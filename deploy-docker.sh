@@ -161,7 +161,39 @@ setup_directories() {
     ok "Direktori siap: ${DB_DATA_DIR}"
 }
 
-# ── 6. build_and_start ──────────────────────
+# ── 6. validate_deploy_assets ───────────────
+
+validate_deploy_assets() {
+    info "Memvalidasi asset deploy tools ..."
+
+    if [ ! -d docs/tools/cftc-export ]; then
+        err "Folder docs/tools/cftc-export tidak ditemukan."
+        echo "  Folder ini diperlukan agar /tools/cftc-viewer tersedia di Docker."
+        exit 1
+    fi
+
+    if [ ! -f docs/tools/cftc-export/index.html ]; then
+        err "File docs/tools/cftc-export/index.html tidak ditemukan."
+        echo "  CFTC viewer membutuhkan static export yang sudah dikomit."
+        exit 1
+    fi
+
+    if [ ! -d docs/tools/cftc-export/futures ]; then
+        err "Folder docs/tools/cftc-export/futures tidak ditemukan."
+        echo "  Halaman kategori CFTC tidak akan bisa dibuka tanpa folder ini."
+        exit 1
+    fi
+
+    if grep -Eq '(^|/|[[:space:]])docs($|/|[[:space:]])|docs/tools|cftc-export' .dockerignore 2>/dev/null; then
+        err ".dockerignore mengecualikan docs/tools/cftc-export dari build context."
+        echo "  Hapus rule ignore tersebut agar Dockerfile frontend bisa COPY asset CFTC."
+        exit 1
+    fi
+
+    ok "Asset CFTC viewer siap masuk Docker build context."
+}
+
+# ── 7. build_and_start ──────────────────────
 
 build_and_start() {
     info "Building Docker images (--no-cache) ..."
@@ -179,7 +211,7 @@ build_and_start() {
     ok "Semua container dimulai."
 }
 
-# ── 7. run_migrations ───────────────────────
+# ── 8. run_migrations ───────────────────────
 
 run_migrations() {
     info "Menjalankan database migrations ..."
@@ -209,7 +241,7 @@ run_migrations() {
     fi
 }
 
-# ── 8. health_check ─────────────────────────
+# ── 9. health_check ─────────────────────────
 
 health_check() {
     echo ""
@@ -279,6 +311,7 @@ main() {
     auto_construct_vars
     set_defaults
     setup_directories
+    validate_deploy_assets
     build_and_start
     run_migrations
     health_check
