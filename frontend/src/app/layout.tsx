@@ -1,5 +1,6 @@
 import type { Metadata, Viewport } from 'next';
 import { Inter } from 'next/font/google';
+import Script from 'next/script';
 import { Navbar } from '@/components/layout/Navbar';
 import { Footer } from '@/components/layout/Footer';
 import { ToastProvider } from '@/components/ui/Toast';
@@ -60,7 +61,11 @@ export default function RootLayout({
       <head>
         <link rel="icon" href="/images/logo/Logo-Horizon-Atom-Online-Black_7.png" media="(prefers-color-scheme: light)" />
         <link rel="icon" href="/images/logo/Logo-Horizon-Atom-Online-White_8.png" media="(prefers-color-scheme: dark)" />
-        <script dangerouslySetInnerHTML={{ __html: themeInitScript }} />
+        <Script
+          id="theme-init"
+          strategy="beforeInteractive"
+          dangerouslySetInnerHTML={{ __html: themeInitScript }}
+        />
       </head>
       <body>
         <a href="#main-content" className="skip-to-content">

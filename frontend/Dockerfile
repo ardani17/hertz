@@ -4,6 +4,7 @@ WORKDIR /app
 
 # Copy workspace files
 COPY package.json package-lock.json ./
+COPY .npmrc ./
 COPY frontend/package.json ./frontend/
 COPY bot/package.json ./bot/
 COPY shared/package.json ./shared/
@@ -20,6 +21,7 @@ COPY --from=deps /app/node_modules ./node_modules
 
 # Copy source
 COPY package.json package-lock.json ./
+COPY .npmrc ./
 COPY tsconfig.base.json ./
 COPY shared/ ./shared/
 COPY frontend/ ./frontend/
@@ -55,7 +57,9 @@ COPY --from=deps /app/node_modules ./node_modules
 COPY --from=builder /app/frontend ./frontend
 COPY --from=builder /app/shared ./shared
 COPY --from=builder /app/package.json ./
+COPY --from=builder /app/.npmrc ./
 COPY --from=builder /app/tsconfig.base.json ./
+COPY docs/tools/cftc-export ./docs/tools/cftc-export
 
 RUN chown -R nextjs:nodejs /app
 

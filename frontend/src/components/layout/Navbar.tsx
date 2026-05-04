@@ -8,6 +8,7 @@ const navItems = [
   { label: 'Feed', href: '/' },
   { label: 'Outlook', href: '/outlook' },
   { label: 'Blog', href: '/blog' },
+  { label: 'Tools', href: '/tools' },
   { label: 'Gallery', href: '/gallery' },
 ] as const;
 
