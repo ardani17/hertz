@@ -36,6 +36,8 @@ export type ArticleStatus = (typeof ArticleStatus)[keyof typeof ArticleStatus];
 export const ArticleSource = {
   TELEGRAM: 'telegram',
   DASHBOARD: 'dashboard',
+  WEB: 'web',
+  ADMIN: 'admin',
   WORDPRESS: 'wordpress',
 } as const;
 
@@ -82,6 +84,9 @@ export type ActorType = (typeof ActorType)[keyof typeof ActorType];
 /** Activity log target types */
 export const TargetType = {
   ARTICLE: 'article',
+  POST: 'post',
+  COMMENT: 'comment',
+  COMMUNITY_NOTE: 'community_note',
   MEDIA: 'media',
   USER: 'user',
   CREDIT: 'credit',
@@ -118,6 +123,13 @@ export interface User {
   password_hash: string | null;
   role: UserRole;
   credit_balance: number;
+  display_name?: string | null;
+  avatar_url?: string | null;
+  telegram_first_name?: string | null;
+  telegram_last_name?: string | null;
+  verified_member_at?: Date | null;
+  muted_until?: Date | null;
+  banned_at?: Date | null;
   created_at: Date;
 }
 
@@ -336,3 +348,7 @@ export const ERROR_CODE_TO_HTTP_STATUS: Record<ErrorCode, number> = {
   [ErrorCode.IMPORT_ALREADY_RUNNING]: 409,
   [ErrorCode.INTERNAL_ERROR]: 500,
 };
+
+export type * from './feed';
+export type * from './membership';
+export type * from './communityNote';

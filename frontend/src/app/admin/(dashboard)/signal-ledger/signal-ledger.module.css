@@ -1,0 +1,164 @@
+.page {
+  display: grid;
+  gap: 24px;
+}
+
+.header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+}
+
+.kicker {
+  margin: 0 0 6px;
+  color: #11a36a;
+  font-size: 0.78rem;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.header h1 {
+  margin: 0;
+  color: #f4f8f5;
+  font-size: clamp(1.6rem, 3vw, 2.35rem);
+}
+
+.refreshButton,
+.actions button {
+  border: 1px solid rgba(255, 255, 255, 0.16);
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.08);
+  color: #f4f8f5;
+  cursor: pointer;
+  font-weight: 800;
+  padding: 10px 14px;
+}
+
+.refreshButton:disabled,
+.actions button:disabled {
+  cursor: wait;
+  opacity: 0.55;
+}
+
+.metrics {
+  display: grid;
+  gap: 12px;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+.metrics div,
+.panel {
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 8px;
+  background: #101412;
+}
+
+.metrics div {
+  padding: 18px;
+}
+
+.metrics span {
+  color: #42d392;
+  display: block;
+  font-size: 1.9rem;
+  font-weight: 900;
+}
+
+.metrics p {
+  color: #9aa7a0;
+  margin: 4px 0 0;
+}
+
+.panel {
+  overflow: hidden;
+}
+
+.panelHeader {
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  padding: 18px 20px;
+}
+
+.panelHeader h2 {
+  color: #f4f8f5;
+  font-size: 1.15rem;
+  margin: 0;
+}
+
+.panelHeader p {
+  color: #9aa7a0;
+  margin: 6px 0 0;
+}
+
+.list {
+  display: grid;
+}
+
+.postCard {
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  display: grid;
+  gap: 12px;
+  padding: 18px 20px;
+}
+
+.postCard:last-child {
+  border-bottom: 0;
+}
+
+.postMeta {
+  color: #82908a;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  font-size: 0.82rem;
+}
+
+.postCard h3 {
+  color: #f4f8f5;
+  font-size: 1rem;
+  margin: 0;
+}
+
+.postCard p {
+  color: #d7ded9;
+  line-height: 1.5;
+  margin: 0;
+  max-width: 760px;
+}
+
+.actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.actions .primary {
+  background: #12b76a;
+  border-color: #12b76a;
+  color: #04120a;
+}
+
+.empty,
+.error {
+  color: #b8c3bd;
+  padding: 20px;
+}
+
+.error {
+  border: 1px solid rgba(255, 89, 89, 0.34);
+  border-radius: 8px;
+  background: rgba(255, 89, 89, 0.08);
+  color: #ffb5b5;
+}
+
+@media (max-width: 760px) {
+  .header {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
+  .metrics {
+    grid-template-columns: 1fr;
+  }
+}

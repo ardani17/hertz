@@ -1,0 +1,15 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 760" role="img" aria-label="XAUUSD liquidity chart">
+  <rect width="1200" height="760" fill="#06110d"/>
+  <g stroke="#133b2d" stroke-width="1">
+    <path d="M0 80h1200M0 160h1200M0 240h1200M0 320h1200M0 400h1200M0 480h1200M0 560h1200M0 640h1200"/>
+    <path d="M120 0v760M240 0v760M360 0v760M480 0v760M600 0v760M720 0v760M840 0v760M960 0v760M1080 0v760"/>
+  </g>
+  <path d="M80 555C170 520 210 575 282 500C345 435 395 470 450 385C520 275 610 318 676 260C760 185 835 220 910 150C980 86 1060 128 1120 90" fill="none" stroke="#18f08c" stroke-width="10" stroke-linecap="round"/>
+  <path d="M92 610h1020" stroke="#ef4444" stroke-width="4" stroke-dasharray="16 12"/>
+  <path d="M92 330h1020" stroke="#10b981" stroke-width="4" stroke-dasharray="16 12"/>
+  <rect x="78" y="52" width="330" height="92" rx="18" fill="#09251b" stroke="#0d6b47"/>
+  <text x="108" y="104" font-family="Inter,Arial,sans-serif" font-size="34" font-weight="800" fill="#f8fafc">XAUUSD LONG</text>
+  <text x="108" y="132" font-family="Inter,Arial,sans-serif" font-size="22" fill="#9ad7bd">Sweep - rejection - continuation</text>
+  <circle cx="676" cy="260" r="16" fill="#18f08c"/>
+  <text x="705" y="252" font-family="Inter,Arial,sans-serif" font-size="26" font-weight="700" fill="#d1fae5">Entry zone</text>
+</svg>

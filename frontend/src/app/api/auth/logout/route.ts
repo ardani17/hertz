@@ -8,6 +8,7 @@ import {
   deleteSession,
   clearSessionCookie,
 } from '@/lib/auth';
+import { deleteCurrentMemberSession } from '@/lib/memberAuth';
 
 function errorResponse(code: string, message: string, status: number) {
   return NextResponse.json(
@@ -43,6 +44,7 @@ export async function POST() {
     }
 
     await clearSessionCookie();
+    await deleteCurrentMemberSession();
 
     return NextResponse.json({
       success: true,
@@ -52,6 +54,7 @@ export async function POST() {
     // Even on error, try to clear the cookie
     try {
       await clearSessionCookie();
+      await deleteCurrentMemberSession();
     } catch {
       // Ignore cookie clearing errors
     }

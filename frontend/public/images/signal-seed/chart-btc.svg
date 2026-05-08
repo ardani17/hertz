@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 700" role="img" aria-label="BTC continuation chart">
+  <rect width="900" height="700" fill="#050d0a"/>
+  <g stroke="#143427"><path d="M0 140h900M0 280h900M0 420h900M0 560h900M150 0v700M300 0v700M450 0v700M600 0v700M750 0v700"/></g>
+  <path d="M72 510L142 480L210 500L282 420L350 450L420 360L506 390L590 270L676 310L810 198" fill="none" stroke="#00e884" stroke-width="8" stroke-linecap="round"/>
+  <rect x="70" y="70" width="276" height="76" rx="16" fill="#09251b" stroke="#10b981"/>
+  <text x="98" y="118" font-family="Inter,Arial" font-size="30" font-weight="800" fill="#fff">BTC reclaim</text>
+  <text x="612" y="222" font-family="Inter,Arial" font-size="24" fill="#d1fae5">67K trigger</text>
+</svg>

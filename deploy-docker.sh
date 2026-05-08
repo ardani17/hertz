@@ -118,6 +118,18 @@ check_required_vars() {
             ;;
     esac
 
+    if [ "${SIGNAL_LEDGER_ENABLED:-false}" = "true" ]; then
+        if [ -z "${MEMBERSHIP_CHECK_URL}" ] || [ -z "${MEMBERSHIP_CHECK_TOKEN}" ] || [ -z "${MEMBER_SESSION_SECRET}" ]; then
+            err "Signal Ledger aktif, tetapi MEMBERSHIP_CHECK_URL, MEMBERSHIP_CHECK_TOKEN, atau MEMBER_SESSION_SECRET belum diisi."
+            exit 1
+        fi
+
+        if [ -z "${HORIZON_TELEGRAM_GROUP_ID:-${TELEGRAM_GROUP_ID}}" ]; then
+            err "Signal Ledger aktif, tetapi HORIZON_TELEGRAM_GROUP_ID atau TELEGRAM_GROUP_ID belum diisi."
+            exit 1
+        fi
+    fi
+
     ok "Semua variabel wajib tervalidasi."
 }
 
@@ -130,11 +142,13 @@ auto_construct_vars() {
     export TELEGRAM_WEBHOOK_URL="https://${DOMAIN}/webhook/telegram"
     export FRONTEND_URL="https://${DOMAIN}"
     export NEXT_PUBLIC_SITE_URL="https://${DOMAIN}"
+    export HORIZON_TELEGRAM_GROUP_ID="${HORIZON_TELEGRAM_GROUP_ID:-${TELEGRAM_GROUP_ID}}"
 
     ok "DATABASE_URL       = postgresql://${POSTGRES_USER}:****@${POSTGRES_HOST:-db}:${POSTGRES_PORT:-5432}/${POSTGRES_DB}"
     ok "TELEGRAM_WEBHOOK_URL = ${TELEGRAM_WEBHOOK_URL}"
     ok "FRONTEND_URL       = ${FRONTEND_URL}"
     ok "NEXT_PUBLIC_SITE_URL = ${NEXT_PUBLIC_SITE_URL}"
+    ok "HORIZON_TELEGRAM_GROUP_ID = ${HORIZON_TELEGRAM_GROUP_ID}"
 }
 
 # ── 4. set_defaults ─────────────────────────
@@ -144,10 +158,12 @@ set_defaults() {
 
     export FRONTEND_PORT="${FRONTEND_PORT:-3000}"
     export BOT_PORT="${BOT_PORT:-4000}"
+    export SIGNAL_LEDGER_ENABLED="${SIGNAL_LEDGER_ENABLED:-false}"
 
     export DB_DATA_DIR="${DB_DATA_DIR:-./data/postgres}"
 
     ok "Defaults: FRONTEND_PORT=${FRONTEND_PORT}, BOT_PORT=${BOT_PORT}"
+    ok "Defaults: SIGNAL_LEDGER_ENABLED=${SIGNAL_LEDGER_ENABLED}"
     ok "Defaults: DB_DATA_DIR=${DB_DATA_DIR}"
 }
 

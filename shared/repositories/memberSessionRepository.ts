@@ -1,0 +1,59 @@
+import { execute, queryOne, type DbClient } from '../db';
+
+export interface MemberSessionRow {
+  id: string;
+  user_id: string;
+  token_hash: string;
+  expires_at: Date;
+  created_at: Date;
+  last_used_at: Date | null;
+}
+
+export class MemberSessionRepository {
+  async create(params: {
+    userId: string;
+    tokenHash: string;
+    expiresAt: Date;
+  }, client?: DbClient): Promise<void> {
+    await execute(
+      `INSERT INTO member_sessions (user_id, token_hash, expires_at)
+       VALUES ($1, $2, $3)`,
+      [params.userId, params.tokenHash, params.expiresAt.toISOString()],
+      client,
+    );
+  }
+
+  async findByTokenHash(tokenHash: string, client?: DbClient): Promise<MemberSessionRow | null> {
+    return queryOne<MemberSessionRow>(
+      `SELECT id, user_id, token_hash, expires_at, created_at, last_used_at
+       FROM member_sessions
+       WHERE token_hash = $1`,
+      [tokenHash],
+      client,
+    );
+  }
+
+  async touch(id: string, client?: DbClient): Promise<void> {
+    await execute(
+      'UPDATE member_sessions SET last_used_at = NOW() WHERE id = $1',
+      [id],
+      client,
+    );
+  }
+
+  async deleteByTokenHash(tokenHash: string, client?: DbClient): Promise<void> {
+    await execute(
+      'DELETE FROM member_sessions WHERE token_hash = $1',
+      [tokenHash],
+      client,
+    );
+  }
+
+  async deleteExpired(client?: DbClient): Promise<void> {
+    await execute(
+      'DELETE FROM member_sessions WHERE expires_at < NOW()',
+      [],
+      client,
+    );
+  }
+}

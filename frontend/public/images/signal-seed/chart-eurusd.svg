@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 760" role="img" aria-label="EURUSD scalp chart">
+  <rect width="1200" height="760" fill="#07100d"/>
+  <g stroke="#123427"><path d="M0 126h1200M0 252h1200M0 378h1200M0 504h1200M0 630h1200M200 0v760M400 0v760M600 0v760M800 0v760M1000 0v760"/></g>
+  <rect x="720" y="188" width="340" height="92" rx="18" fill="#2a1313" stroke="#ef4444"/>
+  <path d="M102 170C220 205 248 170 340 245C430 318 512 276 610 368C720 475 825 420 930 510C1000 568 1064 548 1120 604" fill="none" stroke="#ef4444" stroke-width="9" stroke-linecap="round"/>
+  <text x="746" y="244" font-family="Inter,Arial" font-size="30" font-weight="800" fill="#fee2e2">Rejection zone</text>
+  <text x="112" y="112" font-family="Inter,Arial" font-size="34" font-weight="800" fill="#f8fafc">EURUSD M5 scalp</text>
+</svg>

@@ -1,8 +1,6 @@
 import type { Metadata, Viewport } from 'next';
 import { Inter } from 'next/font/google';
 import Script from 'next/script';
-import { Navbar } from '@/components/layout/Navbar';
-import { Footer } from '@/components/layout/Footer';
 import { ToastProvider } from '@/components/ui/Toast';
 import { themeInitScript } from '@/lib/theme-init';
 import './globals.css';
@@ -72,9 +70,7 @@ export default function RootLayout({
           Langsung ke konten
         </a>
         <ToastProvider>
-          <Navbar />
           <div id="main-content">{children}</div>
-          <Footer />
         </ToastProvider>
       </body>
     </html>

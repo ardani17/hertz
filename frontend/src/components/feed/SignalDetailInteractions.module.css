@@ -1,0 +1,277 @@
+.wrap {
+  border-top: 1px solid rgba(75, 118, 92, 0.28);
+}
+
+.message {
+  background: rgba(251, 191, 36, 0.12);
+  border: 1px solid rgba(251, 191, 36, 0.3);
+  color: #fde68a;
+  margin: 0.9rem 1.25rem 0;
+  padding: 0.7rem 0.8rem;
+}
+
+.section {
+  border-bottom: 1px solid rgba(75, 118, 92, 0.28);
+  padding: 1.1rem 1.25rem 1.25rem;
+}
+
+.sectionHeader {
+  align-items: center;
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 0.85rem;
+}
+
+.sectionHeader h2 {
+  align-items: center;
+  color: #f3fff7;
+  display: flex;
+  font-size: 1rem;
+  gap: 0.45rem;
+  margin: 0;
+}
+
+.sectionHeader svg {
+  color: #13d27b;
+  height: 18px;
+  width: 18px;
+}
+
+.sectionHeader span {
+  color: #8fa899;
+  font-size: 0.84rem;
+}
+
+.form {
+  background: rgba(5, 18, 11, 0.72);
+  border: 1px solid rgba(76, 118, 94, 0.32);
+  border-radius: 8px;
+  display: grid;
+  gap: 0.55rem;
+  margin-bottom: 1rem;
+  padding: 0.75rem;
+}
+
+.form label {
+  color: #9eb8a9;
+  font-size: 0.78rem;
+  font-weight: 800;
+}
+
+.form textarea,
+.form input {
+  background: #020604;
+  border: 1px solid rgba(76, 118, 94, 0.42);
+  border-radius: 7px;
+  color: #eef8f1;
+  font: inherit;
+  line-height: 1.45;
+  padding: 0.65rem 0.75rem;
+  resize: vertical;
+}
+
+.form input {
+  min-height: 38px;
+}
+
+.form textarea:focus,
+.form input:focus {
+  border-color: rgba(19, 210, 123, 0.72);
+  outline: 2px solid rgba(19, 210, 123, 0.18);
+}
+
+.formFooter {
+  align-items: center;
+  display: flex;
+  justify-content: space-between;
+}
+
+.formFooter span {
+  color: #8fa899;
+  font-size: 0.78rem;
+}
+
+.formFooter button,
+.noteActions button,
+.textButton {
+  border: 0;
+  border-radius: 7px;
+  cursor: pointer;
+  font: inherit;
+  transition: background 150ms ease, color 150ms ease, transform 150ms ease;
+}
+
+.formFooter button {
+  background: #13d27b;
+  color: #031008;
+  font-size: 0.82rem;
+  font-weight: 900;
+  min-height: 34px;
+  padding: 0 0.85rem;
+}
+
+.formFooter button:disabled {
+  cursor: wait;
+  opacity: 0.7;
+}
+
+.list {
+  display: grid;
+  gap: 0.65rem;
+}
+
+.item,
+.note {
+  background: rgba(3, 12, 8, 0.68);
+  border: 1px solid rgba(76, 118, 94, 0.28);
+  border-radius: 8px;
+  padding: 0.75rem;
+}
+
+.item {
+  display: grid;
+  gap: 0.7rem;
+  grid-template-columns: 34px minmax(0, 1fr);
+}
+
+.avatar {
+  background: rgba(15, 70, 43, 0.86);
+  border: 1px solid rgba(37, 210, 126, 0.52);
+  border-radius: 8px;
+  color: #a7f3d0;
+  display: grid;
+  font-size: 0.88rem;
+  font-weight: 800;
+  height: 34px;
+  place-items: center;
+  width: 34px;
+}
+
+.itemTop {
+  align-items: center;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.45rem;
+}
+
+.itemTop strong {
+  color: #f3fff7;
+}
+
+.itemTop span {
+  color: #8fa899;
+  font-size: 0.8rem;
+}
+
+.item p,
+.note p,
+.empty {
+  color: #c9dfd1;
+  line-height: 1.5;
+  margin: 0.35rem 0 0;
+  white-space: pre-wrap;
+}
+
+.sources {
+  display: grid;
+  gap: 0.25rem;
+  margin-top: 0.7rem;
+}
+
+.sources a {
+  color: #34d399;
+  font-size: 0.84rem;
+  overflow-wrap: anywhere;
+  text-decoration: none;
+}
+
+.noteActions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin-top: 0.75rem;
+}
+
+.noteActions button {
+  background: rgba(255, 255, 255, 0.06);
+  color: #c9dfd1;
+  min-height: 32px;
+  padding: 0 0.7rem;
+}
+
+.noteActions button:hover,
+.noteActions .active {
+  background: rgba(19, 210, 123, 0.14);
+  color: #34d399;
+}
+
+.textButton {
+  background: transparent;
+  color: #8fa899;
+  margin-top: 0.35rem;
+  padding: 0;
+}
+
+.textButton:hover {
+  color: #34d399;
+}
+
+.inlineActions {
+  display: flex;
+  gap: 0.7rem;
+}
+
+.inlineEdit {
+  display: grid;
+  gap: 0.5rem;
+  margin-top: 0.55rem;
+}
+
+.inlineEdit textarea {
+  background: #020604;
+  border: 1px solid rgba(76, 118, 94, 0.42);
+  border-radius: 7px;
+  color: #eef8f1;
+  font: inherit;
+  line-height: 1.45;
+  padding: 0.65rem 0.75rem;
+  resize: vertical;
+}
+
+.inlineEdit textarea:focus {
+  border-color: rgba(19, 210, 123, 0.72);
+  outline: 2px solid rgba(19, 210, 123, 0.18);
+}
+
+.inlineEdit div {
+  display: flex;
+  gap: 0.5rem;
+  justify-content: flex-end;
+}
+
+.inlineEdit button {
+  background: rgba(255, 255, 255, 0.06);
+  border: 0;
+  border-radius: 7px;
+  color: #c9dfd1;
+  cursor: pointer;
+  font: inherit;
+  min-height: 32px;
+  padding: 0 0.75rem;
+}
+
+.inlineEdit button[type="submit"] {
+  background: #13d27b;
+  color: #031008;
+  font-weight: 900;
+}
+
+@media (max-width: 560px) {
+  .section {
+    padding-inline: 0.8rem;
+  }
+
+  .message {
+    margin-inline: 0.8rem;
+  }
+}

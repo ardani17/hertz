@@ -111,6 +111,26 @@ async function insertArticle(
   if (!result) {
     throw new Error('Failed to insert article');
   }
+
+  await execute(
+    `INSERT INTO feed_posts (
+       article_id, author_id, post_type, source, category, status,
+       telegram_message_id, telegram_chat_id
+     )
+     VALUES ($1, $2, 'original', $3, $4, $5, $6, $7)
+     ON CONFLICT DO NOTHING`,
+    [
+      result.id,
+      data.author_id,
+      data.status === 'published' ? 'admin' : 'telegram',
+      data.category,
+      data.status === 'published' ? 'published' : 'pending_review',
+      data.telegram_message_id ?? null,
+      data.telegram_chat_id ?? null,
+    ],
+    client,
+  );
+
   return result;
 }
 
@@ -146,6 +166,14 @@ async function findArticleByMessageId(telegramMessageId: number) {
 
 async function updateArticleStatus(articleId: string, status: string, client: DbClient) {
   await execute('UPDATE articles SET status = $1 WHERE id = $2', [status, articleId], client);
+  await execute(
+    `UPDATE feed_posts
+     SET status = CASE WHEN $1 = 'published' THEN 'published' ELSE status END,
+         updated_at = NOW()
+     WHERE article_id = $2`,
+    [status, articleId],
+    client,
+  );
 }
 
 async function updateArticleReplyMessageId(articleId: string, botReplyMessageId: number) {

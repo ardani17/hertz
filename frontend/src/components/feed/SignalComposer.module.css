@@ -1,0 +1,223 @@
+.composer {
+  display: grid;
+  grid-template-columns: 44px minmax(0, 1fr);
+  gap: 0.78rem;
+  margin: 0.75rem 1.25rem 0.55rem;
+  padding: 0.75rem 0.85rem;
+  border: 1px solid rgba(76, 118, 94, 0.36);
+  border-radius: 8px;
+  background: linear-gradient(180deg, rgba(7, 22, 14, 0.88), rgba(2, 9, 6, 0.88));
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.04);
+}
+
+.avatar {
+  display: grid;
+  place-items: center;
+  width: 42px;
+  height: 42px;
+  border: 1px solid rgba(37, 210, 126, 0.62);
+  border-radius: 8px;
+  background: rgba(12, 70, 43, 0.85);
+  color: #a7f3d0;
+  font-weight: 800;
+}
+
+.body {
+  min-width: 0;
+}
+
+.body textarea {
+  width: 100%;
+  resize: vertical;
+  min-height: 42px;
+  border: 1px solid rgba(76, 118, 94, 0.32);
+  border-radius: 6px;
+  outline: none;
+  background: rgba(3, 11, 8, 0.76);
+  color: #ecfff3;
+  font: inherit;
+  line-height: 1.45;
+  padding: 0.75rem 0.85rem;
+}
+
+.body textarea::placeholder {
+  color: #7f998a;
+}
+
+.controls {
+  display: flex;
+  align-items: flex-end;
+  flex-wrap: wrap;
+  gap: 0.6rem;
+  margin-top: 0.6rem;
+}
+
+.segments {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.35rem;
+}
+
+.segments button,
+.submit,
+.uploadButton,
+.marketInputs input {
+  min-height: 34px;
+  border: 1px solid rgba(75, 118, 92, 0.38);
+  border-radius: 8px;
+  background: rgba(8, 20, 14, 0.9);
+  color: #cde8d8;
+}
+
+.segments button {
+  padding: 0 0.65rem;
+}
+
+.segments .activeSegment {
+  border-color: rgba(52, 211, 153, 0.8);
+  color: #07120d;
+  background: #34d399;
+}
+
+.marketInputs {
+  display: flex;
+  gap: 0.45rem;
+}
+
+.marketInputs label {
+  display: grid;
+  gap: 0.25rem;
+}
+
+.marketInputs span {
+  color: #7f998a;
+  font-size: 0.68rem;
+  font-weight: 700;
+  line-height: 1;
+}
+
+.marketInputs input {
+  width: 94px;
+  padding: 0 0.55rem;
+}
+
+.submit {
+  align-items: center;
+  display: inline-flex;
+  gap: 0.4rem;
+  margin-left: auto;
+  padding: 0 0.95rem;
+  background: #10b981;
+  color: #02100a;
+  font-weight: 800;
+}
+
+.uploadButton {
+  align-items: center;
+  cursor: pointer;
+  display: inline-flex;
+  gap: 0.4rem;
+  font-size: 0.88rem;
+  padding: 0 0.75rem;
+}
+
+.uploadButton svg,
+.submit svg {
+  height: 17px;
+  width: 17px;
+}
+
+.uploadButton input {
+  display: none;
+}
+
+.submit:disabled,
+.segments button:disabled,
+.disabledUpload,
+.marketInputs input:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.mediaQueue {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+  margin-top: 0.6rem;
+}
+
+.mediaQueue span {
+  border: 1px solid rgba(52, 211, 153, 0.24);
+  border-radius: 999px;
+  color: #a7f3d0;
+  font-size: 0.78rem;
+  max-width: 180px;
+  overflow: hidden;
+  padding: 0.3rem 0.55rem;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.status {
+  margin: 0.55rem 0 0;
+  color: #fbbf24;
+  font-size: 0.82rem;
+}
+
+@media (max-width: 640px) {
+  .composer {
+    grid-template-columns: 36px minmax(0, 1fr);
+    gap: 0.62rem;
+    margin: 0.65rem 0.65rem 0.5rem 2.35rem;
+    padding: 0.75rem;
+    overflow: hidden;
+  }
+
+  .avatar {
+    width: 34px;
+    height: 34px;
+  }
+
+  .composer[data-auth="guest"] {
+    align-items: center;
+    background: rgba(4, 18, 11, 0.82);
+  }
+
+  .composer[data-auth="member"] .controls {
+    align-items: stretch;
+  }
+
+  .segments,
+  .marketInputs {
+    width: 100%;
+  }
+
+  .segments {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+
+  .segments button {
+    padding: 0 0.3rem;
+  }
+
+  .marketInputs {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .marketInputs input {
+    width: 100%;
+  }
+
+  .uploadButton {
+    flex: 1 1 auto;
+    justify-content: center;
+  }
+
+  .submit {
+    flex: 1 1 auto;
+    margin-left: 0;
+    justify-content: center;
+  }
+}

@@ -1,0 +1,298 @@
+.post {
+  position: relative;
+  display: grid;
+  grid-template-columns: 44px minmax(0, 1fr);
+  gap: 0.8rem;
+  margin: 0.55rem 1.25rem;
+  padding: 0.82rem 0.9rem 0.76rem;
+  border: 1px solid rgba(76, 118, 94, 0.34);
+  border-radius: 8px;
+  background: linear-gradient(180deg, rgba(8, 24, 16, 0.72), rgba(3, 10, 7, 0.72));
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.035);
+}
+.post:hover {
+  background: linear-gradient(180deg, rgba(10, 32, 20, 0.82), rgba(3, 10, 7, 0.82));
+  border-color: rgba(35, 190, 118, 0.52);
+}
+.spineNode {
+  position: absolute;
+  display: grid;
+  place-items: center;
+  top: 1.4rem;
+  left: -34px;
+  z-index: 1;
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  border: 1px solid rgba(19, 210, 123, 0.62);
+  background: radial-gradient(circle, rgba(19, 210, 123, 0.35), rgba(5, 18, 11, 0.96));
+  color: #b7f7d5;
+  box-shadow: 0 0 0 4px #020604, 0 0 18px rgba(16, 185, 129, 0.28), inset 0 0 0 5px rgba(5, 18, 11, 0.7);
+}
+.spineNode svg {
+  width: 15px;
+  height: 15px;
+  filter: drop-shadow(0 0 4px rgba(19, 210, 123, 0.7));
+}
+.avatar {
+  display: grid;
+  place-items: center;
+  width: 42px;
+  height: 42px;
+  border: 1px solid rgba(37, 210, 126, 0.62);
+  border-radius: 8px;
+  background: rgba(15, 70, 43, 0.86);
+  color: #a7f3d0;
+  font-weight: 800;
+}
+.body { min-width: 0; }
+.postTop {
+  align-items: flex-start;
+  display: flex;
+  gap: 0.75rem;
+  justify-content: space-between;
+}
+.authorLine, .metaLine {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 0.42rem;
+}
+.authorLine strong { color: #f3fff7; }
+.authorLine span, .metaLine span {
+  color: #88a192;
+  font-size: 0.86rem;
+}
+.badge,
+.adminBadge {
+  padding: 0.08rem 0.35rem;
+  border: 1px solid rgba(52, 211, 153, 0.45);
+  border-radius: 5px;
+  color: #34d399 !important;
+  font-size: 0.7rem !important;
+  font-weight: 800;
+}
+
+.adminBadge {
+  border-color: rgba(251, 191, 36, 0.48);
+  color: #fbbf24 !important;
+}
+.metaLine { margin-top: 0.25rem; }
+.metaLine span {
+  padding-right: 0.45rem;
+  border-right: 1px solid rgba(75, 118, 92, 0.35);
+}
+.metaLine span:last-child { border-right: 0; }
+.content {
+  margin: 0.65rem 0 0;
+  color: #e7f4ec;
+  line-height: 1.55;
+  white-space: pre-wrap;
+}
+.readMore {
+  display: inline-block;
+  margin-top: 0.3rem;
+  color: #34d399;
+  font-weight: 700;
+  text-decoration: none;
+}
+.mediaGrid {
+  display: grid;
+  gap: 0.35rem;
+  margin-top: 0.85rem;
+  overflow: hidden;
+  border: 1px solid rgba(75, 118, 92, 0.32);
+  border-radius: 8px;
+}
+.mediaGrid[data-count="1"] { grid-template-columns: 1fr; }
+.mediaGrid[data-count="2"], .mediaGrid[data-count="3"], .mediaGrid[data-count="4"] { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+.mediaGrid img, .mediaGrid video {
+  width: 100%;
+  min-height: 170px;
+  max-height: 420px;
+  object-fit: cover;
+  background: #050d09;
+}
+.note {
+  margin-top: 0.9rem;
+  padding: 0.85rem 0.95rem;
+  border: 1px solid rgba(52, 211, 153, 0.25);
+  border-radius: 8px;
+  background: linear-gradient(180deg, rgba(16, 185, 129, 0.12), rgba(5, 20, 13, 0.76));
+}
+.note strong {
+  align-items: center;
+  color: #d1fae5;
+  display: flex;
+  gap: 0.45rem;
+}
+.note strong svg {
+  color: #13d27b;
+  height: 17px;
+  width: 17px;
+}
+.note p {
+  margin: 0.35rem 0;
+  color: #dcefe4;
+}
+.note span,
+.note a {
+  color: #8fa899;
+  font-size: 0.82rem;
+}
+.note a {
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  border-radius: 999px;
+  color: #d8efe1;
+  padding: 0.35rem 0.7rem;
+  text-decoration: none;
+}
+
+.noteFooter {
+  align-items: center;
+  display: flex;
+  justify-content: space-between;
+}
+
+.marketCard,
+.quoteCard {
+  border: 1px solid rgba(76, 118, 94, 0.34);
+  border-radius: 8px;
+  margin-top: 0.75rem;
+  padding: 0.75rem;
+  background: rgba(3, 12, 8, 0.66);
+}
+
+.marketCard {
+  display: grid;
+  gap: 0.6rem;
+  grid-template-columns: minmax(120px, 0.85fr) minmax(0, 1.15fr);
+}
+
+.marketCard span,
+.marketCard dt,
+.quoteAuthor em {
+  color: #8ea897;
+  font-size: 0.76rem;
+  font-style: normal;
+}
+
+.marketCard strong {
+  color: #d8efe1;
+  display: block;
+  margin-top: 0.2rem;
+}
+
+.marketCard dl {
+  display: grid;
+  gap: 0.28rem 0.7rem;
+  grid-template-columns: auto 1fr;
+  margin: 0;
+}
+
+.marketCard dd {
+  color: #d8efe1;
+  margin: 0;
+}
+
+.quoteCard {
+  color: inherit;
+  display: block;
+  text-decoration: none;
+}
+
+.quoteCard:hover {
+  border-color: rgba(19, 210, 123, 0.5);
+}
+
+.quoteAuthor {
+  align-items: center;
+  display: flex;
+  gap: 0.45rem;
+}
+
+.quoteAuthor span {
+  border: 1px solid rgba(76, 118, 94, 0.5);
+  border-radius: 50%;
+  color: #a7f3d0;
+  display: grid;
+  font-size: 0.74rem;
+  height: 26px;
+  place-items: center;
+  width: 26px;
+}
+
+.quoteAuthor strong {
+  color: #f3fff8;
+}
+
+.quoteCard p {
+  color: #c9dfd1;
+  line-height: 1.45;
+  margin: 0.45rem 0 0;
+}
+@media (max-width: 640px) {
+  .post {
+    grid-template-columns: 36px minmax(0, 1fr);
+    gap: 0.62rem;
+    margin: 0.5rem 0.65rem 0.5rem 2.35rem;
+    padding: 0.78rem 0.75rem 0.7rem;
+    border-left-color: rgba(19, 210, 123, 0.36);
+    background: linear-gradient(180deg, rgba(7, 23, 15, 0.76), rgba(2, 8, 5, 0.78));
+    overflow: hidden;
+  }
+  .avatar {
+    width: 34px;
+    height: 34px;
+  }
+  .spineNode {
+    display: grid;
+    height: 28px;
+    left: -2.15rem;
+    top: 1.12rem;
+    width: 28px;
+  }
+  .spineNode svg {
+    height: 14px;
+    width: 14px;
+  }
+  .authorLine {
+    gap: 0.28rem;
+  }
+  .authorLine strong {
+    max-width: 9.2rem;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+  .authorLine span {
+    font-size: 0.78rem;
+  }
+  .badge,
+  .adminBadge {
+    font-size: 0.64rem !important;
+    padding: 0.06rem 0.28rem;
+  }
+  .metaLine {
+    gap: 0.28rem;
+    margin-top: 0.2rem;
+  }
+  .metaLine span {
+    font-size: 0.76rem;
+    padding-right: 0.32rem;
+  }
+  .content {
+    font-size: 0.95rem;
+    line-height: 1.48;
+    overflow-wrap: anywhere;
+  }
+  .mediaGrid {
+    gap: 0.22rem;
+    max-width: 100%;
+  }
+  .mediaGrid img, .mediaGrid video { min-height: 120px; }
+  .marketCard { grid-template-columns: 1fr; }
+  .note {
+    padding: 0.75rem;
+  }
+}

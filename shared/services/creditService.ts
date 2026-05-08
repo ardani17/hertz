@@ -2,7 +2,7 @@
 // Horizon Trader Platform — Credit Service
 // ============================================
 
-import { queryOne, execute, type DbClient } from '../db/query';
+import { query, queryOne, execute, type DbClient } from '../db/query';
 import type { SourceType } from '../types/index';
 
 /**
@@ -86,13 +86,24 @@ export class CreditService {
     const amount = settings.credit_reward;
     const sourceType = CATEGORY_TO_SOURCE_TYPE[category] ?? 'article_general';
 
-    // Step 3: Insert credit transaction
-    await execute(
+    // Step 3: Insert credit transaction once for this article/category publish event.
+    const insertResult = await query<{ id: string }>(
       `INSERT INTO credit_transactions (user_id, amount, transaction_type, source_type, source_id, description)
-       VALUES ($1, $2, $3, $4, $5, $6)`,
+       SELECT $1, $2, $3, $4, $5, $6
+       WHERE NOT EXISTS (
+         SELECT 1 FROM credit_transactions
+         WHERE source_id = $5
+           AND source_type = $4
+           AND transaction_type = 'earned'
+       )
+       RETURNING id`,
       [userId, amount, 'earned', sourceType, articleId, null],
       client,
     );
+
+    if (insertResult.rowCount === 0) {
+      return { awarded: false, amount: 0 };
+    }
 
     // Step 4: Update user balance atomically
     await execute(

@@ -1,0 +1,22 @@
+.main {
+  min-height: 100vh;
+  background: #020604;
+  color: #e7f4ec;
+}
+
+.container {
+  max-width: 720px;
+  margin: 0 auto;
+  border-left: 1px solid rgba(75, 118, 92, 0.28);
+  border-right: 1px solid rgba(75, 118, 92, 0.28);
+  min-height: 100vh;
+}
+
+.back {
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
+  padding: 0.75rem 1.25rem;
+  color: #34d399;
+  text-decoration: none;
+}

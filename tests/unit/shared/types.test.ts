@@ -35,7 +35,8 @@ describe('Shared Types — Enums and Constants', () => {
     expect(ArticleCategory.LIFE_STORY).toBe('life_story');
     expect(ArticleCategory.GENERAL).toBe('general');
     expect(ArticleCategory.OUTLOOK).toBe('outlook');
-    expect(Object.keys(ArticleCategory)).toHaveLength(4);
+    expect(ArticleCategory.BLOG).toBe('blog');
+    expect(Object.keys(ArticleCategory)).toHaveLength(5);
   });
 
   it('UserRole has member and admin', () => {
@@ -51,10 +52,13 @@ describe('Shared Types — Enums and Constants', () => {
     expect(Object.keys(ArticleStatus)).toHaveLength(3);
   });
 
-  it('ArticleSource has telegram and dashboard', () => {
+  it('ArticleSource has all expected values', () => {
     expect(ArticleSource.TELEGRAM).toBe('telegram');
     expect(ArticleSource.DASHBOARD).toBe('dashboard');
-    expect(Object.keys(ArticleSource)).toHaveLength(2);
+    expect(ArticleSource.WEB).toBe('web');
+    expect(ArticleSource.ADMIN).toBe('admin');
+    expect(ArticleSource.WORDPRESS).toBe('wordpress');
+    expect(Object.keys(ArticleSource)).toHaveLength(5);
   });
 
   it('TransactionType has earned, spent, adjusted', () => {
@@ -89,12 +93,15 @@ describe('Shared Types — Enums and Constants', () => {
 
   it('TargetType has all expected values', () => {
     expect(TargetType.ARTICLE).toBe('article');
+    expect(TargetType.POST).toBe('post');
+    expect(TargetType.COMMENT).toBe('comment');
+    expect(TargetType.COMMUNITY_NOTE).toBe('community_note');
     expect(TargetType.MEDIA).toBe('media');
     expect(TargetType.USER).toBe('user');
     expect(TargetType.CREDIT).toBe('credit');
     expect(TargetType.SETTING).toBe('setting');
     expect(TargetType.API_KEY).toBe('api_key');
-    expect(Object.keys(TargetType)).toHaveLength(6);
+    expect(Object.keys(TargetType)).toHaveLength(9);
   });
 
   it('CommentStatus has visible and hidden', () => {
@@ -115,8 +122,9 @@ describe('Shared Types — Error Code Registry', () => {
     expect(ErrorCode.MEDIA_TYPE_INVALID).toBe('MEDIA_TYPE_INVALID');
     expect(ErrorCode.MEDIA_SIZE_EXCEEDED).toBe('MEDIA_SIZE_EXCEEDED');
     expect(ErrorCode.RATE_LIMIT_EXCEEDED).toBe('RATE_LIMIT_EXCEEDED');
+    expect(ErrorCode.IMPORT_ALREADY_RUNNING).toBe('IMPORT_ALREADY_RUNNING');
     expect(ErrorCode.INTERNAL_ERROR).toBe('INTERNAL_ERROR');
-    expect(Object.keys(ErrorCode)).toHaveLength(10);
+    expect(Object.keys(ErrorCode)).toHaveLength(11);
   });
 
   it('ERROR_CODE_TO_HTTP_STATUS maps every error code to correct HTTP status', () => {
@@ -129,6 +137,7 @@ describe('Shared Types — Error Code Registry', () => {
     expect(ERROR_CODE_TO_HTTP_STATUS[ErrorCode.MEDIA_TYPE_INVALID]).toBe(422);
     expect(ERROR_CODE_TO_HTTP_STATUS[ErrorCode.MEDIA_SIZE_EXCEEDED]).toBe(422);
     expect(ERROR_CODE_TO_HTTP_STATUS[ErrorCode.RATE_LIMIT_EXCEEDED]).toBe(429);
+    expect(ERROR_CODE_TO_HTTP_STATUS[ErrorCode.IMPORT_ALREADY_RUNNING]).toBe(409);
     expect(ERROR_CODE_TO_HTTP_STATUS[ErrorCode.INTERNAL_ERROR]).toBe(500);
   });
 

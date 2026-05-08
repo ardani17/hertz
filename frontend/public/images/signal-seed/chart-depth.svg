@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 760" role="img" aria-label="Market depth zones">
+  <rect width="1200" height="760" fill="#07130f"/>
+  <rect x="96" y="86" width="1008" height="588" rx="28" fill="#081f17" stroke="#174534" stroke-width="3"/>
+  <path d="M130 560C250 520 340 470 430 482C530 496 610 338 704 312C785 290 870 210 1038 178" fill="none" stroke="#10b981" stroke-width="9" stroke-linecap="round"/>
+  <path d="M130 596C260 578 330 620 430 565C555 495 605 438 704 420C825 398 905 315 1038 292" fill="none" stroke="#38bdf8" stroke-width="5" stroke-linecap="round" opacity=".8"/>
+  <rect x="166" y="172" width="250" height="82" rx="16" fill="#062c20" stroke="#10b981"/>
+  <text x="194" y="218" font-family="Inter,Arial,sans-serif" font-size="28" font-weight="800" fill="#f8fafc">Liquidity Map</text>
+  <text x="194" y="246" font-family="Inter,Arial,sans-serif" font-size="20" fill="#9ad7bd">2334-2336 demand</text>
+  <rect x="760" y="120" width="250" height="72" rx="16" fill="#2a1313" stroke="#ef4444"/>
+  <text x="786" y="165" font-family="Inter,Arial,sans-serif" font-size="24" font-weight="800" fill="#fecaca">Stop cluster</text>
+</svg>

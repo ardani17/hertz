@@ -5,33 +5,30 @@ import { usePathname } from 'next/navigation';
 import styles from './layout.module.css';
 import { Logo } from '@/components/ui/Logo';
 
-/**
- * Navigation items for the admin sidebar.
- * Each section groups related links.
- */
 const navSections = [
   {
     label: 'Utama',
     items: [
-      { label: 'Dashboard', href: '/admin', icon: '📊' },
-      { label: 'Articles', href: '/admin/articles', icon: '📝' },
-      { label: 'Outlook', href: '/admin/outlook', icon: '📈' },
-      { label: 'Blog', href: '/admin/blog', icon: '📰' },
+      { label: 'Dashboard', href: '/admin', icon: 'DB' },
+      { label: 'Signal Ledger', href: '/admin/signal-ledger', icon: 'SL' },
+      { label: 'Articles', href: '/admin/articles', icon: 'AR' },
+      { label: 'Outlook', href: '/admin/outlook', icon: 'OU' },
+      { label: 'Blog', href: '/admin/blog', icon: 'BL' },
     ],
   },
   {
     label: 'Pengguna',
     items: [
-      { label: 'Users', href: '/admin/users', icon: '👥' },
-      { label: 'Credits', href: '/admin/credits', icon: '💰' },
-      { label: 'Comments', href: '/admin/comments', icon: '💬' },
+      { label: 'Users', href: '/admin/users', icon: 'US' },
+      { label: 'Credits', href: '/admin/credits', icon: 'CR' },
+      { label: 'Comments', href: '/admin/comments', icon: 'CM' },
     ],
   },
   {
     label: 'Sistem',
     items: [
-      { label: 'Logs', href: '/admin/logs', icon: '📋' },
-      { label: 'API Keys', href: '/admin/api-keys', icon: '🔑' },
+      { label: 'Logs', href: '/admin/logs', icon: 'LG' },
+      { label: 'API Keys', href: '/admin/api-keys', icon: 'AK' },
     ],
   },
 ] as const;
@@ -41,17 +38,9 @@ interface AdminSidebarProps {
   onClose: () => void;
 }
 
-/**
- * Admin sidebar navigation with grouped links and active state.
- * On mobile, slides in as an overlay controlled by parent layout.
- */
 export function AdminSidebar({ isOpen, onClose }: AdminSidebarProps) {
   const pathname = usePathname();
 
-  /**
-   * Check if a nav link is active. Exact match for /admin (dashboard),
-   * prefix match for other sections.
-   */
   function isActive(href: string): boolean {
     if (href === '/admin') {
       return pathname === '/admin';
@@ -61,7 +50,6 @@ export function AdminSidebar({ isOpen, onClose }: AdminSidebarProps) {
 
   return (
     <>
-      {/* Mobile overlay backdrop */}
       <div
         className={`${styles.overlay} ${isOpen ? styles.overlayVisible : ''}`}
         onClick={onClose}
@@ -72,14 +60,12 @@ export function AdminSidebar({ isOpen, onClose }: AdminSidebarProps) {
         className={`${styles.sidebar} ${isOpen ? styles.sidebarOpen : ''}`}
         aria-label="Admin navigation"
       >
-        {/* Sidebar header */}
         <div className={styles.sidebarHeader}>
           <Link href="/admin" className={styles.sidebarLogo} onClick={onClose}>
             <Logo variant="compact" height={24} /> <span className={styles.sidebarBadge}>Admin</span>
           </Link>
         </div>
 
-        {/* Navigation sections */}
         <nav className={styles.sidebarNav}>
           {navSections.map((section) => (
             <div key={section.label} className={styles.navSection}>
@@ -105,10 +91,9 @@ export function AdminSidebar({ isOpen, onClose }: AdminSidebarProps) {
           ))}
         </nav>
 
-        {/* Sidebar footer */}
         <div className={styles.sidebarFooter}>
           <Link href="/" className={styles.backToSite}>
-            ← Kembali ke situs
+            Kembali ke situs
           </Link>
         </div>
       </aside>

@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { queryOne, execute } from '@shared/db';
 import { validateSession } from '@/lib/auth';
+import { getCurrentMember } from '@/lib/memberAuth';
 import { validateMediaType } from '@shared/utils/mediaValidation';
 import { randomUUID } from 'crypto';
 
@@ -16,7 +17,8 @@ import { randomUUID } from 'crypto';
  */
 export async function POST(request: NextRequest) {
   const admin = await validateSession();
-  if (!admin) {
+  const member = admin ? null : await getCurrentMember();
+  if (!admin && !member) {
     return NextResponse.json(
       { success: false, error: { error_code: 'AUTH_REQUIRED', message: 'Autentikasi diperlukan', details: null, timestamp: new Date().toISOString() } },
       { status: 401 },
@@ -47,6 +49,12 @@ export async function POST(request: NextRequest) {
 
     // Determine media type
     const mediaType = file.type.startsWith('video/') ? 'video' : 'image';
+    if (!admin && mediaType !== 'image') {
+      return NextResponse.json(
+        { success: false, error: { error_code: 'MEDIA_TYPE_INVALID', message: 'Upload web phase awal hanya mendukung gambar', details: { provided: file.type }, timestamp: new Date().toISOString() } },
+        { status: 422 },
+      );
+    }
 
     // Generate unique file key
     const ext = file.name.split('.').pop()?.toLowerCase() || (mediaType === 'image' ? 'jpg' : 'mp4');
@@ -98,8 +106,13 @@ export async function POST(request: NextRequest) {
     // Log activity
     await execute(
       `INSERT INTO activity_logs (actor_id, actor_type, action, target_type, target_id, details)
-       VALUES ($1, 'admin', 'media_uploaded', 'media', $2, $3)`,
-      [admin.id, media?.id, JSON.stringify({ file_key: fileKey, media_type: mediaType, file_size: buffer.length, article_id: articleId })],
+       VALUES ($1, $2, 'media_uploaded', 'media', $3, $4)`,
+      [
+        admin?.id ?? member?.id,
+        admin ? 'admin' : 'member',
+        media?.id,
+        JSON.stringify({ file_key: fileKey, media_type: mediaType, file_size: buffer.length, article_id: articleId }),
+      ],
     );
 
     return NextResponse.json({

@@ -1,8 +1,10 @@
 import type { Metadata } from 'next';
 import { query } from '@shared/db';
 import { Sidebar } from '@/components/layout/Sidebar';
-import { FeedList } from '@/components/feed';
+import { FeedList, SignalLedgerPage } from '@/components/feed';
 import type { ArticleCardData } from '@/components/feed';
+import { FeedService } from '@shared/services/feedService';
+import { getCurrentMember } from '@/lib/memberAuth';
 import styles from './page.module.css';
 
 export const metadata: Metadata = {
@@ -54,7 +56,26 @@ async function getPublishedArticles(): Promise<ArticleCardData[]> {
   }
 }
 
-export default async function FeedPage() {
+interface FeedPageProps {
+  searchParams?: Promise<{ category?: string }>;
+}
+
+export default async function FeedPage({ searchParams }: FeedPageProps) {
+  if (process.env.SIGNAL_LEDGER_ENABLED === 'true') {
+    const currentUser = await getCurrentMember();
+    const params = await searchParams;
+    const category = params?.category && ['trading', 'life_story', 'general'].includes(params.category)
+      ? params.category
+      : null;
+    try {
+      const feed = new FeedService();
+      const result = await feed.listFeed({ viewer: currentUser, limit: 20, category });
+      return <SignalLedgerPage posts={result.items} currentUser={currentUser} activeCategory={category} />;
+    } catch {
+      return <SignalLedgerPage posts={[]} currentUser={currentUser} activeCategory={category} />;
+    }
+  }
+
   const articles = await getPublishedArticles();
 
   return (

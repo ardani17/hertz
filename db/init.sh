@@ -1,12 +1,12 @@
 #!/bin/bash
 
 # ============================================
-# Horizon Trader Platform — Database Initialization & Migration
+# Horizon Trader Platform â€” Database Initialization & Migration
 #
 # Handles all scenarios:
-#   1. Fresh database — runs all migrations from scratch
-#   2. Existing database (pre-tracking) — seeds tracking table, runs new migrations
-#   3. Existing database (with tracking) — runs only new migrations
+#   1. Fresh database â€” runs all migrations from scratch
+#   2. Existing database (pre-tracking) â€” seeds tracking table, runs new migrations
+#   3. Existing database (with tracking) â€” runs only new migrations
 #
 # Uses `schema_migrations` table to track applied migrations.
 # Safe to execute repeatedly (idempotent).
@@ -47,21 +47,21 @@ echo "  Migration tracking entries: ${tracked}"
 echo "  Users table exists: ${has_users}"
 
 if [ "${tracked}" = "0" ] && [ "${has_users}" = "1" ]; then
-    echo "=== Horizon DB: Existing database detected — seeding migration history ==="
+    echo "=== Horizon DB: Existing database detected â€” seeding migration history ==="
 
     # Mark all existing migrations as applied by checking what already exists
-    # 001: schema — users table exists, so this was applied
+    # 001: schema â€” users table exists, so this was applied
     run_sql -c "INSERT INTO schema_migrations (filename) VALUES ('001_create_schema.sql') ON CONFLICT DO NOTHING"
     echo "  [SEED] 001_create_schema.sql"
 
-    # 002: seed data — credit_settings has rows if seed was applied
+    # 002: seed data â€” credit_settings has rows if seed was applied
     has_seeds=$(query_val "SELECT COUNT(*) FROM credit_settings")
     if [ "${has_seeds}" != "0" ]; then
         run_sql -c "INSERT INTO schema_migrations (filename) VALUES ('002_seed_data.sql') ON CONFLICT DO NOTHING"
         echo "  [SEED] 002_seed_data.sql"
     fi
 
-    # 003: drop content_type — check if column still exists
+    # 003: drop content_type â€” check if column still exists
     has_content_type=$(query_val "SELECT COUNT(*) FROM information_schema.columns WHERE table_name='articles' AND column_name='content_type'")
     if [ "${has_content_type}" = "0" ]; then
         run_sql -c "INSERT INTO schema_migrations (filename) VALUES ('003_drop_content_type.sql') ON CONFLICT DO NOTHING"
@@ -94,7 +94,7 @@ for migration_file in "$MIGRATIONS_DIR"/*.sql; do
         echo "  [DONE] ${filename}"
         applied=$((applied + 1))
     else
-        echo "  [FAIL] ${filename} — check error above"
+        echo "  [FAIL] ${filename} â€” check error above"
         # Don't exit, continue with other migrations
     fi
 done
