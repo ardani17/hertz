@@ -39,6 +39,7 @@ export interface MarketContext {
 
 export interface SignalViewerState {
   hasSignaled: boolean;
+  hasPulsed: boolean;
   hasBookmarked: boolean;
   hasReposted: boolean;
   canEdit: boolean;
@@ -48,6 +49,7 @@ export interface SignalViewerState {
 export interface SignalPostCounts {
   comments: number;
   signals: number;
+  pulses: number;
   reposts: number;
   views: number;
 }
@@ -60,6 +62,7 @@ export interface SignalPostContent {
 
 export interface SignalPost {
   id: string;
+  shortId: string;
   articleId: string | null;
   type: SignalPostType;
   source: SignalPostSource;
@@ -120,3 +123,18 @@ export interface CursorFeedResult {
   items: SignalPost[];
   nextCursor: string | null;
 }
+
+export type HertzPostType = SignalPostType;
+export type HertzPostSource = SignalPostSource;
+export type HertzPostCategory = SignalPostCategory;
+export type HertzPostStatus = SignalPostStatus;
+export type HertzAuthor = SignalAuthor;
+export type HertzMedia = SignalMedia;
+export type HertzViewerState = SignalViewerState;
+export type HertzPostCounts = SignalPostCounts;
+export type HertzPostContent = SignalPostContent;
+export type HertzPost = SignalPost;
+export type HertzPostDetail = SignalPostDetail;
+export type HertzComment = SignalComment;
+export type HertzPostInput = SignalPostInput;
+export type HertzFeedResult = CursorFeedResult;

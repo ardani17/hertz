@@ -6,6 +6,15 @@ import { useToolsLanguage } from './useToolsLanguage';
 
 type Inputs = {
   balance: number;
+  riskPercent: number | '';
+  winRate: number | '';
+  rewardRisk: number | '';
+  trades: number | '';
+  simulations: number | '';
+};
+
+type NormalizedInputs = {
+  balance: number;
   riskPercent: number;
   winRate: number;
   rewardRisk: number;
@@ -36,9 +45,14 @@ type SimulationResult = {
   tradeDetails: TradeDetail[];
 };
 
+type CurrencyCode = 'IDR' | 'USD_USC';
+
+type LanguageCode = 'id' | 'en';
+
 const toolCopy = {
   id: {
     fields: {
+      currency: 'Mata uang akun',
       balance: 'Balance awal',
       riskPercent: 'Risk per trade (%)',
       winRate: 'Win rate (%)',
@@ -46,9 +60,13 @@ const toolCopy = {
       trades: 'Jumlah trade',
       simulations: 'Simulasi',
     },
+    currencyOptions: {
+      IDR: 'IDR - Rupiah',
+      USD_USC: 'USD / USC - Dollar atau akun cent',
+    },
     run: 'Jalankan simulasi',
     validation:
-      'Beberapa nilai disesuaikan ke batas aman: risk 0.1-25%, win rate 0-100%, trade 1-1000, simulasi 100-5000.',
+      'Beberapa nilai disesuaikan ke batas aman sesuai mata uang akun: balance, risk 0.1-25%, win rate 0-100%, trade 1-1000, simulasi 100-5000.',
     metrics: {
       expected: 'Expected balance',
       median: 'Median',
@@ -70,13 +88,14 @@ const toolCopy = {
       risk: 'Risk',
       pnl: 'P/L',
       balanceAfter: 'Balance akhir',
-      drawdown: 'Drawdown',
+      drawdown: 'Drawdown saat ini',
       win: 'Menang',
       loss: 'Rugi',
     },
   },
   en: {
     fields: {
+      currency: 'Account currency',
       balance: 'Starting balance',
       riskPercent: 'Risk per trade (%)',
       winRate: 'Win rate (%)',
@@ -84,9 +103,13 @@ const toolCopy = {
       trades: 'Trade count',
       simulations: 'Simulations',
     },
+    currencyOptions: {
+      IDR: 'IDR - Rupiah',
+      USD_USC: 'USD / USC - Dollar or cent account',
+    },
     run: 'Run simulation',
     validation:
-      'Some values were adjusted to safe limits: risk 0.1-25%, win rate 0-100%, trades 1-1000, simulations 100-5000.',
+      'Some values were adjusted to safe limits for the selected account currency: balance, risk 0.1-25%, win rate 0-100%, trades 1-1000, simulations 100-5000.',
     metrics: {
       expected: 'Expected balance',
       median: 'Median',
@@ -108,10 +131,36 @@ const toolCopy = {
       risk: 'Risk',
       pnl: 'P/L',
       balanceAfter: 'Ending balance',
-      drawdown: 'Drawdown',
+      drawdown: 'Current drawdown',
       win: 'Win',
       loss: 'Loss',
     },
+  },
+};
+
+const currencyConfigs: Record<
+  CurrencyCode,
+  {
+    defaultBalance: number;
+    minBalance: number;
+    maxBalance: number;
+    inputFractionDigits: number;
+    outputFractionDigits: number;
+  }
+> = {
+  IDR: {
+    defaultBalance: 10000000,
+    minBalance: 100000,
+    maxBalance: 100000000000,
+    inputFractionDigits: 0,
+    outputFractionDigits: 0,
+  },
+  USD_USC: {
+    defaultBalance: 1000,
+    minBalance: 1,
+    maxBalance: 100000000,
+    inputFractionDigits: 2,
+    outputFractionDigits: 2,
   },
 };
 
@@ -120,23 +169,95 @@ function percentile(values: number[], pct: number) {
   return values[index] ?? 0;
 }
 
-function parseFormattedNumber(value: string) {
-  const normalized = value.replace(/\./g, '').replace(',', '.').replace(/[^\d.]/g, '');
-  return Number(normalized) || 0;
+function getLocale(language: LanguageCode) {
+  return language === 'id' ? 'id-ID' : 'en-US';
 }
 
-function formatNumberInput(value: number) {
+function isCurrencyCode(value: string): value is CurrencyCode {
+  return value === 'IDR' || value === 'USD_USC';
+}
+
+function parseIdrInput(value: string) {
+  const normalized = value.replace(/\./g, '').replace(',', '.').replace(/[^\d.]/g, '');
+  return Math.round(Number(normalized) || 0);
+}
+
+function parseSingleSeparatorDecimal(cleaned: string, separator: '.' | ',') {
+  const parts = cleaned.split(separator);
+
+  if (parts.length === 1) {
+    return Number(cleaned.replace(/[^\d]/g, '')) || 0;
+  }
+
+  const lastPart = parts[parts.length - 1] ?? '';
+  const thousandsLike =
+    lastPart.length === 3 &&
+    parts.slice(0, -1).every((part, index) => (index === 0 ? part.length >= 1 && part.length <= 3 : part.length === 3));
+
+  if (thousandsLike) {
+    return Number(parts.join('').replace(/[^\d]/g, '')) || 0;
+  }
+
+  const integer = parts.slice(0, -1).join('').replace(/[^\d]/g, '');
+  const decimal = lastPart.replace(/[^\d]/g, '');
+  return Number(`${integer || '0'}.${decimal}`) || 0;
+}
+
+function parseDecimalCurrencyInput(value: string) {
+  const cleaned = value.replace(/[^\d.,]/g, '');
+
+  if (!cleaned) return 0;
+
+  const lastComma = cleaned.lastIndexOf(',');
+  const lastDot = cleaned.lastIndexOf('.');
+
+  if (lastComma >= 0 && lastDot >= 0) {
+    const decimalSeparator = lastComma > lastDot ? ',' : '.';
+    const thousandsSeparator = decimalSeparator === ',' ? '.' : ',';
+    const decimalIndex = cleaned.lastIndexOf(decimalSeparator);
+    const integer = cleaned.slice(0, decimalIndex).split(thousandsSeparator).join('').replace(/[^\d]/g, '');
+    const decimal = cleaned.slice(decimalIndex + 1).replace(/[^\d]/g, '');
+
+    return Number(`${integer || '0'}.${decimal}`) || 0;
+  }
+
+  if (lastComma >= 0) return parseSingleSeparatorDecimal(cleaned, ',');
+  if (lastDot >= 0) return parseSingleSeparatorDecimal(cleaned, '.');
+
+  return Number(cleaned.replace(/[^\d]/g, '')) || 0;
+}
+
+function parseBalanceInput(value: string, currency: CurrencyCode) {
+  if (currency === 'IDR') return parseIdrInput(value);
+  return parseDecimalCurrencyInput(value);
+}
+
+function formatNumberInput(value: number, currency: CurrencyCode, language: LanguageCode) {
   if (!value) return '';
-  return new Intl.NumberFormat('id-ID', {
-    maximumFractionDigits: 0,
+  const config = currencyConfigs[currency];
+
+  return new Intl.NumberFormat(getLocale(language), {
+    maximumFractionDigits: config.inputFractionDigits,
+    minimumFractionDigits: 0,
   }).format(value);
 }
 
-function formatCurrency(value: number) {
-  return new Intl.NumberFormat('id-ID', {
+function formatCurrency(value: number, currency: CurrencyCode, language: LanguageCode) {
+  const config = currencyConfigs[currency];
+  const locale = getLocale(language);
+
+  if (currency === 'USD_USC') {
+    return `USD/USC ${new Intl.NumberFormat(locale, {
+      minimumFractionDigits: config.outputFractionDigits,
+      maximumFractionDigits: config.outputFractionDigits,
+    }).format(value)}`;
+  }
+
+  return new Intl.NumberFormat(locale, {
     style: 'currency',
-    currency: 'IDR',
-    maximumFractionDigits: 0,
+    currency,
+    minimumFractionDigits: config.outputFractionDigits,
+    maximumFractionDigits: config.outputFractionDigits,
   }).format(value);
 }
 
@@ -149,19 +270,31 @@ function createSeededRandom(seed: number) {
   };
 }
 
-function normalizeInputs(inputs: Inputs) {
+function readNumber(value: number | '') {
+  return value === '' ? 0 : value;
+}
+
+function parseEditableNumber(value: string) {
+  if (value === '') return '';
+  const numeric = Number(value);
+  return Number.isFinite(numeric) ? numeric : '';
+}
+
+function normalizeInputs(inputs: Inputs, currency: CurrencyCode): NormalizedInputs {
+  const config = currencyConfigs[currency];
+
   return {
-    balance: Math.min(Math.max(inputs.balance, 100000), 100000000000),
-    riskPercent: Math.min(Math.max(inputs.riskPercent, 0.1), 25),
-    winRate: Math.min(Math.max(inputs.winRate, 0), 100),
-    rewardRisk: Math.min(Math.max(inputs.rewardRisk, 0.1), 20),
-    trades: Math.min(Math.max(Math.round(inputs.trades), 1), 1000),
-    simulations: Math.min(Math.max(Math.round(inputs.simulations), 100), 5000),
+    balance: Math.min(Math.max(inputs.balance, config.minBalance), config.maxBalance),
+    riskPercent: Math.min(Math.max(readNumber(inputs.riskPercent), 0.1), 25),
+    winRate: Math.min(Math.max(readNumber(inputs.winRate), 0), 100),
+    rewardRisk: Math.min(Math.max(readNumber(inputs.rewardRisk), 0.1), 20),
+    trades: Math.min(Math.max(Math.round(readNumber(inputs.trades)), 1), 1000),
+    simulations: Math.min(Math.max(Math.round(readNumber(inputs.simulations)), 100), 5000),
   };
 }
 
-function runSimulation(inputs: Inputs, seed = 1729): SimulationResult {
-  const normalized = normalizeInputs(inputs);
+function runSimulation(inputs: Inputs, seed = 1729, currency: CurrencyCode = 'IDR'): SimulationResult {
+  const normalized = normalizeInputs(inputs, currency);
   const outcomes: number[] = [];
   const drawdowns: number[] = [];
   const tradeDetails: TradeDetail[] = [];
@@ -179,7 +312,8 @@ function runSimulation(inputs: Inputs, seed = 1729): SimulationResult {
       const pnl = win ? risk * normalized.rewardRisk : -risk;
       balance += pnl;
       peak = Math.max(peak, balance);
-      maxDrawdown = Math.max(maxDrawdown, ((peak - balance) / peak) * 100);
+      const currentDrawdown = ((peak - balance) / peak) * 100;
+      maxDrawdown = Math.max(maxDrawdown, currentDrawdown);
 
       if (sim === 0) {
         tradeDetails.push({
@@ -189,7 +323,7 @@ function runSimulation(inputs: Inputs, seed = 1729): SimulationResult {
           riskAmount: risk,
           pnl,
           balanceAfter: balance,
-          drawdown: maxDrawdown,
+          drawdown: currentDrawdown,
         });
       }
     }
@@ -220,48 +354,74 @@ function runSimulation(inputs: Inputs, seed = 1729): SimulationResult {
 export function ProfitabilityTool() {
   const { language } = useToolsLanguage();
   const copy = toolCopy[language];
+  const numberLocale = getLocale(language);
+  const [currency, setCurrency] = useState<CurrencyCode>('IDR');
   const [inputs, setInputs] = useState<Inputs>({
-    balance: 10000000,
+    balance: currencyConfigs.IDR.defaultBalance,
     riskPercent: 2,
     winRate: 35,
     rewardRisk: 2,
     trades: 100,
     simulations: 1000,
   });
-  const [result, setResult] = useState<SimulationResult>(() => runSimulation(inputs));
+  const [result, setResult] = useState<SimulationResult>(() => runSimulation(inputs, 1729, currency));
   const [validationNote, setValidationNote] = useState<string | null>(null);
 
-  const update = (field: keyof Inputs, value: string) => {
+  const update = (field: Exclude<keyof Inputs, 'balance'>, value: string) => {
     setInputs((prev) => ({
       ...prev,
-      [field]: Number(value) || 0,
+      [field]: parseEditableNumber(value),
     }));
   };
 
   const updateBalance = (value: string) => {
     setInputs((prev) => ({
       ...prev,
-      balance: parseFormattedNumber(value),
+      balance: parseBalanceInput(value, currency),
     }));
   };
 
+  const handleCurrencyChange = (value: string) => {
+    const nextCurrency = isCurrencyCode(value) ? value : 'IDR';
+    const nextInputs = {
+      ...inputs,
+      balance: currencyConfigs[nextCurrency].defaultBalance,
+    };
+
+    setCurrency(nextCurrency);
+    setInputs(nextInputs);
+    setValidationNote(null);
+    setResult(runSimulation(nextInputs, 1729, nextCurrency));
+  };
+
   const handleRun = () => {
-    const normalized = normalizeInputs(inputs);
-    const changed = Object.entries(normalized).some(([key, value]) => inputs[key as keyof Inputs] !== value);
+    const normalized = normalizeInputs(inputs, currency);
+    const changed = Object.entries(normalized).some(([key, value]) => {
+      const current = inputs[key as keyof Inputs];
+      return (current === '' ? 0 : current) !== value;
+    });
+
     setInputs(normalized);
     setValidationNote(changed ? copy.validation : null);
-    setResult(runSimulation(normalized, Date.now()));
+    setResult(runSimulation(normalized, Date.now(), currency));
   };
 
   return (
     <section className={styles.panel}>
       <div className={styles.formGridThree}>
         <div className={styles.field}>
+          <label htmlFor="currency">{copy.fields.currency}</label>
+          <select id="currency" value={currency} onChange={(e) => handleCurrencyChange(e.target.value)}>
+            <option value="IDR">{copy.currencyOptions.IDR}</option>
+            <option value="USD_USC">{copy.currencyOptions.USD_USC}</option>
+          </select>
+        </div>
+        <div className={styles.field}>
           <label htmlFor="balance">{copy.fields.balance}</label>
           <input
             id="balance"
-            inputMode="numeric"
-            value={formatNumberInput(inputs.balance)}
+            inputMode={currency === 'IDR' ? 'numeric' : 'decimal'}
+            value={formatNumberInput(inputs.balance, currency, language)}
             onChange={(e) => updateBalance(e.target.value)}
           />
         </div>
@@ -298,19 +458,19 @@ export function ProfitabilityTool() {
       <div className={styles.resultGrid}>
         <div className={`${styles.metric} ${styles.metricPrimary}`}>
           <span>{copy.metrics.expected}</span>
-          <strong>{formatCurrency(result.average)}</strong>
+          <strong>{formatCurrency(result.average, currency, language)}</strong>
         </div>
         <div className={styles.metric}>
           <span>{copy.metrics.median}</span>
-          <strong>{formatCurrency(result.median)}</strong>
+          <strong>{formatCurrency(result.median, currency, language)}</strong>
         </div>
         <div className={styles.metric}>
           <span>{copy.metrics.best}</span>
-          <strong>{formatCurrency(result.best)}</strong>
+          <strong>{formatCurrency(result.best, currency, language)}</strong>
         </div>
         <div className={styles.metric}>
           <span>{copy.metrics.worst}</span>
-          <strong>{formatCurrency(result.worst)}</strong>
+          <strong>{formatCurrency(result.worst, currency, language)}</strong>
         </div>
         <div className={styles.metric}>
           <span>{copy.metrics.profitable}</span>
@@ -327,7 +487,7 @@ export function ProfitabilityTool() {
       </div>
 
       <p className={styles.note}>
-        {copy.note(result.simulations.toLocaleString('id-ID'), result.trades.toLocaleString('id-ID'))}
+        {copy.note(result.simulations.toLocaleString(numberLocale), result.trades.toLocaleString(numberLocale))}
       </p>
 
       <section className={styles.detailSection}>
@@ -337,7 +497,7 @@ export function ProfitabilityTool() {
             <p>{copy.detailDescription}</p>
           </div>
           <span className={styles.badgeMuted}>
-            {copy.detailCount(result.tradeDetails.length.toLocaleString('id-ID'))}
+            {copy.detailCount(result.tradeDetails.length.toLocaleString(numberLocale))}
           </span>
         </div>
 
@@ -363,12 +523,12 @@ export function ProfitabilityTool() {
                       {trade.outcome === 'Win' ? copy.table.win : copy.table.loss}
                     </span>
                   </td>
-                  <td>{formatCurrency(trade.balanceBefore)}</td>
-                  <td>{formatCurrency(trade.riskAmount)}</td>
+                  <td>{formatCurrency(trade.balanceBefore, currency, language)}</td>
+                  <td>{formatCurrency(trade.riskAmount, currency, language)}</td>
                   <td className={trade.pnl >= 0 ? styles.positiveValue : styles.negativeValue}>
-                    {formatCurrency(trade.pnl)}
+                    {formatCurrency(trade.pnl, currency, language)}
                   </td>
-                  <td>{formatCurrency(trade.balanceAfter)}</td>
+                  <td>{formatCurrency(trade.balanceAfter, currency, language)}</td>
                   <td>{trade.drawdown.toFixed(1)}%</td>
                 </tr>
               ))}

@@ -1,6 +1,6 @@
 import Link from 'next/link';
 import type { CommunityNote } from '@shared/types';
-import { UsersIcon } from './SignalIcons';
+import { SignalIcon, UsersIcon } from './SignalIcons';
 import styles from './SignalPost.module.css';
 
 export function CommunityNoteCard({ note, postId }: { note: CommunityNote | null; postId: string }) {
@@ -8,11 +8,14 @@ export function CommunityNoteCard({ note, postId }: { note: CommunityNote | null
 
   return (
     <div className={styles.note}>
+      <div className={styles.noteSpineNode} aria-hidden="true">
+        <SignalIcon />
+      </div>
       <strong><UsersIcon /> Catatan komunitas</strong>
       <p>{note.content}</p>
       <div className={styles.noteFooter}>
-        <span>{note.sources.length} source</span>
-        <Link href={`/post/${postId}`}>Beri nilai</Link>
+        <span>{note.sources.map((source) => source.url.replace(/^https?:\/\//, '')).join('  ·  ')}</span>
+        <Link href={`/hertz/post/${postId}`}>Beri nilai</Link>
       </div>
     </div>
   );

@@ -1,37 +1,63 @@
+'use client';
+
 import Image from 'next/image';
+import { ChartCandlestick, FileText, Hexagon, Home, MessageCircle, TrendingUp } from 'lucide-react';
 import type { MemberSessionUser } from '@shared/types';
-import { BookmarkIcon, ImageIcon, InsightIcon, PulseIcon, UsersIcon } from './SignalIcons';
 import styles from './SignalRails.module.css';
 
-export function SignalLeftRail({ currentUser }: { currentUser: MemberSessionUser | null }) {
+type ActiveNav = 'home' | 'outlook' | 'blog' | 'tools' | 'messages';
+
+const navItems = [
+  { key: 'home', href: '/hertz', label: 'Home', Icon: Home },
+  { key: 'outlook', href: '/outlook', label: 'Outlook', Icon: TrendingUp },
+  { key: 'blog', href: '/blog', label: 'Blog', Icon: FileText },
+  { key: 'tools', href: '/tools', label: 'Tools', Icon: ChartCandlestick },
+  { key: 'messages', href: '/hertz/messages', label: 'Direct Message', Icon: MessageCircle },
+] as const;
+
+function initials(name: string) {
+  if (name === 'Ardani Trader') return 'AR';
+  return name.split(/\s+/).slice(0, 2).map((part) => part[0]).join('').toUpperCase();
+}
+
+export function SignalLeftRail({
+  currentUser,
+  active = 'home',
+}: {
+  currentUser: MemberSessionUser | null;
+  active?: ActiveNav;
+}) {
   return (
     <aside className={styles.left} aria-label="Horizon navigation">
       <div className={styles.brand}>
         <Image
           className={styles.brandLogo}
-          src="/images/logo/Logo-Horizon-White-05-05.png"
-          alt="Horizon FX"
-          width={190}
-          height={64}
+          src="/images/logo/Logo-Horizon-Atom-Online-White_8.png"
+          alt="Horizon"
+          width={42}
+          height={42}
           priority
         />
+        <strong>HERTZ</strong>
       </div>
       <nav className={styles.nav}>
-        <a href="/" className={styles.activeNav}><PulseIcon />Signal Ledger</a>
-        <a href="/outlook"><InsightIcon />Outlook</a>
-        <a href="/blog"><BookmarkIcon />Blog</a>
-        <a href="/tools"><UsersIcon />Tools</a>
-        <a href="/gallery"><ImageIcon />Gallery</a>
+        {navItems.map(({ key, href, label, Icon }) => (
+          <a key={key} href={href} className={active === key ? styles.activeNav : undefined}>
+            <Icon />
+            {label}
+          </a>
+        ))}
       </nav>
       {currentUser?.role === 'admin' ? (
-        <a href="/admin/signal-ledger" className={styles.syncCard}>
+        <a href="/admin/hertz" className={styles.syncCard}>
           <span className={styles.syncDot} />
-          <strong>Telegram sync active</strong>
+          <strong>HERTZ sync active</strong>
           <span>Draft review queue</span>
         </a>
       ) : null}
+      {currentUser?.role === 'admin' ? <a href="/admin/hertz" className={styles.adminNav}><Hexagon />Admin</a> : null}
       <div className={styles.profile}>
-        <div className={styles.avatar}>{(currentUser?.displayName ?? 'G').slice(0, 1).toUpperCase()}</div>
+        <div className={styles.avatar}>{currentUser ? initials(currentUser.displayName) : 'G'}</div>
         <div>
           <strong>{currentUser?.displayName ?? 'Guest'}</strong>
           <span>{currentUser ? (currentUser.badge === 'admin' ? 'Admin' : 'Verified Member') : 'Read-only'}</span>

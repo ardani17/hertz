@@ -1,20 +1,20 @@
 import { execute, queryOne, type DbClient } from '../db';
 
 export class PostReactionRepository {
-  async hasSignal(postId: string, userId: string, client?: DbClient): Promise<boolean> {
+  async hasPulse(postId: string, userId: string, client?: DbClient): Promise<boolean> {
     const row = await queryOne<{ id: string }>(
       `SELECT id FROM post_reactions
-       WHERE post_id = $1 AND user_id = $2 AND reaction_type = 'signal' AND deleted_at IS NULL`,
+       WHERE post_id = $1 AND user_id = $2 AND reaction_type = 'pulse' AND deleted_at IS NULL`,
       [postId, userId],
       client,
     );
     return Boolean(row);
   }
 
-  async toggleSignal(postId: string, userId: string, client?: DbClient): Promise<{ active: boolean }> {
+  async togglePulse(postId: string, userId: string, client?: DbClient): Promise<{ active: boolean }> {
     const existing = await queryOne<{ id: string }>(
       `SELECT id FROM post_reactions
-       WHERE post_id = $1 AND user_id = $2 AND reaction_type = 'signal' AND deleted_at IS NULL`,
+       WHERE post_id = $1 AND user_id = $2 AND reaction_type = 'pulse' AND deleted_at IS NULL`,
       [postId, userId],
       client,
     );
@@ -30,11 +30,19 @@ export class PostReactionRepository {
 
     await execute(
       `INSERT INTO post_reactions (post_id, user_id, reaction_type)
-       VALUES ($1, $2, 'signal')
+       VALUES ($1, $2, 'pulse')
        ON CONFLICT DO NOTHING`,
       [postId, userId],
       client,
     );
     return { active: true };
+  }
+
+  async hasSignal(postId: string, userId: string, client?: DbClient): Promise<boolean> {
+    return this.hasPulse(postId, userId, client);
+  }
+
+  async toggleSignal(postId: string, userId: string, client?: DbClient): Promise<{ active: boolean }> {
+    return this.togglePulse(postId, userId, client);
   }
 }

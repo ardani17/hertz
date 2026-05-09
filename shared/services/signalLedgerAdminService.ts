@@ -6,7 +6,7 @@ import { ActivityLogService } from './activityLog';
 import { FeedRepository } from '../repositories/feedRepository';
 import type { MemberSessionUser } from '../types/membership';
 
-export class SignalLedgerAdminService {
+export class HertzAdminService {
   private readonly feed = new FeedService();
   private readonly feedRepo = new FeedRepository();
   private readonly comments = new PostCommentService();
@@ -96,17 +96,17 @@ export class SignalLedgerAdminService {
 
   async reject(postId: string, user: MemberSessionUser | null): Promise<void> {
     this.assertAdmin(user);
-    await this.moderatePost(postId, user, 'rejected', 'signal_ledger.post.rejected', 'hidden');
+    await this.moderatePost(postId, user, 'rejected', 'hertz.post.rejected', 'hidden');
   }
 
   async hidePost(postId: string, user: MemberSessionUser | null): Promise<void> {
     this.assertAdmin(user);
-    await this.moderatePost(postId, user, 'hidden', 'signal_ledger.post.hidden', 'hidden');
+    await this.moderatePost(postId, user, 'hidden', 'hertz.post.hidden', 'hidden');
   }
 
   async restorePost(postId: string, user: MemberSessionUser | null): Promise<void> {
     this.assertAdmin(user);
-    await this.moderatePost(postId, user, 'published', 'signal_ledger.post.restored', 'published');
+    await this.moderatePost(postId, user, 'published', 'hertz.post.restored', 'published');
   }
 
   async hideComment(commentId: string, user: MemberSessionUser | null): Promise<void> {
@@ -146,3 +146,5 @@ export class SignalLedgerAdminService {
     });
   }
 }
+
+export { HertzAdminService as SignalLedgerAdminService };

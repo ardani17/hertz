@@ -8,24 +8,26 @@ function read(path: string): string {
   return readFileSync(join(root, path), 'utf8');
 }
 
-describe('Signal Ledger implementation wiring', () => {
+describe('HERTZ implementation wiring', () => {
   it('ships the additive database objects required by the spec', () => {
-    const migration = read('db/migrations/008_create_signal_ledger.sql');
+    const migration = read('db/migrations/009_create_hertz_domain.sql');
 
     for (const table of [
-      'member_sessions',
-      'telegram_memberships',
-      'feed_posts',
-      'post_market_context',
-      'post_reactions',
-      'post_bookmarks',
-      'post_reposts',
-      'post_views',
-      'post_comments',
-      'community_notes',
-      'community_note_sources',
-      'community_note_ratings',
-      'post_reports',
+      'hertz_member_sessions',
+      'hertz_membership_checks',
+      'hertz_posts',
+      'hertz_post_market_context',
+      'hertz_reactions',
+      'hertz_bookmarks',
+      'hertz_reposts',
+      'hertz_views',
+      'hertz_comments',
+      'hertz_community_notes',
+      'hertz_community_note_sources',
+      'hertz_community_note_ratings',
+      'hertz_reports',
+      'hertz_conversations',
+      'hertz_messages',
     ]) {
       expect(migration).toContain(`CREATE TABLE IF NOT EXISTS ${table}`);
     }
@@ -35,14 +37,14 @@ describe('Signal Ledger implementation wiring', () => {
     for (const path of [
       'frontend/src/app/api/auth/telegram/route.ts',
       'frontend/src/app/api/auth/me/route.ts',
-      'frontend/src/app/api/feed/route.ts',
-      'frontend/src/app/api/feed/[postId]/route.ts',
-      'frontend/src/app/api/feed/[postId]/signal/route.ts',
-      'frontend/src/app/api/feed/[postId]/bookmark/route.ts',
-      'frontend/src/app/api/feed/[postId]/repost/route.ts',
-      'frontend/src/app/api/feed/[postId]/comments/route.ts',
-      'frontend/src/app/api/feed/[postId]/community-notes/route.ts',
-      'frontend/src/app/api/feed/community-notes/[noteId]/rating/route.ts',
+      'frontend/src/app/api/hertz/posts/route.ts',
+      'frontend/src/app/api/hertz/posts/[shortId]/route.ts',
+      'frontend/src/app/api/hertz/posts/[shortId]/pulse/route.ts',
+      'frontend/src/app/api/hertz/posts/[shortId]/bookmark/route.ts',
+      'frontend/src/app/api/hertz/posts/[shortId]/repost/route.ts',
+      'frontend/src/app/api/hertz/posts/[shortId]/comments/route.ts',
+      'frontend/src/app/api/hertz/posts/[shortId]/community-notes/route.ts',
+      'frontend/src/app/api/hertz/posts/community-notes/[noteId]/rating/route.ts',
     ]) {
       expect(existsSync(join(root, path))).toBe(true);
     }
@@ -50,11 +52,11 @@ describe('Signal Ledger implementation wiring', () => {
 
   it('keeps guest mutations behind member auth checks', () => {
     const routes = [
-      read('frontend/src/app/api/feed/[postId]/signal/route.ts'),
-      read('frontend/src/app/api/feed/[postId]/bookmark/route.ts'),
-      read('frontend/src/app/api/feed/[postId]/repost/route.ts'),
-      read('frontend/src/app/api/feed/[postId]/comments/route.ts'),
-      read('frontend/src/app/api/feed/[postId]/community-notes/route.ts'),
+      read('frontend/src/app/api/hertz/posts/[shortId]/pulse/route.ts'),
+      read('frontend/src/app/api/hertz/posts/[shortId]/bookmark/route.ts'),
+      read('frontend/src/app/api/hertz/posts/[shortId]/repost/route.ts'),
+      read('frontend/src/app/api/hertz/posts/[shortId]/comments/route.ts'),
+      read('frontend/src/app/api/hertz/posts/[shortId]/community-notes/route.ts'),
     ];
 
     for (const route of routes) {
@@ -73,12 +75,12 @@ describe('Signal Ledger implementation wiring', () => {
     expect(bot).toContain('article_id = $2');
   });
 
-  it('keeps Blog and Outlook separate from Signal Ledger feed routes', () => {
+  it('keeps Blog and Outlook separate from HERTZ feed routes', () => {
     const home = read('frontend/src/app/page.tsx');
     const blog = existsSync(join(root, 'frontend/src/app/blog/page.tsx'));
     const outlook = existsSync(join(root, 'frontend/src/app/outlook/page.tsx'));
 
-    expect(home).toContain('SIGNAL_LEDGER_ENABLED');
+    expect(home).toContain('HERTZ');
     expect(blog).toBe(true);
     expect(outlook).toBe(true);
   });

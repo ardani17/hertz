@@ -17,7 +17,7 @@ const pageCopy = {
       {
         title: 'Balance awal',
         body:
-          'Modal awal yang menjadi titik mulai simulasi. Semua risk per trade dihitung dari balance berjalan, bukan angka tetap. Contoh: jika balance awal 10.000.000 dan risk 2%, maka risk trade pertama adalah 200.000. Setelah balance naik atau turun, nominal risk berikutnya ikut berubah.',
+          'Modal awal yang menjadi titik mulai simulasi, mengikuti mata uang akun yang dipilih: IDR atau USD/USC. Semua risk per trade dihitung dari balance berjalan, bukan angka tetap. Contoh: jika balance awal 10.000.000 dan risk 2%, maka risk trade pertama adalah 200.000. Setelah balance naik atau turun, nominal risk berikutnya ikut berubah.',
       },
       {
         title: 'Risk per trade (%)',
@@ -44,6 +44,11 @@ const pageCopy = {
         body:
           'Jumlah skenario acak yang dijalankan. Semakin besar angka ini, semakin stabil gambaran statistiknya, tetapi proses bisa lebih berat. Metrik seperti Expected balance, Median, Best 10%, Worst 10%, dan Profitable dihitung dari kumpulan simulasi ini.',
       },
+      {
+        title: 'Drawdown',
+        body:
+          'Penurunan balance dari titik tertinggi sebelumnya. Contoh: jika balance sempat naik ke 1.000 lalu turun ke 900, drawdown-nya 10%. Avg drawdown menunjukkan rata-rata penurunan terdalam dari simulasi, sehingga membantu membaca tekanan risiko modal, bukan sekadar hasil akhir profit atau rugi.',
+      },
     ],
   },
   en: {
@@ -57,7 +62,7 @@ const pageCopy = {
       {
         title: 'Starting balance',
         body:
-          'The initial capital used as the starting point. Risk per trade is calculated from the running balance, not a fixed number. For example, with a starting balance of 10,000,000 and 2% risk, the first trade risks 200,000. As balance changes, the next risk amount changes too.',
+          'The initial capital used as the starting point, following the selected account currency: IDR or USD/USC. Risk per trade is calculated from the running balance, not a fixed number. For example, with a starting balance of 10,000,000 and 2% risk, the first trade risks 200,000. As balance changes, the next risk amount changes too.',
       },
       {
         title: 'Risk per trade (%)',
@@ -83,6 +88,11 @@ const pageCopy = {
         title: 'Simulations',
         body:
           'The number of random scenarios to run. Higher values make the statistics more stable, but can be heavier. Metrics such as Expected balance, Median, Best 10%, Worst 10%, and Profitable are calculated from these simulations.',
+      },
+      {
+        title: 'Drawdown',
+        body:
+          'The decline from the previous highest balance. For example, if balance reaches 1,000 and then falls to 900, the drawdown is 10%. Avg drawdown shows the average deepest decline across simulations, helping you read account pressure beyond the final profit or loss.',
       },
     ],
   },

@@ -85,7 +85,7 @@ export interface PublishHandlerDeps {
  */
 export class PublishHandler implements CommandHandler {
   readonly name = '/publish';
-  readonly description = 'Publikasikan pesan yang dibalas ke platform (admin only) — balas pesan dengan /publish';
+  readonly description = 'Publikasikan pesan yang dibalas ke HERTZ (admin only)';
   readonly permission = 'admin' as const;
   readonly type = 'command' as const;
 
@@ -109,13 +109,13 @@ export class PublishHandler implements CommandHandler {
 
     // Requirement 2.2: No article found
     if (!article) {
-      await ctx.reply('Pesan ini bukan artikel draft');
+      await ctx.reply('Pesan ini bukan draft HERTZ');
       return;
     }
 
     // Requirement 2.3: Must be a draft
     if (article.status !== 'draft') {
-      await ctx.reply('Artikel sudah dipublikasikan');
+      await ctx.reply('Post HERTZ sudah dipublikasikan');
       return;
     }
 
@@ -148,7 +148,7 @@ export class PublishHandler implements CommandHandler {
         }
       });
     } catch (error) {
-      await ctx.reply('Gagal mempublikasikan artikel. Silakan coba lagi.');
+      await ctx.reply('Gagal mempublikasikan post HERTZ. Silakan coba lagi.');
       throw error;
     }
 
@@ -168,7 +168,7 @@ export class PublishHandler implements CommandHandler {
 
     // Send confirmation and auto-delete after ~5 seconds (fire-and-forget)
     const chatId = ctx.message.chat.id;
-    const confirmationId = await ctx.sendMessage(chatId, 'Artikel berhasil dipublikasikan!');
+    const confirmationId = await ctx.sendMessage(chatId, 'Post HERTZ berhasil dipublikasikan.');
     setTimeout(async () => {
       await ctx.deleteMessage(chatId, confirmationId);
     }, 5000);

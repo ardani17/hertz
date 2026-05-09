@@ -6,13 +6,20 @@ export function QuotePostCard({ post }: { post: SignalPost | null }) {
   if (!post) return null;
 
   return (
-    <Link className={styles.quoteCard} href={`/post/${post.id}`}>
-      <div className={styles.quoteAuthor}>
-        <span>{post.author.name.slice(0, 1).toUpperCase()}</span>
-        <strong>{post.author.name}</strong>
-        <em>{post.market?.pair ?? (post.category === 'trading' ? 'Trading Room' : 'Horizon')}</em>
+    <Link className={styles.quoteCard} href={`/hertz/post/${post.shortId}`}>
+      {post.media[0] ? <img src={post.media[0].url} alt={post.media[0].alt ?? 'Quoted chart'} /> : null}
+      <div>
+        <div className={styles.quoteAuthor}>
+          <strong>{post.author.name}</strong>
+          <em>{post.market?.pair ?? (post.category === 'trading' ? 'Trading Room' : 'Horizon')}</em>
+        </div>
+        <p>{post.content.text}</p>
+        {post.market ? (
+          <small>
+            Entry: {post.market.entryZone ?? post.market.entryPrice ?? '-'} · TP: {post.market.takeProfit1 ?? post.market.takeProfit ?? '-'} · SL: {post.market.stopLoss ?? '-'}
+          </small>
+        ) : null}
       </div>
-      <p>{post.content.text}</p>
     </Link>
   );
 }

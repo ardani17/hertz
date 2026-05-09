@@ -1,6 +1,6 @@
 -- ============================================
 -- Horizon Trader Platform
--- Migration 008: Signal Ledger feed domain
+-- Migration 008: social feed domain
 -- ============================================
 
 CREATE EXTENSION IF NOT EXISTS "pgcrypto";
@@ -166,7 +166,7 @@ CREATE INDEX IF NOT EXISTS idx_post_views_post_id_viewed ON post_views(post_id, 
 CREATE INDEX IF NOT EXISTS idx_post_views_session ON post_views(post_id, session_hash, viewed_at DESC);
 CREATE INDEX IF NOT EXISTS idx_post_views_user ON post_views(post_id, user_id, viewed_at DESC);
 
--- Member-only comments for Signal Ledger.
+-- Member-only comments for the social feed.
 CREATE TABLE IF NOT EXISTS post_comments (
   id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
   post_id UUID NOT NULL REFERENCES feed_posts(id) ON DELETE CASCADE,

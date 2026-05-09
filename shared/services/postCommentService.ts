@@ -1,6 +1,7 @@
 import { withTransaction } from '../db';
 import { ActivityLogService } from './activityLog';
 import { FeedForbiddenError, FeedNotFoundError, FeedValidationError } from './feedService';
+import { FeedRepository } from '../repositories/feedRepository';
 import { PostCommentRepository } from '../repositories/postCommentRepository';
 import type { MemberSessionUser } from '../types/membership';
 
@@ -15,20 +16,23 @@ function cleanComment(content: unknown): string {
 
 export class PostCommentService {
   private readonly repo = new PostCommentRepository();
+  private readonly feedRepo = new FeedRepository();
   private readonly logs = new ActivityLogService();
 
   async create(postId: string, user: MemberSessionUser | null, content: unknown) {
     if (!user) throw new FeedForbiddenError('Login member diperlukan');
+    const resolvedPostId = await this.feedRepo.resolvePostId(postId);
+    if (!resolvedPostId) throw new FeedNotFoundError('Post tidak ditemukan');
     const cleaned = cleanComment(content);
     const row = await withTransaction(async (client) => {
-      const comment = await this.repo.create(postId, user.id, cleaned, client);
+      const comment = await this.repo.create(resolvedPostId, user.id, cleaned, client);
       await this.logs.log({
         actor_id: user.id,
         actor_type: user.role === 'admin' ? 'admin' : 'member',
-        action: 'signal_ledger.comment.created',
+        action: 'hertz.comment.created',
         target_type: 'comment',
         target_id: comment.id,
-        details: { post_id: postId },
+        details: { post_id: resolvedPostId },
       }, client);
       return comment;
     });
@@ -46,7 +50,7 @@ export class PostCommentService {
       await this.logs.log({
         actor_id: user.id,
         actor_type: user.role === 'admin' ? 'admin' : 'member',
-        action: 'signal_ledger.comment.edited',
+        action: 'hertz.comment.edited',
         target_type: 'comment',
         target_id: commentId,
       }, client);
@@ -63,7 +67,7 @@ export class PostCommentService {
       await this.logs.log({
         actor_id: user.id,
         actor_type: user.role === 'admin' ? 'admin' : 'member',
-        action: 'signal_ledger.comment.deleted',
+        action: 'hertz.comment.deleted',
         target_type: 'comment',
         target_id: commentId,
       }, client);
@@ -77,7 +81,7 @@ export class PostCommentService {
       await this.logs.log({
         actor_id: admin.id,
         actor_type: 'admin',
-        action: 'signal_ledger.comment.hidden',
+        action: 'hertz.comment.hidden',
         target_type: 'comment',
         target_id: commentId,
       }, client);

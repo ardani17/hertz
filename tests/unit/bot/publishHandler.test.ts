@@ -139,17 +139,17 @@ describe('PublishHandler', () => {
       expect(deps.findArticleByMessageId).toHaveBeenCalledWith(42);
     });
 
-    it('should reply "Pesan ini bukan artikel draft" when no article found', async () => {
+    it('should reply with HERTZ draft copy when no article found', async () => {
       vi.mocked(deps.findArticleByMessageId).mockResolvedValue(null);
 
       await handler.execute(ctx);
 
-      expect(ctx.reply).toHaveBeenCalledWith('Pesan ini bukan artikel draft');
+      expect(ctx.reply).toHaveBeenCalledWith('Pesan ini bukan draft HERTZ');
     });
   });
 
   describe('draft status check (Req 2.3)', () => {
-    it('should reply "Artikel sudah dipublikasikan" when article is not draft', async () => {
+    it('should reply with HERTZ copy when article is not draft', async () => {
       vi.mocked(deps.findArticleByMessageId).mockResolvedValue({
         ...mockDraftArticle,
         status: 'published',
@@ -157,7 +157,7 @@ describe('PublishHandler', () => {
 
       await handler.execute(ctx);
 
-      expect(ctx.reply).toHaveBeenCalledWith('Artikel sudah dipublikasikan');
+      expect(ctx.reply).toHaveBeenCalledWith('Post HERTZ sudah dipublikasikan');
     });
   });
 

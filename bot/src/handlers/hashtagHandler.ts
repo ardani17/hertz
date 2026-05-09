@@ -107,7 +107,7 @@ export interface HashtagHandlerDeps {
  */
 export class HashtagHandler implements CommandHandler {
   readonly name = '#hashtag';
-  readonly description = 'Publish article via hashtag (#trading, #cerita, #general)';
+  readonly description = 'Kirim post HERTZ via hashtag (#trading, #cerita, #general)';
   readonly permission = 'member' as const;
   readonly type = 'hashtag' as const;
 
@@ -237,20 +237,20 @@ export class HashtagHandler implements CommandHandler {
       if (articleStatus === 'draft') {
         // Member draft: capture reply message ID for later cleanup
         const replyMessageId = await ctx.replyWithMessageId(
-          `Artikel dikirim! Menunggu persetujuan admin. Kategori: ${category}`,
+          `Post HERTZ dikirim. Menunggu persetujuan admin. Kategori: ${category}`,
         );
         await this.deps.updateArticleReplyMessageId(article.id, replyMessageId);
       } else {
         // Admin publish: reply, then clean up messages (best-effort)
         const replyMessageId = await ctx.replyWithMessageId(
-          `Artikel dipublikasikan! Kategori: ${category}`,
+          `Post HERTZ dipublikasikan. Kategori: ${category}`,
         );
         // Best-effort message cleanup — deleteMessage never throws
         await ctx.deleteMessage(ctx.message.chat.id, ctx.message.message_id);
         await ctx.deleteMessage(ctx.message.chat.id, replyMessageId);
       }
     } catch (error) {
-      await ctx.reply('Gagal mempublikasikan artikel. Silakan coba lagi.');
+      await ctx.reply('Gagal mempublikasikan post HERTZ. Silakan coba lagi.');
       throw error;
     }
   }

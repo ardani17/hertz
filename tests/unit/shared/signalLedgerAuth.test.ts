@@ -24,7 +24,7 @@ function signedTelegramPayload(botToken: string, overrides: Partial<TelegramAuth
   return { ...payload, hash };
 }
 
-describe('Signal Ledger Telegram auth', () => {
+describe('HERTZ Telegram auth', () => {
   it('accepts valid Telegram login widget signatures', () => {
     const botToken = '123456:test-token';
     const payload = signedTelegramPayload(botToken);

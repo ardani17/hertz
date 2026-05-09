@@ -1,7 +1,7 @@
 import { createHmac, randomUUID } from 'crypto';
 import { MemberSessionRepository } from '../repositories/memberSessionRepository';
 import { MembershipRepository } from '../repositories/membershipRepository';
-import { toMemberSessionUser } from './membershipService';
+import { MembershipService, toMemberSessionUser } from './membershipService';
 import type { MemberSessionUser } from '../types/membership';
 
 const SESSION_DURATION_MS = 7 * 24 * 60 * 60 * 1000;
@@ -16,6 +16,7 @@ export function hashMemberSessionToken(token: string): string {
 export class MemberSessionService {
   private readonly sessions = new MemberSessionRepository();
   private readonly memberships = new MembershipRepository();
+  private readonly verifier = new MembershipService();
 
   async createSession(userId: string): Promise<{ token: string; expiresAt: Date }> {
     const token = randomUUID();
@@ -44,6 +45,10 @@ export class MemberSessionService {
 
     const user = await this.memberships.findUserById(session.user_id);
     if (!user || user.banned_at) return null;
+    if (user.role !== 'admin') {
+      const stillMember = await this.verifier.ensureMembershipFresh(user, false);
+      if (!stillMember) return null;
+    }
 
     await this.sessions.touch(session.id);
     return toMemberSessionUser(user);

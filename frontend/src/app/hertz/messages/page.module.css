@@ -1,0 +1,55 @@
+.main {
+  min-height: 100vh;
+  background: #000000;
+  color: #e7f4ec;
+  display: grid;
+  grid-template-columns: 250px minmax(260px, 360px) minmax(0, 1fr);
+  max-width: 1230px;
+  margin: 0 auto;
+  border-left: 1px solid rgba(52, 211, 153, 0.22);
+  border-right: 1px solid rgba(52, 211, 153, 0.22);
+}
+
+.sidebar,
+.thread {
+  border-right: 1px solid rgba(52, 211, 153, 0.24);
+  padding: 1rem;
+}
+
+.sidebar h1 {
+  margin: 0 0 1rem;
+}
+
+.list,
+.messages {
+  display: grid;
+  gap: 0.75rem;
+}
+
+.item,
+.bubble {
+  border: 1px solid rgba(52, 211, 153, 0.24);
+  border-radius: 8px;
+  background: #020906;
+  color: inherit;
+  padding: 0.85rem;
+}
+
+.composer {
+  border-top: 1px solid rgba(52, 211, 153, 0.24);
+  display: flex;
+  gap: 0.75rem;
+  margin-top: 1rem;
+  padding-top: 1rem;
+}
+
+.composer input {
+  flex: 1;
+}
+
+@media (max-width: 760px) {
+  .main {
+    display: block;
+    border: 0;
+  }
+}

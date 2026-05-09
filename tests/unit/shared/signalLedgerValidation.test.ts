@@ -14,7 +14,7 @@ const member: MemberSessionUser = {
   verifiedMemberAt: '2026-05-08T00:00:00.000Z',
 };
 
-describe('Signal Ledger validation guards', () => {
+describe('HERTZ validation guards', () => {
   it('requires at least one source URL for community notes before touching storage', async () => {
     const service = new CommunityNoteService();
 

@@ -3,6 +3,7 @@ import type { MarketContext, SignalPostCategory, SignalPostSource, SignalPostSta
 
 export interface FeedPostRow {
   id: string;
+  short_id: string;
   article_id: string | null;
   author_id: string;
   post_type: SignalPostType;
@@ -101,6 +102,7 @@ export class FeedRepository {
   }
 
   async createFeedPost(params: {
+    shortId: string;
     articleId?: string | null;
     authorId: string;
     postType: SignalPostType;
@@ -114,15 +116,16 @@ export class FeedRepository {
   }, client?: DbClient): Promise<FeedPostRow> {
     const row = await queryOne<FeedPostRow>(
       `INSERT INTO feed_posts (
-         article_id, author_id, post_type, source, category, status,
+         short_id, article_id, author_id, post_type, source, category, status,
          quoted_post_id, repost_id, telegram_message_id, telegram_chat_id
        )
-       VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10)
+       VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11)
        RETURNING *, NULL::text AS content_html, NULL::text AS title, NULL::text AS slug,
                  NULL::text AS author_username, NULL::text AS author_display_name,
                  NULL::text AS author_avatar_url, 'member'::text AS author_role,
                  NULL::timestamp with time zone AS author_verified_member_at`,
       [
+        params.shortId,
         params.articleId ?? null,
         params.authorId,
         params.postType,
@@ -139,6 +142,24 @@ export class FeedRepository {
 
     if (!row) throw new Error('Failed to create feed post');
     return row;
+  }
+
+  async shortIdExists(shortId: string, client?: DbClient): Promise<boolean> {
+    const row = await queryOne<{ id: string }>(
+      'SELECT id FROM feed_posts WHERE short_id = $1',
+      [shortId],
+      client,
+    );
+    return Boolean(row);
+  }
+
+  async resolvePostId(postIdOrShortId: string, client?: DbClient): Promise<string | null> {
+    const row = await queryOne<{ id: string }>(
+      'SELECT id FROM feed_posts WHERE id::text = $1 OR short_id = $1',
+      [postIdOrShortId],
+      client,
+    );
+    return row?.id ?? null;
   }
 
   async attachMediaToArticle(articleId: string, mediaIds: string[], client?: DbClient): Promise<void> {
@@ -253,7 +274,7 @@ export class FeedRepository {
        ) pc ON true
        LEFT JOIN LATERAL (
          SELECT COUNT(*) AS signal_count FROM post_reactions r
-         WHERE r.post_id = fp.id AND r.reaction_type = 'signal' AND r.deleted_at IS NULL
+         WHERE r.post_id = fp.id AND r.reaction_type = 'pulse' AND r.deleted_at IS NULL
        ) pr ON true
        LEFT JOIN LATERAL (
          SELECT COUNT(*) AS repost_count FROM post_reposts r
@@ -263,7 +284,7 @@ export class FeedRepository {
          SELECT COUNT(*) AS view_count FROM post_views v WHERE v.post_id = fp.id
        ) pv ON true
        LEFT JOIN post_reactions vr
-         ON vr.post_id = fp.id AND vr.user_id = $${viewerParam}::uuid AND vr.reaction_type = 'signal' AND vr.deleted_at IS NULL
+         ON vr.post_id = fp.id AND vr.user_id = $${viewerParam}::uuid AND vr.reaction_type = 'pulse' AND vr.deleted_at IS NULL
        LEFT JOIN post_bookmarks vb
          ON vb.post_id = fp.id AND vb.user_id = $${viewerParam}::uuid AND vb.deleted_at IS NULL
        LEFT JOIN post_reposts vrr
@@ -281,7 +302,7 @@ export class FeedRepository {
     const rows = await query<FeedListRow>(
       `SELECT * FROM (
         SELECT fp.created_at AS cursor_created_at, fp.id AS cursor_id
-        FROM feed_posts fp WHERE fp.id = $1
+        FROM feed_posts fp WHERE fp.id::text = $1 OR fp.short_id = $1
       ) cursor_marker
       RIGHT JOIN LATERAL (
         SELECT fp.*, a.content_html, a.title, a.slug,
@@ -305,13 +326,13 @@ export class FeedRepository {
         LEFT JOIN users u ON u.id = fp.author_id
         LEFT JOIN post_market_context pmc ON pmc.post_id = fp.id
         LEFT JOIN LATERAL (SELECT COUNT(*) AS comment_count FROM post_comments c WHERE c.post_id = fp.id AND c.status = 'visible' AND c.deleted_at IS NULL) pc ON true
-        LEFT JOIN LATERAL (SELECT COUNT(*) AS signal_count FROM post_reactions r WHERE r.post_id = fp.id AND r.reaction_type = 'signal' AND r.deleted_at IS NULL) pr ON true
+        LEFT JOIN LATERAL (SELECT COUNT(*) AS signal_count FROM post_reactions r WHERE r.post_id = fp.id AND r.reaction_type = 'pulse' AND r.deleted_at IS NULL) pr ON true
         LEFT JOIN LATERAL (SELECT COUNT(*) AS repost_count FROM post_reposts r WHERE r.original_post_id = fp.id AND r.deleted_at IS NULL) rr ON true
         LEFT JOIN LATERAL (SELECT COUNT(*) AS view_count FROM post_views v WHERE v.post_id = fp.id) pv ON true
-        LEFT JOIN post_reactions vr ON vr.post_id = fp.id AND vr.user_id = $2::uuid AND vr.reaction_type = 'signal' AND vr.deleted_at IS NULL
+        LEFT JOIN post_reactions vr ON vr.post_id = fp.id AND vr.user_id = $2::uuid AND vr.reaction_type = 'pulse' AND vr.deleted_at IS NULL
         LEFT JOIN post_bookmarks vb ON vb.post_id = fp.id AND vb.user_id = $2::uuid AND vb.deleted_at IS NULL
         LEFT JOIN post_reposts vrr ON vrr.original_post_id = fp.id AND vrr.user_id = $2::uuid AND vrr.repost_type = 'repost' AND vrr.deleted_at IS NULL
-        WHERE fp.id = $1
+        WHERE fp.id::text = $1 OR fp.short_id = $1
       ) fp ON true`,
       [postId, viewerId ?? null],
       client,
@@ -328,7 +349,7 @@ export class FeedRepository {
        FROM feed_posts fp
        LEFT JOIN articles a ON a.id = fp.article_id
        LEFT JOIN users u ON u.id = fp.author_id
-       WHERE fp.id = $1`,
+       WHERE fp.id::text = $1 OR fp.short_id = $1`,
       [postId],
       client,
     );
@@ -354,7 +375,7 @@ export class FeedRepository {
 
   async updatePostStatus(postId: string, status: SignalPostStatus, client?: DbClient): Promise<void> {
     await execute(
-      'UPDATE feed_posts SET status = $1, updated_at = NOW() WHERE id = $2',
+      'UPDATE feed_posts SET status = $1, updated_at = NOW() WHERE id::text = $2 OR short_id = $2',
       [status, postId],
       client,
     );
@@ -362,7 +383,8 @@ export class FeedRepository {
 
   async softDeletePost(postId: string, client?: DbClient): Promise<void> {
     await execute(
-      `UPDATE feed_posts SET status = 'deleted', deleted_at = NOW(), updated_at = NOW() WHERE id = $1`,
+      `UPDATE feed_posts SET status = 'deleted', deleted_at = NOW(), updated_at = NOW()
+       WHERE id::text = $1 OR short_id = $1`,
       [postId],
       client,
     );
@@ -370,7 +392,7 @@ export class FeedRepository {
 
   async markEdited(postId: string, client?: DbClient): Promise<void> {
     await execute(
-      'UPDATE feed_posts SET edited_at = NOW(), updated_at = NOW() WHERE id = $1',
+      'UPDATE feed_posts SET edited_at = NOW(), updated_at = NOW() WHERE id::text = $1 OR short_id = $1',
       [postId],
       client,
     );

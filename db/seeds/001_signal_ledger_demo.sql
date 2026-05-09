@@ -1,6 +1,6 @@
 -- ============================================
 -- Horizon Trader Platform
--- Demo seed: Signal Ledger rich timeline
+-- Demo seed: HERTZ rich timeline
 -- ============================================
 -- Safe to run repeatedly. It only replaces records whose ids are in this file.
 
@@ -8,7 +8,7 @@ BEGIN;
 
 CREATE EXTENSION IF NOT EXISTS "pgcrypto";
 
--- Clean previous Signal Ledger demo rows.
+-- Clean previous HERTZ demo rows.
 DELETE FROM post_reports
 WHERE post_id::text LIKE '30000000-0000-0000-0000-0000000000%';
 
@@ -75,7 +75,7 @@ ON CONFLICT (telegram_id) DO UPDATE SET
   telegram_last_name = EXCLUDED.telegram_last_name,
   verified_member_at = EXCLUDED.verified_member_at;
 
-INSERT INTO telegram_memberships (user_id, telegram_id, group_id, is_member, checked_at, last_verified_at, raw_response)
+INSERT INTO hertz_membership_checks (user_id, telegram_id, group_id, is_member, checked_at, last_verified_at, raw_response)
 SELECT id, telegram_id, -1001916607651, true, NOW(), NOW(), '{"isMember":true}'::jsonb
 FROM users
 WHERE telegram_id BETWEEN 910000001 AND 910000008
@@ -102,32 +102,32 @@ VALUES
   ('20000000-0000-0000-0000-000000000011', '10000000-0000-0000-0000-000000000002', '<p>Telegram pending sample: ini contoh draft dari Telegram yang harus terlihat di admin queue dan belum muncul di feed publik sampai admin publish.</p>', 'Pending Telegram sample', 'general', 'telegram', 'draft', 'signal-seed-pending-telegram-sample', 9103011, -1001916607651, NOW() - INTERVAL '12 minutes'),
   ('20000000-0000-0000-0000-000000000012', '10000000-0000-0000-0000-000000000003', '<p>Hidden sample: post ini sengaja hidden untuk memastikan moderation path tidak bocor ke feed publik.</p>', 'Hidden moderation sample', 'general', 'web', 'published', 'signal-seed-hidden-sample', NULL, NULL, NOW() - INTERVAL '1 day');
 
-INSERT INTO feed_posts (id, article_id, author_id, post_type, source, category, status, quoted_post_id, telegram_message_id, telegram_chat_id, pinned_at, created_at, updated_at)
+INSERT INTO feed_posts (id, short_id, article_id, author_id, post_type, source, category, status, quoted_post_id, telegram_message_id, telegram_chat_id, pinned_at, created_at, updated_at)
 VALUES
-  ('30000000-0000-0000-0000-000000000001', '20000000-0000-0000-0000-000000000001', '10000000-0000-0000-0000-000000000001', 'original', 'web', 'trading', 'published', NULL, NULL, NULL, NOW() - INTERVAL '7 minutes', NOW() - INTERVAL '8 minutes', NOW() - INTERVAL '8 minutes'),
-  ('30000000-0000-0000-0000-000000000002', '20000000-0000-0000-0000-000000000002', '10000000-0000-0000-0000-000000000002', 'original', 'web', 'life_story', 'published', NULL, NULL, NULL, NULL, NOW() - INTERVAL '23 minutes', NOW() - INTERVAL '23 minutes'),
-  ('30000000-0000-0000-0000-000000000003', '20000000-0000-0000-0000-000000000003', '10000000-0000-0000-0000-000000000003', 'original', 'telegram', 'trading', 'published', NULL, 9103003, -1001916607651, NULL, NOW() - INTERVAL '41 minutes', NOW() - INTERVAL '41 minutes'),
-  ('30000000-0000-0000-0000-000000000004', '20000000-0000-0000-0000-000000000004', '10000000-0000-0000-0000-000000000004', 'original', 'telegram', 'general', 'published', NULL, 9103004, -1001916607651, NULL, NOW() - INTERVAL '1 hour', NOW() - INTERVAL '1 hour'),
-  ('30000000-0000-0000-0000-000000000005', '20000000-0000-0000-0000-000000000005', '10000000-0000-0000-0000-000000000005', 'quote', 'web', 'trading', 'published', '30000000-0000-0000-0000-000000000001', NULL, NULL, NULL, NOW() - INTERVAL '1 hour 15 minutes', NOW() - INTERVAL '1 hour 15 minutes'),
-  ('30000000-0000-0000-0000-000000000006', '20000000-0000-0000-0000-000000000006', '10000000-0000-0000-0000-000000000006', 'original', 'web', 'general', 'published', NULL, NULL, NULL, NULL, NOW() - INTERVAL '2 hours', NOW() - INTERVAL '2 hours'),
-  ('30000000-0000-0000-0000-000000000007', '20000000-0000-0000-0000-000000000007', '10000000-0000-0000-0000-000000000007', 'original', 'telegram', 'trading', 'published', NULL, 9103007, -1001916607651, NULL, NOW() - INTERVAL '2 hours 40 minutes', NOW() - INTERVAL '2 hours 40 minutes'),
-  ('30000000-0000-0000-0000-000000000008', '20000000-0000-0000-0000-000000000008', '10000000-0000-0000-0000-000000000008', 'original', 'web', 'life_story', 'published', NULL, NULL, NULL, NULL, NOW() - INTERVAL '3 hours 15 minutes', NOW() - INTERVAL '3 hours 15 minutes'),
-  ('30000000-0000-0000-0000-000000000009', '20000000-0000-0000-0000-000000000009', '10000000-0000-0000-0000-000000000001', 'original', 'admin', 'general', 'published', NULL, NULL, NULL, NULL, NOW() - INTERVAL '4 hours', NOW() - INTERVAL '4 hours'),
-  ('30000000-0000-0000-0000-000000000010', '20000000-0000-0000-0000-000000000010', '10000000-0000-0000-0000-000000000004', 'original', 'web', 'trading', 'published', NULL, NULL, NULL, NULL, NOW() - INTERVAL '5 hours', NOW() - INTERVAL '5 hours'),
-  ('30000000-0000-0000-0000-000000000011', '20000000-0000-0000-0000-000000000011', '10000000-0000-0000-0000-000000000002', 'original', 'telegram', 'general', 'pending_review', NULL, 9103011, -1001916607651, NULL, NOW() - INTERVAL '12 minutes', NOW() - INTERVAL '12 minutes'),
-  ('30000000-0000-0000-0000-000000000012', '20000000-0000-0000-0000-000000000012', '10000000-0000-0000-0000-000000000003', 'original', 'web', 'general', 'hidden', NULL, NULL, NULL, NULL, NOW() - INTERVAL '1 day', NOW() - INTERVAL '1 day');
+  ('30000000-0000-0000-0000-000000000001', 'hz_seed01', '20000000-0000-0000-0000-000000000001', '10000000-0000-0000-0000-000000000001', 'original', 'web', 'trading', 'published', NULL, NULL, NULL, NOW() - INTERVAL '7 minutes', NOW() - INTERVAL '8 minutes', NOW() - INTERVAL '8 minutes'),
+  ('30000000-0000-0000-0000-000000000002', 'hz_seed02', '20000000-0000-0000-0000-000000000002', '10000000-0000-0000-0000-000000000002', 'original', 'web', 'life_story', 'published', NULL, NULL, NULL, NULL, NOW() - INTERVAL '23 minutes', NOW() - INTERVAL '23 minutes'),
+  ('30000000-0000-0000-0000-000000000003', 'hz_seed03', '20000000-0000-0000-0000-000000000003', '10000000-0000-0000-0000-000000000003', 'original', 'telegram', 'trading', 'published', NULL, 9103003, -1001916607651, NULL, NOW() - INTERVAL '41 minutes', NOW() - INTERVAL '41 minutes'),
+  ('30000000-0000-0000-0000-000000000004', 'hz_seed04', '20000000-0000-0000-0000-000000000004', '10000000-0000-0000-0000-000000000004', 'original', 'telegram', 'general', 'published', NULL, 9103004, -1001916607651, NULL, NOW() - INTERVAL '1 hour', NOW() - INTERVAL '1 hour'),
+  ('30000000-0000-0000-0000-000000000005', 'hz_seed05', '20000000-0000-0000-0000-000000000005', '10000000-0000-0000-0000-000000000005', 'quote', 'web', 'trading', 'published', '30000000-0000-0000-0000-000000000001', NULL, NULL, NULL, NOW() - INTERVAL '1 hour 15 minutes', NOW() - INTERVAL '1 hour 15 minutes'),
+  ('30000000-0000-0000-0000-000000000006', 'hz_seed06', '20000000-0000-0000-0000-000000000006', '10000000-0000-0000-0000-000000000006', 'original', 'web', 'general', 'published', NULL, NULL, NULL, NULL, NOW() - INTERVAL '2 hours', NOW() - INTERVAL '2 hours'),
+  ('30000000-0000-0000-0000-000000000007', 'hz_seed07', '20000000-0000-0000-0000-000000000007', '10000000-0000-0000-0000-000000000007', 'original', 'telegram', 'trading', 'published', NULL, 9103007, -1001916607651, NULL, NOW() - INTERVAL '2 hours 40 minutes', NOW() - INTERVAL '2 hours 40 minutes'),
+  ('30000000-0000-0000-0000-000000000008', 'hz_seed08', '20000000-0000-0000-0000-000000000008', '10000000-0000-0000-0000-000000000008', 'original', 'web', 'life_story', 'published', NULL, NULL, NULL, NULL, NOW() - INTERVAL '3 hours 15 minutes', NOW() - INTERVAL '3 hours 15 minutes'),
+  ('30000000-0000-0000-0000-000000000009', 'hz_seed09', '20000000-0000-0000-0000-000000000009', '10000000-0000-0000-0000-000000000001', 'original', 'admin', 'general', 'published', NULL, NULL, NULL, NULL, NOW() - INTERVAL '4 hours', NOW() - INTERVAL '4 hours'),
+  ('30000000-0000-0000-0000-000000000010', 'hz_seed10', '20000000-0000-0000-0000-000000000010', '10000000-0000-0000-0000-000000000004', 'original', 'web', 'trading', 'published', NULL, NULL, NULL, NULL, NOW() - INTERVAL '5 hours', NOW() - INTERVAL '5 hours'),
+  ('30000000-0000-0000-0000-000000000011', 'hz_seed11', '20000000-0000-0000-0000-000000000011', '10000000-0000-0000-0000-000000000002', 'original', 'telegram', 'general', 'pending_review', NULL, 9103011, -1001916607651, NULL, NOW() - INTERVAL '12 minutes', NOW() - INTERVAL '12 minutes'),
+  ('30000000-0000-0000-0000-000000000012', 'hz_seed12', '20000000-0000-0000-0000-000000000012', '10000000-0000-0000-0000-000000000003', 'original', 'web', 'general', 'hidden', NULL, NULL, NULL, NULL, NOW() - INTERVAL '1 day', NOW() - INTERVAL '1 day');
 
 INSERT INTO media (id, article_id, file_url, media_type, file_key, file_size, created_at)
 VALUES
   ('40000000-0000-0000-0000-000000000001', '20000000-0000-0000-0000-000000000001', '/images/signal-seed/chart-xauusd.svg', 'image', 'seed/xauusd-chart.svg', 235000, NOW() - INTERVAL '8 minutes'),
-  ('40000000-0000-0000-0000-000000000002', '20000000-0000-0000-0000-000000000001', '/images/signal-seed/chart-depth.svg', 'image', 'seed/xauusd-depth.svg', 228000, NOW() - INTERVAL '8 minutes'),
-  ('40000000-0000-0000-0000-000000000003', '20000000-0000-0000-0000-000000000002', '/images/signal-seed/journal-desk.svg', 'image', 'seed/journal-desk.svg', 196000, NOW() - INTERVAL '23 minutes'),
-  ('40000000-0000-0000-0000-000000000004', '20000000-0000-0000-0000-000000000003', '/images/signal-seed/chart-btc.svg', 'image', 'seed/btc-1.svg', 210000, NOW() - INTERVAL '41 minutes'),
-  ('40000000-0000-0000-0000-000000000005', '20000000-0000-0000-0000-000000000003', '/images/signal-seed/chart-depth.svg', 'image', 'seed/btc-2.svg', 210000, NOW() - INTERVAL '41 minutes'),
+  ('40000000-0000-0000-0000-000000000002', '20000000-0000-0000-0000-000000000001', '/images/signal-seed/chart-mini.svg', 'image', 'seed/xauusd-depth.svg', 228000, NOW() - INTERVAL '8 minutes'),
+  ('40000000-0000-0000-0000-000000000003', '20000000-0000-0000-0000-000000000002', '/images/signal-seed/chart-mini.svg', 'image', 'seed/journal-desk.svg', 196000, NOW() - INTERVAL '23 minutes'),
+  ('40000000-0000-0000-0000-000000000004', '20000000-0000-0000-0000-000000000003', '/images/signal-seed/chart-mini.svg', 'image', 'seed/btc-1.svg', 210000, NOW() - INTERVAL '41 minutes'),
+  ('40000000-0000-0000-0000-000000000005', '20000000-0000-0000-0000-000000000003', '/images/signal-seed/chart-mini.svg', 'image', 'seed/btc-2.svg', 210000, NOW() - INTERVAL '41 minutes'),
   ('40000000-0000-0000-0000-000000000006', '20000000-0000-0000-0000-000000000003', '/images/signal-seed/chart-xauusd.svg', 'image', 'seed/btc-3.svg', 210000, NOW() - INTERVAL '41 minutes'),
-  ('40000000-0000-0000-0000-000000000007', '20000000-0000-0000-0000-000000000003', '/images/signal-seed/chart-eurusd.svg', 'image', 'seed/btc-4.svg', 210000, NOW() - INTERVAL '41 minutes'),
-  ('40000000-0000-0000-0000-000000000008', '20000000-0000-0000-0000-000000000007', '/images/signal-seed/chart-eurusd.svg', 'image', 'seed/eurusd.svg', 182000, NOW() - INTERVAL '2 hours 40 minutes'),
-  ('40000000-0000-0000-0000-000000000009', '20000000-0000-0000-0000-000000000010', '/images/signal-seed/chart-gbpjpy.svg', 'image', 'seed/gbpjpy.svg', 191000, NOW() - INTERVAL '5 hours');
+  ('40000000-0000-0000-0000-000000000007', '20000000-0000-0000-0000-000000000003', '/images/signal-seed/chart-mini.svg', 'image', 'seed/btc-4.svg', 210000, NOW() - INTERVAL '41 minutes'),
+  ('40000000-0000-0000-0000-000000000008', '20000000-0000-0000-0000-000000000007', '/images/signal-seed/chart-mini.svg', 'image', 'seed/eurusd.svg', 182000, NOW() - INTERVAL '2 hours 40 minutes'),
+  ('40000000-0000-0000-0000-000000000009', '20000000-0000-0000-0000-000000000010', '/images/signal-seed/chart-mini.svg', 'image', 'seed/gbpjpy.svg', 191000, NOW() - INTERVAL '5 hours');
 
 INSERT INTO post_market_context (
   post_id, pair, timeframe, risk_percent, direction, entry_price, entry_zone,
@@ -140,7 +140,7 @@ INSERT INTO post_market_context (
   ('30000000-0000-0000-0000-000000000010', 'GBPJPY', 'M30', 0.75, 'watchlist', NULL, '191.20-191.55', 190.70, 192.80, 191.95, 192.35, 192.80, 'Volatility expansion', 61, 'Horizon demo');
 
 INSERT INTO post_reactions (post_id, user_id, reaction_type, created_at)
-SELECT post_id::uuid, user_id::uuid, 'signal', NOW() - (rn || ' minutes')::interval
+SELECT post_id::uuid, user_id::uuid, 'pulse', NOW() - (rn || ' minutes')::interval
 FROM (
   VALUES
     ('30000000-0000-0000-0000-000000000001', '10000000-0000-0000-0000-000000000002', 2),
@@ -226,14 +226,14 @@ VALUES
 
 INSERT INTO credit_transactions (user_id, amount, transaction_type, source_type, source_id, description, created_at)
 VALUES
-  ('10000000-0000-0000-0000-000000000001', 10, 'earned', 'article', '20000000-0000-0000-0000-000000000001', '[seed signal ledger] Trading Room post reward', NOW() - INTERVAL '8 minutes'),
-  ('10000000-0000-0000-0000-000000000002', 5, 'earned', 'article', '20000000-0000-0000-0000-000000000002', '[seed signal ledger] Life story post reward', NOW() - INTERVAL '23 minutes'),
-  ('10000000-0000-0000-0000-000000000003', 10, 'earned', 'article', '20000000-0000-0000-0000-000000000003', '[seed signal ledger] Trading Room post reward', NOW() - INTERVAL '41 minutes'),
-  ('10000000-0000-0000-0000-000000000004', 3, 'earned', 'article', '20000000-0000-0000-0000-000000000004', '[seed signal ledger] General post reward', NOW() - INTERVAL '1 hour');
+  ('10000000-0000-0000-0000-000000000001', 10, 'earned', 'article', '20000000-0000-0000-0000-000000000001', '[seed hertz] Trading Room post reward', NOW() - INTERVAL '8 minutes'),
+  ('10000000-0000-0000-0000-000000000002', 5, 'earned', 'article', '20000000-0000-0000-0000-000000000002', '[seed hertz] Life story post reward', NOW() - INTERVAL '23 minutes'),
+  ('10000000-0000-0000-0000-000000000003', 10, 'earned', 'article', '20000000-0000-0000-0000-000000000003', '[seed hertz] Trading Room post reward', NOW() - INTERVAL '41 minutes'),
+  ('10000000-0000-0000-0000-000000000004', 3, 'earned', 'article', '20000000-0000-0000-0000-000000000004', '[seed hertz] General post reward', NOW() - INTERVAL '1 hour');
 
 INSERT INTO activity_logs (actor_id, actor_type, action, target_type, target_id, details, created_at)
 VALUES
-  ('10000000-0000-0000-0000-000000000001', 'admin', 'signal_ledger.seed.loaded', 'post', '30000000-0000-0000-0000-000000000001', '{"seed":"signal-ledger-demo","records":"rich timeline"}'::jsonb, NOW());
+  ('10000000-0000-0000-0000-000000000001', 'admin', 'hertz.seed.loaded', 'post', '30000000-0000-0000-0000-000000000001', '{"seed":"hertz-demo","records":"rich timeline"}'::jsonb, NOW());
 
 COMMIT;
 

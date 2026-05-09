@@ -36,7 +36,7 @@ export class PostReportService {
 
     return withTransaction(async (client) => {
       const report = await this.reports.create({
-        postId,
+        postId: post.id,
         reporterUserId: user.id,
         reason,
         details,
@@ -44,9 +44,9 @@ export class PostReportService {
       await this.logs.log({
         actor_id: user.id,
         actor_type: user.role === 'admin' ? 'admin' : 'member',
-        action: 'signal_ledger.post.reported',
+        action: 'hertz.post.reported',
         target_type: 'post',
-        target_id: postId,
+        target_id: post.id,
         details: { report_id: report.id, reason },
       }, client);
       return report;

@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import { TelegramLoginWidget, type TelegramUser } from '@/components/auth/TelegramLoginWidget';
+import { Button } from '@/components/ui/button';
 import { TelegramIcon } from './SignalIcons';
 import styles from './SignalTelegramLogin.module.css';
 
@@ -40,10 +41,10 @@ export function SignalTelegramLogin({ compact = false }: { compact?: boolean }) 
             {!compact ? <span>Masukkan `TELEGRAM_BOT_NAME` asli agar tombol login Telegram resmi muncul.</span> : null}
           </div>
         </div>
-        <div className={styles.fallbackButton}>
+        <Button type="button" className={styles.fallbackButton} aria-disabled>
           <TelegramIcon />
           <span>Login Telegram</span>
-        </div>
+        </Button>
       </div>
     );
   }

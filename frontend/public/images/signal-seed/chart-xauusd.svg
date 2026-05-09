@@ -1,15 +1,33 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 760" role="img" aria-label="XAUUSD liquidity chart">
-  <rect width="1200" height="760" fill="#06110d"/>
-  <g stroke="#133b2d" stroke-width="1">
-    <path d="M0 80h1200M0 160h1200M0 240h1200M0 320h1200M0 400h1200M0 480h1200M0 560h1200M0 640h1200"/>
-    <path d="M120 0v760M240 0v760M360 0v760M480 0v760M600 0v760M720 0v760M840 0v760M960 0v760M1080 0v760"/>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 668 150">
+  <rect width="668" height="150" rx="7" fill="#000"/>
+  <g stroke="#0f291c" stroke-width="1">
+    <path d="M0 30h668M0 60h668M0 90h668M0 120h668"/>
   </g>
-  <path d="M80 555C170 520 210 575 282 500C345 435 395 470 450 385C520 275 610 318 676 260C760 185 835 220 910 150C980 86 1060 128 1120 90" fill="none" stroke="#18f08c" stroke-width="10" stroke-linecap="round"/>
-  <path d="M92 610h1020" stroke="#ef4444" stroke-width="4" stroke-dasharray="16 12"/>
-  <path d="M92 330h1020" stroke="#10b981" stroke-width="4" stroke-dasharray="16 12"/>
-  <rect x="78" y="52" width="330" height="92" rx="18" fill="#09251b" stroke="#0d6b47"/>
-  <text x="108" y="104" font-family="Inter,Arial,sans-serif" font-size="34" font-weight="800" fill="#f8fafc">XAUUSD LONG</text>
-  <text x="108" y="132" font-family="Inter,Arial,sans-serif" font-size="22" fill="#9ad7bd">Sweep - rejection - continuation</text>
-  <circle cx="676" cy="260" r="16" fill="#18f08c"/>
-  <text x="705" y="252" font-family="Inter,Arial,sans-serif" font-size="26" font-weight="700" fill="#d1fae5">Entry zone</text>
+  <path d="M38 26h350" stroke="#f2c14e" stroke-width="1"/>
+  <rect x="0" y="118" width="225" height="26" fill="#074d31" opacity=".85"/>
+  <g>
+    <path d="M28 74v24" stroke="#ff4d4f"/><rect x="25" y="80" width="6" height="12" rx="1" fill="#ff4d4f"/>
+    <path d="M55 66v24" stroke="#13d27b"/><rect x="52" y="72" width="6" height="12" rx="1" fill="#13d27b"/>
+    <path d="M82 58v24" stroke="#13d27b"/><rect x="79" y="64" width="6" height="12" rx="1" fill="#13d27b"/>
+    <path d="M109 52v24" stroke="#13d27b"/><rect x="106" y="58" width="6" height="12" rx="1" fill="#13d27b"/>
+    <path d="M136 49v24" stroke="#ff4d4f"/><rect x="133" y="55" width="6" height="12" rx="1" fill="#ff4d4f"/>
+    <path d="M163 48v24" stroke="#13d27b"/><rect x="160" y="54" width="6" height="12" rx="1" fill="#13d27b"/>
+    <path d="M190 51v24" stroke="#13d27b"/><rect x="187" y="57" width="6" height="12" rx="1" fill="#13d27b"/>
+    <path d="M217 56v24" stroke="#13d27b"/><rect x="214" y="62" width="6" height="12" rx="1" fill="#13d27b"/>
+    <path d="M244 63v24" stroke="#ff4d4f"/><rect x="241" y="69" width="6" height="12" rx="1" fill="#ff4d4f"/>
+    <path d="M271 72v24" stroke="#13d27b"/><rect x="268" y="78" width="6" height="12" rx="1" fill="#13d27b"/>
+    <path d="M298 81v24" stroke="#13d27b"/><rect x="295" y="87" width="6" height="12" rx="1" fill="#13d27b"/>
+    <path d="M325 89v24" stroke="#13d27b"/><rect x="322" y="95" width="6" height="12" rx="1" fill="#13d27b"/>
+    <path d="M352 96v24" stroke="#ff4d4f"/><rect x="349" y="102" width="6" height="12" rx="1" fill="#ff4d4f"/>
+    <path d="M379 101v24" stroke="#13d27b"/><rect x="376" y="107" width="6" height="12" rx="1" fill="#13d27b"/>
+    <path d="M406 103v24" stroke="#13d27b"/><rect x="403" y="109" width="6" height="12" rx="1" fill="#13d27b"/>
+    <path d="M433 102v24" stroke="#13d27b"/><rect x="430" y="108" width="6" height="12" rx="1" fill="#13d27b"/>
+    <path d="M460 98v24" stroke="#ff4d4f"/><rect x="457" y="104" width="6" height="12" rx="1" fill="#ff4d4f"/>
+    <path d="M487 92v24" stroke="#13d27b"/><rect x="484" y="98" width="6" height="12" rx="1" fill="#13d27b"/>
+    <path d="M514 84v24" stroke="#13d27b"/><rect x="511" y="90" width="6" height="12" rx="1" fill="#13d27b"/>
+    <path d="M541 75v24" stroke="#13d27b"/><rect x="538" y="81" width="6" height="12" rx="1" fill="#13d27b"/>
+    <path d="M568 66v24" stroke="#ff4d4f"/><rect x="565" y="72" width="6" height="12" rx="1" fill="#ff4d4f"/>
+    <path d="M595 58v24" stroke="#13d27b"/><rect x="592" y="64" width="6" height="12" rx="1" fill="#13d27b"/>
+    <path d="M622 53v24" stroke="#13d27b"/><rect x="619" y="59" width="6" height="12" rx="1" fill="#13d27b"/>
+  </g>
 </svg>

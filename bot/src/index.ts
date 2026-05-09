@@ -3,6 +3,7 @@
 // ============================================
 
 import express from 'express';
+import { randomBytes } from 'crypto';
 import { Bot, webhookCallback } from 'grammy';
 import { S3Client } from '@aws-sdk/client-s3';
 import { CommandRegistry } from './commands/registry';
@@ -31,6 +32,7 @@ import type { DbClient } from '../../shared/db/query';
 const PORT = Number(process.env.BOT_PORT) || 4000;
 const BOT_TOKEN = process.env.TELEGRAM_BOT_TOKEN || '';
 const GROUP_CHAT_ID = Number(process.env.TELEGRAM_GROUP_ID) || 0;
+const SHORT_ID_ALPHABET = 'abcdefghijklmnopqrstuvwxyz0123456789';
 
 // ---- Bot Instance ----
 
@@ -51,6 +53,21 @@ const commandStats = new CommandStats();
 // ---- Services ----
 
 const activityLogService = new ActivityLogService();
+
+async function createShortId(client: DbClient): Promise<string> {
+  for (let attempt = 0; attempt < 10; attempt++) {
+    const bytes = randomBytes(8);
+    const suffix = Array.from(bytes, (byte) => SHORT_ID_ALPHABET[byte % SHORT_ID_ALPHABET.length]).join('');
+    const shortId = `hz_${suffix}`;
+    const existing = await queryOne<{ id: string }>(
+      'SELECT id FROM feed_posts WHERE short_id = $1',
+      [shortId],
+      client,
+    );
+    if (!existing) return shortId;
+  }
+  throw new Error('Failed to generate HERTZ short id');
+}
 
 // ---- Media Service (Cloudflare R2) ----
 
@@ -114,12 +131,13 @@ async function insertArticle(
 
   await execute(
     `INSERT INTO feed_posts (
-       article_id, author_id, post_type, source, category, status,
+       short_id, article_id, author_id, post_type, source, category, status,
        telegram_message_id, telegram_chat_id
      )
-     VALUES ($1, $2, 'original', $3, $4, $5, $6, $7)
+     VALUES ($1, $2, $3, 'original', $4, $5, $6, $7, $8)
      ON CONFLICT DO NOTHING`,
     [
+      await createShortId(client),
       result.id,
       data.author_id,
       data.status === 'published' ? 'admin' : 'telegram',

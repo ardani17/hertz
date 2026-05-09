@@ -3,26 +3,27 @@
   display: grid;
   grid-template-columns: 44px minmax(0, 1fr);
   gap: 0.8rem;
-  margin: 0.55rem 1.25rem;
-  padding: 0.82rem 0.9rem 0.76rem;
+  margin: 0 0 10px 50px;
+  min-height: 132px;
+  padding: 16px;
   border: 1px solid rgba(76, 118, 94, 0.34);
   border-radius: 8px;
-  background: linear-gradient(180deg, rgba(8, 24, 16, 0.72), rgba(3, 10, 7, 0.72));
+  background: #000000;
   box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.035);
 }
 .post:hover {
-  background: linear-gradient(180deg, rgba(10, 32, 20, 0.82), rgba(3, 10, 7, 0.82));
+  background: rgba(4, 14, 9, 0.94);
   border-color: rgba(35, 190, 118, 0.52);
 }
 .spineNode {
   position: absolute;
   display: grid;
   place-items: center;
-  top: 1.4rem;
-  left: -34px;
+  top: 18px;
+  left: -47px;
   z-index: 1;
-  width: 30px;
-  height: 30px;
+  width: 32px;
+  height: 32px;
   border-radius: 50%;
   border: 1px solid rgba(19, 210, 123, 0.62);
   background: radial-gradient(circle, rgba(19, 210, 123, 0.35), rgba(5, 18, 11, 0.96));
@@ -37,8 +38,8 @@
 .avatar {
   display: grid;
   place-items: center;
-  width: 42px;
-  height: 42px;
+  width: 44px;
+  height: 44px;
   border: 1px solid rgba(37, 210, 126, 0.62);
   border-radius: 8px;
   background: rgba(15, 70, 43, 0.86);
@@ -56,37 +57,52 @@
   display: flex;
   align-items: center;
   flex-wrap: wrap;
-  gap: 0.42rem;
+  gap: 0.34rem;
 }
-.authorLine strong { color: #f3fff7; }
+.authorLine strong {
+  color: #f3fff7;
+  font-size: 15px;
+  line-height: 18px;
+}
 .authorLine span, .metaLine span {
   color: #88a192;
-  font-size: 0.86rem;
+  font-size: 11px;
+  line-height: 13px;
 }
 .badge,
 .adminBadge {
-  padding: 0.08rem 0.35rem;
-  border: 1px solid rgba(52, 211, 153, 0.45);
+  align-items: center;
+  background: #13d27b;
+  border: 0;
   border-radius: 5px;
-  color: #34d399 !important;
-  font-size: 0.7rem !important;
+  color: #02100a !important;
+  display: inline-flex;
+  font-size: 10.5px !important;
   font-weight: 800;
+  height: 23px;
+  padding: 0 8px;
 }
 
 .adminBadge {
-  border-color: rgba(251, 191, 36, 0.48);
-  color: #fbbf24 !important;
+  background: #fbbf24;
+  color: #140f02 !important;
 }
-.metaLine { margin-top: 0.25rem; }
+.metaLine { margin-top: 3px; }
 .metaLine span {
-  padding-right: 0.45rem;
-  border-right: 1px solid rgba(75, 118, 92, 0.35);
+  padding-right: 0;
+  border-right: 0;
+}
+.metaLine span + span::before {
+  color: #536d5e;
+  content: "·";
+  margin-right: 0.34rem;
 }
 .metaLine span:last-child { border-right: 0; }
 .content {
-  margin: 0.65rem 0 0;
+  margin: 8px 0 0;
   color: #e7f4ec;
-  line-height: 1.55;
+  font-size: 14px;
+  line-height: 21px;
   white-space: pre-wrap;
 }
 .readMore {
@@ -99,7 +115,7 @@
 .mediaGrid {
   display: grid;
   gap: 0.35rem;
-  margin-top: 0.85rem;
+  margin-top: 7px;
   overflow: hidden;
   border: 1px solid rgba(75, 118, 92, 0.32);
   border-radius: 8px;
@@ -108,23 +124,47 @@
 .mediaGrid[data-count="2"], .mediaGrid[data-count="3"], .mediaGrid[data-count="4"] { grid-template-columns: repeat(2, minmax(0, 1fr)); }
 .mediaGrid img, .mediaGrid video {
   width: 100%;
-  min-height: 170px;
-  max-height: 420px;
+  height: 150px;
+  min-height: 150px;
+  max-height: 150px;
   object-fit: cover;
   background: #050d09;
 }
 .note {
-  margin-top: 0.9rem;
-  padding: 0.85rem 0.95rem;
-  border: 1px solid rgba(52, 211, 153, 0.25);
+  position: relative;
+  margin: 0 0 10px 50px;
+  min-height: 100px;
+  padding: 14px 15px 13px;
+  border: 1px solid #00d67a;
   border-radius: 8px;
-  background: linear-gradient(180deg, rgba(16, 185, 129, 0.12), rgba(5, 20, 13, 0.76));
+  background: rgba(0, 20, 13, 0.72);
+}
+.noteSpineNode {
+  position: absolute;
+  display: grid;
+  place-items: center;
+  top: 12px;
+  left: -47px;
+  z-index: 1;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  border: 1px solid rgba(19, 210, 123, 0.7);
+  background: radial-gradient(circle, rgba(19, 210, 123, 0.38), rgba(5, 18, 11, 0.96));
+  color: #b7f7d5;
+  box-shadow: 0 0 0 4px #020604, 0 0 18px rgba(16, 185, 129, 0.28), inset 0 0 0 5px rgba(5, 18, 11, 0.7);
+}
+.noteSpineNode svg {
+  width: 15px;
+  height: 15px;
 }
 .note strong {
   align-items: center;
   color: #d1fae5;
   display: flex;
   gap: 0.45rem;
+  font-size: 15px;
+  line-height: 18px;
 }
 .note strong svg {
   color: #13d27b;
@@ -132,19 +172,27 @@
   width: 17px;
 }
 .note p {
-  margin: 0.35rem 0;
+  margin: 10px 0 9px;
   color: #dcefe4;
+  font-size: 13px;
+  line-height: 20px;
 }
 .note span,
 .note a {
-  color: #8fa899;
-  font-size: 0.82rem;
+  color: #13d27b;
+  font-size: 12px;
 }
 .note a {
-  border: 1px solid rgba(255, 255, 255, 0.14);
-  border-radius: 999px;
-  color: #d8efe1;
-  padding: 0.35rem 0.7rem;
+  align-items: center;
+  border: 1px solid #13d27b;
+  border-radius: 5px;
+  color: #02100a;
+  display: inline-flex;
+  font-size: 10.5px;
+  font-weight: 800;
+  height: 23px;
+  padding: 0 8px;
+  background: #13d27b;
   text-decoration: none;
 }
 
@@ -158,18 +206,23 @@
 .quoteCard {
   border: 1px solid rgba(76, 118, 94, 0.34);
   border-radius: 8px;
-  margin-top: 0.75rem;
+  margin-top: 7px;
   padding: 0.75rem;
   background: rgba(3, 12, 8, 0.66);
 }
 
 .marketCard {
-  display: grid;
-  gap: 0.6rem;
-  grid-template-columns: minmax(120px, 0.85fr) minmax(0, 1.15fr);
+  position: relative;
+  z-index: 2;
+  display: block;
+  width: 172px;
+  height: 0;
+  margin: -74px 14px 88px auto;
+  padding: 0;
+  border: 0;
+  background: transparent;
 }
 
-.marketCard span,
 .marketCard dt,
 .quoteAuthor em {
   color: #8ea897;
@@ -177,50 +230,66 @@
   font-style: normal;
 }
 
-.marketCard strong {
-  color: #d8efe1;
-  display: block;
-  margin-top: 0.2rem;
-}
-
 .marketCard dl {
   display: grid;
-  gap: 0.28rem 0.7rem;
-  grid-template-columns: auto 1fr;
+  gap: 0.2rem;
   margin: 0;
+}
+
+.marketRowMini {
+  display: grid;
+  grid-template-columns: 58px 1fr;
+  gap: 0.35rem;
+  align-items: baseline;
+}
+
+.marketCard dt,
+.marketCard dd {
+  font-size: 11px;
+  line-height: 1.2;
 }
 
 .marketCard dd {
-  color: #d8efe1;
   margin: 0;
+  text-align: right;
+  white-space: nowrap;
+}
+
+.marketRowMini:nth-child(1) dt,
+.marketRowMini:nth-child(1) dd,
+.marketRowMini:nth-child(3) dt,
+.marketRowMini:nth-child(3) dd {
+  color: #13d27b;
+}
+
+.marketRowMini:nth-child(2) dt,
+.marketRowMini:nth-child(2) dd {
+  color: #eab308;
 }
 
 .quoteCard {
   color: inherit;
-  display: block;
+  display: grid;
+  grid-template-columns: 142px minmax(0, 1fr);
+  gap: 14px;
+  min-height: 62px;
   text-decoration: none;
+}
+
+.quoteCard img {
+  align-self: center;
+  border: 1px solid rgba(36, 91, 58, 0.8);
+  border-radius: 6px;
+  height: 38px;
+  object-fit: cover;
+  width: 142px;
 }
 
 .quoteCard:hover {
   border-color: rgba(19, 210, 123, 0.5);
 }
 
-.quoteAuthor {
-  align-items: center;
-  display: flex;
-  gap: 0.45rem;
-}
-
-.quoteAuthor span {
-  border: 1px solid rgba(76, 118, 94, 0.5);
-  border-radius: 50%;
-  color: #a7f3d0;
-  display: grid;
-  font-size: 0.74rem;
-  height: 26px;
-  place-items: center;
-  width: 26px;
-}
+.quoteAuthor { display: none; }
 
 .quoteAuthor strong {
   color: #f3fff8;
@@ -228,8 +297,16 @@
 
 .quoteCard p {
   color: #c9dfd1;
-  line-height: 1.45;
-  margin: 0.45rem 0 0;
+  font-size: 12px;
+  line-height: 18px;
+  margin: 1px 0 2px;
+}
+
+.quoteCard small {
+  color: #c9dfd1;
+  display: block;
+  font-size: 11px;
+  line-height: 16px;
 }
 @media (max-width: 640px) {
   .post {

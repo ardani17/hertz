@@ -10,7 +10,7 @@ const navSections = [
     label: 'Utama',
     items: [
       { label: 'Dashboard', href: '/admin', icon: 'DB' },
-      { label: 'Signal Ledger', href: '/admin/signal-ledger', icon: 'SL' },
+      { label: 'HERTZ', href: '/admin/hertz', icon: 'HZ' },
       { label: 'Articles', href: '/admin/articles', icon: 'AR' },
       { label: 'Outlook', href: '/admin/outlook', icon: 'OU' },
       { label: 'Blog', href: '/admin/blog', icon: 'BL' },

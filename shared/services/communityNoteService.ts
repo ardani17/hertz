@@ -2,6 +2,7 @@ import { withTransaction } from '../db';
 import { ActivityLogService } from './activityLog';
 import { FeedForbiddenError, FeedNotFoundError, FeedValidationError } from './feedService';
 import { CommunityNoteRepository } from '../repositories/communityNoteRepository';
+import { FeedRepository } from '../repositories/feedRepository';
 import type { CommunityNoteInput, CommunityNoteRatingValue, CommunityNoteSourceInput } from '../types/communityNote';
 import type { MemberSessionUser } from '../types/membership';
 
@@ -43,21 +44,24 @@ function validateSources(sources: unknown): CommunityNoteSourceInput[] {
 
 export class CommunityNoteService {
   private readonly repo = new CommunityNoteRepository();
+  private readonly feedRepo = new FeedRepository();
   private readonly logs = new ActivityLogService();
 
   async create(postId: string, user: MemberSessionUser | null, input: CommunityNoteInput) {
     if (!user) throw new FeedForbiddenError('Login member diperlukan');
     const content = cleanNoteContent(input.content);
     const sources = validateSources(input.sources);
+    const resolvedPostId = await this.feedRepo.resolvePostId(postId);
+    if (!resolvedPostId) throw new FeedNotFoundError('Post tidak ditemukan');
     return withTransaction(async (client) => {
-      const note = await this.repo.create(postId, user.id, content, sources, client);
+      const note = await this.repo.create(resolvedPostId, user.id, content, sources, client);
       await this.logs.log({
         actor_id: user.id,
         actor_type: user.role === 'admin' ? 'admin' : 'member',
-        action: 'signal_ledger.community_note.created',
+        action: 'hertz.community_note.created',
         target_type: 'community_note',
         target_id: note.id,
-        details: { post_id: postId, source_count: sources.length },
+        details: { post_id: resolvedPostId, source_count: sources.length },
       }, client);
       return note;
     });
@@ -80,7 +84,7 @@ export class CommunityNoteService {
       await this.logs.log({
         actor_id: user.id,
         actor_type: user.role === 'admin' ? 'admin' : 'member',
-        action: 'signal_ledger.community_note.edited',
+        action: 'hertz.community_note.edited',
         target_type: 'community_note',
         target_id: noteId,
       }, client);
@@ -97,7 +101,7 @@ export class CommunityNoteService {
       await this.logs.log({
         actor_id: user.id,
         actor_type: user.role === 'admin' ? 'admin' : 'member',
-        action: 'signal_ledger.community_note.deleted',
+        action: 'hertz.community_note.deleted',
         target_type: 'community_note',
         target_id: noteId,
       }, client);
@@ -111,7 +115,7 @@ export class CommunityNoteService {
       await this.logs.log({
         actor_id: admin.id,
         actor_type: 'admin',
-        action: 'signal_ledger.community_note.hidden',
+        action: 'hertz.community_note.hidden',
         target_type: 'community_note',
         target_id: noteId,
       }, client);
@@ -128,7 +132,7 @@ export class CommunityNoteService {
       await this.logs.log({
         actor_id: user.id,
         actor_type: user.role === 'admin' ? 'admin' : 'member',
-        action: 'signal_ledger.community_note.rated',
+        action: 'hertz.community_note.rated',
         target_type: 'community_note',
         target_id: noteId,
         details: { rating },

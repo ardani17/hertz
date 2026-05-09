@@ -72,7 +72,7 @@ export class MembershipRepository {
     rawResponse: Record<string, unknown>;
   }, client?: DbClient): Promise<void> {
     await queryOne(
-      `INSERT INTO telegram_memberships (
+      `INSERT INTO hertz_membership_checks (
          user_id, telegram_id, group_id, is_member, checked_at, last_verified_at, raw_response, updated_at
        )
        VALUES ($1, $2, $3, $4, NOW(), CASE WHEN $4 THEN NOW() ELSE NULL END, $5, NOW())
@@ -81,7 +81,7 @@ export class MembershipRepository {
          user_id = EXCLUDED.user_id,
          is_member = EXCLUDED.is_member,
          checked_at = NOW(),
-         last_verified_at = CASE WHEN EXCLUDED.is_member THEN NOW() ELSE telegram_memberships.last_verified_at END,
+         last_verified_at = CASE WHEN EXCLUDED.is_member THEN NOW() ELSE hertz_membership_checks.last_verified_at END,
          raw_response = EXCLUDED.raw_response,
          updated_at = NOW()
        RETURNING id`,
@@ -99,7 +99,7 @@ export class MembershipRepository {
   async findRecentMembership(telegramId: number, groupId: number, maxAgeMs: number, client?: DbClient): Promise<{ is_member: boolean; checked_at: Date } | null> {
     return queryOne<{ is_member: boolean; checked_at: Date }>(
       `SELECT is_member, checked_at
-       FROM telegram_memberships
+       FROM hertz_membership_checks
        WHERE telegram_id = $1 AND group_id = $2 AND checked_at > NOW() - ($3::text)::interval`,
       [telegramId, groupId, `${Math.floor(maxAgeMs / 1000)} seconds`],
       client,

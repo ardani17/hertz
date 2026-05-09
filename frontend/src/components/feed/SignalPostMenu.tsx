@@ -2,6 +2,7 @@
 
 import { useState, type FormEvent } from 'react';
 import type { MarketContext, MemberSessionUser, SignalPost } from '@shared/types';
+import { Button } from '@/components/ui/button';
 import { MoreIcon } from './SignalIcons';
 import styles from './SignalPostMenu.module.css';
 
@@ -25,13 +26,13 @@ export function SignalPostMenu({ post, currentUser }: { post: SignalPost; curren
   });
 
   async function copyLink() {
-    await navigator.clipboard?.writeText(`${window.location.origin}/post/${post.id}`);
+    await navigator.clipboard?.writeText(`${window.location.origin}/hertz/post/${post.shortId}`);
     setMessage('Link disalin.');
     setOpen(false);
   }
 
   async function deleteOwnPost() {
-    const response = await fetch(`/api/feed/${post.id}`, { method: 'DELETE' });
+    const response = await fetch(`/api/hertz/posts/${post.shortId}`, { method: 'DELETE' });
     if (!response.ok) {
       const data = await response.json().catch(() => null);
       setMessage(data?.error?.message ?? 'Gagal menghapus post.');
@@ -41,7 +42,7 @@ export function SignalPostMenu({ post, currentUser }: { post: SignalPost; curren
   }
 
   async function hidePost() {
-    const response = await fetch(`/api/admin/signal-ledger/posts/${post.id}/hide`, { method: 'POST' });
+    const response = await fetch(`/api/admin/hertz/posts/${post.id}/hide`, { method: 'POST' });
     if (!response.ok) {
       const data = await response.json().catch(() => null);
       setMessage(data?.error?.message ?? 'Gagal menyembunyikan post.');
@@ -52,7 +53,7 @@ export function SignalPostMenu({ post, currentUser }: { post: SignalPost; curren
 
   async function submitReport(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
-    const response = await fetch(`/api/feed/${post.id}/report`, {
+    const response = await fetch(`/api/hertz/posts/${post.shortId}/report`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ reason: reportReason, details: reportDetails }),
@@ -87,7 +88,7 @@ export function SignalPostMenu({ post, currentUser }: { post: SignalPost; curren
       takeProfit: numberOrNull(market.takeProfit),
       confidencePercent: numberOrNull(market.confidencePercent),
     };
-    const response = await fetch(`/api/feed/${post.id}`, {
+    const response = await fetch(`/api/hertz/posts/${post.shortId}`, {
       method: 'PATCH',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ market: payload }),
@@ -106,16 +107,16 @@ export function SignalPostMenu({ post, currentUser }: { post: SignalPost; curren
 
   return (
     <div className={styles.wrap}>
-      <button type="button" className={styles.trigger} onClick={() => setOpen((value) => !value)} aria-label="Post actions">
+      <Button type="button" variant="ghost" size="icon-sm" className={styles.trigger} onClick={() => setOpen((value) => !value)} aria-label="Post actions">
         <MoreIcon />
-      </button>
+      </Button>
       {open ? (
         <div className={styles.menu}>
-          <button type="button" onClick={copyLink}>Copy link</button>
-          {currentUser ? <button type="button" onClick={() => { setReportOpen((value) => !value); setMarketOpen(false); }}>Report</button> : null}
-          {currentUser?.role === 'admin' ? <button type="button" onClick={() => { setMarketOpen((value) => !value); setReportOpen(false); }}>Edit market metadata</button> : null}
-          {post.viewer.canDelete ? <button type="button" onClick={deleteOwnPost}>Delete post</button> : null}
-          {currentUser?.role === 'admin' ? <button type="button" onClick={hidePost}>Hide post</button> : null}
+          <Button type="button" variant="ghost" size="sm" onClick={copyLink}>Copy link</Button>
+          {currentUser ? <Button type="button" variant="ghost" size="sm" onClick={() => { setReportOpen((value) => !value); setMarketOpen(false); }}>Report</Button> : null}
+          {currentUser?.role === 'admin' ? <Button type="button" variant="ghost" size="sm" onClick={() => { setMarketOpen((value) => !value); setReportOpen(false); }}>Edit market metadata</Button> : null}
+          {post.viewer.canDelete ? <Button type="button" variant="ghost" size="sm" onClick={deleteOwnPost}>Delete post</Button> : null}
+          {currentUser?.role === 'admin' ? <Button type="button" variant="ghost" size="sm" onClick={hidePost}>Hide post</Button> : null}
         </div>
       ) : null}
       {reportOpen ? (
@@ -129,7 +130,7 @@ export function SignalPostMenu({ post, currentUser }: { post: SignalPost; curren
             <option value="other">Other</option>
           </select>
           <textarea value={reportDetails} onChange={(event) => setReportDetails(event.target.value)} placeholder="Detail opsional" rows={3} />
-          <button type="submit">Submit report</button>
+          <Button type="submit">Submit report</Button>
         </form>
       ) : null}
       {marketOpen ? (
@@ -143,7 +144,7 @@ export function SignalPostMenu({ post, currentUser }: { post: SignalPost; curren
           <label>SL<input value={market.stopLoss} onChange={(event) => setMarketField('stopLoss', event.target.value)} inputMode="decimal" /></label>
           <label>TP<input value={market.takeProfit} onChange={(event) => setMarketField('takeProfit', event.target.value)} inputMode="decimal" /></label>
           <label>Confidence %<input value={market.confidencePercent} onChange={(event) => setMarketField('confidencePercent', event.target.value)} inputMode="decimal" /></label>
-          <button type="submit">Save market</button>
+          <Button type="submit">Save market</Button>
         </form>
       ) : null}
       {message ? <p className={styles.message}>{message}</p> : null}

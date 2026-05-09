@@ -1,4 +1,4 @@
-import { createHash } from 'crypto';
+import { createHash, randomBytes } from 'crypto';
 import { execute, withTransaction } from '../db';
 import { FeedRepository, type FeedListRow } from '../repositories/feedRepository';
 import { CommunityNoteRepository } from '../repositories/communityNoteRepository';
@@ -28,6 +28,7 @@ import type { MemberSessionUser } from '../types/membership';
 const FEED_EXCERPT_LIMIT = 420;
 const EDIT_WINDOW_MS = 15 * 60 * 1000;
 const VALID_CATEGORIES: SignalPostCategory[] = ['trading', 'life_story', 'general'];
+const SHORT_ID_ALPHABET = 'abcdefghijklmnopqrstuvwxyz0123456789';
 
 export class FeedValidationError extends Error {
   constructor(message: string) {
@@ -74,6 +75,15 @@ function optionalMediaIds(value: unknown): string[] {
   const ids = value.filter((id): id is string => typeof id === 'string' && id.trim().length > 0);
   if (ids.length > 4) throw new FeedValidationError('Maksimal 4 media per post');
   return ids;
+}
+
+function createShortIdCandidate(): string {
+  const bytes = randomBytes(8);
+  let suffix = '';
+  for (const byte of bytes) {
+    suffix += SHORT_ID_ALPHABET[byte % SHORT_ID_ALPHABET.length];
+  }
+  return `hz_${suffix}`;
 }
 
 function encodeCursor(row: { created_at: Date; id: string }): string {
@@ -158,8 +168,8 @@ export class FeedService {
     }
     const [post] = await this.mapPosts([row], viewer ?? null, false);
     const [comments, communityNotes] = await Promise.all([
-      this.listComments(postId, viewer ?? null),
-      this.listCommunityNotes(postId, viewer ?? null),
+      this.listComments(row.id, viewer ?? null),
+      this.listCommunityNotes(row.id, viewer ?? null),
     ]);
     return { ...post, comments, communityNotes };
   }
@@ -186,6 +196,7 @@ export class FeedService {
       }, client);
       await this.feedRepo.attachMediaToArticle(article.id, mediaIds, client);
       const post = await this.feedRepo.createFeedPost({
+        shortId: await this.generateShortId(),
         articleId: article.id,
         authorId: user.id,
         postType: 'original',
@@ -203,7 +214,7 @@ export class FeedService {
       await this.logs.log({
         actor_id: user.id,
         actor_type: user.role === 'admin' ? 'admin' : 'member',
-        action: 'signal_ledger.post.created',
+        action: 'hertz.post.created',
         target_type: 'post',
         target_id: post.id,
         details: { source: 'web', category, article_id: article.id },
@@ -243,6 +254,7 @@ export class FeedService {
       }, client);
       await this.feedRepo.attachMediaToArticle(article.id, params.mediaIds ?? [], client);
       const post = await this.feedRepo.createFeedPost({
+        shortId: await this.generateShortId(),
         articleId: article.id,
         authorId: params.userId,
         postType: 'original',
@@ -263,7 +275,7 @@ export class FeedService {
       await this.logs.log({
         actor_id: params.userId,
         actor_type: params.isAdmin ? 'admin' : 'member',
-        action: 'signal_ledger.post.created',
+        action: 'hertz.post.created',
         target_type: 'post',
         target_id: post.id,
         details: { source: 'telegram', status },
@@ -281,7 +293,7 @@ export class FeedService {
       if (post.status !== 'pending_review' && post.status !== 'draft') {
         throw new FeedValidationError('Post bukan draft Telegram');
       }
-      await this.feedRepo.updatePostStatus(postId, 'published', client);
+      await this.feedRepo.updatePostStatus(post.id, 'published', client);
       if (post.article_id) {
         await execute('UPDATE articles SET status = $1 WHERE id = $2', ['published', post.article_id], client);
         await this.credit.awardCreditForArticle({
@@ -294,9 +306,9 @@ export class FeedService {
       await this.logs.log({
         actor_id: admin.id,
         actor_type: 'admin',
-        action: 'signal_ledger.post.published',
+        action: 'hertz.post.published',
         target_type: 'post',
-        target_id: postId,
+        target_id: post.id,
         details: { article_id: post.article_id },
       }, client);
     });
@@ -318,7 +330,7 @@ export class FeedService {
       await this.logs.log({
         actor_id: user.id,
         actor_type: user.role === 'admin' ? 'admin' : 'member',
-        action: 'signal_ledger.post.edited',
+        action: 'hertz.post.edited',
         target_type: 'post',
         target_id: postId,
       }, client);
@@ -330,13 +342,13 @@ export class FeedService {
     const post = await this.feedRepo.findRawById(postId);
     if (!post) throw new FeedNotFoundError();
     await withTransaction(async (client) => {
-      await this.feedRepo.upsertMarketContext(postId, market, client);
+      await this.feedRepo.upsertMarketContext(post.id, market, client);
       await this.logs.log({
         actor_id: user.id,
         actor_type: 'admin',
-        action: 'signal_ledger.market_context.edited',
+        action: 'hertz.market_context.edited',
         target_type: 'post',
-        target_id: postId,
+        target_id: post.id,
         details: { market },
       }, client);
     });
@@ -347,13 +359,13 @@ export class FeedService {
     if (!post) throw new FeedNotFoundError();
     if (post.author_id !== user.id && user.role !== 'admin') throw new FeedForbiddenError();
     await withTransaction(async (client) => {
-      await this.feedRepo.softDeletePost(postId, client);
+      await this.feedRepo.softDeletePost(post.id, client);
       await this.logs.log({
         actor_id: user.id,
         actor_type: user.role === 'admin' ? 'admin' : 'member',
-        action: 'signal_ledger.post.deleted',
+        action: 'hertz.post.deleted',
         target_type: 'post',
-        target_id: postId,
+        target_id: post.id,
       }, client);
     });
   }
@@ -363,13 +375,13 @@ export class FeedService {
     if (!original || original.status !== 'published' || original.deleted_at) throw new FeedNotFoundError();
     if (input.type === 'repost') {
       if (original.author_id === user.id) throw new FeedValidationError('Tidak bisa repost post sendiri');
-      const result = await this.repostRepo.togglePlainRepost(postId, user.id);
+      const result = await this.repostRepo.togglePlainRepost(original.id, user.id);
       await this.logs.log({
         actor_id: user.id,
         actor_type: user.role === 'admin' ? 'admin' : 'member',
-        action: result.active ? 'signal_ledger.repost.created' : 'signal_ledger.repost.deleted',
+        action: result.active ? 'hertz.repost.created' : 'hertz.repost.deleted',
         target_type: 'post',
-        target_id: postId,
+        target_id: original.id,
       });
       return { active: result.active };
     }
@@ -388,21 +400,22 @@ export class FeedService {
       }, client);
       await this.feedRepo.attachMediaToArticle(article.id, mediaIds, client);
       const post = await this.feedRepo.createFeedPost({
+        shortId: await this.generateShortId(),
         articleId: article.id,
         authorId: user.id,
         postType: 'quote',
         source: 'web',
         category: original.category,
         status: 'published',
-        quotedPostId: postId,
+        quotedPostId: original.id,
       }, client);
-      await this.repostRepo.createQuote(postId, user.id, post.id, client);
+      await this.repostRepo.createQuote(original.id, user.id, post.id, client);
       await this.logs.log({
         actor_id: user.id,
         actor_type: user.role === 'admin' ? 'admin' : 'member',
-        action: 'signal_ledger.repost.created',
+        action: 'hertz.repost.created',
         target_type: 'post',
-        target_id: postId,
+        target_id: original.id,
         details: { quote_post_id: post.id },
       }, client);
       return post.id;
@@ -457,6 +470,7 @@ export class FeedService {
 
       return {
         id: row.id,
+        shortId: row.short_id,
         articleId: row.article_id,
         type: row.post_type,
         source: row.source,
@@ -473,6 +487,7 @@ export class FeedService {
         quotedPost: null,
         viewer: {
           hasSignaled: Boolean(row.viewer_has_signaled),
+          hasPulsed: Boolean(row.viewer_has_signaled),
           hasBookmarked: Boolean(row.viewer_has_bookmarked),
           hasReposted: Boolean(row.viewer_has_reposted),
           canEdit: Boolean(viewer && (viewer.id === row.author_id || viewer.role === 'admin')),
@@ -481,6 +496,7 @@ export class FeedService {
         counts: {
           comments: Number(row.comment_count ?? 0),
           signals: Number(row.signal_count ?? 0),
+          pulses: Number(row.signal_count ?? 0),
           reposts: Number(row.repost_count ?? 0),
           views: Number(row.view_count ?? 0),
         },
@@ -587,6 +603,16 @@ export class FeedService {
       confidencePercent: numberOrNull(row.confidence_percent),
       brokerOrSource: row.broker_or_source,
     };
+  }
+
+  private async generateShortId(): Promise<string> {
+    for (let attempt = 0; attempt < 10; attempt++) {
+      const shortId = createShortIdCandidate();
+      if (!(await this.feedRepo.shortIdExists(shortId))) {
+        return shortId;
+      }
+    }
+    throw new FeedValidationError('Gagal membuat post id publik');
   }
 }
 

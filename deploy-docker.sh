@@ -118,16 +118,14 @@ check_required_vars() {
             ;;
     esac
 
-    if [ "${SIGNAL_LEDGER_ENABLED:-false}" = "true" ]; then
-        if [ -z "${MEMBERSHIP_CHECK_URL}" ] || [ -z "${MEMBERSHIP_CHECK_TOKEN}" ] || [ -z "${MEMBER_SESSION_SECRET}" ]; then
-            err "Signal Ledger aktif, tetapi MEMBERSHIP_CHECK_URL, MEMBERSHIP_CHECK_TOKEN, atau MEMBER_SESSION_SECRET belum diisi."
-            exit 1
-        fi
+    if [ -z "${MEMBERSHIP_CHECK_URL}" ] || [ -z "${MEMBERSHIP_CHECK_TOKEN}" ] || [ -z "${MEMBER_SESSION_SECRET}" ]; then
+        err "HERTZ membutuhkan MEMBERSHIP_CHECK_URL, MEMBERSHIP_CHECK_TOKEN, dan MEMBER_SESSION_SECRET."
+        exit 1
+    fi
 
-        if [ -z "${HORIZON_TELEGRAM_GROUP_ID:-${TELEGRAM_GROUP_ID}}" ]; then
-            err "Signal Ledger aktif, tetapi HORIZON_TELEGRAM_GROUP_ID atau TELEGRAM_GROUP_ID belum diisi."
-            exit 1
-        fi
+    if [ -z "${HORIZON_TELEGRAM_GROUP_ID:-${TELEGRAM_GROUP_ID}}" ]; then
+        err "HERTZ membutuhkan HORIZON_TELEGRAM_GROUP_ID atau TELEGRAM_GROUP_ID."
+        exit 1
     fi
 
     ok "Semua variabel wajib tervalidasi."
@@ -158,12 +156,12 @@ set_defaults() {
 
     export FRONTEND_PORT="${FRONTEND_PORT:-3000}"
     export BOT_PORT="${BOT_PORT:-4000}"
-    export SIGNAL_LEDGER_ENABLED="${SIGNAL_LEDGER_ENABLED:-false}"
+    export HERTZ_PLATFORM_ENABLED="${HERTZ_PLATFORM_ENABLED:-true}"
 
     export DB_DATA_DIR="${DB_DATA_DIR:-./data/postgres}"
 
     ok "Defaults: FRONTEND_PORT=${FRONTEND_PORT}, BOT_PORT=${BOT_PORT}"
-    ok "Defaults: SIGNAL_LEDGER_ENABLED=${SIGNAL_LEDGER_ENABLED}"
+    ok "Defaults: HERTZ_PLATFORM_ENABLED=${HERTZ_PLATFORM_ENABLED}"
     ok "Defaults: DB_DATA_DIR=${DB_DATA_DIR}"
 }
 

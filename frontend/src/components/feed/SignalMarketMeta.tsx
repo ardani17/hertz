@@ -7,17 +7,21 @@ export function SignalMarketMeta({ post }: { post: SignalPost }) {
     return null;
   }
 
+  const rows = [
+    ['TP', market.takeProfit1 ?? market.takeProfit],
+    ['Key Level', market.entryZone ?? market.entryPrice],
+    ['Buy zone', market.stopLoss],
+  ].filter(([, value]) => value);
+
   return (
     <div className={styles.marketCard}>
-      <div>
-        <span>Setup reference</span>
-        <strong>{market.pair ?? 'Market setup'} {market.direction ? ` ${market.direction}` : ''}</strong>
-      </div>
       <dl>
-        {market.entryPrice || market.entryZone ? <><dt>Entry</dt><dd>{market.entryZone ?? market.entryPrice}</dd></> : null}
-        {market.takeProfit || market.takeProfit1 ? <><dt>TP</dt><dd>{market.takeProfit1 ?? market.takeProfit}</dd></> : null}
-        {market.stopLoss ? <><dt>SL</dt><dd>{market.stopLoss}</dd></> : null}
-        {market.confidencePercent ? <><dt>Confidence</dt><dd>{market.confidencePercent}%</dd></> : null}
+        {rows.map(([label, value]) => (
+          <div className={styles.marketRowMini} key={label}>
+            <dt>{label}</dt>
+            <dd>{value}</dd>
+          </div>
+        ))}
       </dl>
     </div>
   );

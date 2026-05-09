@@ -35,7 +35,7 @@ export function SignalDetailInteractions({
       return;
     }
     setPending('comment');
-    const response = await fetch(`/api/feed/${post.id}/comments`, {
+    const response = await fetch(`/api/hertz/posts/${post.shortId}/comments`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ content }),
@@ -59,7 +59,7 @@ export function SignalDetailInteractions({
       return;
     }
     setPending('note');
-    const response = await fetch(`/api/feed/${post.id}/community-notes`, {
+    const response = await fetch(`/api/hertz/posts/${post.shortId}/community-notes`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ content, sources: [{ url }] }),
@@ -75,7 +75,7 @@ export function SignalDetailInteractions({
 
   async function deleteComment(commentId: string) {
     if (!requireLogin()) return;
-    const response = await fetch(`/api/feed/comments/${commentId}`, { method: 'DELETE' });
+    const response = await fetch(`/api/hertz/posts/comments/${commentId}`, { method: 'DELETE' });
     if (!response.ok) {
       const data = await response.json().catch(() => null);
       setMessage(data?.error?.message ?? 'Komentar gagal dihapus.');
@@ -91,7 +91,7 @@ export function SignalDetailInteractions({
       setMessage('Komentar tidak boleh kosong.');
       return;
     }
-    const response = await fetch(`/api/feed/comments/${commentId}`, {
+    const response = await fetch(`/api/hertz/posts/comments/${commentId}`, {
       method: 'PATCH',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ content: cleaned }),
@@ -106,7 +106,7 @@ export function SignalDetailInteractions({
 
   async function deleteNote(noteId: string) {
     if (!requireLogin()) return;
-    const response = await fetch(`/api/feed/community-notes/${noteId}`, { method: 'DELETE' });
+    const response = await fetch(`/api/hertz/posts/community-notes/${noteId}`, { method: 'DELETE' });
     if (!response.ok) {
       const data = await response.json().catch(() => null);
       setMessage(data?.error?.message ?? 'Catatan gagal dihapus.');
@@ -122,7 +122,7 @@ export function SignalDetailInteractions({
       setMessage('Catatan komunitas tidak boleh kosong.');
       return;
     }
-    const response = await fetch(`/api/feed/community-notes/${noteId}`, {
+    const response = await fetch(`/api/hertz/posts/community-notes/${noteId}`, {
       method: 'PATCH',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ content: cleaned }),
@@ -137,7 +137,7 @@ export function SignalDetailInteractions({
 
   async function rateNote(noteId: string, rating: 'helpful' | 'not_helpful') {
     if (!requireLogin()) return;
-    const response = await fetch(`/api/feed/community-notes/${noteId}/rating`, {
+    const response = await fetch(`/api/hertz/posts/community-notes/${noteId}/rating`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ rating }),

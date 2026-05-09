@@ -2,18 +2,16 @@
 
 import { useState } from 'react';
 import type { MemberSessionUser } from '@shared/types';
-import { ImageIcon, PlusIcon } from './SignalIcons';
+import { Button } from '@/components/ui/button';
 import { SignalTelegramLogin } from './SignalTelegramLogin';
 import styles from './SignalComposer.module.css';
 
-const categories = [
-  { value: 'trading', label: 'Trading Room' },
-  { value: 'life_story', label: 'Life & Coffee' },
-  { value: 'general', label: 'General' },
-] as const;
+function initials(name: string) {
+  if (name === 'Ardani Trader') return 'AR';
+  return name.split(/\s+/).slice(0, 2).map((part) => part[0]).join('').toUpperCase();
+}
 
 export function SignalComposer({ currentUser }: { currentUser: MemberSessionUser | null }) {
-  const [category, setCategory] = useState<'trading' | 'life_story' | 'general'>('trading');
   const [content, setContent] = useState('');
   const [pair, setPair] = useState('');
   const [risk, setRisk] = useState('');
@@ -66,16 +64,16 @@ export function SignalComposer({ currentUser }: { currentUser: MemberSessionUser
       return;
     }
     setStatus('Mengirim...');
-    const response = await fetch('/api/feed', {
+    const response = await fetch('/api/hertz/posts', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
-        category,
+        category: 'trading',
         content,
-        market: category === 'trading' ? {
+        market: {
           pair: pair || null,
           riskPercent: risk ? Number(risk) : null,
-        } : null,
+        },
         mediaIds,
       }),
     });
@@ -105,45 +103,20 @@ export function SignalComposer({ currentUser }: { currentUser: MemberSessionUser
   }
 
   return (
-    <section className={styles.composer} data-auth="member" aria-label="Signal composer">
-      <div className={styles.avatar}>{(currentUser?.displayName ?? 'G').slice(0, 1).toUpperCase()}</div>
+    <section className={styles.composer} data-auth="member" aria-label="HERTZ composer">
+      <div className={styles.avatar}>{initials(currentUser.displayName)}</div>
       <div className={styles.body}>
         <textarea
           value={content}
           onChange={(event) => setContent(event.target.value)}
           placeholder={currentUser ? 'Kirim jurnal dari Telegram atau tulis setup...' : 'Login Telegram member untuk membuat post'}
           disabled={!currentUser}
-          rows={3}
+          rows={1}
         />
         <div className={styles.controls}>
-          <div className={styles.segments} role="tablist" aria-label="Category">
-            {categories.map((item) => (
-              <button
-                key={item.value}
-                type="button"
-                className={category === item.value ? styles.activeSegment : ''}
-                onClick={() => setCategory(item.value)}
-                disabled={!currentUser}
-              >
-                {item.label}
-              </button>
-            ))}
-          </div>
-          {category === 'trading' ? (
-            <div className={styles.marketInputs}>
-              <label>
-                <span>Pair</span>
-                <input value={pair} onChange={(event) => setPair(event.target.value)} placeholder="XAUUSD" disabled={!currentUser} />
-              </label>
-              <label>
-                <span>Risk</span>
-                <input value={risk} onChange={(event) => setRisk(event.target.value)} placeholder="1%" inputMode="decimal" disabled={!currentUser} />
-              </label>
-            </div>
-          ) : null}
           <label className={`${styles.uploadButton} ${(!currentUser || uploading || mediaIds.length >= 4) ? styles.disabledUpload : ''}`}>
-            <ImageIcon />
-            Chart
+            <span>+</span>
+            <span>Chart</span>
             <input
               type="file"
               accept="image/*"
@@ -155,10 +128,17 @@ export function SignalComposer({ currentUser }: { currentUser: MemberSessionUser
               }}
             />
           </label>
-          <button className={styles.submit} type="button" onClick={submit} disabled={!currentUser || !content.trim()}>
-            <PlusIcon />
+          <label className={styles.inlineField}>
+            <span>+</span>
+            <input value={pair} onChange={(event) => setPair(event.target.value)} placeholder="Pair" disabled={!currentUser} />
+          </label>
+          <label className={styles.inlineField}>
+            <span>+</span>
+            <input value={risk} onChange={(event) => setRisk(event.target.value)} placeholder="Risk" inputMode="decimal" disabled={!currentUser} />
+          </label>
+          <Button className={styles.submit} type="button" onClick={submit} disabled={!currentUser || !content.trim()}>
             Publish
-          </button>
+          </Button>
         </div>
         {mediaNames.length > 0 ? (
           <div className={styles.mediaQueue} aria-label="Uploaded images">

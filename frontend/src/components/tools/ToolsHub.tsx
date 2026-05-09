@@ -169,7 +169,7 @@ export function ToolsHub() {
   const current = copy[language];
 
   return (
-    <main className={styles.main}>
+    <div className={styles.main}>
       <section className={styles.hero}>
         <div>
           <p className={styles.eyebrow}>{current.eyebrow}</p>
@@ -215,6 +215,6 @@ export function ToolsHub() {
           </Link>
         ))}
       </section>
-    </main>
+    </div>
   );
 }
