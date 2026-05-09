@@ -1,5 +1,5 @@
 import { NextRequest } from 'next/server';
-import { PostReactionService } from '@shared/services/postReactionService';
+import { HertzReactionService } from '@shared/services/hertzInteractionService';
 import { checkRateLimit } from '@/lib/rateLimit';
 import { apiError, apiErrorFromUnknown, apiSuccess } from '@/lib/apiResponse';
 import { getCurrentMember } from '@/lib/memberAuth';
@@ -8,7 +8,7 @@ interface RouteContext {
   params: Promise<{ shortId: string }>;
 }
 
-const service = new PostReactionService();
+const service = new HertzReactionService();
 
 export async function POST(request: NextRequest, context: RouteContext) {
   const rateLimited = checkRateLimit(request, { max: 120, windowMs: 10 * 60 * 1000, prefix: 'hertz-pulse' });

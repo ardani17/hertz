@@ -1,6 +1,6 @@
 import type { Metadata } from 'next';
 import { notFound } from 'next/navigation';
-import { FeedService } from '@shared/services/feedService';
+import { HertzPostService } from '@shared/services/hertzPostService';
 import { getCurrentMember } from '@/lib/memberAuth';
 import { SignalPostCard } from '@/components/feed/SignalPost';
 import { SignalDetailInteractions } from '@/components/feed/SignalDetailInteractions';
@@ -23,7 +23,7 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
 export default async function HertzPostDetailPage({ params }: PageProps) {
   const { shortId } = await params;
   const viewer = await getCurrentMember();
-  const feed = new FeedService();
+  const feed = new HertzPostService();
   let post;
   try {
     post = await feed.getPostDetail(shortId, viewer);

@@ -57,12 +57,12 @@ describe('parseHashtags', () => {
 // ---- mapHashtagToCategory Tests ----
 
 describe('mapHashtagToCategory', () => {
-  it('should map #trading to trading', () => {
-    expect(mapHashtagToCategory(['trading'])).toBe('trading');
+  it('should map #trading to trading_room', () => {
+    expect(mapHashtagToCategory(['trading'])).toBe('trading_room');
   });
 
-  it('should map #cerita to life_story', () => {
-    expect(mapHashtagToCategory(['cerita'])).toBe('life_story');
+  it('should map #cerita to life_coffee', () => {
+    expect(mapHashtagToCategory(['cerita'])).toBe('life_coffee');
   });
 
   it('should map #general to general', () => {
@@ -78,12 +78,12 @@ describe('mapHashtagToCategory', () => {
   });
 
   it('should use the first recognized hashtag for category', () => {
-    // #cerita comes first → life_story, even though #trading is also present
-    expect(mapHashtagToCategory(['cerita', 'trading'])).toBe('life_story');
+    // #cerita comes first → life_coffee, even though #trading is also present
+    expect(mapHashtagToCategory(['cerita', 'trading'])).toBe('life_coffee');
   });
 
   it('should skip unrecognized hashtags and use first recognized one', () => {
-    expect(mapHashtagToCategory(['random', 'unknown', 'trading'])).toBe('trading');
+    expect(mapHashtagToCategory(['random', 'unknown', 'trading'])).toBe('trading_room');
   });
 
   it('should be deterministic — same input always produces same output', () => {
@@ -107,14 +107,14 @@ describe('mapHashtagToCategory', () => {
 // ---- Integration: parseHashtags + mapHashtagToCategory ----
 
 describe('parseHashtags + mapHashtagToCategory integration', () => {
-  it('should categorize a #trading message as trading', () => {
+  it('should categorize a #trading message as trading_room', () => {
     const hashtags = parseHashtags('#trading EURUSD analysis');
-    expect(mapHashtagToCategory(hashtags)).toBe('trading');
+    expect(mapHashtagToCategory(hashtags)).toBe('trading_room');
   });
 
-  it('should categorize a #cerita message as life_story', () => {
+  it('should categorize a #cerita message as life_coffee', () => {
     const hashtags = parseHashtags('Hari ini saya belajar #cerita');
-    expect(mapHashtagToCategory(hashtags)).toBe('life_story');
+    expect(mapHashtagToCategory(hashtags)).toBe('life_coffee');
   });
 
   it('should categorize a #general message as general', () => {
@@ -134,6 +134,6 @@ describe('parseHashtags + mapHashtagToCategory integration', () => {
 
   it('should use first recognized hashtag when multiple are present', () => {
     const hashtags = parseHashtags('#cerita #trading mixed content');
-    expect(mapHashtagToCategory(hashtags)).toBe('life_story');
+    expect(mapHashtagToCategory(hashtags)).toBe('life_coffee');
   });
 });

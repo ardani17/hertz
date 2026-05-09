@@ -1,5 +1,5 @@
 import { NextRequest } from 'next/server';
-import { CommunityNoteService } from '@shared/services/communityNoteService';
+import { HertzCommunityNoteService } from '@shared/services/hertzCommunityNoteService';
 import { apiError, apiErrorFromUnknown, apiSuccess } from '@/lib/apiResponse';
 import { getCurrentMember } from '@/lib/memberAuth';
 
@@ -7,7 +7,7 @@ interface RouteContext {
   params: Promise<{ noteId: string }>;
 }
 
-const notes = new CommunityNoteService();
+const notes = new HertzCommunityNoteService();
 
 export async function PATCH(request: NextRequest, context: RouteContext) {
   try {

@@ -2,8 +2,8 @@ import styles from './SignalLedgerHeader.module.css';
 
 const tabs = [
   { value: null, label: 'All', href: '/hertz' },
-  { value: 'trading', label: 'Trading Room', href: '/hertz?category=trading' },
-  { value: 'life_story', label: 'Life & Coffee', href: '/hertz?category=life_story' },
+  { value: 'trading_room', label: 'Trading Room', href: '/hertz?category=trading_room' },
+  { value: 'life_coffee', label: 'Life & Coffee', href: '/hertz?category=life_coffee' },
   { value: 'general', label: 'General', href: '/hertz?category=general' },
 ] as const;
 

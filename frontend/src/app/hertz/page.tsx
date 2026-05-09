@@ -1,7 +1,7 @@
 import type { Metadata } from 'next';
 import { SignalLedgerPage } from '@/components/feed';
 import { getHertzDemoPosts, getHertzDemoUser } from '@/components/feed/demoPosts';
-import { FeedService } from '@shared/services/feedService';
+import { HertzPostService, normalizeHertzCategory } from '@shared/services/hertzPostService';
 import { getCurrentMember } from '@/lib/memberAuth';
 
 export const dynamic = 'force-dynamic';
@@ -16,14 +16,21 @@ interface HertzPageProps {
   searchParams?: Promise<{ category?: string }>;
 }
 
+function selectedCategory(value?: string) {
+  if (!value) return null;
+  try {
+    return normalizeHertzCategory(value);
+  } catch {
+    return null;
+  }
+}
+
 export default async function HertzPage({ searchParams }: HertzPageProps) {
   const currentUser = await getCurrentMember();
   const params = await searchParams;
-  const category = params?.category && ['trading', 'life_story', 'general'].includes(params.category)
-    ? params.category
-    : null;
+  const category = selectedCategory(params?.category);
   try {
-    const feed = new FeedService();
+    const feed = new HertzPostService();
     const result = await feed.listFeed({ viewer: currentUser, limit: 20, category });
     const items = result.items.length > 0 ? result.items : getHertzDemoPosts();
     const visualUser = result.items.length > 0 ? currentUser : (currentUser ?? getHertzDemoUser());

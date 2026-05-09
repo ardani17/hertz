@@ -135,3 +135,12 @@ export function UsersIcon({ className }: IconProps) {
     </IconBase>
   );
 }
+
+export function CoffeeIcon({ className }: IconProps) {
+  return (
+    <IconBase className={className}>
+      <path d="M5 8h10v5.5A4.5 4.5 0 0 1 10.5 18h-1A4.5 4.5 0 0 1 5 13.5V8Z" stroke="currentColor" strokeWidth="1.6" strokeLinejoin="round" />
+      <path d="M15 9h1.6a2.4 2.4 0 0 1 0 4.8H15M7 5.5V4m3 1.5V4m3 1.5V4M4 20h13" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" />
+    </IconBase>
+  );
+}

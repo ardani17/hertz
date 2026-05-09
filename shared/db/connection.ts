@@ -3,6 +3,7 @@
 // ============================================
 
 import { Pool, PoolConfig } from 'pg';
+import { config as loadDotEnv } from 'dotenv';
 
 /** Database connection configuration from environment variables */
 export interface DbConfig {
@@ -19,11 +20,21 @@ export interface DbConfig {
   connectionTimeoutMs?: number;
 }
 
+let envLoaded = false;
+
+function loadWorkspaceEnv(): void {
+  if (envLoaded) return;
+  envLoaded = true;
+  loadDotEnv({ path: '.env', override: false, quiet: true });
+  loadDotEnv({ path: '../.env', override: false, quiet: true });
+}
+
 /**
  * Reads database configuration from environment variables.
  * Falls back to individual POSTGRES_* vars if DATABASE_URL is not set.
  */
 export function getDbConfig(): DbConfig {
+  loadWorkspaceEnv();
   return {
     host: process.env.POSTGRES_HOST ?? 'localhost',
     port: parseInt(process.env.POSTGRES_PORT ?? '5432', 10),
@@ -41,6 +52,7 @@ export function getDbConfig(): DbConfig {
  * If DATABASE_URL is set, it takes precedence over individual config fields.
  */
 export function createPool(config?: DbConfig): Pool {
+  loadWorkspaceEnv();
   const databaseUrl = process.env.DATABASE_URL;
 
   if (databaseUrl) {

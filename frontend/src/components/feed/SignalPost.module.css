@@ -35,6 +35,15 @@
   height: 15px;
   filter: drop-shadow(0 0 4px rgba(19, 210, 123, 0.7));
 }
+.coffeeSpineNode {
+  border-color: rgba(234, 179, 8, 0.75);
+  background: radial-gradient(circle, rgba(234, 179, 8, 0.28), rgba(28, 18, 4, 0.96));
+  color: #facc15;
+  box-shadow: 0 0 0 4px #020604, 0 0 18px rgba(234, 179, 8, 0.28), inset 0 0 0 5px rgba(28, 18, 4, 0.78);
+}
+.coffeeSpineNode svg {
+  filter: drop-shadow(0 0 4px rgba(234, 179, 8, 0.7));
+}
 .avatar {
   display: grid;
   place-items: center;

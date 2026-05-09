@@ -28,8 +28,21 @@ export async function POST(request: NextRequest, context: RouteContext) {
     if (!user) return apiError('AUTH_REQUIRED', 'Login member diperlukan', 401);
     const { conversationId } = await context.params;
     const body = await request.json();
-    const message = await service.send(user, conversationId, body.body);
+    const message = await service.send(user, conversationId, body.body, body.attachments);
     return apiSuccess({ message }, 201);
+  } catch (error) {
+    return apiErrorFromUnknown(error);
+  }
+}
+
+export async function PATCH(request: NextRequest, context: RouteContext) {
+  try {
+    const user = await getCurrentMember();
+    if (!user) return apiError('AUTH_REQUIRED', 'Login member diperlukan', 401);
+    const { conversationId } = await context.params;
+    const body = await request.json();
+    await service.archive(user, conversationId, Boolean(body.archived));
+    return apiSuccess({ archived: Boolean(body.archived) });
   } catch (error) {
     return apiErrorFromUnknown(error);
   }

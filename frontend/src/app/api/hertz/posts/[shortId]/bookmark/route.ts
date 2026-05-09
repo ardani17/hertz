@@ -1,5 +1,5 @@
 import { NextRequest } from 'next/server';
-import { PostBookmarkService } from '@shared/services/postBookmarkService';
+import { HertzBookmarkService } from '@shared/services/hertzInteractionService';
 import { checkRateLimit } from '@/lib/rateLimit';
 import { apiError, apiErrorFromUnknown, apiSuccess } from '@/lib/apiResponse';
 import { getCurrentMember } from '@/lib/memberAuth';
@@ -8,7 +8,7 @@ interface RouteContext {
   params: Promise<{ shortId: string }>;
 }
 
-const service = new PostBookmarkService();
+const service = new HertzBookmarkService();
 
 export async function POST(request: NextRequest, context: RouteContext) {
   const rateLimited = checkRateLimit(request, { max: 120, windowMs: 10 * 60 * 1000, prefix: 'bookmark-toggle' });

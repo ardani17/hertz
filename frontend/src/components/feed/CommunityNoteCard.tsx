@@ -1,6 +1,6 @@
 import Link from 'next/link';
 import type { CommunityNote } from '@shared/types';
-import { SignalIcon, UsersIcon } from './SignalIcons';
+import { UsersIcon } from './SignalIcons';
 import styles from './SignalPost.module.css';
 
 export function CommunityNoteCard({ note, postId }: { note: CommunityNote | null; postId: string }) {
@@ -9,7 +9,7 @@ export function CommunityNoteCard({ note, postId }: { note: CommunityNote | null
   return (
     <div className={styles.note}>
       <div className={styles.noteSpineNode} aria-hidden="true">
-        <SignalIcon />
+        <UsersIcon />
       </div>
       <strong><UsersIcon /> Catatan komunitas</strong>
       <p>{note.content}</p>

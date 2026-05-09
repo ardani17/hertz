@@ -11,7 +11,7 @@ export function QuotePostCard({ post }: { post: SignalPost | null }) {
       <div>
         <div className={styles.quoteAuthor}>
           <strong>{post.author.name}</strong>
-          <em>{post.market?.pair ?? (post.category === 'trading' ? 'Trading Room' : 'Horizon')}</em>
+          <em>{post.market?.pair ?? (post.category === 'trading_room' || post.category === 'trading' ? 'Trading Room' : 'Horizon')}</em>
         </div>
         <p>{post.content.text}</p>
         {post.market ? (

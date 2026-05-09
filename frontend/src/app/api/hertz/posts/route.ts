@@ -1,12 +1,12 @@
 import { NextRequest } from 'next/server';
-import { FeedService } from '@shared/services/feedService';
+import { HertzPostService } from '@shared/services/hertzPostService';
 import { checkRateLimit } from '@/lib/rateLimit';
 import { apiError, apiErrorFromUnknown, apiSuccess } from '@/lib/apiResponse';
 import { getCurrentMember } from '@/lib/memberAuth';
 
 export const dynamic = 'force-dynamic';
 
-const feed = new FeedService();
+const feed = new HertzPostService();
 
 export async function GET(request: NextRequest) {
   try {

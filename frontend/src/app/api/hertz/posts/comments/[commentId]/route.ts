@@ -1,5 +1,5 @@
 import { NextRequest } from 'next/server';
-import { PostCommentService } from '@shared/services/postCommentService';
+import { HertzCommentService } from '@shared/services/hertzCommentService';
 import { apiError, apiErrorFromUnknown, apiSuccess } from '@/lib/apiResponse';
 import { getCurrentMember } from '@/lib/memberAuth';
 
@@ -7,7 +7,7 @@ interface RouteContext {
   params: Promise<{ commentId: string }>;
 }
 
-const comments = new PostCommentService();
+const comments = new HertzCommentService();
 
 export async function PATCH(request: NextRequest, context: RouteContext) {
   try {

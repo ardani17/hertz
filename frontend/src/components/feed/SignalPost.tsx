@@ -7,7 +7,7 @@ import { SignalMarketMeta } from './SignalMarketMeta';
 import { SignalPostMenu } from './SignalPostMenu';
 import { CommunityNoteCard } from './CommunityNoteCard';
 import { QuotePostCard } from './QuotePostCard';
-import { SignalIcon } from './SignalIcons';
+import { CoffeeIcon, ImageIcon, TelegramIcon } from './SignalIcons';
 import styles from './SignalPost.module.css';
 
 function initials(name: string, username?: string | null) {
@@ -17,12 +17,25 @@ function initials(name: string, username?: string | null) {
   return name.split(/\s+/).slice(0, 2).map((part) => part[0]).join('').toUpperCase();
 }
 
+function SpineIcon({ post }: { post: SignalPost }) {
+  if (post.category === 'life_coffee' || post.category === 'life_story') return <CoffeeIcon />;
+  if (post.quotedPost) return <ImageIcon />;
+  return <TelegramIcon />;
+}
+
+function spineNodeClass(post: SignalPost) {
+  return [
+    styles.spineNode,
+    (post.category === 'life_coffee' || post.category === 'life_story') ? styles.coffeeSpineNode : '',
+  ].filter(Boolean).join(' ');
+}
+
 export function SignalPostCard({ post, currentUser }: { post: SignalPost; currentUser: MemberSessionUser | null }) {
   return (
     <>
       <article className={styles.post}>
-        <div className={styles.spineNode} aria-hidden="true">
-          <SignalIcon />
+        <div className={spineNodeClass(post)} aria-hidden="true">
+          <SpineIcon post={post} />
         </div>
         <div className={styles.avatar}>{initials(post.author.name, post.author.username)}</div>
         <div className={styles.body}>

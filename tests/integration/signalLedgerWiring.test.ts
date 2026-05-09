@@ -66,13 +66,44 @@ describe('HERTZ implementation wiring', () => {
     }
   });
 
-  it('wires Telegram article creation and publish into feed_posts', () => {
+  it('wires Telegram article creation and publish into hertz_posts', () => {
     const bot = read('bot/src/index.ts');
 
-    expect(bot).toContain('INSERT INTO feed_posts');
+    expect(bot).toContain('INSERT INTO hertz_posts');
     expect(bot).toContain('pending_review');
-    expect(bot).toContain('UPDATE feed_posts');
+    expect(bot).toContain('UPDATE hertz_posts');
     expect(bot).toContain('article_id = $2');
+  });
+
+  it('uses hertz_* services for public HERTZ actions', () => {
+    const postsRoute = read('frontend/src/app/api/hertz/posts/route.ts');
+    const postRepo = read('shared/repositories/hertzPostRepository.ts');
+    const interactions = read('shared/repositories/hertzInteractionRepository.ts');
+    const notes = read('shared/repositories/hertzCommunityNoteRepository.ts');
+
+    expect(postsRoute).toContain('HertzPostService');
+    expect(postRepo).toContain('FROM hertz_posts');
+    expect(postRepo).toContain('INSERT INTO hertz_posts');
+    expect(postRepo).toContain('hertz_post_media');
+    expect(interactions).toContain('hertz_reactions');
+    expect(interactions).toContain('hertz_bookmarks');
+    expect(interactions).toContain('hertz_reposts');
+    expect(interactions).toContain('hertz_views');
+    expect(notes).toContain('hertz_community_notes');
+    expect(notes).toContain('hertz_community_note_sources');
+    expect(notes).toContain('hertz_community_note_ratings');
+  });
+
+  it('ships DM and Blog completion route surfaces', () => {
+    for (const path of [
+      'frontend/src/app/api/hertz/messages/conversations/route.ts',
+      'frontend/src/app/api/hertz/messages/conversations/[conversationId]/route.ts',
+      'frontend/src/app/api/hertz/messages/messages/[messageId]/route.ts',
+      'frontend/src/app/api/hertz/messages/blocks/[userId]/route.ts',
+      'frontend/src/app/api/blog/[id]/route.ts',
+    ]) {
+      expect(existsSync(join(root, path))).toBe(true);
+    }
   });
 
   it('keeps Blog and Outlook separate from HERTZ feed routes', () => {

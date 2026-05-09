@@ -39,4 +39,30 @@ export class HertzBlogService {
       return article;
     });
   }
+
+  async update(user: MemberSessionUser, articleId: string, input: HertzBlogPostInput): Promise<void> {
+    const article = await this.repo.findManageable(articleId);
+    if (!article) throw new Error('Blog tidak ditemukan');
+    if (article.author_id !== user.id && user.role !== 'admin') throw new Error('Akses ditolak');
+    const title = input.title.trim();
+    const content = input.content.trim();
+    if (!title || !content) throw new Error('Title dan content wajib diisi');
+    await this.repo.update(articleId, { ...input, title, content: textToHtml(content) });
+  }
+
+  async delete(user: MemberSessionUser, articleId: string): Promise<void> {
+    const article = await this.repo.findManageable(articleId);
+    if (!article) throw new Error('Blog tidak ditemukan');
+    if (article.author_id !== user.id && user.role !== 'admin') throw new Error('Akses ditolak');
+    await this.repo.softDelete(articleId);
+  }
+
+  async report(user: MemberSessionUser, articleId: string, reason: unknown): Promise<void> {
+    const reasonText = typeof reason === 'string' && reason.trim() ? reason.trim().slice(0, 50) : 'other';
+    await execute(
+      `INSERT INTO hertz_reports (target_type, target_id, reporter_user_id, reason)
+       VALUES ('blog', $1, $2, $3)`,
+      [articleId, user.id, reasonText],
+    );
+  }
 }

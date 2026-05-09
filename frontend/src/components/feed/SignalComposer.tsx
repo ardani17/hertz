@@ -63,12 +63,16 @@ export function SignalComposer({ currentUser }: { currentUser: MemberSessionUser
       setStatus('Login Telegram member diperlukan.');
       return;
     }
+    if (!pair.trim() || !risk.trim()) {
+      setStatus('Pair dan risk wajib untuk Trading Room.');
+      return;
+    }
     setStatus('Mengirim...');
     const response = await fetch('/api/hertz/posts', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
-        category: 'trading',
+        category: 'trading_room',
         content,
         market: {
           pair: pair || null,

@@ -1,6 +1,6 @@
 import { NextRequest } from 'next/server';
-import { FeedService } from '@shared/services/feedService';
-import { PostCommentService } from '@shared/services/postCommentService';
+import { HertzPostService } from '@shared/services/hertzPostService';
+import { HertzCommentService } from '@shared/services/hertzCommentService';
 import { checkRateLimit } from '@/lib/rateLimit';
 import { apiError, apiErrorFromUnknown, apiSuccess } from '@/lib/apiResponse';
 import { getCurrentMember } from '@/lib/memberAuth';
@@ -9,8 +9,8 @@ interface RouteContext {
   params: Promise<{ shortId: string }>;
 }
 
-const feed = new FeedService();
-const comments = new PostCommentService();
+const feed = new HertzPostService();
+const comments = new HertzCommentService();
 
 export async function GET(_request: NextRequest, context: RouteContext) {
   try {

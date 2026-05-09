@@ -7,6 +7,17 @@ export const dynamic = 'force-dynamic';
 
 const service = new HertzDmService();
 
+export async function GET(request: NextRequest) {
+  try {
+    const user = await getCurrentMember();
+    if (!user) return apiError('AUTH_REQUIRED', 'Login member diperlukan', 401);
+    const members = await service.searchMembers(request.nextUrl.searchParams.get('q') ?? '', user.id);
+    return apiSuccess({ members });
+  } catch (error) {
+    return apiErrorFromUnknown(error);
+  }
+}
+
 export async function POST(request: NextRequest) {
   try {
     const user = await getCurrentMember();

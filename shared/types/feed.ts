@@ -2,7 +2,7 @@ import type { CommunityNote } from './communityNote';
 
 export type SignalPostType = 'original' | 'quote' | 'repost';
 export type SignalPostSource = 'telegram' | 'web' | 'admin' | 'system';
-export type SignalPostCategory = 'trading' | 'life_story' | 'general';
+export type SignalPostCategory = 'trading_room' | 'life_coffee' | 'general' | 'community_note' | 'trading' | 'life_story';
 export type SignalPostStatus = 'draft' | 'pending_review' | 'published' | 'hidden' | 'rejected' | 'deleted';
 
 export interface SignalAuthor {

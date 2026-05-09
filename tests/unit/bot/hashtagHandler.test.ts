@@ -77,22 +77,22 @@ describe('HashtagHandler', () => {
   });
 
   describe('article creation', () => {
-    it('should create an article with category "trading" for #trading', async () => {
+    it('should create an article with category "trading_room" for #trading', async () => {
       ctx.message.text = '#trading EURUSD analysis for the week';
       await handler.execute(ctx);
 
       expect(deps.insertArticle).toHaveBeenCalledWith(
-        expect.objectContaining({ category: 'trading' }),
+        expect.objectContaining({ category: 'trading_room' }),
         'mock-client',
       );
     });
 
-    it('should create an article with category "life_story" for #cerita', async () => {
+    it('should create an article with category "life_coffee" for #cerita', async () => {
       ctx.message.text = '#cerita Hari ini saya belajar sesuatu yang baru';
       await handler.execute(ctx);
 
       expect(deps.insertArticle).toHaveBeenCalledWith(
-        expect.objectContaining({ category: 'life_story' }),
+        expect.objectContaining({ category: 'life_coffee' }),
         'mock-client',
       );
     });
@@ -169,7 +169,7 @@ describe('HashtagHandler', () => {
       expect(deps.updateCreditBalance).toHaveBeenCalledWith(ctx.user.id, 10, 'mock-client');
     });
 
-    it('should use correct source_type for life_story category', async () => {
+    it('should use correct source_type for life_coffee category', async () => {
       ctx.user = createMockUser({ role: 'admin' });
       ctx.message.text = '#cerita My life story';
       vi.mocked(deps.getCreditReward).mockResolvedValue({ credit_reward: 5, is_active: true });
@@ -394,7 +394,7 @@ describe('HashtagHandler', () => {
       await handler.execute(ctx);
 
       expect(ctx.replyWithMessageId).toHaveBeenCalledWith(
-        expect.stringContaining('trading'),
+        expect.stringContaining('trading_room'),
       );
     });
 
@@ -403,7 +403,7 @@ describe('HashtagHandler', () => {
       await handler.execute(ctx);
 
       expect(ctx.replyWithMessageId).toHaveBeenCalledWith(
-        expect.stringContaining('life_story'),
+        expect.stringContaining('life_coffee'),
       );
     });
 

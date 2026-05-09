@@ -1,5 +1,5 @@
 import { NextRequest } from 'next/server';
-import { PostViewService } from '@shared/services/postViewService';
+import { HertzViewService } from '@shared/services/hertzInteractionService';
 import { apiErrorFromUnknown, apiSuccess } from '@/lib/apiResponse';
 import { getCurrentMember, getMemberSessionToken } from '@/lib/memberAuth';
 
@@ -7,7 +7,7 @@ interface RouteContext {
   params: Promise<{ shortId: string }>;
 }
 
-const service = new PostViewService();
+const service = new HertzViewService();
 
 function getIp(request: NextRequest): string | null {
   return request.headers.get('x-forwarded-for')?.split(',')[0]?.trim()

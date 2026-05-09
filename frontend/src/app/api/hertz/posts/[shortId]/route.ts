@@ -1,5 +1,5 @@
 import { NextRequest } from 'next/server';
-import { FeedService } from '@shared/services/feedService';
+import { HertzPostService } from '@shared/services/hertzPostService';
 import { apiError, apiErrorFromUnknown, apiSuccess } from '@/lib/apiResponse';
 import { getCurrentMember } from '@/lib/memberAuth';
 
@@ -9,7 +9,7 @@ interface RouteContext {
 
 export const dynamic = 'force-dynamic';
 
-const feed = new FeedService();
+const feed = new HertzPostService();
 
 export async function GET(_request: NextRequest, context: RouteContext) {
   try {

@@ -3,13 +3,17 @@ import type { HertzBlogPostInput } from '../types/hertz';
 
 export class HertzBlogRepository {
   async create(authorId: string, slug: string, input: HertzBlogPostInput, client?: DbClient) {
-    return queryOne<{ id: string; slug: string }>(
+    const article = await queryOne<{ id: string; slug: string }>(
       `INSERT INTO articles (author_id, title, slug, content_html, category, source, status)
        VALUES ($1, $2, $3, $4, 'blog', 'web', 'published')
        RETURNING id, slug`,
       [authorId, input.title, slug, input.content],
       client,
     );
+    if (article && input.coverImageUrl) {
+      await this.upsertCover(article.id, input.coverImageUrl, client);
+    }
+    return article;
   }
 
   async update(articleId: string, input: HertzBlogPostInput, client?: DbClient): Promise<void> {
@@ -18,6 +22,15 @@ export class HertzBlogRepository {
        SET title = $2, content_html = $3, updated_at = NOW()
        WHERE id = $1 AND category = 'blog'`,
       [articleId, input.title, input.content],
+      client,
+    );
+    if (input.coverImageUrl) await this.upsertCover(articleId, input.coverImageUrl, client);
+  }
+
+  async findManageable(articleId: string, client?: DbClient) {
+    return queryOne<{ id: string; author_id: string; status: string }>(
+      `SELECT id, author_id, status FROM articles WHERE id = $1 AND category = 'blog'`,
+      [articleId],
       client,
     );
   }
@@ -52,5 +65,14 @@ export class HertzBlogRepository {
       client,
     );
     return result.rows;
+  }
+
+  private async upsertCover(articleId: string, url: string, client?: DbClient): Promise<void> {
+    await execute(
+      `INSERT INTO media (article_id, file_url, media_type, file_key, file_size)
+       VALUES ($1, $2, 'image', $2, 0)`,
+      [articleId, url],
+      client,
+    );
   }
 }

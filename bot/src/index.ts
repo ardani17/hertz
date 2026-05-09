@@ -25,6 +25,7 @@ import { ActivityLogService } from '../../shared/services/activityLog';
 import { MediaService, createTelegramApiClient } from './services/mediaService';
 import { formatBotErrorMessage, logBotError } from './utils/errorHandler';
 import type { User, ArticleCategory } from '../../shared/types/index';
+import type { SignalPostCategory } from '../../shared/types/feed';
 import type { DbClient } from '../../shared/db/query';
 
 // ---- Configuration ----
@@ -60,7 +61,7 @@ async function createShortId(client: DbClient): Promise<string> {
     const suffix = Array.from(bytes, (byte) => SHORT_ID_ALPHABET[byte % SHORT_ID_ALPHABET.length]).join('');
     const shortId = `hz_${suffix}`;
     const existing = await queryOne<{ id: string }>(
-      'SELECT id FROM feed_posts WHERE short_id = $1',
+      'SELECT id FROM hertz_posts WHERE short_id = $1',
       [shortId],
       client,
     );
@@ -106,7 +107,7 @@ async function insertArticle(
     author_id: string;
     content_html: string;
     title: string | null;
-    category: string;
+    category: SignalPostCategory;
     source: string;
     status: string;
     slug: string;
@@ -121,7 +122,7 @@ async function insertArticle(
        telegram_message_id, bot_reply_message_id, telegram_chat_id)
      VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10)
      RETURNING id`,
-    [data.author_id, data.content_html, data.title, data.category, data.source, data.status, data.slug,
+    [data.author_id, data.content_html, data.title, toArticleCategory(data.category), data.source, data.status, data.slug,
      data.telegram_message_id ?? null, data.bot_reply_message_id ?? null, data.telegram_chat_id ?? null],
     client,
   );
@@ -130,11 +131,11 @@ async function insertArticle(
   }
 
   await execute(
-    `INSERT INTO feed_posts (
-       short_id, article_id, author_id, post_type, source, category, status,
+    `INSERT INTO hertz_posts (
+       short_id, article_id, author_id, type, source, category, status, content,
        telegram_message_id, telegram_chat_id
      )
-     VALUES ($1, $2, $3, 'original', $4, $5, $6, $7, $8)
+     VALUES ($1, $2, $3, 'original', $4, $5, $6, $7, $8, $9)
      ON CONFLICT DO NOTHING`,
     [
       await createShortId(client),
@@ -143,6 +144,7 @@ async function insertArticle(
       data.status === 'published' ? 'admin' : 'telegram',
       data.category,
       data.status === 'published' ? 'published' : 'pending_review',
+      data.content_html.replace(/<[^>]*>/g, ' ').replace(/\s+/g, ' ').trim(),
       data.telegram_message_id ?? null,
       data.telegram_chat_id ?? null,
     ],
@@ -150,6 +152,12 @@ async function insertArticle(
   );
 
   return result;
+}
+
+function toArticleCategory(category: SignalPostCategory): ArticleCategory {
+  if (category === 'trading_room') return 'trading';
+  if (category === 'life_coffee') return 'life_story';
+  return 'general';
 }
 
 async function insertMedia(
@@ -162,10 +170,21 @@ async function insertMedia(
   },
   client: DbClient,
 ): Promise<void> {
-  await execute(
+  const media = await queryOne<{ id: string }>(
     `INSERT INTO media (article_id, file_url, media_type, file_key, file_size)
-     VALUES ($1, $2, $3, $4, $5)`,
+     VALUES ($1, $2, $3, $4, $5)
+     RETURNING id`,
     [data.article_id, data.file_url, data.media_type, data.file_key, data.file_size],
+    client,
+  );
+  if (!media) return;
+  await execute(
+    `INSERT INTO hertz_post_media (post_id, media_id, file_url, media_type, file_key, file_size, sort_order)
+     SELECT hp.id, $2, $3, $4, $5, $6,
+            COALESCE((SELECT MAX(sort_order) + 1 FROM hertz_post_media WHERE post_id = hp.id), 0)
+     FROM hertz_posts hp
+     WHERE hp.article_id = $1`,
+    [data.article_id, media.id, data.file_url, data.media_type, data.file_key, data.file_size],
     client,
   );
 }
@@ -185,8 +204,9 @@ async function findArticleByMessageId(telegramMessageId: number) {
 async function updateArticleStatus(articleId: string, status: string, client: DbClient) {
   await execute('UPDATE articles SET status = $1 WHERE id = $2', [status, articleId], client);
   await execute(
-    `UPDATE feed_posts
+    `UPDATE hertz_posts
      SET status = CASE WHEN $1 = 'published' THEN 'published' ELSE status END,
+         published_at = CASE WHEN $1 = 'published' AND published_at IS NULL THEN NOW() ELSE published_at END,
          updated_at = NOW()
      WHERE article_id = $2`,
     [status, articleId],

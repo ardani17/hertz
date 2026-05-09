@@ -21,6 +21,16 @@ interface PendingResponse {
     pendingNotes: number;
     reportedPosts: number;
   };
+  reports: Array<{
+    id: string;
+    target_type: string;
+    target_id: string;
+    reason: string;
+    details: string | null;
+    reporter_name: string | null;
+    message_preview?: string | null;
+    created_at: string;
+  }>;
 }
 
 export default function AdminSignalLedgerPage() {
@@ -105,6 +115,32 @@ export default function AdminSignalLedgerPage() {
       </section>
 
       {error ? <div className={styles.error}>{error}</div> : null}
+
+      <section className={styles.panel}>
+        <div className={styles.panelHeader}>
+          <h2>Report Terbuka</h2>
+          <p>Post, komentar, note, Blog, dan DM yang perlu ditinjau admin.</p>
+        </div>
+
+        {!loading && data?.reports.length === 0 ? (
+          <div className={styles.empty}>Tidak ada report terbuka.</div>
+        ) : null}
+
+        <div className={styles.list}>
+          {data?.reports.map((report) => (
+            <article key={report.id} className={styles.postCard}>
+              <div className={styles.postMeta}>
+                <span>{report.target_type}</span>
+                <span>{report.reporter_name ?? 'Member'}</span>
+                <span>{report.reason}</span>
+              </div>
+              <h3>{report.target_id.slice(0, 8)}</h3>
+              {report.message_preview ? <p>{report.message_preview}</p> : null}
+              {report.details ? <p>{report.details}</p> : null}
+            </article>
+          ))}
+        </div>
+      </section>
 
       <section className={styles.panel}>
         <div className={styles.panelHeader}>

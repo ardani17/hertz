@@ -8,6 +8,7 @@
     "dev:bot": "npm run dev --workspace=bot",
     "build:frontend": "npm run build --workspace=frontend",
     "build:bot": "npm run build --workspace=bot",
+    "db:seed": "node scripts/run-db-seeds.js",
     "lint": "eslint . --ext .ts,.tsx",
     "test": "vitest --run",
     "test:watch": "vitest",

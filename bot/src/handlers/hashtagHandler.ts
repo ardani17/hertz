@@ -7,15 +7,16 @@ import type { BotContext } from '../middleware/types';
 import { parseHashtags, mapHashtagToCategory, stripRecognizedHashtags } from '../utils/hashtag';
 import { textToHtml } from '../../../shared/utils/textToHtml';
 import { slugify, extractFirstWords } from '../../../shared/utils/slugify';
-import type { ArticleCategory, SourceType } from '../../../shared/types/index';
+import type { SourceType } from '../../../shared/types/index';
+import type { SignalPostCategory } from '../../../shared/types/feed';
 import type { DbClient } from '../../../shared/db/query';
 
 /**
  * Maps article categories to credit source types for transaction records.
  */
 const CATEGORY_TO_SOURCE_TYPE: Record<string, SourceType> = {
-  trading: 'article_trading',
-  life_story: 'article_life_story',
+  trading_room: 'article_trading',
+  life_coffee: 'article_life_story',
   general: 'article_general',
 };
 
@@ -33,7 +34,7 @@ export interface HashtagHandlerDeps {
       author_id: string;
       content_html: string;
       title: string | null;
-      category: ArticleCategory;
+      category: SignalPostCategory;
       source: string;
       status: string;
       slug: string;
