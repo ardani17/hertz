@@ -3,6 +3,7 @@ import { HertzCommentRepository, type HertzCommentRow } from '../repositories/he
 import { HertzPostRepository } from '../repositories/hertzPostRepository';
 import { ActivityLogService } from './activityLog';
 import { HertzForbiddenError, HertzNotFoundError, HertzValidationError } from './hertzPostService';
+import { PushNotificationService } from './pushNotificationService';
 import type { MemberSessionUser } from '../types/membership';
 
 const COMMENT_MAX = 2000;
@@ -18,12 +19,13 @@ export class HertzCommentService {
   private readonly comments = new HertzCommentRepository();
   private readonly posts = new HertzPostRepository();
   private readonly logs = new ActivityLogService();
+  private readonly push = new PushNotificationService();
 
   async create(postId: string, user: MemberSessionUser | null, content: unknown): Promise<HertzCommentRow> {
     if (!user) throw new HertzForbiddenError('Login member diperlukan');
     const resolvedPostId = await this.posts.resolvePostId(postId);
     if (!resolvedPostId) throw new HertzNotFoundError('Post tidak ditemukan');
-    return withTransaction(async (client) => {
+    const comment = await withTransaction(async (client) => {
       const comment = await this.comments.create(resolvedPostId, user.id, cleanComment(content), client);
       await this.logs.log({
         actor_id: user.id,
@@ -35,6 +37,8 @@ export class HertzCommentService {
       }, client);
       return comment;
     });
+    void this.push.notifyHertzCommentCreated({ postId: resolvedPostId, commentId: comment.id, commenterId: user.id });
+    return comment;
   }
 
   async edit(commentId: string, user: MemberSessionUser | null, content: unknown): Promise<void> {

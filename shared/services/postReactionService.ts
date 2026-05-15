@@ -24,8 +24,4 @@ export class PostReactionService {
     });
     return result;
   }
-
-  async toggleSignal(postId: string, user: MemberSessionUser | null): Promise<{ active: boolean }> {
-    return this.togglePulse(postId, user);
-  }
 }

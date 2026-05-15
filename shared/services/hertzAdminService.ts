@@ -178,7 +178,7 @@ export class HertzAdminService {
 async function awardTelegramPublishCredit(userId: string, postId: string, client: DbClient): Promise<void> {
   const result = await query<{ amount: number }>(
     `INSERT INTO hertz_credit_ledger (user_id, event_type, entity_id, amount)
-     SELECT $1, 'telegram_post_published', $2, amount
+     SELECT $1::uuid, 'telegram_post_published', $2::uuid, amount
      FROM hertz_credit_settings
      WHERE key = 'telegram_post_published' AND is_active = true AND amount > 0
      ON CONFLICT (user_id, event_type, entity_id) DO NOTHING

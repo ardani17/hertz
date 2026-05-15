@@ -1,0 +1,55 @@
+.mobileNav {
+  display: none;
+}
+
+@media (max-width: 720px) {
+  .mobileNav {
+    align-items: stretch;
+    background: rgba(2, 6, 4, 0.94);
+    border-top: 1px solid rgba(76, 118, 94, 0.34);
+    bottom: 0;
+    box-shadow: 0 -18px 34px rgba(0, 0, 0, 0.34);
+    display: grid;
+    gap: 0.1rem;
+    grid-template-columns: repeat(5, minmax(0, 1fr));
+    left: 0;
+    min-height: calc(66px + env(safe-area-inset-bottom));
+    padding: 0.38rem 0.28rem calc(0.38rem + env(safe-area-inset-bottom));
+    position: fixed;
+    right: 0;
+    z-index: 30;
+  }
+
+  .mobileNav a {
+    align-items: center;
+    border-radius: 8px;
+    color: #8fa899;
+    display: grid;
+    font-size: clamp(0.54rem, 2.35vw, 0.66rem);
+    font-weight: 750;
+    gap: 0.16rem;
+    justify-items: center;
+    line-height: 1.05;
+    min-height: 50px;
+    min-width: 0;
+    padding: 0.24rem 0.1rem;
+    text-align: center;
+    text-decoration: none;
+  }
+
+  .mobileNav a span {
+    display: block;
+    max-width: 100%;
+    overflow-wrap: anywhere;
+  }
+
+  .mobileNav svg {
+    height: 17px;
+    width: 17px;
+  }
+
+  .active {
+    background: rgba(16, 185, 129, 0.12);
+    color: #34d399 !important;
+  }
+}

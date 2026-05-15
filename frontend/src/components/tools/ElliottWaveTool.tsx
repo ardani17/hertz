@@ -99,7 +99,7 @@ const toolCopy = {
       distance: 'Distance',
     },
     note:
-      'Function: builds Elliott observation levels from Fibonacci ratios of the previous range. Signals only appear when price is close to a level according to the selected timeframe tolerance.',
+      'Function: builds Elliott observation levels from Fibonacci ratios of the previous range. Setups only appear when price is close to a level according to the selected timeframe tolerance.',
   },
 } as const;
 

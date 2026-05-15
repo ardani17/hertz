@@ -7,7 +7,6 @@ const categories = [
   { label: 'Life & Coffee', href: '/?category=life_story' },
   { label: 'Outlook', href: '/outlook' },
   { label: 'Blog', href: '/blog' },
-  { label: 'Gallery', href: '/gallery' },
 ] as const;
 
 const links = [

@@ -2,7 +2,7 @@ import type { Metadata } from 'next';
 import Image from 'next/image';
 import Link from 'next/link';
 import { HertzPostService } from '@shared/services/hertzPostService';
-import type { SignalPost } from '@shared/types';
+import type { HertzPost } from '@shared/types';
 import styles from './HorizonLanding.module.css';
 
 export const dynamic = 'force-dynamic';
@@ -38,7 +38,7 @@ const marketGroups = [
   },
 ] as const;
 
-async function getLandingPreviewPost(): Promise<SignalPost | null> {
+async function getLandingPreviewPost(): Promise<HertzPost | null> {
   try {
     const feed = new HertzPostService();
     const result = await feed.listFeed({ limit: 1, sort: 'latest' });
@@ -57,7 +57,7 @@ function initials(name: string) {
     .toUpperCase() || 'HZ';
 }
 
-function categoryInitials(post: SignalPost) {
+function categoryInitials(post: HertzPost) {
   if (post.category === 'trading_room') return 'TR';
   if (post.category === 'life_coffee') return 'LC';
   if (post.category === 'community_note') return 'CN';

@@ -1,6 +1,7 @@
 import Link from 'next/link';
 import styles from './OutlookCard.module.css';
 import { estimateReadTime, formatDate } from '@/components/article/ArticleMeta';
+import { ClickableArticle } from '@/components/article/ClickableArticle';
 
 export interface OutlookCardData {
   id: string;
@@ -29,7 +30,7 @@ export function OutlookCard({ article }: OutlookCardProps) {
   const readTime = estimateReadTime(article.content_html);
 
   return (
-    <article className={styles.card}>
+    <ClickableArticle className={styles.card} href={`/outlook/${article.slug}`}>
       <div className={styles.thumbnail}>
         {article.cover_image ? (
 
@@ -69,6 +70,6 @@ export function OutlookCard({ article }: OutlookCardProps) {
           <span className={styles.readTime}>{readTime} menit baca</span>
         </div>
       </div>
-    </article>
+    </ClickableArticle>
   );
 }

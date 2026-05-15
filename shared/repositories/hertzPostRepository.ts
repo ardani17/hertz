@@ -1,15 +1,15 @@
 import { execute, query, queryOne, type DbClient } from '../db';
-import type { MarketContext, SignalPostCategory, SignalPostSource, SignalPostStatus, SignalPostType } from '../types/feed';
+import type { MarketContext, HertzPostCategory, HertzPostSource, HertzPostStatus, HertzPostType } from '../types/feed';
 
 export interface HertzPostRow {
   id: string;
   short_id: string;
   article_id: string | null;
   author_id: string;
-  post_type: SignalPostType;
-  source: SignalPostSource;
-  category: SignalPostCategory;
-  status: SignalPostStatus;
+  post_type: HertzPostType;
+  source: HertzPostSource;
+  category: HertzPostCategory;
+  status: HertzPostStatus;
   visibility: string;
   quoted_post_id: string | null;
   telegram_message_id: number | null;
@@ -75,10 +75,10 @@ export class HertzPostRepository {
     shortId: string;
     articleId?: string | null;
     authorId: string;
-    type: SignalPostType;
-    source: SignalPostSource;
-    category: SignalPostCategory;
-    status: SignalPostStatus;
+    type: HertzPostType;
+    source: HertzPostSource;
+    category: HertzPostCategory;
+    status: HertzPostStatus;
     content: string;
     quotedPostId?: string | null;
     telegramMessageId?: number | null;
@@ -89,8 +89,8 @@ export class HertzPostRepository {
          short_id, article_id, author_id, type, source, category, status, content,
          quoted_post_id, telegram_message_id, telegram_chat_id, published_at
        )
-       VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11,
-         CASE WHEN $7 = 'published' THEN NOW() ELSE NULL END)
+       VALUES ($1, $2, $3, $4, $5, $6, $7::varchar, $8, $9, $10, $11,
+         CASE WHEN $7::text = 'published' THEN NOW() ELSE NULL END)
        RETURNING id, short_id`,
       [
         params.shortId,
@@ -226,20 +226,20 @@ export class HertzPostRepository {
 
   async updateContent(postId: string, content: string, client?: DbClient): Promise<void> {
     await execute(
-      'UPDATE hertz_posts SET content = $1, edited_at = NOW(), updated_at = NOW() WHERE id = $2 OR short_id = $2',
+      'UPDATE hertz_posts SET content = $1, edited_at = NOW(), updated_at = NOW() WHERE id::text = $2 OR short_id = $2',
       [content, postId],
       client,
     );
   }
 
-  async updateStatus(postId: string, status: SignalPostStatus, client?: DbClient): Promise<void> {
+  async updateStatus(postId: string, status: HertzPostStatus, client?: DbClient): Promise<void> {
     await execute(
       `UPDATE hertz_posts
        SET status = $2,
            published_at = CASE WHEN $2 = 'published' AND published_at IS NULL THEN NOW() ELSE published_at END,
            deleted_at = CASE WHEN $2 = 'deleted' THEN NOW() ELSE deleted_at END,
            updated_at = NOW()
-       WHERE id = $1 OR short_id = $1`,
+       WHERE id::text = $1 OR short_id = $1`,
       [postId, status],
       client,
     );

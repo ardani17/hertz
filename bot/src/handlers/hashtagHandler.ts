@@ -8,7 +8,7 @@ import { parseHashtags, mapHashtagToCategory, stripRecognizedHashtags } from '..
 import { textToHtml } from '../../../shared/utils/textToHtml';
 import { slugify, extractFirstWords } from '../../../shared/utils/slugify';
 import type { SourceType } from '../../../shared/types/index';
-import type { SignalPostCategory } from '../../../shared/types/feed';
+import type { HertzPostCategory } from '../../../shared/types/feed';
 import type { DbClient } from '../../../shared/db/query';
 
 /**
@@ -34,7 +34,7 @@ export interface HashtagHandlerDeps {
       author_id: string;
       content_html: string;
       title: string | null;
-      category: SignalPostCategory;
+      category: HertzPostCategory;
       source: string;
       status: string;
       slug: string;

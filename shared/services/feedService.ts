@@ -12,22 +12,22 @@ import type {
   CursorFeedResult,
   MarketContext,
   RepostInput,
-  SignalAuthor,
-  SignalComment,
-  SignalMedia,
-  SignalPost,
-  SignalPostCategory,
-  SignalPostDetail,
-  SignalPostInput,
-  SignalPostSource,
-  SignalPostStatus,
+  HertzAuthor,
+  HertzComment,
+  HertzMedia,
+  HertzPost,
+  HertzPostCategory,
+  HertzPostDetail,
+  HertzPostInput,
+  HertzPostSource,
+  HertzPostStatus,
 } from '../types/feed';
 import type { CommunityNote, CommunityNoteSource } from '../types/communityNote';
 import type { MemberSessionUser } from '../types/membership';
 
 const FEED_EXCERPT_LIMIT = 420;
 const EDIT_WINDOW_MS = 15 * 60 * 1000;
-const VALID_CATEGORIES: SignalPostCategory[] = ['trading', 'life_story', 'general'];
+const VALID_CATEGORIES: HertzPostCategory[] = ['trading', 'life_story', 'general'];
 const SHORT_ID_ALPHABET = 'abcdefghijklmnopqrstuvwxyz0123456789';
 
 export class FeedValidationError extends Error {
@@ -55,9 +55,9 @@ function assertMember(user: MemberSessionUser | null): asserts user is MemberSes
   if (!user) throw new FeedForbiddenError('Login member diperlukan');
 }
 
-function normalizeCategory(category: unknown): SignalPostCategory {
-  if (typeof category === 'string' && VALID_CATEGORIES.includes(category as SignalPostCategory)) {
-    return category as SignalPostCategory;
+function normalizeCategory(category: unknown): HertzPostCategory {
+  if (typeof category === 'string' && VALID_CATEGORIES.includes(category as HertzPostCategory)) {
+    return category as HertzPostCategory;
   }
   throw new FeedValidationError('Kategori tidak valid');
 }
@@ -104,7 +104,7 @@ function decodeCursor(cursor: string | null): { createdAt: string; id: string } 
   }
 }
 
-function authorFromRow(row: FeedListRow | PostCommentRow): SignalAuthor {
+function authorFromRow(row: FeedListRow | PostCommentRow): HertzAuthor {
   const username = 'author_username' in row ? row.author_username : row.username;
   const name = ('display_name' in row ? row.display_name : null)
     ?? ('author_display_name' in row ? row.author_display_name : null)
@@ -161,7 +161,7 @@ export class FeedService {
     return { items: posts, nextCursor };
   }
 
-  async getPostDetail(postId: string, viewer?: MemberSessionUser | null): Promise<SignalPostDetail> {
+  async getPostDetail(postId: string, viewer?: MemberSessionUser | null): Promise<HertzPostDetail> {
     const row = await this.feedRepo.findById(postId, viewer?.id ?? null);
     if (!row || row.status !== 'published' || row.deleted_at) {
       throw new FeedNotFoundError();
@@ -174,7 +174,7 @@ export class FeedService {
     return { ...post, comments, communityNotes };
   }
 
-  async createWebPost(user: MemberSessionUser, input: SignalPostInput): Promise<SignalPost> {
+  async createWebPost(user: MemberSessionUser, input: HertzPostInput): Promise<HertzPost> {
     assertMember(user);
     const category = normalizeCategory(input.category);
     const content = cleanText(input.content);
@@ -229,16 +229,16 @@ export class FeedService {
     userId: string;
     isAdmin: boolean;
     content: string;
-    category: SignalPostCategory;
+    category: HertzPostCategory;
     mediaIds?: string[];
     telegramMessageId?: number | null;
     telegramChatId?: number | null;
   }): Promise<string> {
     const content = cleanText(params.content);
-    const status: SignalPostStatus = params.isAdmin ? 'published' : 'pending_review';
+    const status: HertzPostStatus = params.isAdmin ? 'published' : 'pending_review';
     const contentHtml = textToHtml(content);
     const slug = slugify(extractFirstWords(content, 8));
-    const source: SignalPostSource = params.isAdmin ? 'admin' : 'telegram';
+    const source: HertzPostSource = params.isAdmin ? 'admin' : 'telegram';
 
     return withTransaction(async (client) => {
       const article = await this.feedRepo.createArticle({
@@ -370,7 +370,7 @@ export class FeedService {
     });
   }
 
-  async createRepost(postId: string, user: MemberSessionUser, input: RepostInput): Promise<{ active?: boolean; post?: SignalPost }> {
+  async createRepost(postId: string, user: MemberSessionUser, input: RepostInput): Promise<{ active?: boolean; post?: HertzPost }> {
     const original = await this.feedRepo.findRawById(postId);
     if (!original || original.status !== 'published' || original.deleted_at) throw new FeedNotFoundError();
     if (input.type === 'repost') {
@@ -423,7 +423,7 @@ export class FeedService {
     return { post: await this.getPostDetail(quotePostId, user) };
   }
 
-  async listComments(postId: string, viewer: MemberSessionUser | null): Promise<SignalComment[]> {
+  async listComments(postId: string, viewer: MemberSessionUser | null): Promise<HertzComment[]> {
     const rows = await this.commentRepo.listByPost(postId);
     return rows.map((row) => ({
       id: row.id,
@@ -445,7 +445,7 @@ export class FeedService {
     viewer: MemberSessionUser | null,
     truncate = true,
     includeQuotes = true,
-  ): Promise<SignalPost[]> {
+  ): Promise<HertzPost[]> {
     const articleIds = rows.map((row) => row.article_id).filter((id): id is string => Boolean(id));
     const postIds = rows.map((row) => row.id);
     const [mediaRows, primaryNotes] = await Promise.all([
@@ -458,7 +458,7 @@ export class FeedService {
       const html = row.content_html ?? '';
       const text = stripHtml(html);
       const isTruncated = truncate && text.length > FEED_EXCERPT_LIMIT;
-      const media: SignalMedia[] = mediaRows
+      const media: HertzMedia[] = mediaRows
         .filter((mediaRow) => mediaRow.article_id === row.article_id)
         .map((mediaRow) => ({
           id: mediaRow.id,
@@ -486,8 +486,7 @@ export class FeedService {
         market: this.mapMarket(row),
         quotedPost: null,
         viewer: {
-          hasSignaled: Boolean(row.viewer_has_signaled),
-          hasPulsed: Boolean(row.viewer_has_signaled),
+          hasPulsed: Boolean(row.viewer_has_pulsed),
           hasBookmarked: Boolean(row.viewer_has_bookmarked),
           hasReposted: Boolean(row.viewer_has_reposted),
           canEdit: Boolean(viewer && (viewer.id === row.author_id || viewer.role === 'admin')),
@@ -495,8 +494,7 @@ export class FeedService {
         },
         counts: {
           comments: Number(row.comment_count ?? 0),
-          signals: Number(row.signal_count ?? 0),
-          pulses: Number(row.signal_count ?? 0),
+          pulses: Number(row.pulse_count ?? 0),
           reposts: Number(row.repost_count ?? 0),
           views: Number(row.view_count ?? 0),
         },

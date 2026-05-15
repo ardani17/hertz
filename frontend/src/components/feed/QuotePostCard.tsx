@@ -1,8 +1,8 @@
 import Link from 'next/link';
-import type { SignalPost } from '@shared/types';
-import styles from './SignalPost.module.css';
+import type { HertzPost } from '@shared/types';
+import styles from './HertzPost.module.css';
 
-export function QuotePostCard({ post }: { post: SignalPost | null }) {
+export function QuotePostCard({ post }: { post: HertzPost | null }) {
   if (!post) return null;
 
   return (

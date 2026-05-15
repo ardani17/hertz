@@ -3,7 +3,7 @@
 import { useCallback, useEffect, useState } from 'react';
 import styles from './hertz.module.css';
 
-interface PendingSignalPost {
+interface PendingHertzPost {
   id: string;
   title: string | null;
   body: string;
@@ -15,7 +15,7 @@ interface PendingSignalPost {
 }
 
 interface PendingResponse {
-  posts: PendingSignalPost[];
+  posts: PendingHertzPost[];
   counts: {
     pendingPosts: number;
     pendingNotes: number;
@@ -33,7 +33,7 @@ interface PendingResponse {
   }>;
 }
 
-export default function AdminSignalLedgerPage() {
+export default function AdminHertzPage() {
   const [data, setData] = useState<PendingResponse | null>(null);
   const [loading, setLoading] = useState(true);
   const [actionId, setActionId] = useState<string | null>(null);

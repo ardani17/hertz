@@ -124,13 +124,13 @@ VALUES
 
 INSERT INTO media (id, article_id, file_url, media_type, file_key, file_size, created_at)
 VALUES
-  ('54000000-0000-0000-0000-000000000001', '51000000-0000-0000-0000-000000000001', '/images/signal-seed/chart-xauusd.svg', 'image', 'seed/v2/outlook-xauusd.svg', 220000, NOW() - INTERVAL '2 hours'),
-  ('54000000-0000-0000-0000-000000000002', '51000000-0000-0000-0000-000000000002', '/images/signal-seed/chart-mini.svg', 'image', 'seed/v2/outlook-btc.svg', 186000, NOW() - INTERVAL '4 hours'),
-  ('54000000-0000-0000-0000-000000000004', '51000000-0000-0000-0000-000000000008', '/images/signal-seed/chart-xauusd.svg', 'image', 'seed/v2/feed-gold.svg', 220000, NOW() - INTERVAL '9 minutes'),
-  ('54000000-0000-0000-0000-000000000005', '51000000-0000-0000-0000-000000000009', '/images/signal-seed/chart-mini.svg', 'image', 'seed/v2/feed-eurusd.svg', 186000, NOW() - INTERVAL '18 minutes'),
-  ('54000000-0000-0000-0000-000000000006', '51000000-0000-0000-0000-000000000013', '/images/signal-seed/chart-mini.svg', 'image', 'seed/v2/outlook-dxy.svg', 176000, NOW() - INTERVAL '10 hours'),
-  ('54000000-0000-0000-0000-000000000007', '51000000-0000-0000-0000-000000000019', '/images/signal-seed/chart-mini.svg', 'image', 'seed/v2/feed-btc.svg', 186000, NOW() - INTERVAL '1 hour'),
-  ('54000000-0000-0000-0000-000000000008', '51000000-0000-0000-0000-000000000020', '/images/signal-seed/chart-mini.svg', 'image', 'seed/v2/feed-coffee.svg', 164000, NOW() - INTERVAL '1 hour 20 minutes');
+  ('54000000-0000-0000-0000-000000000001', '51000000-0000-0000-0000-000000000001', '/images/hertz-seed/chart-xauusd.svg', 'image', 'seed/v2/outlook-xauusd.svg', 220000, NOW() - INTERVAL '2 hours'),
+  ('54000000-0000-0000-0000-000000000002', '51000000-0000-0000-0000-000000000002', '/images/hertz-seed/chart-mini.svg', 'image', 'seed/v2/outlook-btc.svg', 186000, NOW() - INTERVAL '4 hours'),
+  ('54000000-0000-0000-0000-000000000004', '51000000-0000-0000-0000-000000000008', '/images/hertz-seed/chart-xauusd.svg', 'image', 'seed/v2/feed-gold.svg', 220000, NOW() - INTERVAL '9 minutes'),
+  ('54000000-0000-0000-0000-000000000005', '51000000-0000-0000-0000-000000000009', '/images/hertz-seed/chart-mini.svg', 'image', 'seed/v2/feed-eurusd.svg', 186000, NOW() - INTERVAL '18 minutes'),
+  ('54000000-0000-0000-0000-000000000006', '51000000-0000-0000-0000-000000000013', '/images/hertz-seed/chart-mini.svg', 'image', 'seed/v2/outlook-dxy.svg', 176000, NOW() - INTERVAL '10 hours'),
+  ('54000000-0000-0000-0000-000000000007', '51000000-0000-0000-0000-000000000019', '/images/hertz-seed/chart-mini.svg', 'image', 'seed/v2/feed-btc.svg', 186000, NOW() - INTERVAL '1 hour'),
+  ('54000000-0000-0000-0000-000000000008', '51000000-0000-0000-0000-000000000020', '/images/hertz-seed/chart-mini.svg', 'image', 'seed/v2/feed-coffee.svg', 164000, NOW() - INTERVAL '1 hour 20 minutes');
 
 INSERT INTO feed_posts (id, short_id, article_id, author_id, post_type, source, category, status, quoted_post_id, telegram_message_id, telegram_chat_id, pinned_at, created_at, updated_at)
 VALUES
@@ -161,9 +161,9 @@ VALUES
 
 INSERT INTO hertz_post_media (id, post_id, media_id, file_url, media_type, file_key, file_size, alt_text, sort_order)
 VALUES
-  ('72000000-0000-0000-0000-000000000001', '71000000-0000-0000-0000-000000000001', '54000000-0000-0000-0000-000000000004', '/images/signal-seed/chart-xauusd.svg', 'image', 'seed/v2/feed-gold.svg', 220000, 'XAUUSD setup chart', 0),
-  ('72000000-0000-0000-0000-000000000002', '71000000-0000-0000-0000-000000000004', '54000000-0000-0000-0000-000000000005', '/images/signal-seed/chart-mini.svg', 'image', 'seed/v2/feed-eurusd.svg', 186000, 'EURUSD compression chart', 0),
-  ('72000000-0000-0000-0000-000000000003', '71000000-0000-0000-0000-000000000005', '54000000-0000-0000-0000-000000000007', '/images/signal-seed/chart-mini.svg', 'image', 'seed/v2/feed-btc.svg', 186000, 'BTC retest chart', 0);
+  ('72000000-0000-0000-0000-000000000001', '71000000-0000-0000-0000-000000000001', '54000000-0000-0000-0000-000000000004', '/images/hertz-seed/chart-xauusd.svg', 'image', 'seed/v2/feed-gold.svg', 220000, 'XAUUSD setup chart', 0),
+  ('72000000-0000-0000-0000-000000000002', '71000000-0000-0000-0000-000000000004', '54000000-0000-0000-0000-000000000005', '/images/hertz-seed/chart-mini.svg', 'image', 'seed/v2/feed-eurusd.svg', 186000, 'EURUSD compression chart', 0),
+  ('72000000-0000-0000-0000-000000000003', '71000000-0000-0000-0000-000000000005', '54000000-0000-0000-0000-000000000007', '/images/hertz-seed/chart-mini.svg', 'image', 'seed/v2/feed-btc.svg', 186000, 'BTC retest chart', 0);
 
 INSERT INTO hertz_post_market_context (post_id, pair, timeframe, risk_percent, direction, entry_zone, stop_loss, take_profit, setup_type, confidence_percent, broker_or_source)
 VALUES
@@ -275,7 +275,7 @@ WHERE hertz_conversations.id = latest.conversation_id;
 
 INSERT INTO hertz_message_attachments (id, message_id, file_url, file_key, mime_type, file_size, width, height, created_at)
 VALUES
-  ('83200000-0000-0000-0000-000000000001', '83000000-0000-0000-0000-000000000004', '/images/signal-seed/chart-mini.svg', 'seed/dm/liquidity-source.svg', 'image/png', 128000, 1200, 720, NOW() - INTERVAL '52 minutes');
+  ('83200000-0000-0000-0000-000000000001', '83000000-0000-0000-0000-000000000004', '/images/hertz-seed/chart-mini.svg', 'seed/dm/liquidity-source.svg', 'image/png', 128000, 1200, 720, NOW() - INTERVAL '52 minutes');
 
 INSERT INTO hertz_message_reports (id, message_id, reporter_user_id, reason, details, status, created_at)
 VALUES

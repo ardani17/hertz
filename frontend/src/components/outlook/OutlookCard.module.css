@@ -6,6 +6,7 @@
   gap: 1rem;
   grid-template-columns: 64px 1fr;
   padding: 1rem;
+  cursor: pointer;
 }
 
 .card:hover {
@@ -86,4 +87,37 @@
 
 .author strong {
   color: #dff7e9;
+}
+
+@media (max-width: 360px) {
+  .card {
+    gap: 0.75rem;
+    grid-template-columns: 1fr;
+    padding: 0.9rem;
+  }
+
+  .thumbnail {
+    height: 126px;
+    width: 100%;
+  }
+
+  .meta,
+  .footer {
+    gap: 0.45rem;
+  }
+
+  .title {
+    font-size: 1.02rem;
+    line-height: 1.2;
+  }
+
+  .excerpt {
+    font-size: 0.94rem;
+    line-height: 1.48;
+  }
+
+  .footer {
+    align-items: flex-start;
+    flex-direction: column;
+  }
 }

@@ -37,12 +37,4 @@ export class PostReactionRepository {
     );
     return { active: true };
   }
-
-  async hasSignal(postId: string, userId: string, client?: DbClient): Promise<boolean> {
-    return this.hasPulse(postId, userId, client);
-  }
-
-  async toggleSignal(postId: string, userId: string, client?: DbClient): Promise<{ active: boolean }> {
-    return this.togglePulse(postId, userId, client);
-  }
 }

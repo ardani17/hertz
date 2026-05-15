@@ -1,7 +1,7 @@
 import Link from 'next/link';
 import type { CommunityNote } from '@shared/types';
-import { UsersIcon } from './SignalIcons';
-import styles from './SignalPost.module.css';
+import { UsersIcon } from './HertzIcons';
+import styles from './HertzPost.module.css';
 
 export function CommunityNoteCard({ note, postId }: { note: CommunityNote | null; postId: string }) {
   if (!note) return null;

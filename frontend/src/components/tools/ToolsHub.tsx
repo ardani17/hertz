@@ -50,7 +50,7 @@ const copy = {
         href: '/tools/elliott-wave',
         label: 'Calculator',
         summary: 'Membuat level Elliott berbasis range sebelumnya dan menandai area buy/sell observasi.',
-        points: ['Fibonacci', 'Wave levels', 'Signals'],
+        points: ['Fibonacci', 'Wave levels', 'Setups'],
       },
       {
         name: 'Economic Calendar',
@@ -120,7 +120,7 @@ const copy = {
         href: '/tools/elliott-wave',
         label: 'Calculator',
         summary: 'Builds Elliott levels from the previous range and marks observational buy/sell areas.',
-        points: ['Fibonacci', 'Wave levels', 'Signals'],
+        points: ['Fibonacci', 'Wave levels', 'Setups'],
       },
       {
         name: 'Economic Calendar',

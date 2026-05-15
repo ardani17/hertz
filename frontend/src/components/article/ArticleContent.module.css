@@ -48,6 +48,28 @@
   margin: var(--space-4) 0;
 }
 
+.content table {
+  display: block;
+  max-width: 100%;
+  overflow-x: auto;
+  table-layout: auto;
+  white-space: normal;
+  -webkit-overflow-scrolling: touch;
+}
+
+.content th,
+.content td {
+  min-width: 8rem;
+  vertical-align: top;
+}
+
+.content iframe,
+.content embed,
+.content object {
+  display: block;
+  max-width: 100%;
+}
+
 .content ul,
 .content ol {
   padding-left: var(--space-6);
@@ -83,4 +105,26 @@
   margin-bottom: var(--space-2);
 }
 
+@media (max-width: 640px) {
+  .content {
+    font-size: 0.98rem;
+    line-height: 1.68;
+  }
 
+  .content table {
+    font-size: 0.82rem;
+    margin-left: calc(-1 * var(--space-2));
+    width: calc(100% + var(--space-4));
+  }
+
+  .content th,
+  .content td {
+    min-width: 9rem;
+    padding: var(--space-2);
+  }
+
+  .content ul,
+  .content ol {
+    padding-left: var(--space-4);
+  }
+}

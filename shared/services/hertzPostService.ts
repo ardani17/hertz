@@ -11,21 +11,21 @@ import type { MemberSessionUser } from '../types/membership';
 import type {
   CursorFeedResult,
   MarketContext,
-  SignalAuthor,
-  SignalComment,
-  SignalMedia,
-  SignalPost,
-  SignalPostCategory,
-  SignalPostDetail,
-  SignalPostInput,
-  SignalPostSource,
-  SignalPostStatus,
+  HertzAuthor,
+  HertzComment,
+  HertzMedia,
+  HertzPost,
+  HertzPostCategory,
+  HertzPostDetail,
+  HertzPostInput,
+  HertzPostSource,
+  HertzPostStatus,
 } from '../types/feed';
 
 const EXCERPT_LIMIT = 420;
 const EDIT_WINDOW_MS = 15 * 60 * 1000;
 const SHORT_ID_ALPHABET = 'abcdefghijklmnopqrstuvwxyz0123456789';
-const VALID_CATEGORIES: SignalPostCategory[] = ['trading_room', 'life_coffee', 'general', 'community_note'];
+const VALID_CATEGORIES: HertzPostCategory[] = ['trading_room', 'life_coffee', 'general', 'community_note'];
 
 export class HertzValidationError extends Error {
   constructor(message: string) {
@@ -52,11 +52,11 @@ function assertMember(user: MemberSessionUser | null): asserts user is MemberSes
   if (!user) throw new HertzForbiddenError('Login member diperlukan');
 }
 
-export function normalizeHertzCategory(category: unknown): SignalPostCategory {
+export function normalizeHertzCategory(category: unknown): HertzPostCategory {
   if (category === 'trading') return 'trading_room';
   if (category === 'life_story') return 'life_coffee';
-  if (typeof category === 'string' && VALID_CATEGORIES.includes(category as SignalPostCategory)) {
-    return category as SignalPostCategory;
+  if (typeof category === 'string' && VALID_CATEGORIES.includes(category as HertzPostCategory)) {
+    return category as HertzPostCategory;
   }
   throw new HertzValidationError('Kategori tidak valid');
 }
@@ -76,7 +76,7 @@ function optionalMediaIds(value: unknown): string[] {
   return ids;
 }
 
-function validateMarket(category: SignalPostCategory, market: MarketContext | null | undefined): MarketContext | null {
+function validateMarket(category: HertzPostCategory, market: MarketContext | null | undefined): MarketContext | null {
   if (category !== 'trading_room') return null;
   const pair = typeof market?.pair === 'string' ? market.pair.trim() : '';
   const riskPercent = market?.riskPercent;
@@ -123,7 +123,7 @@ function numberOrNull(value: string | number | null): number | null {
   return Number.isFinite(numeric) ? numeric : null;
 }
 
-function authorFromRow(row: HertzPostRow): SignalAuthor {
+function authorFromRow(row: HertzPostRow): HertzAuthor {
   return {
     id: row.author_id,
     name: row.author_display_name ?? row.author_username ?? 'Member Horizon',
@@ -167,7 +167,7 @@ export class HertzPostService {
     };
   }
 
-  async getPostDetail(postId: string, viewer?: MemberSessionUser | null): Promise<SignalPostDetail> {
+  async getPostDetail(postId: string, viewer?: MemberSessionUser | null): Promise<HertzPostDetail> {
     const row = await this.posts.findById(postId, viewer?.id ?? null);
     if (!row || row.status !== 'published' || row.deleted_at) throw new HertzNotFoundError();
     const [post] = await this.mapPosts([row], viewer ?? null, false);
@@ -178,7 +178,7 @@ export class HertzPostService {
     };
   }
 
-  async createWebPost(user: MemberSessionUser, input: SignalPostInput): Promise<SignalPost> {
+  async createWebPost(user: MemberSessionUser, input: HertzPostInput): Promise<HertzPost> {
     assertMember(user);
     const category = normalizeHertzCategory(input.category);
     const content = cleanText(input.content);
@@ -212,7 +212,7 @@ export class HertzPostService {
     return this.getPostDetail(postId, user);
   }
 
-  async createQuotePost(user: MemberSessionUser, quotedPostId: string, input: SignalPostInput): Promise<SignalPost> {
+  async createQuotePost(user: MemberSessionUser, quotedPostId: string, input: HertzPostInput): Promise<HertzPost> {
     assertMember(user);
     const originalId = await this.posts.resolvePostId(quotedPostId);
     if (!originalId) throw new HertzNotFoundError('Post tidak ditemukan');
@@ -240,15 +240,15 @@ export class HertzPostService {
     userId: string;
     isAdmin: boolean;
     content: string;
-    category: SignalPostCategory;
+    category: HertzPostCategory;
     mediaIds?: string[];
     telegramMessageId?: number | null;
     telegramChatId?: number | null;
   }): Promise<string> {
     const category = normalizeHertzCategory(params.category);
     const content = cleanText(params.content);
-    const status: SignalPostStatus = params.isAdmin ? 'published' : 'pending_review';
-    const source: SignalPostSource = params.isAdmin ? 'admin' : 'telegram';
+    const status: HertzPostStatus = params.isAdmin ? 'published' : 'pending_review';
+    const source: HertzPostSource = params.isAdmin ? 'admin' : 'telegram';
     return withTransaction(async (client) => {
       const post = await this.posts.createPost({
         shortId: await this.generateShortId(),
@@ -298,7 +298,7 @@ export class HertzPostService {
     await this.posts.updateStatus(post.id, 'deleted');
   }
 
-  private async mapPosts(rows: HertzPostRow[], viewer: MemberSessionUser | null, truncate = true, includeQuotes = true): Promise<SignalPost[]> {
+  private async mapPosts(rows: HertzPostRow[], viewer: MemberSessionUser | null, truncate = true, includeQuotes = true): Promise<HertzPost[]> {
     const postIds = rows.map((row) => row.id);
     const [mediaRows, primaryNotes] = await Promise.all([
       this.posts.listMedia(postIds),
@@ -309,7 +309,7 @@ export class HertzPostService {
       const html = row.content_html ? textToHtml(stripHtml(row.content_html)) : '';
       const text = stripHtml(html);
       const isTruncated = truncate && text.length > EXCERPT_LIMIT;
-      const media: SignalMedia[] = mediaRows
+      const media: HertzMedia[] = mediaRows
         .filter((mediaRow) => mediaRow.post_id === row.id)
         .map((mediaRow) => ({
           id: mediaRow.id,
@@ -336,7 +336,6 @@ export class HertzPostService {
         market: this.mapMarket(row),
         quotedPost: null,
         viewer: {
-          hasSignaled: Boolean(row.viewer_has_pulsed),
           hasPulsed: Boolean(row.viewer_has_pulsed),
           hasBookmarked: Boolean(row.viewer_has_bookmarked),
           hasReposted: Boolean(row.viewer_has_reposted),
@@ -345,7 +344,6 @@ export class HertzPostService {
         },
         counts: {
           comments: Number(row.comment_count ?? 0),
-          signals: Number(row.pulse_count ?? 0),
           pulses: Number(row.pulse_count ?? 0),
           reposts: Number(row.repost_count ?? 0),
           views: Number(row.view_count ?? 0),
@@ -381,12 +379,12 @@ export class HertzPostService {
     return notes.map((note) => this.mapCommunityNote(note, sources));
   }
 
-  private async listComments(postId: string, viewer: MemberSessionUser | null): Promise<SignalComment[]> {
+  private async listComments(postId: string, viewer: MemberSessionUser | null): Promise<HertzComment[]> {
     const rows = await this.comments.listByPost(postId);
     return rows.map((row) => this.mapComment(row, viewer));
   }
 
-  private mapComment(row: HertzCommentRow, viewer: MemberSessionUser | null): SignalComment {
+  private mapComment(row: HertzCommentRow, viewer: MemberSessionUser | null): HertzComment {
     return {
       id: row.id,
       postId: row.post_id,
@@ -476,9 +474,9 @@ export const FeedNotFoundError = HertzNotFoundError;
 async function awardHertzCredit(userId: string, eventType: string, entityId: string, client: DbClient): Promise<void> {
   const result = await query<{ amount: number }>(
     `INSERT INTO hertz_credit_ledger (user_id, event_type, entity_id, amount)
-     SELECT $1, $2, $3, amount
+     SELECT $1::uuid, $2::varchar, $3::uuid, amount
      FROM hertz_credit_settings
-     WHERE key = $2 AND is_active = true AND amount > 0
+     WHERE key = $2::varchar AND is_active = true AND amount > 0
      ON CONFLICT (user_id, event_type, entity_id) DO NOTHING
      RETURNING amount`,
     [userId, eventType, entityId],

@@ -1,0 +1,27 @@
+import { NextRequest } from 'next/server';
+import { HertzCommentService } from '@shared/services/hertzCommentService';
+import { apiErrorFromUnknown, apiSuccess } from '@/lib/apiResponse';
+import { checkMobileRateLimit, isMobileAuthContext, requireMobileMember } from '@/lib/mobileApi';
+
+interface RouteContext {
+  params: Promise<{ shortId: string }>;
+}
+
+const comments = new HertzCommentService();
+
+export async function POST(request: NextRequest, context: RouteContext) {
+  const auth = await requireMobileMember(request);
+  if (!isMobileAuthContext(auth)) return auth;
+
+  const limited = checkMobileRateLimit(request, 'mutation', auth.user.id);
+  if (limited) return limited;
+
+  try {
+    const { shortId } = await context.params;
+    const body = await request.json();
+    const comment = await comments.create(shortId, auth.user, body.content);
+    return apiSuccess({ comment }, 201);
+  } catch (error) {
+    return apiErrorFromUnknown(error);
+  }
+}

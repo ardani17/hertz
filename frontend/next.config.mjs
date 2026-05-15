@@ -38,7 +38,7 @@ const nextConfig = {
               "script-src 'self' 'unsafe-inline' 'unsafe-eval' https://telegram.org",
               "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com",
               "font-src 'self' https://fonts.gstatic.com",
-              "img-src 'self' data: blob: https://image.cloudnexify.com https://*.r2.dev https://academy.horizonfx.id https://i.ibb.co",
+              "img-src 'self' data: blob: https://image.cloudnexify.com https://*.r2.dev https://academy.horizonfx.id https://i.ibb.co https://api.dicebear.com https://t.me https://telegram.org https://*.telegram.org https://*.telegram-cdn.org https://*.cdn-telegram.org https://*.telesco.pe",
               "media-src 'self' blob: https://image.cloudnexify.com https://*.r2.dev https://academy.horizonfx.id",
               "connect-src 'self' https://image.cloudnexify.com",
               "frame-src https://oauth.telegram.org",

@@ -25,7 +25,7 @@ import { ActivityLogService } from '../../shared/services/activityLog';
 import { MediaService, createTelegramApiClient } from './services/mediaService';
 import { formatBotErrorMessage, logBotError } from './utils/errorHandler';
 import type { User, ArticleCategory } from '../../shared/types/index';
-import type { SignalPostCategory } from '../../shared/types/feed';
+import type { HertzPostCategory } from '../../shared/types/feed';
 import type { DbClient } from '../../shared/db/query';
 
 // ---- Configuration ----
@@ -107,7 +107,7 @@ async function insertArticle(
     author_id: string;
     content_html: string;
     title: string | null;
-    category: SignalPostCategory;
+    category: HertzPostCategory;
     source: string;
     status: string;
     slug: string;
@@ -154,7 +154,7 @@ async function insertArticle(
   return result;
 }
 
-function toArticleCategory(category: SignalPostCategory): ArticleCategory {
+function toArticleCategory(category: HertzPostCategory): ArticleCategory {
   if (category === 'trading_room') return 'trading';
   if (category === 'life_coffee') return 'life_story';
   return 'general';

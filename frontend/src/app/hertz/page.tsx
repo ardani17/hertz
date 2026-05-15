@@ -1,8 +1,8 @@
 import type { Metadata } from 'next';
-import { SignalLedgerPage } from '@/components/feed';
+import { HertzPage as HertzFeedPage } from '@/components/feed';
 import { HertzPostService, normalizeHertzCategory } from '@shared/services/hertzPostService';
 import { getCurrentMember } from '@/lib/memberAuth';
-import type { SignalPost } from '@shared/types';
+import type { HertzPost } from '@shared/types';
 
 export const dynamic = 'force-dynamic';
 
@@ -31,7 +31,7 @@ export default async function HertzPage({ searchParams }: HertzPageProps) {
   const category = selectedCategory(params?.category);
   const search = params?.q?.trim() || null;
   const sort = params?.sort === 'trending' ? 'trending' : 'latest';
-  let items: SignalPost[] = [];
+  let items: HertzPost[] = [];
 
   try {
     const feed = new HertzPostService();
@@ -41,5 +41,5 @@ export default async function HertzPage({ searchParams }: HertzPageProps) {
     items = [];
   }
 
-  return <SignalLedgerPage posts={items} currentUser={currentUser} activeCategory={category} activeSearch={search} activeSort={sort} />;
+  return <HertzFeedPage posts={items} currentUser={currentUser} activeCategory={category} activeSearch={search} activeSort={sort} />;
 }

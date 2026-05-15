@@ -2,7 +2,7 @@
 // Horizon Trader Platform — Hashtag Parser & Category Mapper
 // ============================================
 
-import type { SignalPostCategory } from '../../../shared/types/feed';
+import type { HertzPostCategory } from '../../../shared/types/feed';
 
 /**
  * Mapping from recognized hashtags to article categories.
@@ -11,7 +11,7 @@ import type { SignalPostCategory } from '../../../shared/types/feed';
  *
  * Validates: Requirements 3.1, 3.2, 3.3, 3.4, 4.1, 5.1, 5.2, 5.3, 5.4
  */
-const HASHTAG_CATEGORY_MAP: Record<string, SignalPostCategory> = {
+const HASHTAG_CATEGORY_MAP: Record<string, HertzPostCategory> = {
   trading: 'trading_room',
   cerita: 'life_coffee',
   general: 'general',
@@ -51,7 +51,7 @@ export function parseHashtags(text: string): string[] {
  *
  * Validates: Requirements 8.1, 8.2, 8.7
  */
-export function mapHashtagToCategory(hashtags: string[]): SignalPostCategory {
+export function mapHashtagToCategory(hashtags: string[]): HertzPostCategory {
   for (const tag of hashtags) {
     const category = HASHTAG_CATEGORY_MAP[tag];
     if (category) {

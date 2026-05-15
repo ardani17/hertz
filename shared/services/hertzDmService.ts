@@ -1,10 +1,12 @@
 import { query, withTransaction } from '../db';
 import { HertzDmRepository } from '../repositories/hertzDmRepository';
 import { HertzForbiddenError, HertzValidationError } from './hertzPostService';
+import { PushNotificationService } from './pushNotificationService';
 import type { MemberSessionUser } from '../types/membership';
 
 export class HertzDmService {
   private readonly repo = new HertzDmRepository();
+  private readonly push = new PushNotificationService();
 
   async inbox(user: MemberSessionUser, includeArchived = false) {
     const rows = await this.repo.listInbox(user.id, includeArchived);
@@ -67,11 +69,13 @@ export class HertzDmService {
     const text = typeof body === 'string' ? body.trim() : '';
     const files = validateAttachments(attachments);
     if (!text && files.length === 0) throw new HertzValidationError('Pesan tidak boleh kosong');
-    return withTransaction(async (client) => {
+    const message = await withTransaction(async (client) => {
       const message = await this.repo.sendMessage(conversationId, user.id, text ? text.slice(0, 4000) : null, client);
       await this.repo.attachImages(message.id, files, client);
       return message;
     });
+    void this.push.notifyDmMessageCreated({ conversationId, messageId: message.id, senderId: user.id });
+    return message;
   }
 
   async searchMembers(queryText: string, currentUserId?: string) {

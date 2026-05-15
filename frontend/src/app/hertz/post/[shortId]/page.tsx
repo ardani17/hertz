@@ -2,9 +2,9 @@ import type { Metadata } from 'next';
 import { notFound } from 'next/navigation';
 import { HertzPostService } from '@shared/services/hertzPostService';
 import { getCurrentMember } from '@/lib/memberAuth';
-import { SignalPostCard } from '@/components/feed/SignalPost';
-import { SignalDetailInteractions } from '@/components/feed/SignalDetailInteractions';
-import { SignalViewTracker } from '@/components/feed/SignalViewTracker';
+import { HertzPostCard } from '@/components/feed/HertzPost';
+import { HertzDetailInteractions } from '@/components/feed/HertzDetailInteractions';
+import { HertzViewTracker } from '@/components/feed/HertzViewTracker';
 import { HertzAppShell } from '@/components/hertz/HertzAppShell';
 import styles from './post-detail.module.css';
 
@@ -42,9 +42,9 @@ export default async function HertzPostDetailPage({ params }: PageProps) {
     >
       <div className={styles.container}>
         <a className={styles.back} href="/hertz">Kembali ke HERTZ</a>
-        <SignalViewTracker shortId={post.shortId} />
-        <SignalPostCard post={post} currentUser={viewer} />
-        <SignalDetailInteractions post={post} currentUser={viewer} />
+        <HertzViewTracker shortId={post.shortId} />
+        <HertzPostCard post={post} currentUser={viewer} />
+        <HertzDetailInteractions post={post} currentUser={viewer} />
       </div>
     </HertzAppShell>
   );

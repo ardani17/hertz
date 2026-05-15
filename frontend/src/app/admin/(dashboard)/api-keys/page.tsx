@@ -223,7 +223,7 @@ export default function AdminApiKeysPage() {
                 type="text"
                 value={appName}
                 onChange={(e) => setAppName(e.target.value)}
-                placeholder="Contoh: Signal Tool, Trading Bot"
+                placeholder="Contoh: Hertz Tool, Trading Bot"
                 required
               />
             </div>

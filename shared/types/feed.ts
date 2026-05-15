@@ -1,11 +1,11 @@
 import type { CommunityNote } from './communityNote';
 
-export type SignalPostType = 'original' | 'quote' | 'repost';
-export type SignalPostSource = 'telegram' | 'web' | 'admin' | 'system';
-export type SignalPostCategory = 'trading_room' | 'life_coffee' | 'general' | 'community_note' | 'trading' | 'life_story';
-export type SignalPostStatus = 'draft' | 'pending_review' | 'published' | 'hidden' | 'rejected' | 'deleted';
+export type HertzPostType = 'original' | 'quote' | 'repost';
+export type HertzPostSource = 'telegram' | 'web' | 'admin' | 'system';
+export type HertzPostCategory = 'trading_room' | 'life_coffee' | 'general' | 'community_note' | 'trading' | 'life_story';
+export type HertzPostStatus = 'draft' | 'pending_review' | 'published' | 'hidden' | 'rejected' | 'deleted';
 
-export interface SignalAuthor {
+export interface HertzAuthor {
   id: string;
   name: string;
   username: string | null;
@@ -13,7 +13,7 @@ export interface SignalAuthor {
   avatarUrl: string | null;
 }
 
-export interface SignalMedia {
+export interface HertzMedia {
   id: string;
   url: string;
   type: 'image' | 'video';
@@ -37,8 +37,7 @@ export interface MarketContext {
   brokerOrSource?: string | null;
 }
 
-export interface SignalViewerState {
-  hasSignaled: boolean;
+export interface HertzViewerState {
   hasPulsed: boolean;
   hasBookmarked: boolean;
   hasReposted: boolean;
@@ -46,51 +45,50 @@ export interface SignalViewerState {
   canDelete: boolean;
 }
 
-export interface SignalPostCounts {
+export interface HertzPostCounts {
   comments: number;
-  signals: number;
   pulses: number;
   reposts: number;
   views: number;
 }
 
-export interface SignalPostContent {
+export interface HertzPostContent {
   html: string;
   text: string;
   isTruncated: boolean;
 }
 
-export interface SignalPost {
+export interface HertzPost {
   id: string;
   shortId: string;
   articleId: string | null;
-  type: SignalPostType;
-  source: SignalPostSource;
-  category: SignalPostCategory;
-  status: SignalPostStatus;
-  author: SignalAuthor;
-  content: SignalPostContent;
-  media: SignalMedia[];
+  type: HertzPostType;
+  source: HertzPostSource;
+  category: HertzPostCategory;
+  status: HertzPostStatus;
+  author: HertzAuthor;
+  content: HertzPostContent;
+  media: HertzMedia[];
   market: MarketContext | null;
-  quotedPost: SignalPost | null;
-  viewer: SignalViewerState;
-  counts: SignalPostCounts;
+  quotedPost: HertzPost | null;
+  viewer: HertzViewerState;
+  counts: HertzPostCounts;
   primaryCommunityNote: CommunityNote | null;
   createdAt: string;
   updatedAt: string;
   editedAt: string | null;
 }
 
-export interface SignalPostDetail extends SignalPost {
-  comments: SignalComment[];
+export interface HertzPostDetail extends HertzPost {
+  comments: HertzComment[];
   communityNotes: CommunityNote[];
 }
 
-export interface SignalComment {
+export interface HertzComment {
   id: string;
   postId: string;
   userId: string;
-  author: SignalAuthor;
+  author: HertzAuthor;
   content: string;
   status: 'visible' | 'hidden' | 'deleted';
   createdAt: string;
@@ -100,8 +98,8 @@ export interface SignalComment {
   canDelete: boolean;
 }
 
-export interface SignalPostInput {
-  category: SignalPostCategory;
+export interface HertzPostInput {
+  category: HertzPostCategory;
   content: string;
   mediaIds?: string[];
   market?: MarketContext | null;
@@ -120,21 +118,21 @@ export interface PlainRepostInput {
 export type RepostInput = PlainRepostInput | QuoteRepostInput;
 
 export interface CursorFeedResult {
-  items: SignalPost[];
+  items: HertzPost[];
   nextCursor: string | null;
 }
 
-export type HertzPostType = SignalPostType;
-export type HertzPostSource = SignalPostSource;
-export type HertzPostCategory = SignalPostCategory;
-export type HertzPostStatus = SignalPostStatus;
-export type HertzAuthor = SignalAuthor;
-export type HertzMedia = SignalMedia;
-export type HertzViewerState = SignalViewerState;
-export type HertzPostCounts = SignalPostCounts;
-export type HertzPostContent = SignalPostContent;
-export type HertzPost = SignalPost;
-export type HertzPostDetail = SignalPostDetail;
-export type HertzComment = SignalComment;
-export type HertzPostInput = SignalPostInput;
+export type SignalPostType = HertzPostType;
+export type SignalPostSource = HertzPostSource;
+export type SignalPostCategory = HertzPostCategory;
+export type SignalPostStatus = HertzPostStatus;
+export type SignalAuthor = HertzAuthor;
+export type SignalMedia = HertzMedia;
+export type SignalViewerState = HertzViewerState;
+export type SignalPostCounts = HertzPostCounts;
+export type SignalPostContent = HertzPostContent;
+export type SignalPost = HertzPost;
+export type SignalPostDetail = HertzPostDetail;
+export type SignalComment = HertzComment;
+export type SignalPostInput = HertzPostInput;
 export type HertzFeedResult = CursorFeedResult;

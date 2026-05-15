@@ -1,15 +1,15 @@
 import { execute, query, queryOne, type DbClient } from '../db';
-import type { MarketContext, SignalPostCategory, SignalPostSource, SignalPostStatus, SignalPostType } from '../types/feed';
+import type { MarketContext, HertzPostCategory, HertzPostSource, HertzPostStatus, HertzPostType } from '../types/feed';
 
 export interface FeedPostRow {
   id: string;
   short_id: string;
   article_id: string | null;
   author_id: string;
-  post_type: SignalPostType;
-  source: SignalPostSource;
-  category: SignalPostCategory;
-  status: SignalPostStatus;
+  post_type: HertzPostType;
+  source: HertzPostSource;
+  category: HertzPostCategory;
+  status: HertzPostStatus;
   visibility: string;
   quoted_post_id: string | null;
   repost_id: string | null;
@@ -32,10 +32,10 @@ export interface FeedPostRow {
 
 export interface FeedListRow extends FeedPostRow {
   comment_count: string;
-  signal_count: string;
+  pulse_count: string;
   repost_count: string;
   view_count: string;
-  viewer_has_signaled: boolean | null;
+  viewer_has_pulsed: boolean | null;
   viewer_has_bookmarked: boolean | null;
   viewer_has_reposted: boolean | null;
   pair: string | null;
@@ -105,10 +105,10 @@ export class FeedRepository {
     shortId: string;
     articleId?: string | null;
     authorId: string;
-    postType: SignalPostType;
-    source: SignalPostSource;
-    category: SignalPostCategory;
-    status: SignalPostStatus;
+    postType: HertzPostType;
+    source: HertzPostSource;
+    category: HertzPostCategory;
+    status: HertzPostStatus;
     quotedPostId?: string | null;
     repostId?: string | null;
     telegramMessageId?: number | null;
@@ -253,10 +253,10 @@ export class FeedRepository {
               u.role AS author_role,
               u.verified_member_at AS author_verified_member_at,
               COALESCE(pc.comment_count, 0)::text AS comment_count,
-              COALESCE(pr.signal_count, 0)::text AS signal_count,
+              COALESCE(pr.pulse_count, 0)::text AS pulse_count,
               COALESCE(rr.repost_count, 0)::text AS repost_count,
               COALESCE(pv.view_count, 0)::text AS view_count,
-              vr.id IS NOT NULL AS viewer_has_signaled,
+              vr.id IS NOT NULL AS viewer_has_pulsed,
               vb.id IS NOT NULL AS viewer_has_bookmarked,
               vrr.id IS NOT NULL AS viewer_has_reposted,
               pmc.pair, pmc.timeframe, pmc.risk_percent::text, pmc.direction,
@@ -273,7 +273,7 @@ export class FeedRepository {
          WHERE c.post_id = fp.id AND c.status = 'visible' AND c.deleted_at IS NULL
        ) pc ON true
        LEFT JOIN LATERAL (
-         SELECT COUNT(*) AS signal_count FROM post_reactions r
+         SELECT COUNT(*) AS pulse_count FROM post_reactions r
          WHERE r.post_id = fp.id AND r.reaction_type = 'pulse' AND r.deleted_at IS NULL
        ) pr ON true
        LEFT JOIN LATERAL (
@@ -310,10 +310,10 @@ export class FeedRepository {
                u.avatar_url AS author_avatar_url, u.role AS author_role,
                u.verified_member_at AS author_verified_member_at,
                COALESCE(pc.comment_count, 0)::text AS comment_count,
-               COALESCE(pr.signal_count, 0)::text AS signal_count,
+               COALESCE(pr.pulse_count, 0)::text AS pulse_count,
                COALESCE(rr.repost_count, 0)::text AS repost_count,
                COALESCE(pv.view_count, 0)::text AS view_count,
-               vr.id IS NOT NULL AS viewer_has_signaled,
+               vr.id IS NOT NULL AS viewer_has_pulsed,
                vb.id IS NOT NULL AS viewer_has_bookmarked,
                vrr.id IS NOT NULL AS viewer_has_reposted,
                pmc.pair, pmc.timeframe, pmc.risk_percent::text, pmc.direction,
@@ -326,7 +326,7 @@ export class FeedRepository {
         LEFT JOIN users u ON u.id = fp.author_id
         LEFT JOIN post_market_context pmc ON pmc.post_id = fp.id
         LEFT JOIN LATERAL (SELECT COUNT(*) AS comment_count FROM post_comments c WHERE c.post_id = fp.id AND c.status = 'visible' AND c.deleted_at IS NULL) pc ON true
-        LEFT JOIN LATERAL (SELECT COUNT(*) AS signal_count FROM post_reactions r WHERE r.post_id = fp.id AND r.reaction_type = 'pulse' AND r.deleted_at IS NULL) pr ON true
+        LEFT JOIN LATERAL (SELECT COUNT(*) AS pulse_count FROM post_reactions r WHERE r.post_id = fp.id AND r.reaction_type = 'pulse' AND r.deleted_at IS NULL) pr ON true
         LEFT JOIN LATERAL (SELECT COUNT(*) AS repost_count FROM post_reposts r WHERE r.original_post_id = fp.id AND r.deleted_at IS NULL) rr ON true
         LEFT JOIN LATERAL (SELECT COUNT(*) AS view_count FROM post_views v WHERE v.post_id = fp.id) pv ON true
         LEFT JOIN post_reactions vr ON vr.post_id = fp.id AND vr.user_id = $2::uuid AND vr.reaction_type = 'pulse' AND vr.deleted_at IS NULL
@@ -373,7 +373,7 @@ export class FeedRepository {
     );
   }
 
-  async updatePostStatus(postId: string, status: SignalPostStatus, client?: DbClient): Promise<void> {
+  async updatePostStatus(postId: string, status: HertzPostStatus, client?: DbClient): Promise<void> {
     await execute(
       'UPDATE feed_posts SET status = $1, updated_at = NOW() WHERE id::text = $2 OR short_id = $2',
       [status, postId],

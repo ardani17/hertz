@@ -2,8 +2,9 @@
 
 import type { ReactNode } from 'react';
 import type { MemberSessionUser } from '@shared/types';
-import { SignalLeftRail } from '@/components/feed/SignalLeftRail';
-import { SignalRightRail } from '@/components/feed/SignalRightRail';
+import { HertzLeftRail } from '@/components/feed/HertzLeftRail';
+import { HertzRightRail } from '@/components/feed/HertzRightRail';
+import { MobileBottomNav } from './MobileBottomNav';
 import styles from './HertzAppShell.module.css';
 
 type ActiveNav = 'home' | 'outlook' | 'blog' | 'gallery' | 'tools' | 'messages';
@@ -26,7 +27,7 @@ export function HertzAppShell({
   return (
     <main className={styles.main}>
       <div className={hideRightRail ? styles.shellCompact : styles.shell}>
-        <SignalLeftRail currentUser={currentUser} active={active} />
+        <HertzLeftRail currentUser={currentUser} active={active} />
         <section className={styles.content}>
           <header className={styles.header}>
             <h1>{title}</h1>
@@ -34,8 +35,9 @@ export function HertzAppShell({
           </header>
           {children}
         </section>
-        {hideRightRail ? null : <SignalRightRail />}
+        {hideRightRail ? null : <HertzRightRail />}
       </div>
+      <MobileBottomNav active={active} />
     </main>
   );
 }

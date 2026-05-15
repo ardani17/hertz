@@ -1,5 +1,6 @@
 .main {
   min-height: 100vh;
+  overflow-x: hidden;
   background: #000;
   color: #e7f4ec;
 }
@@ -14,12 +15,14 @@
 }
 
 .shell {
+  --left-rail-offset: max(0px, calc((100vw - 1600px) / 2));
   grid-template-columns: minmax(150px, 210px) minmax(0, 1fr) minmax(260px, 340px);
   max-width: 1600px;
   width: min(100vw, 1600px);
 }
 
 .shellCompact {
+  --left-rail-offset: max(0px, calc((100vw - 1230px) / 2));
   grid-template-columns: minmax(150px, 210px) minmax(0, 1fr);
   max-width: 1230px;
   width: min(100vw, 1230px);
@@ -28,6 +31,7 @@
 .content {
   border-left: 1px solid rgba(29, 185, 112, 0.22);
   border-right: 1px solid rgba(29, 185, 112, 0.22);
+  grid-column: 2;
   min-width: 0;
   padding: 1.2rem 1.4rem 3rem;
 }
@@ -49,6 +53,10 @@
 }
 
 @media (max-width: 760px) {
+  .main {
+    padding-bottom: calc(78px + env(safe-area-inset-bottom));
+  }
+
   .shell,
   .shellCompact {
     display: block;
@@ -60,5 +68,16 @@
   .content {
     border: 0;
     padding: 1rem;
+    min-width: 0;
+  }
+}
+
+@media (max-width: 360px) {
+  .content {
+    padding: 0.85rem;
+  }
+
+  .header h1 {
+    font-size: 1.18rem;
   }
 }

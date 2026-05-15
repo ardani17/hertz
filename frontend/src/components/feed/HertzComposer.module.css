@@ -1,0 +1,178 @@
+.composer {
+  background: #000;
+  border: 1px solid #245b3a;
+  border-radius: 8px;
+  display: grid;
+  gap: 12px;
+  grid-template-columns: 42px minmax(0, 1fr);
+  min-height: 94px;
+  margin: 0 0 10px;
+  padding: 13px 10px 8px 17px;
+}
+
+.avatar {
+  background: #084729;
+  border: 1px solid #13d27b;
+  border-radius: 7px;
+  color: #a7f3d0;
+  display: grid;
+  font-size: 16px;
+  font-weight: 800;
+  height: 42px;
+  overflow: hidden;
+  place-items: center;
+  width: 42px;
+}
+
+.avatar img {
+  display: block;
+  height: 100%;
+  object-fit: cover;
+  width: 100%;
+}
+
+.body {
+  min-width: 0;
+}
+
+.body textarea {
+  background: #000;
+  border: 1px solid #173824;
+  border-radius: 6px;
+  color: #f0fbf4;
+  font: inherit;
+  font-size: 13px;
+  height: 38px;
+  line-height: 18px;
+  outline: none;
+  overflow: hidden;
+  padding: 9px 15px;
+  resize: none;
+  width: 100%;
+}
+
+.body textarea::placeholder {
+  color: #92aa9b;
+}
+
+.controls {
+  align-items: center;
+  display: flex;
+  gap: 10px;
+  margin-top: 8px;
+}
+
+.submit,
+.uploadButton,
+.inlineField {
+  align-items: center;
+  background: #000;
+  border: 1px solid #173824;
+  border-radius: 5px;
+  color: #f0fbf4;
+  display: inline-flex;
+  font-size: 12px;
+  font-weight: 650;
+  gap: 6px;
+  height: 30px;
+  justify-content: center;
+  min-width: 72px;
+  padding: 0 12px;
+}
+
+.inlineField span {
+  color: #f0fbf4;
+}
+
+.inlineField input {
+  background: transparent;
+  border: 0;
+  color: #f0fbf4;
+  font: inherit;
+  outline: none;
+  width: 42px;
+}
+
+.uploadButton {
+  cursor: pointer;
+}
+
+.uploadButton input {
+  display: none;
+}
+
+.submit {
+  background: #13d27b;
+  border-color: #13d27b;
+  color: #02100a;
+  font-weight: 800;
+  justify-content: center;
+  margin-left: auto;
+  min-width: 80px;
+  padding: 0;
+  width: 80px;
+}
+
+.disabledUpload,
+.submit:disabled,
+.inlineField input:disabled {
+  cursor: not-allowed;
+  opacity: 0.55;
+}
+
+.mediaQueue {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-top: 7px;
+}
+
+.mediaQueue span {
+  border: 1px solid #173824;
+  border-radius: 5px;
+  color: #92aa9b;
+  font-size: 11px;
+  max-width: 180px;
+  overflow: hidden;
+  padding: 3px 7px;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.status {
+  color: #fbbf24;
+  font-size: 12px;
+  margin: 6px 0 0;
+}
+
+@media (max-width: 720px) {
+  .composer {
+    height: auto;
+    margin: 0.65rem 0.65rem 0.5rem 2.35rem;
+    padding: 0.75rem;
+  }
+
+  .composer[data-auth="guest"] {
+    grid-template-columns: minmax(0, 1fr);
+    margin-left: 2.35rem;
+  }
+
+  .composer[data-auth="guest"] > .avatar {
+    display: none;
+  }
+
+  .controls {
+    flex-wrap: wrap;
+  }
+}
+
+@media (max-width: 360px) {
+  .composer {
+    margin-right: 0.55rem;
+    padding: 0.65rem;
+  }
+
+  .composer[data-auth="guest"] {
+    margin-right: 0.55rem;
+  }
+}

@@ -58,4 +58,12 @@ export class MemberSessionService {
     if (!token) return;
     await this.sessions.deleteByTokenHash(hashMemberSessionToken(token));
   }
+
+  async refreshSession(token: string | null): Promise<{ token: string; expiresAt: Date; user: MemberSessionUser } | null> {
+    const user = await this.validateToken(token);
+    if (!user) return null;
+    await this.deleteSession(token);
+    const session = await this.createSession(user.id);
+    return { ...session, user };
+  }
 }

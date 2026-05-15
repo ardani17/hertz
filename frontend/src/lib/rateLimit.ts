@@ -42,6 +42,8 @@ interface RateLimitOptions {
   windowMs: number;
   /** Key prefix to separate different endpoints */
   prefix: string;
+  /** Optional identity override, e.g. member id or bearer token fingerprint */
+  key?: string | null;
 }
 
 /**
@@ -54,8 +56,8 @@ export function checkRateLimit(
 ): NextResponse | null {
   cleanup();
 
-  const ip = getClientIp(request);
-  const key = `${options.prefix}:${ip}`;
+  const identity = options.key || getClientIp(request);
+  const key = `${options.prefix}:${identity}`;
   const now = Date.now();
 
   const entry = store.get(key);
@@ -73,7 +75,8 @@ export function checkRateLimit(
     return NextResponse.json(
       {
         success: false,
-        error: {
+          error: {
+          code: 'RATE_LIMIT_EXCEEDED',
           error_code: 'RATE_LIMITED',
           message: 'Terlalu banyak permintaan. Silakan coba lagi nanti.',
           details: { retry_after_seconds: retryAfter },
