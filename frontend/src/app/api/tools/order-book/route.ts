@@ -22,42 +22,6 @@ query GetOrderPositionBook($instrument: String!, $bookType: BookType!, $recentHo
 }
 `;
 
-function fallbackBook(instrument: string) {
-  const basePrice = instrument.startsWith('XAU')
-    ? 2325
-    : instrument.endsWith('JPY')
-      ? 155
-      : 1.08;
-  const bucketWidth = instrument.startsWith('XAU') ? 2.5 : instrument.endsWith('JPY') ? 0.05 : 0.0005;
-  const buckets = Array.from({ length: 81 }, (_, index) => {
-    const distance = index - 40;
-    const price = Number((basePrice + distance * bucketWidth).toFixed(5));
-    const intensity = Math.max(0.2, 1 - Math.abs(distance) / 45);
-    return {
-      price,
-      longCountPercent: Number((Math.abs(Math.sin(index * 0.7)) * 12 * intensity + 0.2).toFixed(4)),
-      shortCountPercent: Number((Math.abs(Math.cos(index * 0.55)) * 12 * intensity + 0.2).toFixed(4)),
-    };
-  });
-
-  return {
-    success: true,
-    data: {
-      orderPositionBook: [
-        {
-          bucketWidth,
-          price: basePrice,
-          time: new Date().toISOString(),
-          buckets,
-        },
-      ],
-    },
-    mode: 'demo',
-    warning: 'OANDA Labs upstream is unavailable, showing generated demo distribution.',
-    lastUpdated: new Date().toISOString(),
-  };
-}
-
 function normalizeInstrument(value: unknown) {
   return String(value ?? '').replace(/[^a-zA-Z]/g, '').toUpperCase();
 }
@@ -70,14 +34,11 @@ function normalizeBookType(value: unknown) {
 }
 
 export async function POST(request: NextRequest) {
-  let fallbackInstrument = 'EURUSD';
-
   try {
     const body = await request.json();
     const instrument = normalizeInstrument(body.instrument);
     const bookType = normalizeBookType(body.bookType);
     const recentHours = Math.min(Math.max(Number(body.recentHours ?? 1), 1), 24);
-    fallbackInstrument = validInstruments.includes(instrument) ? instrument : fallbackInstrument;
 
     if (!validInstruments.includes(instrument) || !validBookTypes.includes(bookType)) {
       return NextResponse.json(
@@ -116,9 +77,11 @@ export async function POST(request: NextRequest) {
     }, {
       headers: { 'Cache-Control': 'no-store' },
     });
-  } catch {
-    return NextResponse.json(fallbackBook(fallbackInstrument), {
-      headers: { 'Cache-Control': 'no-store' },
-    });
+  } catch (error) {
+    const message = error instanceof Error ? error.message : 'Order book upstream is unavailable';
+    return NextResponse.json(
+      { success: false, error: message },
+      { status: 503, headers: { 'Cache-Control': 'no-store' } },
+    );
   }
 }

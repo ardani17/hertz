@@ -1,13 +1,15 @@
 import { notFound } from 'next/navigation';
 import Link from 'next/link';
 import { query, queryOne } from '@shared/db';
-import { Sidebar } from '@/components/layout/Sidebar';
 import { OutlookContent } from '@/components/outlook';
 import { ArticleMeta } from '@/components/article/ArticleMeta';
+import { ShareButtons } from '@/components/article/ShareButtons';
+import { CommentSection } from '@/components/article/CommentSection';
+import { LikeButton } from '@/components/article/LikeButton';
+import { HertzAppShell } from '@/components/hertz/HertzAppShell';
 import styles from './page.module.css';
 
-/** ISR revalidation interval in seconds (5 minutes) */
-export const revalidate = 300;
+export const dynamic = 'force-dynamic';
 
 interface ArticleRow {
   id: string;
@@ -88,23 +90,6 @@ async function getOutlookBySlug(slug: string): Promise<OutlookDetail | null> {
     };
   } catch {
     return null;
-  }
-}
-
-interface SlugRow {
-  slug: string;
-}
-
-/** Generate static params for SSG */
-export async function generateStaticParams(): Promise<Array<{ slug: string }>> {
-  try {
-    const result = await query<SlugRow>(
-      `SELECT slug FROM articles WHERE status = $1 AND category = $2 ORDER BY created_at DESC LIMIT 100`,
-      ['published', 'outlook']
-    );
-    return result.rows.map((row) => ({ slug: row.slug }));
-  } catch {
-    return [];
   }
 }
 
@@ -208,74 +193,93 @@ export default async function OutlookDetailPage({
   };
 
   return (
-    <main className={styles.main}>
+    <>
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
       />
-      <div className={styles.container}>
+      <HertzAppShell
+        active="outlook"
+        title="Outlook"
+        description="Narasi market dan konteks besar sebelum eksekusi."
+        currentUser={null}
+      >
         <div className={styles.content}>
-          <Link href="/outlook" className={styles.backLink}>
-            ← Kembali ke Outlook
-          </Link>
+        <Link href="/outlook" className={styles.backLink}>
+          ← Kembali ke Outlook
+        </Link>
 
-          <article className={styles.article}>
-            <h1 className={styles.title}>{displayTitle}</h1>
+        <article className={styles.article}>
+          <h1 className={styles.title}>{displayTitle}</h1>
 
-            <ArticleMeta
-              authorName={article.author_name}
-              createdAt={article.created_at}
-              contentHtml={article.content_html}
-              category={article.category}
+          <ArticleMeta
+            authorName={article.author_name}
+            createdAt={article.created_at}
+            contentHtml={article.content_html}
+            category={article.category}
+          />
+
+          {coverImage && (
+
+            <img
+              src={coverImage.file_url}
+              alt={displayTitle}
+              className={styles.coverImage}
             />
+          )}
 
-            {coverImage && (
-              /* eslint-disable-next-line @next/next/no-img-element */
-              <img
-                src={coverImage.file_url}
-                alt={displayTitle}
-                className={styles.coverImage}
-              />
-            )}
+          <OutlookContent html={article.content_html} />
 
-            <OutlookContent html={article.content_html} />
+          {additionalMedia.length > 0 && (
+            <section className={styles.mediaSection} aria-label="Media artikel">
+              <div className={styles.mediaGrid}>
+                {additionalMedia.map((m) => (
+                  <div key={m.id} className={styles.mediaItem}>
+                    {m.media_type === 'video' ? (
+                      <video controls preload="metadata">
+                        <source src={m.file_url} />
+                        Browser Anda tidak mendukung video.
+                      </video>
+                    ) : (
 
-            {additionalMedia.length > 0 && (
-              <section className={styles.mediaSection} aria-label="Media artikel">
-                <div className={styles.mediaGrid}>
-                  {additionalMedia.map((m) => (
-                    <div key={m.id} className={styles.mediaItem}>
-                      {m.media_type === 'video' ? (
-                        <video controls preload="metadata">
-                          <source src={m.file_url} />
-                          Browser Anda tidak mendukung video.
-                        </video>
-                      ) : (
-                        /* eslint-disable-next-line @next/next/no-img-element */
-                        <img
-                          src={m.file_url}
-                          alt={displayTitle}
-                          loading="lazy"
-                        />
-                      )}
-                    </div>
-                  ))}
-                </div>
-              </section>
-            )}
+                      <img
+                        src={m.file_url}
+                        alt={displayTitle}
+                        loading="lazy"
+                      />
+                    )}
+                  </div>
+                ))}
+              </div>
+            </section>
+          )}
 
-            <div className={styles.stats}>
-              <span className={styles.statItem}>
-                ❤️ {article.likeCount} suka
-              </span>
-              <span className={styles.statItem}>
-                💬 {article.commentCount} komentar
-              </span>
-            </div>
-          </article>
+          <div className={styles.stats}>
+            <span className={styles.statItem}>
+              ❤️ {article.likeCount} suka
+            </span>
+            <span className={styles.statItem}>
+              💬 {article.commentCount} komentar
+            </span>
+          </div>
+        </article>
+
+        <div className={styles.interactions}>
+          <ShareButtons
+            title={displayTitle}
+            excerpt={excerpt}
+            url={outlookUrl}
+          />
+
+          <LikeButton
+            articleId={article.id}
+            initialLikeCount={article.likeCount}
+          />
         </div>
-        <Sidebar />
-      </div>
-    </main>
+
+        <CommentSection articleId={article.id} />
+        </div>
+      </HertzAppShell>
+    </>
   );
 }

@@ -106,9 +106,9 @@ Status: implementasi Signal Ledger selesai untuk scope spec phase awal.
 
 Bukti verifikasi:
 
-- `npm.cmd run build --workspace=frontend` berhasil.
-- `npm.cmd run build --workspace=bot` berhasil.
-- `npm.cmd --workspaces=false run test` berhasil: 32 test files, 638 tests passed.
+- `npm.cmd run build:frontend` berhasil.
+- `npm.cmd run build:bot` berhasil.
+- `npm.cmd run test` berhasil: 32 test files, 638 tests passed.
 - Smoke lokal `http://127.0.0.1:3000/` berhasil HTTP 200 dengan `SIGNAL_LEDGER_ENABLED=true`.
 - Smoke lokal mengonfirmasi teks `Signal Ledger` dan label `Data sementara` tampil di HTML.
 - Screenshot audit live dibuat di `docs/signal-ledger/audit-desktop-current.png` dan `docs/signal-ledger/audit-mobile-current.png`.
@@ -135,9 +135,9 @@ Temuan audit yang sudah ditutup:
 
 Bukti verifikasi audit ulang:
 
-- `npm.cmd run build --workspace=frontend` berhasil.
-- `npm.cmd run build --workspace=bot` berhasil.
-- `npm.cmd --workspaces=false run test` berhasil: 32 test files, 638 tests passed.
+- `npm.cmd run build:frontend` berhasil.
+- `npm.cmd run build:bot` berhasil.
+- `npm.cmd run test` berhasil: 32 test files, 638 tests passed.
 - Smoke lokal `GET http://127.0.0.1:3000/` berhasil HTTP 200, memuat `Signal Ledger`, tidak memuat tag `<header>`/`<footer>`, dan tidak memuat class legacy Navbar/Footer.
 - Smoke lokal guest `POST /api/feed` berhasil ditolak dengan HTTP 401 dan `error.code=UNAUTHENTICATED`.
 - Smoke lokal guest `GET /api/admin/signal-ledger/pending` berhasil ditolak dengan HTTP 403 dan `error.code=FORBIDDEN`.

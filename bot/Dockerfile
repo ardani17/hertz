@@ -3,9 +3,7 @@ FROM node:20-alpine AS deps
 WORKDIR /app
 
 COPY package.json package-lock.json ./
-COPY bot/package.json ./bot/
-COPY frontend/package.json ./frontend/
-COPY shared/package.json ./shared/
+COPY .npmrc ./
 
 RUN npm ci
 
@@ -21,7 +19,7 @@ COPY shared/ ./shared/
 COPY bot/ ./bot/
 
 # Compile — output goes to bot/dist/bot/src/ and bot/dist/shared/
-RUN npx --workspace=bot tsc
+RUN npm run build:bot
 
 # ---- Stage 3: Production runtime ----
 FROM node:20-alpine AS runner

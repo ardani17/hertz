@@ -32,7 +32,7 @@ export function BlogCard({ article }: BlogCardProps) {
     <article className={styles.card}>
       <div className={styles.thumbnail}>
         {article.cover_image ? (
-          /* eslint-disable-next-line @next/next/no-img-element */
+
           <img
             src={article.cover_image}
             alt={displayTitle}

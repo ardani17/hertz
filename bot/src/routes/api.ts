@@ -129,7 +129,7 @@ export function createApiRouter(deps: ApiRouterDeps): Router {
         success: true,
         data: { sent: true },
       });
-    } catch (err) {
+    } catch (_err) {
       res.status(500).json({
         success: false,
         error: {

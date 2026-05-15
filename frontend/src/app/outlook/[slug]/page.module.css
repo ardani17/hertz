@@ -16,6 +16,15 @@
   max-width: 100%;
 }
 
+.interactions {
+  align-items: center;
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-3);
+  justify-content: space-between;
+  margin: var(--space-5) 0;
+}
+
 .article {
   background-color: var(--color-surface);
   border: var(--border-width) solid var(--color-border);
@@ -124,6 +133,11 @@
 
   .title {
     font-size: var(--text-2xl);
+  }
+
+  .interactions {
+    align-items: flex-start;
+    flex-direction: column;
   }
 
   .mediaGrid {

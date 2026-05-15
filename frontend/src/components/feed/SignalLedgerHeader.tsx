@@ -1,28 +1,44 @@
 import styles from './SignalLedgerHeader.module.css';
 
 const tabs = [
-  { value: null, label: 'All', href: '/hertz' },
-  { value: 'trading_room', label: 'Trading Room', href: '/hertz?category=trading_room' },
-  { value: 'life_coffee', label: 'Life & Coffee', href: '/hertz?category=life_coffee' },
-  { value: 'general', label: 'General', href: '/hertz?category=general' },
+  { value: null, label: 'All' },
+  { value: 'trading_room', label: 'Trading Room' },
+  { value: 'life_coffee', label: 'Life & Coffee' },
+  { value: 'general', label: 'General' },
 ] as const;
 
 export function SignalLedgerHeader({
   activeCategory,
+  activeSearch,
+  activeSort = 'latest',
 }: {
   activeCategory?: string | null;
+  activeSearch?: string | null;
+  activeSort?: 'latest' | 'trending';
 }) {
+  function hertzHref(category: string | null, sort: 'latest' | 'trending' = activeSort) {
+    const params = new URLSearchParams();
+    if (category) params.set('category', category);
+    if (activeSearch) params.set('q', activeSearch);
+    if (sort === 'trending') params.set('sort', 'trending');
+    const query = params.toString();
+    return query ? `/hertz?${query}` : '/hertz';
+  }
+
+  const searchParam = activeSearch ? `q=${encodeURIComponent(activeSearch)}` : '';
+  const forYouHref = searchParam ? `/hertz?${searchParam}` : '/hertz';
+  const trendingHref = `/hertz?${[searchParam, 'sort=trending'].filter(Boolean).join('&')}`;
   return (
     <div className={styles.header}>
       <div className={styles.top}>
-        <a className={styles.feedTitleActive} href="/hertz" aria-current="page">For You</a>
-        <a className={styles.feedTitle} href="/hertz?sort=trending">Trending</a>
+        <a className={activeSort === 'latest' ? styles.feedTitleActive : styles.feedTitle} href={forYouHref} aria-current={activeSort === 'latest' ? 'page' : undefined}>For You</a>
+        <a className={activeSort === 'trending' ? styles.feedTitleActive : styles.feedTitle} href={trendingHref} aria-current={activeSort === 'trending' ? 'page' : undefined}>Trending</a>
       </div>
       <nav className={styles.tabs} aria-label="HERTZ categories">
         {tabs.map((tab) => {
           const active = (tab.value ?? null) === (activeCategory ?? null);
           return (
-            <a key={tab.label} href={tab.href} className={active ? styles.activeTab : ''}>
+            <a key={tab.label} href={hertzHref(tab.value)} className={active ? styles.activeTab : ''}>
               {tab.label}
             </a>
           );

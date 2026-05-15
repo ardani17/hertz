@@ -6,54 +6,59 @@
   margin: 0 0 10px 50px;
   min-height: 132px;
   padding: 16px;
-  border: 1px solid rgba(76, 118, 94, 0.34);
+  border: 1px solid #245b3a;
   border-radius: 8px;
-  background: #000000;
+  background: #000;
   box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.035);
 }
 .post:hover {
   background: rgba(4, 14, 9, 0.94);
-  border-color: rgba(35, 190, 118, 0.52);
+  border-color: #13d27b;
 }
 .spineNode {
   position: absolute;
   display: grid;
   place-items: center;
-  top: 18px;
-  left: -47px;
+  top: 16px;
+  left: -49px;
   z-index: 1;
-  width: 32px;
-  height: 32px;
+  width: 36px;
+  height: 36px;
   border-radius: 50%;
-  border: 1px solid rgba(19, 210, 123, 0.62);
-  background: radial-gradient(circle, rgba(19, 210, 123, 0.35), rgba(5, 18, 11, 0.96));
-  color: #b7f7d5;
-  box-shadow: 0 0 0 4px #020604, 0 0 18px rgba(16, 185, 129, 0.28), inset 0 0 0 5px rgba(5, 18, 11, 0.7);
+  border: 1.5px solid #00e38a;
+  background: #063b25;
+  color: #00e38a;
+  box-shadow: 0 0 0 4px #000, 0 0 18px rgba(0, 227, 138, 0.22);
 }
 .spineNode svg {
-  width: 15px;
-  height: 15px;
-  filter: drop-shadow(0 0 4px rgba(19, 210, 123, 0.7));
+  width: 16px;
+  height: 16px;
 }
 .coffeeSpineNode {
-  border-color: rgba(234, 179, 8, 0.75);
-  background: radial-gradient(circle, rgba(234, 179, 8, 0.28), rgba(28, 18, 4, 0.96));
-  color: #facc15;
-  box-shadow: 0 0 0 4px #020604, 0 0 18px rgba(234, 179, 8, 0.28), inset 0 0 0 5px rgba(28, 18, 4, 0.78);
+  border: 1.5px solid #d8a72f;
+  background: #2b1d06;
+  color: #d8a72f;
+  box-shadow: 0 0 0 4px #000, 0 0 18px rgba(216, 167, 47, 0.22);
 }
 .coffeeSpineNode svg {
-  filter: drop-shadow(0 0 4px rgba(234, 179, 8, 0.7));
+  filter: none;
 }
 .avatar {
   display: grid;
   place-items: center;
   width: 44px;
   height: 44px;
-  border: 1px solid rgba(37, 210, 126, 0.62);
-  border-radius: 8px;
-  background: rgba(15, 70, 43, 0.86);
+  border: 1px solid #13d27b;
+  border-radius: 7px;
+  background: #084729;
   color: #a7f3d0;
   font-weight: 800;
+}
+
+.coffeeAvatar {
+  border: 1px solid #c9792e;
+  background: #4a260f;
+  color: #ffc386;
 }
 .body { min-width: 0; }
 .postTop {
@@ -78,6 +83,19 @@
   font-size: 11px;
   line-height: 13px;
 }
+.lifeBadge {
+  align-items: center;
+  background: #5a331b;
+  border: 0;
+  border-radius: 5px;
+  color: #ffc386 !important;
+  display: inline-flex;
+  font-size: 10.5px !important;
+  font-weight: 800;
+  height: 23px;
+  padding: 0 8px;
+}
+
 .badge,
 .adminBadge {
   align-items: center;
@@ -144,28 +162,28 @@
   margin: 0 0 10px 50px;
   min-height: 100px;
   padding: 14px 15px 13px;
-  border: 1px solid #00d67a;
+  border: 1px solid #13d27b;
   border-radius: 8px;
-  background: rgba(0, 20, 13, 0.72);
+  background: #000;
 }
 .noteSpineNode {
   position: absolute;
   display: grid;
   place-items: center;
   top: 12px;
-  left: -47px;
+  left: -49px;
   z-index: 1;
-  width: 32px;
-  height: 32px;
+  width: 36px;
+  height: 36px;
   border-radius: 50%;
-  border: 1px solid rgba(19, 210, 123, 0.7);
-  background: radial-gradient(circle, rgba(19, 210, 123, 0.38), rgba(5, 18, 11, 0.96));
-  color: #b7f7d5;
-  box-shadow: 0 0 0 4px #020604, 0 0 18px rgba(16, 185, 129, 0.28), inset 0 0 0 5px rgba(5, 18, 11, 0.7);
+  border: 1.5px solid #00e38a;
+  background: #063b25;
+  color: #00e38a;
+  box-shadow: 0 0 0 4px #000, 0 0 18px rgba(0, 227, 138, 0.22);
 }
 .noteSpineNode svg {
-  width: 15px;
-  height: 15px;
+  width: 16px;
+  height: 16px;
 }
 .note strong {
   align-items: center;
@@ -195,13 +213,13 @@
   align-items: center;
   border: 1px solid #13d27b;
   border-radius: 5px;
-  color: #02100a;
+  color: #13d27b;
   display: inline-flex;
   font-size: 10.5px;
   font-weight: 800;
   height: 23px;
   padding: 0 8px;
-  background: #13d27b;
+  background: #082416;
   text-decoration: none;
 }
 
@@ -355,7 +373,8 @@
     font-size: 0.78rem;
   }
   .badge,
-  .adminBadge {
+  .adminBadge,
+  .lifeBadge {
     font-size: 0.64rem !important;
     padding: 0.06rem 0.28rem;
   }

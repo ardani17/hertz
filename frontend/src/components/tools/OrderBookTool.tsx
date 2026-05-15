@@ -23,7 +23,7 @@ type OrderBookResponse = {
   success?: boolean;
   error?: string;
   warning?: string;
-  mode?: 'live' | 'demo';
+  mode?: 'live';
   data?: {
     orderPositionBook?: OrderBookData[];
   };
@@ -43,7 +43,6 @@ const copy = {
     },
     badges: {
       live: 'Live',
-      demo: 'Demo fallback',
       order: 'Open Orders',
       position: 'Open Positions',
       jakarta: 'Waktu: Asia/Jakarta',
@@ -60,8 +59,7 @@ const copy = {
       short: 'Short %',
       empty: 'Belum ada data order book untuk pilihan ini.',
     },
-    fallback:
-      'Upstream order book sedang tidak tersedia, jadi distribusi demo ditampilkan agar layout dan pembacaan tool tetap bisa diuji.',
+    fallback: 'Upstream order book sedang tidak tersedia.',
     note:
       'Fungsi: melihat konsentrasi order atau posisi di sekitar harga sekarang. Bar long/short membantu membaca area likuiditas potensial, bukan sinyal entry tunggal.',
     errors: {
@@ -80,7 +78,6 @@ const copy = {
     },
     badges: {
       live: 'Live',
-      demo: 'Demo fallback',
       order: 'Open Orders',
       position: 'Open Positions',
       jakarta: 'Time: Asia/Jakarta',
@@ -97,8 +94,7 @@ const copy = {
       short: 'Short %',
       empty: 'No order book data for this selection yet.',
     },
-    fallback:
-      'The order book upstream is currently unavailable, so demo distribution is shown to keep the tool readable and testable.',
+    fallback: 'The order book upstream is currently unavailable.',
     note:
       'Function: reads order or position concentration around current price. Long/short bars help inspect potential liquidity areas, not a standalone entry signal.',
     errors: {
@@ -132,7 +128,6 @@ export function OrderBookTool() {
   const [instrument, setInstrument] = useState('XAUUSD');
   const [bookType, setBookType] = useState<BookType>('ORDER');
   const [data, setData] = useState<OrderBookData | null>(null);
-  const [mode, setMode] = useState<'live' | 'demo' | null>(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [warning, setWarning] = useState<string | null>(null);
@@ -161,7 +156,6 @@ export function OrderBookTool() {
         const book = json.data?.orderPositionBook?.[0];
         if (!book) throw new Error(current.errors.empty);
         setData(book);
-        setMode(json.mode ?? (json.warning ? 'demo' : 'live'));
         setWarning(json.warning ? current.fallback : null);
       })
       .catch((err) => {
@@ -211,9 +205,7 @@ export function OrderBookTool() {
       {data ? (
         <>
           <div className={styles.statusLine}>
-            <span className={mode === 'demo' ? styles.badgeWarning : styles.badge}>
-              {mode === 'demo' ? current.badges.demo : current.badges.live}
-            </span>
+            <span className={styles.badge}>{current.badges.live}</span>
             <span className={styles.badgeMuted}>{bookType === 'ORDER' ? current.badges.order : current.badges.position}</span>
             <span className={styles.badgeMuted}>{instrument}</span>
             <span className={styles.badgeMuted}>{current.badges.jakarta}</span>

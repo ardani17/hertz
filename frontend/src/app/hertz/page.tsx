@@ -1,8 +1,8 @@
 import type { Metadata } from 'next';
 import { SignalLedgerPage } from '@/components/feed';
-import { getHertzDemoPosts, getHertzDemoUser } from '@/components/feed/demoPosts';
 import { HertzPostService, normalizeHertzCategory } from '@shared/services/hertzPostService';
 import { getCurrentMember } from '@/lib/memberAuth';
+import type { SignalPost } from '@shared/types';
 
 export const dynamic = 'force-dynamic';
 
@@ -13,7 +13,7 @@ export const metadata: Metadata = {
 };
 
 interface HertzPageProps {
-  searchParams?: Promise<{ category?: string }>;
+  searchParams?: Promise<{ category?: string; q?: string; sort?: string }>;
 }
 
 function selectedCategory(value?: string) {
@@ -29,13 +29,17 @@ export default async function HertzPage({ searchParams }: HertzPageProps) {
   const currentUser = await getCurrentMember();
   const params = await searchParams;
   const category = selectedCategory(params?.category);
+  const search = params?.q?.trim() || null;
+  const sort = params?.sort === 'trending' ? 'trending' : 'latest';
+  let items: SignalPost[] = [];
+
   try {
     const feed = new HertzPostService();
-    const result = await feed.listFeed({ viewer: currentUser, limit: 20, category });
-    const items = result.items.length > 0 ? result.items : getHertzDemoPosts();
-    const visualUser = result.items.length > 0 ? currentUser : (currentUser ?? getHertzDemoUser());
-    return <SignalLedgerPage posts={items} currentUser={visualUser} activeCategory={category} />;
+    const result = await feed.listFeed({ viewer: currentUser, limit: 20, category, search, sort });
+    items = result.items;
   } catch {
-    return <SignalLedgerPage posts={getHertzDemoPosts()} currentUser={currentUser ?? getHertzDemoUser()} activeCategory={category} />;
+    items = [];
   }
+
+  return <SignalLedgerPage posts={items} currentUser={currentUser} activeCategory={category} activeSearch={search} activeSort={sort} />;
 }

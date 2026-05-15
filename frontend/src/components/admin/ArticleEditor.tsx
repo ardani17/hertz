@@ -352,7 +352,7 @@ export function ArticleEditor({
                   {item.media_type === 'video' ? (
                     <video src={item.file_url} muted />
                   ) : (
-                    // eslint-disable-next-line @next/next/no-img-element
+
                     <img src={item.file_url} alt={`Media ${index + 1}`} />
                   )}
                   <button

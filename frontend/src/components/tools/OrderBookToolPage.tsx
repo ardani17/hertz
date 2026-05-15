@@ -12,7 +12,7 @@ const pageCopy = {
     description: 'Lihat distribusi open orders atau positions untuk forex dan metals.',
     helpTitle: 'Cara membaca Order Book',
     helpIntro:
-      'Tool ini menampilkan konsentrasi order atau posisi di sekitar harga saat ini. Jika upstream tidak tersedia, mode demo fallback akan aktif supaya struktur data tetap bisa dipelajari.',
+      'Tool ini menampilkan konsentrasi order atau posisi di sekitar harga saat ini dari upstream yang tersedia.',
     items: [
       {
         title: 'Instrumen',
@@ -38,7 +38,7 @@ const pageCopy = {
     description: 'View open orders or open positions distribution for forex and metals.',
     helpTitle: 'How to read the Order Book',
     helpIntro:
-      'This tool shows order or position concentration around current price. If the upstream is unavailable, demo fallback mode is shown so the structure remains readable.',
+      'This tool shows order or position concentration around current price from the available upstream.',
     items: [
       {
         title: 'Instrument',

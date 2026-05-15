@@ -1,10 +1,12 @@
+'use client';
+
 import type { ReactNode } from 'react';
 import type { MemberSessionUser } from '@shared/types';
 import { SignalLeftRail } from '@/components/feed/SignalLeftRail';
 import { SignalRightRail } from '@/components/feed/SignalRightRail';
 import styles from './HertzAppShell.module.css';
 
-type ActiveNav = 'home' | 'outlook' | 'blog' | 'tools' | 'messages';
+type ActiveNav = 'home' | 'outlook' | 'blog' | 'gallery' | 'tools' | 'messages';
 
 export function HertzAppShell({
   active,

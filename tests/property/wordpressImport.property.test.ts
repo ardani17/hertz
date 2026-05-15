@@ -2,7 +2,7 @@
 // Property-Based Tests — WordPress Import
 // ============================================
 
-import { describe, it, expect, vi, beforeEach } from 'vitest';
+import { describe, it, expect, vi } from 'vitest';
 import fc from 'fast-check';
 import {
   sanitizeWordPressHtml,
@@ -174,7 +174,7 @@ describe('Feature: admin-wordpress-import, Property 3: Import job accounting inv
           const dbModule = await import('../../shared/db/query');
 
           // Mock query (used by insertArticle)
-          vi.spyOn(dbModule, 'query').mockImplementation(async (_sql: string, params?: unknown[]) => {
+          vi.spyOn(dbModule, 'query').mockImplementation(async (_sql: string, _params?: unknown[]) => {
             // insertArticle call — may fail based on failFlags
             const shouldFail = failFlags[nonSkippedIndex % failFlags.length] ?? false;
             nonSkippedIndex++;
@@ -194,7 +194,7 @@ describe('Feature: admin-wordpress-import, Property 3: Import job accounting inv
           vi.spyOn(dbModule, 'execute').mockImplementation(async () => 1);
 
           // Mock global fetch for WordPress API
-          const mockFetch = vi.fn().mockImplementation(async (url: string) => {
+          const mockFetch = vi.fn().mockImplementation(async (_url: string) => {
             return {
               ok: true,
               headers: new Headers({ 'X-WP-TotalPages': '1' }),

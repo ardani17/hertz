@@ -1,6 +1,6 @@
 -- ============================================
 -- Horizon Trader Platform
--- Demo seed: HERTZ full product surfaces
+-- Review seed: HERTZ full product surfaces
 -- ============================================
 -- Safe to run repeatedly. It replaces only rows whose ids are declared here.
 
@@ -8,7 +8,7 @@ BEGIN;
 
 CREATE EXTENSION IF NOT EXISTS "pgcrypto";
 
--- Clean HERTZ v2 demo rows.
+-- Clean HERTZ v2 review rows.
 UPDATE hertz_conversations
 SET last_message_id = NULL
 WHERE id::text LIKE '82000000-0000-0000-0000-0000000000%';
@@ -48,6 +48,7 @@ DELETE FROM feed_posts WHERE id::text LIKE '61000000-0000-0000-0000-0000000000%'
 
 DELETE FROM credit_transactions WHERE id::text LIKE '86000000-0000-0000-0000-0000000000%';
 DELETE FROM activity_logs WHERE id::text LIKE '87000000-0000-0000-0000-0000000000%';
+DELETE FROM wordpress_import_jobs WHERE id::text LIKE '88000000-0000-0000-0000-0000000000%';
 DELETE FROM hertz_membership_checks
 WHERE id::text LIKE '12000000-0000-0000-0000-0000000000%'
    OR telegram_id BETWEEN 920000001 AND 920000010;
@@ -109,10 +110,7 @@ VALUES
   ('51000000-0000-0000-0000-000000000001', '11000000-0000-0000-0000-000000000003', '<p>Outlook London: XAUUSD masih bertahan di atas area 2332. Selama buyer mempertahankan area ini, struktur intraday tetap condong mencari continuation menuju 2346.</p>', 'London Outlook: XAUUSD menunggu reclaim 2340', 'outlook', 'web', 'published', 'outlook-xauusd-reclaim-2340', NOW() - INTERVAL '2 hours'),
   ('51000000-0000-0000-0000-000000000002', '11000000-0000-0000-0000-000000000007', '<p>Crypto watchlist hari ini fokus pada BTC/USDT. Area 66.400 menjadi batas penting; reclaim bersih dapat membuka ruang ke 67.200.</p>', 'Crypto Outlook: BTC butuh reclaim sebelum agresif', 'outlook', 'web', 'published', 'outlook-btc-reclaim-67200', NOW() - INTERVAL '4 hours'),
   ('51000000-0000-0000-0000-000000000003', '11000000-0000-0000-0000-000000000009', '<p>US index masih ditopang saham teknologi besar, tetapi breadth mulai menyempit. Untuk NASDAQ, perhatikan reaksi di resistance intraday sebelum follow trend.</p>', 'Stock Outlook: NASDAQ kuat tapi breadth melemah', 'outlook', 'web', 'published', 'outlook-nasdaq-breadth-melemah', NOW() - INTERVAL '6 hours'),
-  ('51000000-0000-0000-0000-000000000004', '11000000-0000-0000-0000-000000000001', '<p>Setelah dua loss kecil, saya berhenti trading selama 45 menit. Bukan karena takut, tapi karena saya mulai ingin membalas market. Jurnal ini mengingatkan saya untuk menjaga ritme.</p>', 'Menahan diri setelah dua loss kecil', 'blog', 'web', 'published', 'blog-menahan-diri-setelah-loss', NOW() - INTERVAL '8 hours'),
-  ('51000000-0000-0000-0000-000000000005', '11000000-0000-0000-0000-000000000008', '<p>Saya membagi sesi trading menjadi tiga blok: observasi, eksekusi, dan evaluasi. Format sederhana ini membuat hasil mingguan lebih mudah dibaca.</p>', 'Template jurnal trading yang saya pakai', 'blog', 'web', 'published', 'blog-template-jurnal-trading', NOW() - INTERVAL '12 hours'),
-  ('51000000-0000-0000-0000-000000000006', '11000000-0000-0000-0000-000000000006', '<p>Checklist sebelum entry: arah sesi, berita berdampak tinggi, level invalidasi, dan alasan untuk tidak entry. Bagian terakhir justru paling sering menyelamatkan akun.</p>', 'Checklist entry sebelum tekan buy atau sell', 'blog', 'web', 'published', 'blog-checklist-entry-harian', NOW() - INTERVAL '18 hours'),
-  ('51000000-0000-0000-0000-000000000007', '11000000-0000-0000-0000-000000000010', '<p>Tools demo: Profitability, CFTC Viewer, dan Market Pulse disiapkan sebagai ruang kerja trader. Data ini hanya activity seed untuk membuat admin dashboard terasa terisi.</p>', 'Tools workspace demo activity', 'tools', 'admin', 'published', 'tools-workspace-demo-activity', NOW() - INTERVAL '20 hours'),
+  ('51000000-0000-0000-0000-000000000007', '11000000-0000-0000-0000-000000000010', '<p>Tools workspace: Profitability, CFTC Viewer, dan Market Pulse disiapkan sebagai ruang kerja trader. Data ini adalah activity seed untuk membuat admin dashboard terasa terisi.</p>', 'Tools workspace review activity', 'tools', 'admin', 'published', 'tools-workspace-review-activity', NOW() - INTERVAL '20 hours'),
   ('51000000-0000-0000-0000-000000000008', '11000000-0000-0000-0000-000000000004', '<p>Gold reject 2338. Tunggu retest, jangan kejar candle. Setup baru valid kalau M15 close tetap di atas 2331.</p>', 'Gold reject 2338', 'trading', 'telegram', 'published', 'hertz-gold-reject-2338', NOW() - INTERVAL '9 minutes'),
   ('51000000-0000-0000-0000-000000000009', '11000000-0000-0000-0000-000000000002', '<p>Struktur EURUSD masih compression. Saya ingin lihat sweep bawah dulu sebelum cari long kecil.</p>', 'EURUSD compression London setup', 'trading', 'web', 'published', 'hertz-eurusd-compression-london', NOW() - INTERVAL '18 minutes'),
   ('51000000-0000-0000-0000-000000000010', '11000000-0000-0000-0000-000000000005', '<p>Hari ini saya hanya ambil satu posisi kecil. Fokusnya bukan jumlah trade, tapi kualitas keputusan setelah market bergerak cepat.</p>', 'Satu posisi kecil lebih baik dari lima entry panik', 'life_story', 'web', 'published', 'hertz-satu-posisi-kecil', NOW() - INTERVAL '31 minutes'),
@@ -121,9 +119,6 @@ VALUES
   ('51000000-0000-0000-0000-000000000013', '11000000-0000-0000-0000-000000000003', '<p>DXY membuka sesi Asia dengan range sempit. Jika index gagal bertahan di atas 104.20, pair mayor bisa punya ruang koreksi pendek.</p>', 'Forex Outlook: DXY menjaga range Asia', 'outlook', 'web', 'published', 'outlook-dxy-range-asia', NOW() - INTERVAL '10 hours'),
   ('51000000-0000-0000-0000-000000000014', '11000000-0000-0000-0000-000000000007', '<p>ETH/USDT masih mengikuti ritme BTC, tetapi relative strength mulai membaik. Break 3.120 dapat membuat altcoin beta ikut bergerak.</p>', 'Crypto Outlook: ETH mulai mengejar BTC', 'outlook', 'web', 'published', 'outlook-eth-relative-strength', NOW() - INTERVAL '14 hours'),
   ('51000000-0000-0000-0000-000000000015', '11000000-0000-0000-0000-000000000009', '<p>Dow Jones cenderung defensif setelah pembukaan US. Sektor energi membantu menahan koreksi, tetapi momentum belum cukup bersih.</p>', 'Stock Outlook: Dow defensif, energi menopang', 'outlook', 'web', 'published', 'outlook-dow-defensive-energy', NOW() - INTERVAL '22 hours'),
-  ('51000000-0000-0000-0000-000000000016', '11000000-0000-0000-0000-000000000006', '<p>Saya mulai menilai hari trading dari kualitas eksekusi, bukan profit. Jika semua aturan dipatuhi, hari merah pun tetap bisa dihitung sebagai hari yang baik.</p>', 'Cara saya menilai hari trading yang merah', 'blog', 'web', 'published', 'blog-menilai-hari-merah', NOW() - INTERVAL '1 day'),
-  ('51000000-0000-0000-0000-000000000017', '11000000-0000-0000-0000-000000000008', '<p>Risk kecil membuat saya lebih mudah objektif. Saat lot terlalu besar, chart yang sama bisa terasa seperti ancaman.</p>', 'Kenapa lot kecil membuat chart lebih jelas', 'blog', 'web', 'published', 'blog-lot-kecil-chart-jelas', NOW() - INTERVAL '2 days'),
-  ('51000000-0000-0000-0000-000000000018', '11000000-0000-0000-0000-000000000005', '<p>Rutinitas malam saya sederhana: screenshot entry, tulis alasan, tandai emosi, lalu tutup platform. Review dilakukan esok hari agar tidak bias.</p>', 'Rutinitas review setelah market tutup', 'blog', 'web', 'published', 'blog-rutinitas-review-market-tutup', NOW() - INTERVAL '3 days'),
   ('51000000-0000-0000-0000-000000000019', '11000000-0000-0000-0000-000000000004', '<p>BTC retest 66.4K berjalan rapi. Saya tidak entry kalau candle H1 masih menutup di bawah resistance.</p>', 'BTC retest 66.4K', 'trading', 'telegram', 'published', 'hertz-btc-retest-66400', NOW() - INTERVAL '1 hour'),
   ('51000000-0000-0000-0000-000000000020', '11000000-0000-0000-0000-000000000006', '<p>Ngopi dulu sebelum New York. Kalau market belum memberi setup, saya lebih baik baca ulang jurnal kemarin.</p>', 'Ngopi sebelum sesi New York', 'life_story', 'web', 'published', 'hertz-ngopi-sebelum-new-york', NOW() - INTERVAL '1 hour 20 minutes');
 
@@ -131,7 +126,6 @@ INSERT INTO media (id, article_id, file_url, media_type, file_key, file_size, cr
 VALUES
   ('54000000-0000-0000-0000-000000000001', '51000000-0000-0000-0000-000000000001', '/images/signal-seed/chart-xauusd.svg', 'image', 'seed/v2/outlook-xauusd.svg', 220000, NOW() - INTERVAL '2 hours'),
   ('54000000-0000-0000-0000-000000000002', '51000000-0000-0000-0000-000000000002', '/images/signal-seed/chart-mini.svg', 'image', 'seed/v2/outlook-btc.svg', 186000, NOW() - INTERVAL '4 hours'),
-  ('54000000-0000-0000-0000-000000000003', '51000000-0000-0000-0000-000000000004', '/images/signal-seed/chart-mini.svg', 'image', 'seed/v2/blog-journal.svg', 186000, NOW() - INTERVAL '8 hours'),
   ('54000000-0000-0000-0000-000000000004', '51000000-0000-0000-0000-000000000008', '/images/signal-seed/chart-xauusd.svg', 'image', 'seed/v2/feed-gold.svg', 220000, NOW() - INTERVAL '9 minutes'),
   ('54000000-0000-0000-0000-000000000005', '51000000-0000-0000-0000-000000000009', '/images/signal-seed/chart-mini.svg', 'image', 'seed/v2/feed-eurusd.svg', 186000, NOW() - INTERVAL '18 minutes'),
   ('54000000-0000-0000-0000-000000000006', '51000000-0000-0000-0000-000000000013', '/images/signal-seed/chart-mini.svg', 'image', 'seed/v2/outlook-dxy.svg', 176000, NOW() - INTERVAL '10 hours'),
@@ -300,13 +294,11 @@ VALUES
 INSERT INTO hertz_credit_ledger (id, user_id, event_type, entity_id, amount, created_at)
 VALUES
   ('85000000-0000-0000-0000-000000000001', '11000000-0000-0000-0000-000000000004', 'telegram_post_published', '71000000-0000-0000-0000-000000000001', 10, NOW() - INTERVAL '9 minutes'),
-  ('85000000-0000-0000-0000-000000000002', '11000000-0000-0000-0000-000000000001', 'blog_published', '51000000-0000-0000-0000-000000000004', 15, NOW() - INTERVAL '8 hours'),
   ('85000000-0000-0000-0000-000000000003', '11000000-0000-0000-0000-000000000007', 'hertz_post_published', '71000000-0000-0000-0000-000000000002', 10, NOW() - INTERVAL '45 minutes');
 
 INSERT INTO credit_transactions (id, user_id, amount, transaction_type, source_type, source_id, description, created_at)
 VALUES
   ('86000000-0000-0000-0000-000000000001', '11000000-0000-0000-0000-000000000004', 10, 'earned', 'hertz_post', '61000000-0000-0000-0000-000000000001', 'Seed reward: published Telegram HERTZ post', NOW() - INTERVAL '9 minutes'),
-  ('86000000-0000-0000-0000-000000000002', '11000000-0000-0000-0000-000000000001', 15, 'earned', 'blog_post', '51000000-0000-0000-0000-000000000004', 'Seed reward: published member blog', NOW() - INTERVAL '8 hours'),
   ('86000000-0000-0000-0000-000000000003', '11000000-0000-0000-0000-000000000007', 10, 'earned', 'community_note', '63000000-0000-0000-0000-000000000001', 'Seed reward: sourced community note', NOW() - INTERVAL '4 minutes');
 
 COMMIT;

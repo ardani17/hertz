@@ -7,19 +7,19 @@
 
 .shell {
   display: grid;
-  grid-template-columns: minmax(220px, 253px) minmax(0, 858px) minmax(320px, 489px);
+  grid-template-columns: minmax(150px, 210px) minmax(0, 1fr) minmax(260px, 340px);
   gap: 0;
   max-width: 1600px;
   width: min(100vw, 1600px);
   margin: 0 auto;
   min-height: 100vh;
-  border-left: 1px solid rgba(29, 185, 112, 0.22);
-  border-right: 1px solid rgba(29, 185, 112, 0.22);
+  border-left: 1px solid #245b3a;
+  border-right: 1px solid #173824;
 }
 
 .timeline {
-  border-left: 1px solid rgba(29, 185, 112, 0.22);
-  border-right: 1px solid rgba(29, 185, 112, 0.22);
+  border-left: 1px solid #245b3a;
+  border-right: 1px solid #173824;
   min-width: 0;
   padding: 0 clamp(8px, 0.7vw, 10px) 0 clamp(16px, 1.4vw, 21px);
 }
@@ -75,12 +75,11 @@
 .feed::before {
   content: "";
   position: absolute;
-  left: 40px;
+  left: 42px;
   top: 164px;
   bottom: 0;
   width: 2px;
-  background: linear-gradient(#10b981, rgba(16, 185, 129, 0.08));
-  opacity: 0.78;
+  background: linear-gradient(#245b3a, rgba(36, 91, 58, 0.06));
   pointer-events: none;
 }
 
@@ -103,18 +102,7 @@
   display: none;
 }
 
-@media (max-width: 1499px) {
-  .shell {
-    grid-template-columns: 253px minmax(0, 858px);
-    max-width: 1111px;
-  }
-
-  .timeline {
-    border-right: 1px solid rgba(29, 185, 112, 0.22);
-  }
-}
-
-@media (max-width: 1100px) {
+@media (max-width: 760px) {
   .shell {
     grid-template-columns: minmax(0, 680px);
     max-width: 720px;

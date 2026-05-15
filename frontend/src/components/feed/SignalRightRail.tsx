@@ -5,28 +5,28 @@ const groups = [
   {
     title: 'Forex Market',
     rows: [
-      ['XAUUSD', '2,337.62', '+0.36%', 'up'],
-      ['EURUSD', '1.08421', '+0.19%', 'up'],
-      ['GBPUSD', '1.26380', '-0.08%', 'down'],
-      ['USDJPY', '155.72', '+0.12%', 'up'],
+      { symbol: 'XAUUSD', price: '2,337.62', change: '+0.36%', tone: 'up' },
+      { symbol: 'EURUSD', price: '1.08421', change: '+0.19%', tone: 'up' },
+      { symbol: 'GBPUSD', price: '1.26380', change: '-0.08%', tone: 'down' },
+      { symbol: 'USDJPY', price: '155.72', change: '+0.12%', tone: 'up' },
     ],
   },
   {
     title: 'Crypto Market',
     rows: [
-      ['BTC/USDT', '66,721.18', '-0.19%', 'down'],
-      ['ETH/USDT', '3,107.40', '+0.84%', 'up'],
-      ['SOL/USDT', '148.22', '+1.21%', 'up'],
-      ['BNB/USDT', '594.80', '-0.32%', 'down'],
+      { symbol: 'BTC/USDT', price: '66,721.18', change: '-0.19%', tone: 'down' },
+      { symbol: 'ETH/USDT', price: '3,107.40', change: '+0.84%', tone: 'up' },
+      { symbol: 'SOL/USDT', price: '148.22', change: '+1.21%', tone: 'up' },
+      { symbol: 'BNB/USDT', price: '594.80', change: '-0.32%', tone: 'down' },
     ],
   },
   {
     title: 'Stock Market',
     rows: [
-      ['NASDAQ', '18,093.75', '+0.42%', 'up'],
-      ['S&P 500', '5,221.30', '+0.28%', 'up'],
-      ['DOW', '39,872.99', '-0.11%', 'down'],
-      ['TSLA', '178.90', '+1.04%', 'up'],
+      { symbol: 'NASDAQ', price: '18,093.75', change: '+0.42%', tone: 'up' },
+      { symbol: 'S&P 500', price: '5,221.30', change: '+0.28%', tone: 'up' },
+      { symbol: 'DOW', price: '39,872.99', change: '-0.11%', tone: 'down' },
+      { symbol: 'TSLA', price: '178.90', change: '+1.04%', tone: 'up' },
     ],
   },
 ] as const;
@@ -42,26 +42,26 @@ function Sparkline({ tone }: { tone: 'up' | 'down' }) {
   );
 }
 
-export function SignalRightRail() {
+export function SignalRightRail({ activeSearch }: { activeSearch?: string | null }) {
   return (
     <aside className={styles.right} aria-label="Market intelligence">
-      <div className={styles.searchBox}>
+      <form className={styles.searchBox} action="/hertz">
         <SearchIcon />
-        <span>Cari pair, jurnal, atau member</span>
-      </div>
+        <input name="q" defaultValue={activeSearch ?? ''} placeholder="Cari pair, jurnal, atau member" aria-label="Cari HERTZ" />
+      </form>
       {groups.map((group) => (
         <section className={styles.marketPanel} key={group.title}>
           <div className={styles.marketTitle}>
             <SignalIcon />
             <span>{group.title}</span>
           </div>
-          {group.rows.map(([symbol, price, change, tone]) => (
-            <div className={styles.marketRow} key={symbol}>
-              <strong>{symbol}</strong>
-              <Sparkline tone={tone} />
+          {group.rows.map((row) => (
+            <div className={styles.marketRow} key={row.symbol}>
+              <strong>{row.symbol}</strong>
+              <Sparkline tone={row.tone} />
               <div>
-                <b>{price}</b>
-                <em className={tone === 'down' ? styles.down : styles.up}>{change}</em>
+                <b>{row.price}</b>
+                <em className={row.tone === 'down' ? styles.down : styles.up}>{row.change}</em>
               </div>
             </div>
           ))}

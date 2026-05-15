@@ -8,9 +8,8 @@ import { createAuthMiddleware } from '../../../bot/src/middleware/auth';
 import { createAutoRegisterMiddleware } from '../../../bot/src/middleware/autoRegister';
 import { createLoggingMiddleware } from '../../../bot/src/middleware/logging';
 import { createRateLimiterMiddleware } from '../../../bot/src/middleware/rateLimiter';
-import type { BotContext, MiddlewareFn, TelegramMessage } from '../../../bot/src/middleware/types';
+import type { BotContext, TelegramMessage } from '../../../bot/src/middleware/types';
 import type { User } from '../../../shared/types/index';
-import { AppError } from '../../../shared/utils/errors';
 
 // ---- Test Helpers ----
 

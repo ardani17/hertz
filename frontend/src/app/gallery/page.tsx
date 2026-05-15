@@ -1,9 +1,9 @@
 import type { Metadata } from 'next';
 import { query } from '@shared/db';
-import { Sidebar } from '@/components/layout/Sidebar';
 import { GalleryGrid } from '@/components/gallery';
 import type { GalleryMediaItem } from '@/components/gallery';
-import styles from './page.module.css';
+import { HertzAppShell } from '@/components/hertz/HertzAppShell';
+import { getCurrentMember } from '@/lib/memberAuth';
 
 export const metadata: Metadata = {
   title: 'Gallery',
@@ -70,19 +70,20 @@ async function getGalleryMedia(): Promise<{
 }
 
 export default async function GalleryPage() {
-  const { items, totalCount } = await getGalleryMedia();
+  const [{ items, totalCount }, currentUser] = await Promise.all([
+    getGalleryMedia(),
+    getCurrentMember(),
+  ]);
 
   return (
-    <main className={styles.main}>
-      <div className={styles.container}>
-        <div className={styles.content}>
-          <div className={styles.header}>
-            <h1>Gallery</h1>
-          </div>
-          <GalleryGrid initialItems={items} totalCount={totalCount} />
-        </div>
-        <Sidebar />
-      </div>
-    </main>
+    <HertzAppShell
+      active="gallery"
+      title="Gallery"
+      description="Arsip foto dan video dari jurnal komunitas Horizon."
+      currentUser={currentUser}
+      hideRightRail
+    >
+      <GalleryGrid initialItems={items} totalCount={totalCount} />
+    </HertzAppShell>
   );
 }

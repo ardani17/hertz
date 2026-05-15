@@ -14,7 +14,7 @@ interface ArticleRow extends Article {
  * Admin-only endpoint.
  *
  * Query params:
- *   page (default 1), pageSize (default 20), search, status, category
+ *   page (default 1), pageSize (default 20), search, status, category, source
  *
  * Requirements: 5.1
  */
@@ -33,6 +33,7 @@ export async function GET(request: NextRequest) {
   const search = params.get('search')?.trim() || '';
   const statusFilter = params.get('status') || '';
   const categoryFilter = params.get('category') || '';
+  const sourceFilter = params.get('source') || '';
   const offset = (page - 1) * pageSize;
 
   try {
@@ -55,6 +56,12 @@ export async function GET(request: NextRequest) {
     if (categoryFilter) {
       conditions.push(`a.category = $${paramIndex}`);
       values.push(categoryFilter);
+      paramIndex++;
+    }
+
+    if (sourceFilter) {
+      conditions.push(`a.source = $${paramIndex}`);
+      values.push(sourceFilter);
       paramIndex++;
     }
 

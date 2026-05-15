@@ -37,7 +37,7 @@ export function SignalPostCard({ post, currentUser }: { post: SignalPost; curren
         <div className={spineNodeClass(post)} aria-hidden="true">
           <SpineIcon post={post} />
         </div>
-        <div className={styles.avatar}>{initials(post.author.name, post.author.username)}</div>
+        <div className={`${styles.avatar} ${(post.category === 'life_coffee' || post.category === 'life_story') ? styles.coffeeAvatar : ''}`}>{initials(post.author.name, post.author.username)}</div>
         <div className={styles.body}>
           <div className={styles.postTop}>
             <SignalAuthorLine post={post} />

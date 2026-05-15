@@ -1272,14 +1272,14 @@ Update minimal:
 Build check:
 
 ```bash
-npm.cmd --workspace frontend run build
-npm.cmd --workspace bot run build
+npm.cmd run build:frontend
+npm.cmd run build:bot
 ```
 
 Test check:
 
 ```bash
-npm.cmd --workspaces=false run test
+npm.cmd run test
 ```
 
 Catatan: jika test existing punya failure lama yang tidak terkait, audit harus mencatatnya jelas.

@@ -9,7 +9,6 @@ import {
   retryWithBackoff,
   withBotErrorHandling,
   containsInternalInfo,
-  sleep,
 } from '../../../bot/src/utils/errorHandler';
 import type { ErrorLogger, ErrorContext } from '../../../bot/src/utils/errorHandler';
 import {
@@ -25,7 +24,6 @@ import {
   AuthInvalidError,
   ResourceNotFoundError,
 } from '../../../shared/utils/errors';
-import { ErrorCode } from '../../../shared/types/index';
 import type { BotContext } from '../../../bot/src/middleware/types';
 import type { User } from '../../../shared/types/index';
 

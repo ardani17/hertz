@@ -143,16 +143,21 @@ export class HertzPostService {
     cursor?: string | null;
     limit?: number;
     category?: string | null;
+    search?: string | null;
+    sort?: string | null;
     viewer?: MemberSessionUser | null;
   }): Promise<CursorFeedResult> {
     const limit = Math.min(Math.max(params.limit ?? 20, 1), 50);
     const decoded = decodeCursor(params.cursor ?? null);
     const category = params.category ? normalizeHertzCategory(params.category) : null;
+    const sort = params.sort === 'trending' ? 'trending' : 'latest';
     const rows = await this.posts.listPublished({
       limit: limit + 1,
       cursorCreatedAt: decoded?.createdAt ?? null,
       cursorId: decoded?.id ?? null,
       category,
+      search: params.search ?? null,
+      sort,
       viewerId: params.viewer?.id ?? null,
     });
     const pageRows = rows.slice(0, limit);

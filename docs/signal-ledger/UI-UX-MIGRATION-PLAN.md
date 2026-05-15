@@ -48,7 +48,7 @@ Jika nanti ada file Figma:
    - Tidak boleh ada header/footer lama yang muncul lagi.
 
 5. **Verification**
-   - Jalankan `npm.cmd --workspace=frontend run build`.
+   - Jalankan `npm.cmd run build:frontend`.
    - Jalankan test unit/integration Signal Ledger yang relevan.
    - Jika browser lokal kuat, cek screenshot desktop dan mobile.
 

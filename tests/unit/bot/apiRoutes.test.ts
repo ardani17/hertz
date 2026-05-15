@@ -106,7 +106,7 @@ describe('GET /api/bot/commands', () => {
     expect(res.status).toBe(200);
     expect(res.body.data.commands).toHaveLength(2);
 
-    const publishCmd = res.body.data.commands.find((c: any) => c.name === '/publish');
+    const publishCmd = res.body.data.commands.find((c: { name: string }) => c.name === '/publish');
     expect(publishCmd).toEqual({
       name: '/publish',
       description: 'Publish a message as article',
@@ -114,7 +114,7 @@ describe('GET /api/bot/commands', () => {
       permission: 'member',
     });
 
-    const tradingCmd = res.body.data.commands.find((c: any) => c.name === '#trading');
+    const tradingCmd = res.body.data.commands.find((c: { name: string }) => c.name === '#trading');
     expect(tradingCmd).toEqual({
       name: '#trading',
       description: 'Trading journal via hashtag',

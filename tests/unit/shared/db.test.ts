@@ -1,5 +1,9 @@
-import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
+import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { Pool, PoolClient, QueryResult } from 'pg';
+
+vi.mock('dotenv', () => ({
+  config: vi.fn(),
+}));
 
 // ---- Connection tests ----
 

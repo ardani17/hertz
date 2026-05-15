@@ -48,7 +48,7 @@ describe('AppError', () => {
 
 describe('Error subclasses', () => {
   const cases: Array<{
-    Class: new (...args: any[]) => AppError;
+    Class: new (message?: string, details?: Record<string, unknown> | null) => AppError;
     expectedCode: ErrorCode;
     expectedStatus: number;
     expectedName: string;

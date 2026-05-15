@@ -9,10 +9,12 @@ import styles from './SignalPostMenu.module.css';
 export function SignalPostMenu({ post, currentUser }: { post: SignalPost; currentUser: MemberSessionUser | null }) {
   const [open, setOpen] = useState(false);
   const [reportOpen, setReportOpen] = useState(false);
+  const [editOpen, setEditOpen] = useState(false);
   const [marketOpen, setMarketOpen] = useState(false);
   const [message, setMessage] = useState<string | null>(null);
   const [reportReason, setReportReason] = useState('misleading');
   const [reportDetails, setReportDetails] = useState('');
+  const [editContent, setEditContent] = useState(post.content.text);
   const [market, setMarket] = useState({
     pair: post.market?.pair ?? '',
     timeframe: post.market?.timeframe ?? '',
@@ -46,6 +48,26 @@ export function SignalPostMenu({ post, currentUser }: { post: SignalPost; curren
     if (!response.ok) {
       const data = await response.json().catch(() => null);
       setMessage(data?.error?.message ?? 'Gagal menyembunyikan post.');
+      return;
+    }
+    window.location.reload();
+  }
+
+  async function submitEdit(event: FormEvent<HTMLFormElement>) {
+    event.preventDefault();
+    const content = editContent.trim();
+    if (!content) {
+      setMessage('Konten tidak boleh kosong.');
+      return;
+    }
+    const response = await fetch(`/api/hertz/posts/${post.shortId}`, {
+      method: 'PATCH',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ content }),
+    });
+    if (!response.ok) {
+      const data = await response.json().catch(() => null);
+      setMessage(data?.error?.message ?? 'Post gagal diedit.');
       return;
     }
     window.location.reload();
@@ -113,8 +135,9 @@ export function SignalPostMenu({ post, currentUser }: { post: SignalPost; curren
       {open ? (
         <div className={styles.menu}>
           <Button type="button" variant="ghost" size="sm" onClick={copyLink}>Copy link</Button>
-          {currentUser ? <Button type="button" variant="ghost" size="sm" onClick={() => { setReportOpen((value) => !value); setMarketOpen(false); }}>Report</Button> : null}
-          {currentUser?.role === 'admin' ? <Button type="button" variant="ghost" size="sm" onClick={() => { setMarketOpen((value) => !value); setReportOpen(false); }}>Edit market metadata</Button> : null}
+          {currentUser ? <Button type="button" variant="ghost" size="sm" onClick={() => { setReportOpen((value) => !value); setMarketOpen(false); setEditOpen(false); }}>Report</Button> : null}
+          {post.viewer.canEdit ? <Button type="button" variant="ghost" size="sm" onClick={() => { setEditOpen((value) => !value); setReportOpen(false); setMarketOpen(false); }}>Edit post</Button> : null}
+          {currentUser?.role === 'admin' ? <Button type="button" variant="ghost" size="sm" onClick={() => { setMarketOpen((value) => !value); setReportOpen(false); setEditOpen(false); }}>Edit market metadata</Button> : null}
           {post.viewer.canDelete ? <Button type="button" variant="ghost" size="sm" onClick={deleteOwnPost}>Delete post</Button> : null}
           {currentUser?.role === 'admin' ? <Button type="button" variant="ghost" size="sm" onClick={hidePost}>Hide post</Button> : null}
         </div>
@@ -131,6 +154,13 @@ export function SignalPostMenu({ post, currentUser }: { post: SignalPost; curren
           </select>
           <textarea value={reportDetails} onChange={(event) => setReportDetails(event.target.value)} placeholder="Detail opsional" rows={3} />
           <Button type="submit">Submit report</Button>
+        </form>
+      ) : null}
+      {editOpen ? (
+        <form className={styles.panel} onSubmit={submitEdit}>
+          <label htmlFor={`edit-post-${post.id}`}>Edit post</label>
+          <textarea id={`edit-post-${post.id}`} value={editContent} onChange={(event) => setEditContent(event.target.value)} rows={5} maxLength={12000} />
+          <Button type="submit">Save post</Button>
         </form>
       ) : null}
       {marketOpen ? (

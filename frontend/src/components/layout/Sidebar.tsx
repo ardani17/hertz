@@ -10,6 +10,11 @@ const categories = [
   { label: 'Gallery', href: '/gallery' },
 ] as const;
 
+const links = [
+  { label: '🔗 Login Telegram', href: '/hertz#telegram-login' },
+  { label: '📖 Panduan Tools', href: '/tools' },
+] as const;
+
 export function Sidebar() {
   return (
     <aside className={styles.sidebar} aria-label="Sidebar navigasi">
@@ -53,12 +58,13 @@ export function Sidebar() {
       <div className={styles.section}>
         <h3 className={styles.sectionTitle}>Links</h3>
         <ul className={styles.linkList} role="list">
-          <li>
-            <span className={styles.linkItem}>🔗 Telegram Group</span>
-          </li>
-          <li>
-            <span className={styles.linkItem}>📖 Panduan</span>
-          </li>
+          {links.map((item) => (
+            <li key={item.href}>
+              <Link href={item.href} className={styles.linkItem}>
+                {item.label}
+              </Link>
+            </li>
+          ))}
         </ul>
       </div>
     </aside>

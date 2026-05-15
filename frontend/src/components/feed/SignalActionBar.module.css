@@ -42,6 +42,11 @@
   color: #34d399;
 }
 
+.actions button:disabled {
+  cursor: wait;
+  opacity: 0.62;
+}
+
 .actions .active svg {
   background: #074d31;
   border-color: #13d27b;

@@ -22,12 +22,6 @@ const HASHTAG_CATEGORY_MAP: Record<string, string> = {
   general: 'general',
 };
 
-function parseHashtags(text: string): string[] {
-  const matches = text.match(/#\w+/g);
-  if (!matches) return [];
-  return matches.map((tag) => tag.slice(1).toLowerCase());
-}
-
 function mapHashtagToCategory(hashtags: string[]): string {
   for (const tag of hashtags) {
     const category = HASHTAG_CATEGORY_MAP[tag];

@@ -11,7 +11,7 @@ export function CommunityNoteCard({ note, postId }: { note: CommunityNote | null
       <div className={styles.noteSpineNode} aria-hidden="true">
         <UsersIcon />
       </div>
-      <strong><UsersIcon /> Catatan komunitas</strong>
+      <strong><UsersIcon /> Catatan Komunitas</strong>
       <p>{note.content}</p>
       <div className={styles.noteFooter}>
         <span>{note.sources.map((source) => source.url.replace(/^https?:\/\//, '')).join('  ·  ')}</span>

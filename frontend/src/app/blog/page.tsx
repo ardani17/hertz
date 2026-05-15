@@ -4,14 +4,13 @@ import { query } from '@shared/db';
 import { PAGINATION } from '@shared/constants';
 import { BlogCard } from '@/components/blog';
 import type { BlogCardData } from '@/components/blog';
-import { BlogComposer } from '@/components/blog/BlogComposer';
 import { HertzAppShell } from '@/components/hertz/HertzAppShell';
 import { getCurrentMember } from '@/lib/memberAuth';
 import styles from './page.module.css';
 
 export const metadata: Metadata = {
   title: 'Blog',
-  description: 'Artikel blog dari Horizon: tips trading, edukasi, dan insight pasar.',
+  description: 'Artikel blog Horizon hasil import WordPress.',
   alternates: { canonical: '/blog' },
 };
 
@@ -36,10 +35,10 @@ interface CountRow {
 async function getBlogArticles(page: number, search: string): Promise<{ articles: BlogCardData[]; total: number }> {
   try {
     const offset = (page - 1) * PAGE_SIZE;
-    const params: unknown[] = ['published', 'blog'];
-    let whereClause = 'WHERE a.status = $1 AND a.category = $2';
+    const params: unknown[] = ['published', 'blog', 'wordpress'];
+    let whereClause = 'WHERE a.status = $1 AND a.category = $2 AND a.source = $3';
     if (search) {
-      whereClause += ' AND (a.title ILIKE $3 OR a.content_html ILIKE $3)';
+      whereClause += ' AND (a.title ILIKE $4 OR a.content_html ILIKE $4)';
       params.push(`%${search}%`);
     }
     const [articlesResult, countResult] = await Promise.all([
@@ -101,8 +100,7 @@ export default async function BlogPage({ searchParams }: { searchParams: Promise
   const totalPages = Math.ceil(total / PAGE_SIZE);
 
   return (
-    <HertzAppShell active="blog" title="Blog" description="Artikel member verified yang langsung publish dari web." currentUser={currentUser}>
-      <BlogComposer currentUser={currentUser} />
+    <HertzAppShell active="blog" title="Blog" description="Artikel hasil import WordPress." currentUser={currentUser}>
       <form className={styles.searchForm} action="/blog" method="get">
         <input type="search" name="search" className={styles.searchInput} placeholder="Cari artikel blog..." defaultValue={search} aria-label="Cari artikel blog" />
       </form>
@@ -113,8 +111,8 @@ export default async function BlogPage({ searchParams }: { searchParams: Promise
         </>
       ) : (
         <div className={styles.empty}>
-          <p className={styles.emptyText}>Belum ada artikel Blog</p>
-          <p className={styles.emptySubtext}>Artikel blog akan ditampilkan di sini.</p>
+          <p className={styles.emptyText}>Belum ada artikel WordPress</p>
+          <p className={styles.emptySubtext}>Artikel blog akan tampil setelah import WordPress selesai.</p>
         </div>
       )}
     </HertzAppShell>

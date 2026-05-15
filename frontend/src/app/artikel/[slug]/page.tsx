@@ -242,7 +242,7 @@ export default async function ArticleDetailPage({
                           Browser Anda tidak mendukung video.
                         </video>
                       ) : (
-                        /* eslint-disable-next-line @next/next/no-img-element */
+
                         <img
                           src={m.file_url}
                           alt={article.title || 'Media artikel'}

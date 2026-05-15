@@ -12,6 +12,7 @@ function initials(name: string) {
 }
 
 export function SignalComposer({ currentUser }: { currentUser: MemberSessionUser | null }) {
+  const [category, setCategory] = useState<'trading_room' | 'life_coffee' | 'general'>('trading_room');
   const [content, setContent] = useState('');
   const [pair, setPair] = useState('');
   const [risk, setRisk] = useState('');
@@ -63,7 +64,7 @@ export function SignalComposer({ currentUser }: { currentUser: MemberSessionUser
       setStatus('Login Telegram member diperlukan.');
       return;
     }
-    if (!pair.trim() || !risk.trim()) {
+    if (category === 'trading_room' && (!pair.trim() || !risk.trim())) {
       setStatus('Pair dan risk wajib untuk Trading Room.');
       return;
     }
@@ -72,12 +73,12 @@ export function SignalComposer({ currentUser }: { currentUser: MemberSessionUser
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
-        category: 'trading_room',
+        category,
         content,
-        market: {
+        market: category === 'trading_room' ? {
           pair: pair || null,
           riskPercent: risk ? Number(risk) : null,
-        },
+        } : null,
         mediaIds,
       }),
     });
@@ -87,6 +88,7 @@ export function SignalComposer({ currentUser }: { currentUser: MemberSessionUser
       return;
     }
     setContent('');
+    setCategory('trading_room');
     setPair('');
     setRisk('');
     setMediaIds([]);
@@ -118,6 +120,17 @@ export function SignalComposer({ currentUser }: { currentUser: MemberSessionUser
           rows={1}
         />
         <div className={styles.controls}>
+          <select
+            className={styles.categorySelect}
+            value={category}
+            onChange={(event) => setCategory(event.target.value as 'trading_room' | 'life_coffee' | 'general')}
+            disabled={!currentUser}
+            aria-label="Kategori post"
+          >
+            <option value="trading_room">Trading</option>
+            <option value="life_coffee">Life</option>
+            <option value="general">General</option>
+          </select>
           <label className={`${styles.uploadButton} ${(!currentUser || uploading || mediaIds.length >= 4) ? styles.disabledUpload : ''}`}>
             <span>+</span>
             <span>Chart</span>
@@ -134,11 +147,11 @@ export function SignalComposer({ currentUser }: { currentUser: MemberSessionUser
           </label>
           <label className={styles.inlineField}>
             <span>+</span>
-            <input value={pair} onChange={(event) => setPair(event.target.value)} placeholder="Pair" disabled={!currentUser} />
+            <input value={pair} onChange={(event) => setPair(event.target.value)} placeholder="Pair" disabled={!currentUser || category !== 'trading_room'} />
           </label>
           <label className={styles.inlineField}>
             <span>+</span>
-            <input value={risk} onChange={(event) => setRisk(event.target.value)} placeholder="Risk" inputMode="decimal" disabled={!currentUser} />
+            <input value={risk} onChange={(event) => setRisk(event.target.value)} placeholder="Risk" inputMode="decimal" disabled={!currentUser || category !== 'trading_room'} />
           </label>
           <Button className={styles.submit} type="button" onClick={submit} disabled={!currentUser || !content.trim()}>
             Publish

@@ -331,18 +331,22 @@ const CFTC_VISIBLE_TRANSLATIONS: Array<[RegExp, string]> = [
 ];
 
 function getCftcRoot() {
+  const configuredRoots = process.env.CFTC_VIEWER_ROOT
+    ?.split(path.delimiter)
+    .filter(Boolean)
+    .map((root) => path.resolve(/* turbopackIgnore: true */ process.cwd(), root));
+
   return [
-    path.resolve(path.join(/*turbopackIgnore: true*/ process.cwd(), '..', 'docs', 'tools', 'cftc-export')),
-    path.resolve(path.join(/*turbopackIgnore: true*/ process.cwd(), 'docs', 'tools', 'cftc-export')),
-    path.resolve(path.join(/*turbopackIgnore: true*/ process.cwd(), '..', 'docs', 'tools', 'cftc')),
-    path.resolve(path.join(/*turbopackIgnore: true*/ process.cwd(), 'docs', 'tools', 'cftc')),
+    ...(configuredRoots ?? []),
+    path.join(/* turbopackIgnore: true */ process.cwd(), 'docs', 'tools', 'cftc-export'),
+    path.join(/* turbopackIgnore: true */ process.cwd(), 'docs', 'tools', 'cftc'),
   ];
 }
 
 async function resolveRoot() {
   for (const candidate of getCftcRoot()) {
     try {
-      const stats = await stat(candidate);
+      const stats = await stat(/* turbopackIgnore: true */ candidate);
       if (stats.isDirectory()) {
         return candidate;
       }
@@ -401,14 +405,14 @@ export async function GET(_request: Request, context: RouteContext) {
   }
 
   try {
-    const fileStats = await stat(filePath);
+    const fileStats = await stat(/* turbopackIgnore: true */ filePath);
     const resolvedFile = fileStats.isDirectory()
       ? path.join(filePath, 'index.html')
       : filePath;
 
     const ext = path.extname(resolvedFile).toLowerCase();
     const contentType = CONTENT_TYPES[ext] ?? 'application/octet-stream';
-    const buffer = await readFile(resolvedFile);
+    const buffer = await readFile(/* turbopackIgnore: true */ resolvedFile);
 
     if (ext === '.html') {
       return new NextResponse(rewriteStaticHtml(buffer.toString('utf-8')), {

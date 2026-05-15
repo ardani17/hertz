@@ -175,7 +175,7 @@ async function insertArticle(
 ): Promise<string> {
   const result = await query<{ id: string }>(
     `INSERT INTO articles (author_id, title, content_html, category, source, status, slug, created_at)
-     VALUES ($1, $2, $3, 'outlook', 'wordpress', 'published', $4, $5)
+     VALUES ($1, $2, $3, 'blog', 'wordpress', 'published', $4, $5)
      RETURNING id`,
     [authorId, data.title, data.contentHtml, data.slug, data.date],
   );

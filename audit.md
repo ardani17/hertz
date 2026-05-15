@@ -205,7 +205,7 @@ Perbaikan:
 
 ## Verifikasi Setelah Perbaikan
 
-- `npm.cmd run build --workspace=frontend`: berhasil.
+- `npm.cmd run build:frontend`: berhasil.
 - `GET /tools/profitability`: 200.
 - `GET /tools/cftc`: 200, quick links dan static notice muncul.
 - `POST /api/tools/order-book`: 200, fallback terdeteksi saat upstream OANDA gagal.
@@ -213,9 +213,9 @@ Perbaikan:
 
 ## Penyesuaian Node Modules
 
-- Tools aktif sudah menjadi bagian dari workspace Horizon utama, bukan project Node terpisah.
+- Tools aktif sudah menjadi bagian dari package Horizon utama, bukan project Node terpisah.
 - Folder `docs/tools/horizonfx-v2-main` dipertahankan sebagai arsip referensi audit saja.
 - Manifest `package.json` dan `package-lock.json` lama di `docs/tools/horizonfx-v2-main` dihapus agar tidak memicu instalasi `node_modules` kedua.
-- Root `.npmrc` diset `install-strategy=hoisted` dan `workspaces=true` agar instalasi dependency mengikuti workspace Horizon.
-- `frontend/Dockerfile` menyalin `.npmrc` pada stage install/build/runtime supaya Docker juga memakai konfigurasi workspace yang sama.
+- Root `.npmrc` diset `install-strategy=hoisted`; dependency frontend/bot/shared dikonsolidasikan di package root.
+- `frontend/Dockerfile` menyalin `.npmrc` pada stage install/build/runtime supaya Docker juga memakai konfigurasi root yang sama.
 - Command yang dipakai tetap dari root Horizon: `npm install`, `npm run dev:frontend`, dan `npm run build:frontend`.

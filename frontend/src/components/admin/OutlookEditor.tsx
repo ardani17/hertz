@@ -371,7 +371,7 @@ export function OutlookEditor({
           <div className={styles.imageList}>
             {inlineImages.map((img) => (
               <div key={img.id} className={styles.imageItem}>
-                {/* eslint-disable-next-line @next/next/no-img-element */}
+                { }
                 <img src={img.objectUrl} alt="Inline" className={styles.imageThumb} />
                 <span className={styles.imageName}>{img.file.name}</span>
                 <button

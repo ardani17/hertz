@@ -170,6 +170,8 @@ export class HertzPostRepository {
     cursorCreatedAt?: string | null;
     cursorId?: string | null;
     category?: string | null;
+    search?: string | null;
+    sort?: 'latest' | 'trending';
     viewerId?: string | null;
   }, client?: DbClient): Promise<HertzPostRow[]> {
     const conditions = ['hp.status = $1', 'hp.deleted_at IS NULL'];
@@ -182,6 +184,18 @@ export class HertzPostRepository {
       idx++;
     }
 
+    if (params.search?.trim()) {
+      conditions.push(`(
+        hp.content ILIKE $${idx}
+        OR a.title ILIKE $${idx}
+        OR u.username ILIKE $${idx}
+        OR u.display_name ILIKE $${idx}
+        OR pmc.pair ILIKE $${idx}
+      )`);
+      values.push(`%${params.search.trim()}%`);
+      idx++;
+    }
+
     if (params.cursorCreatedAt && params.cursorId) {
       conditions.push(`(hp.created_at, hp.id) < ($${idx}::timestamptz, $${idx + 1}::uuid)`);
       values.push(params.cursorCreatedAt, params.cursorId);
@@ -189,11 +203,11 @@ export class HertzPostRepository {
     }
 
     values.push(params.viewerId ?? null, params.limit);
-    return this.queryRows(conditions.join(' AND '), values, idx, idx + 1, client);
+    return this.queryRows(conditions.join(' AND '), values, idx, idx + 1, params.sort ?? 'latest', client);
   }
 
   async findById(postId: string, viewerId?: string | null, client?: DbClient): Promise<HertzPostRow | null> {
-    const rows = await this.queryRows('(hp.id::text = $1 OR hp.short_id = $1)', [postId, viewerId ?? null, 1], 2, 3, client);
+    const rows = await this.queryRows('(hp.id::text = $1 OR hp.short_id = $1)', [postId, viewerId ?? null, 1], 2, 3, 'latest', client);
     return rows[0] ?? null;
   }
 
@@ -231,7 +245,20 @@ export class HertzPostRepository {
     );
   }
 
-  private async queryRows(whereSql: string, values: unknown[], viewerParam: number, limitParam: number, client?: DbClient): Promise<HertzPostRow[]> {
+  private async queryRows(
+    whereSql: string,
+    values: unknown[],
+    viewerParam: number,
+    limitParam: number,
+    sort: 'latest' | 'trending' = 'latest',
+    client?: DbClient,
+  ): Promise<HertzPostRow[]> {
+    const orderSql = sort === 'trending'
+      ? `ORDER BY hp.pinned_at DESC NULLS LAST,
+                (COALESCE(rc.pulse_count, 0) * 4 + COALESCE(rp.repost_count, 0) * 5 + COALESCE(cc.comment_count, 0) * 3 + COALESCE(vc.view_count, 0)) DESC,
+                hp.created_at DESC,
+                hp.id DESC`
+      : 'ORDER BY hp.pinned_at DESC NULLS LAST, hp.created_at DESC, hp.id DESC';
     const result = await query<HertzPostRow>(
       `SELECT hp.id, hp.short_id, hp.article_id, hp.author_id,
               hp.type AS post_type, hp.source, hp.category, hp.status, hp.visibility,
@@ -281,7 +308,7 @@ export class HertzPostRepository {
        LEFT JOIN hertz_reposts vrr
          ON vrr.original_post_id = hp.id AND vrr.user_id = $${viewerParam}::uuid AND vrr.repost_type = 'repost' AND vrr.deleted_at IS NULL
        WHERE ${whereSql}
-       ORDER BY hp.pinned_at DESC NULLS LAST, hp.created_at DESC, hp.id DESC
+       ${orderSql}
        LIMIT $${limitParam}`,
       values,
       client,

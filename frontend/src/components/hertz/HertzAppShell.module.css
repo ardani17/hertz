@@ -14,13 +14,15 @@
 }
 
 .shell {
-  grid-template-columns: 250px minmax(0, 850px) 440px;
-  max-width: 1540px;
+  grid-template-columns: minmax(150px, 210px) minmax(0, 1fr) minmax(260px, 340px);
+  max-width: 1600px;
+  width: min(100vw, 1600px);
 }
 
 .shellCompact {
-  grid-template-columns: 250px minmax(0, 980px);
+  grid-template-columns: minmax(150px, 210px) minmax(0, 1fr);
   max-width: 1230px;
+  width: min(100vw, 1230px);
 }
 
 .content {
@@ -46,12 +48,13 @@
   margin: 0.3rem 0 0;
 }
 
-@media (max-width: 1100px) {
+@media (max-width: 760px) {
   .shell,
   .shellCompact {
     display: block;
     border: 0;
     max-width: 720px;
+    width: min(100vw, 720px);
   }
 
   .content {

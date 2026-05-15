@@ -5,6 +5,11 @@ import {
   FeedValidationError,
 } from '@shared/services/feedService';
 import {
+  HertzForbiddenError,
+  HertzNotFoundError,
+  HertzValidationError,
+} from '@shared/services/hertzPostService';
+import {
   MembershipCheckUnavailableError,
   NotGroupMemberError,
   TelegramAuthInvalidError,
@@ -39,13 +44,13 @@ export function apiError(code: string, message: string, status: number, details:
 }
 
 export function apiErrorFromUnknown(error: unknown) {
-  if (error instanceof FeedValidationError) {
+  if (error instanceof FeedValidationError || error instanceof HertzValidationError) {
     return apiError('VALIDATION_ERROR', error.message, 400);
   }
-  if (error instanceof FeedForbiddenError) {
+  if (error instanceof FeedForbiddenError || error instanceof HertzForbiddenError) {
     return apiError('AUTH_FORBIDDEN', error.message, 403);
   }
-  if (error instanceof FeedNotFoundError) {
+  if (error instanceof FeedNotFoundError || error instanceof HertzNotFoundError) {
     return apiError('RESOURCE_NOT_FOUND', error.message, 404);
   }
   if (error instanceof TelegramAuthInvalidError) {

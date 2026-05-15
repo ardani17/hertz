@@ -1,13 +1,7 @@
-.main {
-  min-height: 100vh;
-  background: #000000;
-  color: #e7f4ec;
+.dmLayout {
   display: grid;
-  grid-template-columns: 250px minmax(260px, 360px) minmax(0, 1fr);
-  max-width: 1230px;
-  margin: 0 auto;
-  border-left: 1px solid rgba(52, 211, 153, 0.22);
-  border-right: 1px solid rgba(52, 211, 153, 0.22);
+  grid-template-columns: minmax(260px, 340px) minmax(0, 1fr);
+  min-height: calc(100vh - 8rem);
 }
 
 .sidebar,
@@ -16,8 +10,63 @@
   padding: 1rem;
 }
 
-.sidebar h1 {
-  margin: 0 0 1rem;
+.thread {
+  display: grid;
+  grid-template-rows: auto minmax(0, 1fr) auto auto;
+  min-width: 0;
+}
+
+.threadHeader {
+  align-items: center;
+  border-bottom: 1px solid rgba(52, 211, 153, 0.24);
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  margin: -1rem -1rem 1rem;
+  min-height: 66px;
+  padding: 0 1rem;
+}
+
+.threadHeader strong,
+.threadHeader span {
+  display: block;
+}
+
+.threadHeader span {
+  color: #9fb4aa;
+  font-size: 0.82rem;
+  margin-top: 0.2rem;
+}
+
+.threadActions,
+.messageActions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.threadActions button,
+.messageActions button {
+  background: #020906;
+  border: 1px solid rgba(52, 211, 153, 0.28);
+  border-radius: 6px;
+  color: #9fb4aa;
+  cursor: pointer;
+  font: inherit;
+  font-size: 0.8rem;
+  min-height: 32px;
+  padding: 0 0.75rem;
+}
+
+.threadActions button:hover,
+.messageActions button:hover {
+  border-color: #00e887;
+  color: #00e887;
+}
+
+.threadActions button:disabled {
+  cursor: not-allowed;
+  opacity: 0.48;
 }
 
 .search,
@@ -98,6 +147,10 @@
   color: #00e887;
 }
 
+.messageActions {
+  margin-top: 0.35rem;
+}
+
 .attachments {
   display: grid;
   gap: 0.5rem;
@@ -163,8 +216,14 @@
 }
 
 @media (max-width: 760px) {
-  .main {
+  .dmLayout {
     display: block;
-    border: 0;
+  }
+
+  .threadHeader {
+    align-items: flex-start;
+    flex-direction: column;
+    padding-bottom: 0.8rem;
+    padding-top: 0.8rem;
   }
 }

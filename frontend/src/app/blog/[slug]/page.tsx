@@ -1,16 +1,15 @@
 import { notFound } from 'next/navigation';
 import Link from 'next/link';
 import { query, queryOne } from '@shared/db';
-import { Sidebar } from '@/components/layout/Sidebar';
 import { ArticleMeta } from '@/components/article/ArticleMeta';
 import { ArticleContent } from '@/components/article/ArticleContent';
 import { ShareButtons } from '@/components/article/ShareButtons';
 import { CommentSection } from '@/components/article/CommentSection';
 import { LikeButton } from '@/components/article/LikeButton';
+import { HertzAppShell } from '@/components/hertz/HertzAppShell';
 import styles from './page.module.css';
 
-/** ISR revalidation interval in seconds (5 minutes) */
-export const revalidate = 300;
+export const dynamic = 'force-dynamic';
 
 interface ArticleRow {
   id: string;
@@ -53,8 +52,8 @@ async function getBlogBySlug(slug: string): Promise<BlogDetail | null> {
               a.slug, a.status, a.created_at, u.username AS author_name
        FROM articles a
        LEFT JOIN users u ON a.author_id = u.id
-       WHERE a.slug = $1 AND a.status = $2 AND a.category = $3`,
-      [slug, 'published', 'blog']
+       WHERE a.slug = $1 AND a.status = $2 AND a.category = $3 AND a.source = $4`,
+      [slug, 'published', 'blog', 'wordpress']
     );
 
     if (!article) return null;
@@ -91,23 +90,6 @@ async function getBlogBySlug(slug: string): Promise<BlogDetail | null> {
     };
   } catch {
     return null;
-  }
-}
-
-interface SlugRow {
-  slug: string;
-}
-
-/** Generate static params for SSG */
-export async function generateStaticParams(): Promise<Array<{ slug: string }>> {
-  try {
-    const result = await query<SlugRow>(
-      `SELECT slug FROM articles WHERE status = $1 AND category = $2 ORDER BY created_at DESC LIMIT 100`,
-      ['published', 'blog']
-    );
-    return result.rows.map((row) => ({ slug: row.slug }));
-  } catch {
-    return [];
   }
 }
 
@@ -208,12 +190,17 @@ export default async function BlogDetailPage({
   };
 
   return (
-    <main className={styles.main}>
+    <>
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
       />
-      <div className={styles.container}>
+      <HertzAppShell
+        active="blog"
+        title="Blog"
+        description="Artikel hasil import WordPress."
+        currentUser={null}
+      >
         <div className={styles.content}>
           <Link href="/blog" className={styles.backLink}>
             ← Kembali ke Blog
@@ -230,7 +217,7 @@ export default async function BlogDetailPage({
             />
 
             {coverImage && (
-              /* eslint-disable-next-line @next/next/no-img-element */
+
               <img
                 src={coverImage.file_url}
                 alt={displayTitle}
@@ -263,8 +250,7 @@ export default async function BlogDetailPage({
             initialLikeCount={article.likeCount}
           />
         </div>
-        <Sidebar />
-      </div>
-    </main>
+      </HertzAppShell>
+    </>
   );
 }

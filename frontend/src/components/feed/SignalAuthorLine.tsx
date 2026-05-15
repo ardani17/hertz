@@ -10,13 +10,15 @@ function relativeTime(date: string) {
 }
 
 export function SignalAuthorLine({ post }: { post: SignalPost }) {
-  const badge = post.author.badge === 'admin' ? 'Admin' : 'Verified';
+  const isLifeCoffee = post.category === 'life_coffee' || post.category === 'life_story';
+  const badge = post.author.badge === 'admin' ? 'Admin' : isLifeCoffee ? 'Life' : 'Verified';
+  const badgeClass = post.author.badge === 'admin' ? styles.adminBadge : isLifeCoffee ? styles.lifeBadge : styles.badge;
 
   return (
     <div>
       <div className={styles.authorLine}>
         <strong>{post.author.name}</strong>
-        <span className={post.author.badge === 'admin' ? styles.adminBadge : styles.badge}>{badge}</span>
+        <span className={badgeClass}>{badge}</span>
       </div>
       <div className={styles.metaLine}>
         <span>{post.source === 'telegram' || post.source === 'admin' ? 'via Telegram' : 'via Web'}</span>

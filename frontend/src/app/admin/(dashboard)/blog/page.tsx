@@ -43,6 +43,7 @@ export default function AdminBlogPage() {
     try {
       const params = new URLSearchParams();
       params.set('category', 'blog');
+      params.set('source', 'wordpress');
       params.set('page', String(page));
       params.set('pageSize', String(PAGE_SIZE));
       if (search) params.set('search', search);

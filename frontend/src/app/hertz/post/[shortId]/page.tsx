@@ -4,6 +4,8 @@ import { HertzPostService } from '@shared/services/hertzPostService';
 import { getCurrentMember } from '@/lib/memberAuth';
 import { SignalPostCard } from '@/components/feed/SignalPost';
 import { SignalDetailInteractions } from '@/components/feed/SignalDetailInteractions';
+import { SignalViewTracker } from '@/components/feed/SignalViewTracker';
+import { HertzAppShell } from '@/components/hertz/HertzAppShell';
 import styles from './post-detail.module.css';
 
 interface PageProps {
@@ -32,12 +34,18 @@ export default async function HertzPostDetailPage({ params }: PageProps) {
   }
 
   return (
-    <main className={styles.main}>
+    <HertzAppShell
+      active="home"
+      title="HERTZ"
+      description="Detail postingan komunitas."
+      currentUser={viewer}
+    >
       <div className={styles.container}>
         <a className={styles.back} href="/hertz">Kembali ke HERTZ</a>
+        <SignalViewTracker shortId={post.shortId} />
         <SignalPostCard post={post} currentUser={viewer} />
         <SignalDetailInteractions post={post} currentUser={viewer} />
       </div>
-    </main>
+    </HertzAppShell>
   );
 }

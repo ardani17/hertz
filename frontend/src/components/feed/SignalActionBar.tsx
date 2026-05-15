@@ -11,9 +11,12 @@ export function SignalActionBar({ post, currentUser }: { post: SignalPost; curre
   const [quoteOpen, setQuoteOpen] = useState(false);
   const [quoteContent, setQuoteContent] = useState('');
   const [submittingQuote, setSubmittingQuote] = useState(false);
+  const [pendingAction, setPendingAction] = useState<string | null>(null);
   const [pulsed, setPulsed] = useState(post.viewer.hasPulsed);
   const [bookmarked, setBookmarked] = useState(post.viewer.hasBookmarked);
+  const [reposted, setReposted] = useState(post.viewer.hasReposted);
   const [pulses, setPulses] = useState(post.counts.pulses);
+  const [reposts, setReposts] = useState(post.counts.reposts);
 
   function requireLogin() {
     if (!currentUser) {
@@ -35,7 +38,9 @@ export function SignalActionBar({ post, currentUser }: { post: SignalPost; curre
 
   async function togglePulse() {
     if (!requireLogin()) return;
+    setPendingAction('pulse');
     const result = await postAction(`/api/hertz/posts/${post.shortId}/pulse`);
+    setPendingAction(null);
     if (result) {
       const active = Boolean(result.data.active);
       setPulsed(active);
@@ -45,23 +50,41 @@ export function SignalActionBar({ post, currentUser }: { post: SignalPost; curre
 
   async function toggleBookmark() {
     if (!requireLogin()) return;
+    setPendingAction('bookmark');
     const result = await postAction(`/api/hertz/posts/${post.shortId}/bookmark`);
+    setPendingAction(null);
     if (result) setBookmarked(Boolean(result.data.active));
   }
 
   async function repost() {
     if (!requireLogin()) return;
+    setPendingAction('repost');
     const response = await fetch(`/api/hertz/posts/${post.shortId}/repost`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ type: 'repost' }),
     });
+    setPendingAction(null);
     if (!response.ok) {
       const data = await response.json().catch(() => null);
       setMessage(data?.error?.message ?? 'Repost gagal.');
       return;
     }
-    setMessage('Repost diperbarui.');
+    const payload = await response.json().catch(() => null);
+    const active = Boolean(payload?.data?.active);
+    setReposted(active);
+    setReposts((count) => Math.max(0, count + (active ? 1 : -1)));
+    setMessage(active ? 'Repost aktif.' : 'Repost dibatalkan.');
+  }
+
+  async function sharePost() {
+    const url = `${window.location.origin}/hertz/post/${post.shortId}`;
+    if (navigator.share) {
+      await navigator.share({ title: 'HERTZ post', url }).catch(() => undefined);
+      return;
+    }
+    await navigator.clipboard?.writeText(url);
+    setMessage('Link disalin.');
   }
 
   function openQuoteComposer() {
@@ -99,12 +122,12 @@ export function SignalActionBar({ post, currentUser }: { post: SignalPost; curre
     <div className={styles.wrap}>
       <div className={styles.actions}>
         <Button type="button" variant="ghost" size="sm" onClick={() => (currentUser ? window.location.assign(`/hertz/post/${post.shortId}#comments`) : requireLogin())} aria-label="Komentar"><CommentIcon /> <span>Comment</span> {post.counts.comments}</Button>
-        <Button type="button" variant="ghost" size="sm" onClick={repost} aria-label="Repost"><RepostIcon /> <span>Repost</span> {post.counts.reposts}</Button>
+        <Button type="button" variant="ghost" size="sm" onClick={repost} className={reposted ? styles.active : ''} disabled={pendingAction === 'repost'} aria-label="Repost"><RepostIcon /> <span>Repost</span> {reposts}</Button>
         <Button type="button" variant="ghost" size="sm" onClick={openQuoteComposer} aria-label="Quote repost"><RepostIcon /> <span>Quote</span></Button>
-        <Button type="button" variant="ghost" size="sm" onClick={togglePulse} className={pulsed ? styles.active : ''} aria-label="Pulse"><SignalIcon /> <span>Pulse</span> {pulses}</Button>
+        <Button type="button" variant="ghost" size="sm" onClick={togglePulse} className={pulsed ? styles.active : ''} disabled={pendingAction === 'pulse'} aria-label="Pulse"><SignalIcon /> <span>Pulse</span> {pulses}</Button>
         <a href={`/hertz/post/${post.shortId}`} aria-label="Insight"><InsightIcon /> <span>Insight</span> {post.counts.views}</a>
-        <Button type="button" variant="ghost" size="sm" onClick={toggleBookmark} className={bookmarked ? styles.active : ''} aria-label="Simpan"><BookmarkIcon /> <span>Save</span></Button>
-        <Button type="button" variant="ghost" size="sm" onClick={() => navigator.clipboard?.writeText(`${window.location.origin}/hertz/post/${post.shortId}`)} aria-label="Bagikan"><ShareIcon /> <span>Share</span></Button>
+        <Button type="button" variant="ghost" size="sm" onClick={toggleBookmark} className={bookmarked ? styles.active : ''} disabled={pendingAction === 'bookmark'} aria-label="Simpan"><BookmarkIcon /> <span>Save</span></Button>
+        <Button type="button" variant="ghost" size="sm" onClick={sharePost} aria-label="Bagikan"><ShareIcon /> <span>Share</span></Button>
       </div>
       {quoteOpen ? (
         <form className={styles.quoteForm} onSubmit={quoteRepost}>

@@ -1,16 +1,17 @@
 'use client';
 
 import Image from 'next/image';
-import { Compass, FileText, Hexagon, Home, MessageCircle, SlidersVertical } from 'lucide-react';
+import { Compass, FileText, Hexagon, Home, Images, MessageCircle, SlidersVertical } from 'lucide-react';
 import type { MemberSessionUser } from '@shared/types';
 import styles from './SignalRails.module.css';
 
-type ActiveNav = 'home' | 'outlook' | 'blog' | 'tools' | 'messages';
+type ActiveNav = 'home' | 'outlook' | 'blog' | 'gallery' | 'tools' | 'messages';
 
 const navItems = [
   { key: 'home', href: '/hertz', label: 'Home', Icon: Home },
   { key: 'outlook', href: '/outlook', label: 'Outlook', Icon: Compass },
   { key: 'blog', href: '/blog', label: 'Blog', Icon: FileText },
+  { key: 'gallery', href: '/gallery', label: 'Gallery', Icon: Images },
   { key: 'tools', href: '/tools', label: 'Tools', Icon: SlidersVertical },
   { key: 'messages', href: '/hertz/messages', label: 'Direct Message', Icon: MessageCircle },
 ] as const;

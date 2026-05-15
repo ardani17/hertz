@@ -16,6 +16,8 @@ export async function GET(request: NextRequest) {
       cursor: params.get('cursor'),
       limit: Number(params.get('limit') || 20),
       category: params.get('category'),
+      search: params.get('q'),
+      sort: params.get('sort'),
       viewer,
     });
     return apiSuccess(result);

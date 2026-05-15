@@ -92,8 +92,16 @@
 }
 
 .linkItem {
+  display: inline-flex;
+  align-items: center;
+  min-height: 36px;
   font-size: var(--text-sm);
   color: var(--color-text-muted);
+  text-decoration: none;
+}
+
+.linkItem:hover {
+  color: var(--color-accent);
 }
 
 @media (max-width: 768px) {

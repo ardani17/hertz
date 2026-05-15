@@ -2,7 +2,7 @@
 // Horizon Trader Platform — Bot Error Handling
 // ============================================
 
-import { AppError, toAppError, InternalError } from '../../../shared/utils/errors';
+import { toAppError } from '../../../shared/utils/errors';
 import type { ActivityLogInput } from '../../../shared/services/activityLog';
 
 /**
