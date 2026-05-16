@@ -85,9 +85,12 @@ Keputusan bahasa:
 - `member` adalah user Telegram/member aplikasi yang sudah login.
 - `admin` adalah admin aplikasi.
 - Istilah `owner` tidak dipakai sebagai role agar tidak membingungkan. Untuk postingan, sebut sebagai `pembuat postingan` atau `member pembuat post`.
-- Role tetap hanya dua: `member` dan `admin`.
-- User yang belum login disebut `guest` di kode/state internal, dan di UI ditampilkan sebagai `Guest` dengan status `Mode baca`.
-- Guest bukan role database. Guest berarti tidak ada session member aktif.
+- Role database tetap hanya dua: `member` dan `admin`.
+- Untuk frontend/access-control, aplikasi memakai tiga access role: `guest`, `member`, dan `admin`.
+- `guest` berarti user belum login atau tidak punya session member aktif.
+- `guest` dibuat sebagai role/state akses turunan, bukan row user di database.
+- UI menampilkan guest sebagai `Guest` dengan status `Mode baca`.
+- Access role `guest` dipakai agar menu/fitur bisa diatur mudah, misalnya menyembunyikan menu Tools atau action tertentu untuk user belum login.
 
 ### Masalah Produk/UX yang Masih Perlu Dibahas
 
@@ -353,8 +356,14 @@ Alasannya: layout dasar sudah cukup stabil, action bar sudah lebih lengkap, dan 
 
 ### Catatan Role Saat Ini
 
-Role aplikasi saat ini hanya:
+Role database aplikasi saat ini hanya:
 
+- `member`
+- `admin`
+
+Untuk kebutuhan frontend dan menu permission, spec akan memakai access role:
+
+- `guest`
 - `member`
 - `admin`
 
@@ -366,6 +375,13 @@ Bukti:
 - Data live VPS saat dicek: `admin` 3 user, `member` 17 user.
 
 Istilah `owner` tidak dipakai dalam spec frontend agar bahasa tetap sejalan dengan role aplikasi. Dalam konteks post, gunakan istilah `member pembuat post` atau `author`.
+
+Catatan implementasi nanti:
+
+- `guest` dihitung dari kondisi `currentUser === null`.
+- `member` dihitung dari `currentUser.role === 'member'`.
+- `admin` dihitung dari `currentUser.role === 'admin'`.
+- Menu dan fitur frontend membaca access role ini, bukan mengecek `currentUser` tersebar di banyak komponen.
 
 ## Catatan untuk Spec Nanti
 
