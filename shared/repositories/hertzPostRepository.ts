@@ -239,9 +239,9 @@ export class HertzPostRepository {
   async updateStatus(postId: string, status: HertzPostStatus, client?: DbClient): Promise<void> {
     await execute(
       `UPDATE hertz_posts
-       SET status = $2,
-           published_at = CASE WHEN $2 = 'published' AND published_at IS NULL THEN NOW() ELSE published_at END,
-           deleted_at = CASE WHEN $2 = 'deleted' THEN NOW() ELSE deleted_at END,
+       SET status = $2::varchar,
+           published_at = CASE WHEN $2::varchar = 'published' AND published_at IS NULL THEN NOW() ELSE published_at END,
+           deleted_at = CASE WHEN $2::varchar = 'deleted' THEN NOW() ELSE deleted_at END,
            updated_at = NOW()
        WHERE id::text = $1 OR short_id = $1`,
       [postId, status],
