@@ -168,3 +168,52 @@ Next investigation:
 - Tentukan apakah logo masuk sebagai mobile app bar global di `HertzAppShell` atau sebagai bagian feed header `HertzHeader`.
 - Cek semua route HERTZ mobile: `/hertz`, `/hertz/messages`, `/hertz/profile`, dan `/hertz/post/{shortId}` agar brand tidak muncul ganda.
 - Tambahkan test/render assertion atau DOM review marker untuk memastikan logo mobile hadir.
+
+### UTF-004: Ikon kiri pada postingan HERTZ harus mengikuti kategori post
+
+Status: Open  
+Severity: Medium  
+Area: HERTZ feed / post card left spine icon  
+Reported at: 2026-05-16
+
+User report:
+
+- Ikon di sebelah kiri postingan HERTZ menandakan postingan tersebut diposting di kategori mana.
+- Jika kategori `life`, ikon harus berbentuk coffee.
+- Jika kategori `trading`, ikon harus berbentuk grafik/chart.
+- Jika kategori `general`, ikon harus berbentuk pesan seperti kondisi sekarang.
+
+Expected:
+
+- Post `life_coffee` dan `life_story` memakai ikon coffee.
+- Post `trading_signal` dan `trading_analysis` memakai ikon grafik/chart.
+- Post `general` memakai ikon pesan/default seperti sekarang.
+- Ikon kategori tetap konsisten meskipun post memiliki quote/repost, kecuali ada indikator quote terpisah yang sengaja dipakai.
+
+Actual:
+
+- Post kategori life sudah memakai `CoffeeIcon`.
+- Post kategori trading saat ini jatuh ke ikon default `TelegramIcon`, sehingga terlihat sama seperti general.
+- Post dengan `quotedPost` memakai `ImageIcon`, sehingga state quote dapat menimpa makna kategori pada ikon kiri.
+
+Initial evidence:
+
+- `frontend/src/components/feed/HertzPost.tsx` saat ini memetakan:
+  - `life_coffee` / `life_story` ke `CoffeeIcon`.
+  - `post.quotedPost` ke `ImageIcon`.
+  - kategori lain ke `TelegramIcon`.
+- `frontend/src/components/feed/HertzIcons.tsx` sudah memiliki `InsightIcon` yang secara visual bisa dipakai sebagai ikon chart/trading.
+- `frontend/src/components/feed/HertzPost.module.css` baru memiliki variasi `.coffeeSpineNode`; belum ada styling khusus untuk trading.
+
+Likely affected files:
+
+- `frontend/src/components/feed/HertzPost.tsx`
+- `frontend/src/components/feed/HertzPost.module.css`
+- `frontend/src/components/feed/HertzIcons.tsx`
+
+Next implementation:
+
+- Ubah `SpineIcon` agar kategori trading memakai `InsightIcon` atau ikon chart setara.
+- Tambahkan class visual untuk node trading jika perlu, misalnya warna aksen chart/trading.
+- Pastikan quote/repost tidak menghilangkan makna kategori utama pada ikon kiri, atau pindahkan indikator quote ke elemen lain.
+- Tambahkan assertion test/render untuk mapping life, trading, dan general.
