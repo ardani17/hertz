@@ -335,6 +335,10 @@
   border-radius: 8px;
 }
 
+.mobileDataCards {
+  display: none;
+}
+
 .table {
   min-width: 760px;
   width: 100%;
@@ -562,6 +566,60 @@
   text-align: center;
 }
 
+.mobileDataCard {
+  display: grid;
+  gap: var(--space-3);
+  padding: var(--space-3);
+  background: rgba(0, 0, 0, 0.28);
+  border: 1px solid rgba(19, 210, 123, 0.24);
+  border-radius: 8px;
+}
+
+.mobileDataCardHeader {
+  align-items: center;
+  display: flex;
+  gap: var(--space-2);
+  justify-content: space-between;
+}
+
+.mobileDataCardHeader strong {
+  color: var(--color-text);
+  font-size: var(--text-sm);
+  font-variant-numeric: tabular-nums;
+}
+
+.mobileDataCard h3 {
+  color: var(--color-text);
+  font-size: var(--text-sm);
+  line-height: 1.35;
+  margin: 0;
+}
+
+.mobileDataCard dl {
+  display: grid;
+  gap: var(--space-2);
+  margin: 0;
+}
+
+.mobileDataCard div {
+  min-width: 0;
+}
+
+.mobileDataCard dt {
+  color: var(--color-text-muted);
+  font-size: var(--text-xs);
+  font-weight: 700;
+}
+
+.mobileDataCard dd {
+  color: var(--color-text);
+  font-size: var(--text-sm);
+  font-variant-numeric: tabular-nums;
+  margin: var(--space-1) 0 0;
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+
 @media (max-width: 900px) {
   .grid,
   .gridThree,
@@ -588,6 +646,22 @@
   }
 
   .signalCard dl {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 700px) {
+  .tableWrap[data-mobile-cards="true"] {
+    display: none;
+  }
+
+  .mobileDataCards {
+    display: grid;
+    gap: var(--space-3);
+    margin-top: var(--space-5);
+  }
+
+  .mobileDataCard dl {
     grid-template-columns: 1fr;
   }
 }

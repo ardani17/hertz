@@ -501,7 +501,7 @@ export function ProfitabilityTool() {
           </span>
         </div>
 
-        <div className={styles.tableWrap}>
+        <div className={styles.tableWrap} data-mobile-cards="true">
           <table className={styles.table}>
             <thead>
               <tr>
@@ -534,6 +534,40 @@ export function ProfitabilityTool() {
               ))}
             </tbody>
           </table>
+        </div>
+        <div className={styles.mobileDataCards} aria-label={copy.detailTitle}>
+          {result.tradeDetails.slice(0, 40).map((trade) => (
+            <article className={styles.mobileDataCard} key={trade.trade}>
+              <div className={styles.mobileDataCardHeader}>
+                <strong>#{trade.trade}</strong>
+                <span className={trade.outcome === 'Win' ? styles.badge : styles.badgeWarning}>
+                  {trade.outcome === 'Win' ? copy.table.win : copy.table.loss}
+                </span>
+              </div>
+              <dl>
+                <div>
+                  <dt>{copy.table.balanceBefore}</dt>
+                  <dd>{formatCurrency(trade.balanceBefore, currency, language)}</dd>
+                </div>
+                <div>
+                  <dt>{copy.table.risk}</dt>
+                  <dd>{formatCurrency(trade.riskAmount, currency, language)}</dd>
+                </div>
+                <div>
+                  <dt>{copy.table.pnl}</dt>
+                  <dd className={trade.pnl >= 0 ? styles.positiveValue : styles.negativeValue}>{formatCurrency(trade.pnl, currency, language)}</dd>
+                </div>
+                <div>
+                  <dt>{copy.table.balanceAfter}</dt>
+                  <dd>{formatCurrency(trade.balanceAfter, currency, language)}</dd>
+                </div>
+                <div>
+                  <dt>{copy.table.drawdown}</dt>
+                  <dd>{trade.drawdown.toFixed(1)}%</dd>
+                </div>
+              </dl>
+            </article>
+          ))}
         </div>
       </section>
     </section>

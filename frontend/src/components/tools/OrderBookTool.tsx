@@ -234,7 +234,7 @@ export function OrderBookTool() {
       {error ? <div className={styles.error}>{error}</div> : null}
       {warning ? <p className={styles.note}>{warning}</p> : null}
 
-      <div className={styles.tableWrap}>
+      <div className={styles.tableWrap} data-mobile-cards="true">
         <table className={styles.table}>
           <thead>
             <tr>
@@ -265,6 +265,38 @@ export function OrderBookTool() {
             )}
           </tbody>
         </table>
+      </div>
+      <div className={styles.mobileDataCards} aria-label="Order book compact rows">
+        {rows.length ? rows.slice(0, 60).map((bucket) => (
+          <article className={styles.mobileDataCard} key={bucket.price}>
+            <div className={styles.mobileDataCardHeader}>
+              <strong>{formatPrice(bucket.price)}</strong>
+              <span className={styles.badgeMuted}>{bookType === 'ORDER' ? current.badges.order : current.badges.position}</span>
+            </div>
+            <dl>
+              <div>
+                <dt>{current.table.long}</dt>
+                <dd>
+                  <div className={styles.barTrack}>
+                    <div className={styles.barLong} style={{ width: `${(bucket.longCountPercent / max) * 100}%` }} />
+                  </div>
+                  {bucket.longCountPercent.toFixed(2)}%
+                </dd>
+              </div>
+              <div>
+                <dt>{current.table.short}</dt>
+                <dd>
+                  <div className={styles.barTrack}>
+                    <div className={styles.barShort} style={{ width: `${(bucket.shortCountPercent / max) * 100}%` }} />
+                  </div>
+                  {bucket.shortCountPercent.toFixed(2)}%
+                </dd>
+              </div>
+            </dl>
+          </article>
+        )) : (
+          <div className={styles.emptyState}>{current.table.empty}</div>
+        )}
       </div>
 
       <p className={styles.note}>{current.note}</p>

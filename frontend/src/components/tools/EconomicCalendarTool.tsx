@@ -132,7 +132,7 @@ export function EconomicCalendarTool() {
         </div>
       ) : null}
 
-      <div className={styles.tableWrap}>
+      <div className={styles.tableWrap} data-mobile-cards="true">
         <table className={styles.table}>
           <thead>
             <tr>
@@ -167,6 +167,37 @@ export function EconomicCalendarTool() {
             )}
           </tbody>
         </table>
+      </div>
+      <div className={styles.mobileDataCards} aria-label="Economic calendar events">
+        {rows.length ? rows.map((event) => (
+          <article className={styles.mobileDataCard} key={event.eventId}>
+            <div className={styles.mobileDataCardHeader}>
+              <strong>{formatEventTime(event.dateUtc)}</strong>
+              <span className={event.volatility === 'HIGH' ? styles.badgeWarning : styles.badgeMuted}>{event.volatility}</span>
+            </div>
+            <h3>{event.name}</h3>
+            <dl>
+              <div>
+                <dt>Country</dt>
+                <dd>{event.countryCode} {event.currencyCode ? `(${event.currencyCode})` : ''}</dd>
+              </div>
+              <div>
+                <dt>Actual</dt>
+                <dd>{formatValue(event.actual)}</dd>
+              </div>
+              <div>
+                <dt>Forecast</dt>
+                <dd>{formatValue(event.consensus)}</dd>
+              </div>
+              <div>
+                <dt>Previous</dt>
+                <dd>{formatValue(event.previous)}</dd>
+              </div>
+            </dl>
+          </article>
+        )) : (
+          <div className={styles.emptyState}>Tidak ada event untuk filter ini. Coba ubah periode, impact, atau negara.</div>
+        )}
       </div>
 
       <p className={styles.note}>
