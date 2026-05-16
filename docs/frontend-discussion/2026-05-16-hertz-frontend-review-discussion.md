@@ -43,7 +43,7 @@ Setiap area memakai status:
 | Urutan | Area | Status | Alasan |
 | --- | --- | --- | --- |
 | 1 | Direct Message | Siap spec | Keputusan UX utama sudah dicatat: label mobile, guest CTA, menu tiga titik, polling, dan batas upload gambar. |
-| 2 | HERTZ Feed dan Post Detail | Perlu keputusan | Layout live sudah tidak overflow, tetapi masih perlu keputusan untuk media post, owner action, hapus, detail post, dan mobile action labels. |
+| 2 | HERTZ Feed dan Post Detail | Perlu keputusan | Layout live sudah tidak overflow, tetapi masih perlu keputusan untuk media post, author action, hapus, detail post, dan mobile action labels. |
 | 3 | Profile / Member Center | Belum direview | Sudah ada route, perlu pastikan isi dan navigasi sesuai kebutuhan user Telegram. |
 | 4 | Navigation Shell Desktop/Mobile | Belum direview | Menentukan rail kiri, rail kanan, bottom nav, menu yang disembunyikan, dan sticky behavior. |
 | 5 | Landing Horizon | Belum direview | Perlu pastikan mobile kecil, brand signal, dan gateway ke HERTZ. |
@@ -77,6 +77,17 @@ Audit teknis setelah rebuild menemukan penyebab utamanya:
 Commit terkait:
 
 - `9d91880 Make HERTZ messages route dynamic`
+
+### Istilah Role dan Status Login
+
+Keputusan bahasa:
+
+- `member` adalah user Telegram/member aplikasi yang sudah login.
+- `admin` adalah admin aplikasi.
+- Istilah `owner` tidak dipakai sebagai role agar tidak membingungkan. Untuk postingan, sebut sebagai `pembuat postingan` atau `member pembuat post`.
+- Role tetap hanya dua: `member` dan `admin`.
+- User yang belum login disebut `guest` di kode/state internal, dan di UI ditampilkan sebagai `Guest` dengan status `Mode baca`.
+- Guest bukan role database. Guest berarti tidak ada session member aktif.
 
 ### Masalah Produk/UX yang Masih Perlu Dibahas
 
@@ -191,7 +202,7 @@ Alasannya: masalah screenshot sudah terbukti bukan hanya visual kecil, tetapi ga
 
 Setelah DM disepakati, area berikutnya yang disarankan adalah **HERTZ Feed dan Post Detail**, karena terkait langsung dengan:
 
-- owner edit/delete postingan;
+- edit/delete postingan oleh member pembuat post;
 - action bar selain komentar/suka;
 - copy link;
 - composer kategori Trading/Life/General;
@@ -221,7 +232,7 @@ Hasil cek live:
 - Action bar di desktop sudah punya `Komentar`, `Suka`, `Repost`, `Simpan`, dan `Bagikan`.
 - Mobile menyembunyikan teks action dan menyisakan ikon/count agar tidak penuh.
 - Menu tiga titik sudah punya `Salin link`, `Quote postingan`, `Laporkan`, `Edit postingan`, `Hapus postingan`, dan action admin jika user berhak.
-- Deteksi owner edit/delete memakai kombinasi `post.viewer.canEdit/canDelete` dan fallback user dari `/api/auth/me`.
+- Deteksi edit/delete untuk member pembuat post memakai kombinasi `post.viewer.canEdit/canDelete` dan fallback user dari `/api/auth/me`.
 - Composer Trading sudah punya field Pair, TF, Arah, Risk, Entry, SL, TP, dan Confidence.
 - Detail post sudah memakai HERTZ shell dan menampilkan comment form serta list komentar.
 
@@ -231,13 +242,13 @@ Hasil cek live:
    Saat ini upload gambar hanya aktif untuk kategori Trading. Life dan General tidak bisa upload media. Ini bisa benar jika aturan produk memang hanya chart trading, tetapi terasa membatasi untuk social feed.
 
 2. **Delete post belum punya confirm**
-   `Hapus postingan` langsung memanggil DELETE dan reload. Untuk aksi destruktif, perlu confirm dialog agar owner tidak salah hapus.
+   `Hapus postingan` langsung memanggil DELETE dan reload. Untuk aksi destruktif, perlu confirm dialog agar member pembuat post tidak salah hapus.
 
 3. **Edit post hanya edit konten**
-   Owner bisa edit teks post, tetapi metadata market hanya admin yang bisa edit. Jika owner Trading post salah input Pair/Risk/Entry, belum jelas apakah dia boleh memperbaiki sendiri.
+   Member pembuat post bisa edit teks post, tetapi metadata market saat ini hanya admin yang bisa edit. Keputusan diskusi: member pembuat Trading post juga boleh memperbaiki Pair/Risk/Entry dan metadata trading lain miliknya sendiri.
 
-4. **Owner regression harus diuji sebagai user login**
-   Kode sudah mendukung owner edit/delete, tetapi acceptance criteria harus mencakup test login Telegram sebagai `ARDANI | vastara.id`: post milik sendiri menampilkan edit/delete, post orang lain tidak.
+4. **Member author regression harus diuji sebagai user login**
+   Kode sudah mendukung edit/delete milik pembuat postingan, tetapi acceptance criteria harus mencakup test login Telegram sebagai `ARDANI | vastara.id`: post milik sendiri menampilkan edit/delete, post orang lain tidak.
 
 5. **Mobile action labels**
    Mobile menyembunyikan teks `Komentar`, `Suka`, `Repost`, `Simpan`, `Bagikan`. Ini hemat ruang, tetapi discoverability bisa lebih rendah. Minimal `aria-label` harus lengkap dan visual icon/count harus konsisten.
@@ -258,7 +269,7 @@ Hasil cek live:
 Scope:
 
 - Tambah confirm untuk delete.
-- Pastikan owner edit/delete regression.
+- Pastikan edit/delete regression untuk member pembuat post.
 - Rapikan copywriting action.
 - Pertahankan media hanya untuk Trading.
 - Pertahankan mobile icon-only action bar.
@@ -272,7 +283,7 @@ Kekurangan:
 
 - Life/General tetap tidak punya media;
 - detail post masih minimal;
-- owner Trading tidak bisa edit metadata sendiri.
+- member pembuat Trading post tidak bisa edit metadata sendiri.
 
 #### Opsi B: Polish Feed Terarah
 
@@ -289,7 +300,7 @@ Kelebihan:
 
 - menyelesaikan gap produk yang paling terasa tanpa redesign besar;
 - cocok untuk spec implementasi berikutnya;
-- memperjelas owner workflow yang sempat jadi concern utama.
+- memperjelas workflow member pembuat post yang sempat jadi concern utama.
 
 Kekurangan:
 
@@ -319,12 +330,12 @@ Kekurangan:
 
 Pilih **Opsi B: Polish Feed Terarah**.
 
-Alasannya: layout dasar sudah cukup stabil, action bar sudah lebih lengkap, dan composer Trading sudah berkembang. Sisa masalah paling penting adalah keputusan produk yang langsung memengaruhi user owner: upload media non-Trading, edit metadata, confirm delete, dan detail/guest state.
+Alasannya: layout dasar sudah cukup stabil, action bar sudah lebih lengkap, dan composer Trading sudah berkembang. Sisa masalah paling penting adalah keputusan produk yang langsung memengaruhi member pembuat post: upload media non-Trading, edit metadata, confirm delete, dan detail/guest state.
 
 ### Keputusan yang Perlu Dikonfirmasi
 
 1. Life dan General boleh upload gambar juga. Upload media tidak lagi khusus Trading, tetapi tetap dibatasi sebagai gambar pada fase ini.
-2. Owner/pembuat Trading post boleh edit metadata market miliknya sendiri. Admin juga boleh edit metadata market semua postingan.
+2. Member pembuat Trading post boleh edit metadata market miliknya sendiri. Admin juga boleh edit metadata market semua postingan.
 3. Apakah delete post wajib memakai confirm dialog sebelum hapus?
 4. Apakah `Bagikan` di action bar dan `Salin link` di menu tetap dua-duanya ada?
 5. Untuk guest di detail post, apakah form komentar diganti CTA login Telegram atau tetap form dengan pesan login saat dipakai?
@@ -332,9 +343,9 @@ Alasannya: layout dasar sudah cukup stabil, action bar sudah lebih lengkap, dan 
 ### Acceptance Criteria untuk Spec Nanti
 
 - Feed dan detail tidak horizontal overflow di 320px, 390px, tablet, dan desktop.
-- Login owner `ARDANI | vastara.id` melihat `Edit postingan` dan `Hapus postingan` pada post miliknya sendiri.
-- Non-owner tidak melihat edit/delete owner.
-- Owner Trading post bisa edit Pair, TF, Arah, Risk, Entry, SL, TP, dan Confidence miliknya sendiri.
+- Login member `ARDANI | vastara.id` melihat `Edit postingan` dan `Hapus postingan` pada post miliknya sendiri.
+- Non-author member tidak melihat edit/delete postingan orang lain.
+- Member pembuat Trading post bisa edit Pair, TF, Arah, Risk, Entry, SL, TP, dan Confidence miliknya sendiri.
 - Admin bisa edit/delete semua postingan dan edit metadata market semua postingan.
 - Delete tidak terjadi tanpa confirm.
 - Action bar tetap usable di mobile icon-only.
@@ -354,7 +365,7 @@ Bukti:
 - API update user hanya menerima `member` dan `admin`.
 - Data live VPS saat dicek: `admin` 3 user, `member` 17 user.
 
-Istilah `owner` belum menjadi role terpisah. Dalam konteks post, `owner` berarti pembuat/author postingan. Jika dibutuhkan owner platform dengan privilege khusus di luar admin, itu harus dibuat sebagai keputusan role baru.
+Istilah `owner` tidak dipakai dalam spec frontend agar bahasa tetap sejalan dengan role aplikasi. Dalam konteks post, gunakan istilah `member pembuat post` atau `author`.
 
 ## Catatan untuk Spec Nanti
 
