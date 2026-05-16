@@ -52,7 +52,7 @@
   margin: 0.3rem 0 0;
 }
 
-@media (max-width: 760px) {
+@media (max-width: 1024px) {
   .main {
     padding-bottom: calc(78px + env(safe-area-inset-bottom));
   }
@@ -61,14 +61,22 @@
   .shellCompact {
     display: block;
     border: 0;
-    max-width: 720px;
-    width: min(100vw, 720px);
+    max-width: 860px;
+    width: min(100vw, 860px);
   }
 
   .content {
     border: 0;
-    padding: 1rem;
+    padding: 1rem 1rem 1.35rem;
     min-width: 0;
+  }
+}
+
+@media (max-width: 720px) {
+  .shell,
+  .shellCompact {
+    max-width: none;
+    width: 100%;
   }
 }
 

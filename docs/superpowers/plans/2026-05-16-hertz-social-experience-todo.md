@@ -172,7 +172,7 @@ Centang setelah verifikasi pass dan commit dibuat.
 - Modify: `frontend/src/components/feed/HertzMobileMarket.tsx`
 - Review: `tests/review/visual.spec.ts`
 
-- [ ] **Step 1: Baca Next.js dan accessibility docs yang relevan**
+- [x] **Step 1: Baca Next.js dan accessibility docs yang relevan**
 
 Run:
 
@@ -181,7 +181,7 @@ sed -n '1,220p' node_modules/next/dist/docs/01-app/index.md
 sed -n '1,220p' node_modules/next/dist/docs/03-architecture/accessibility.md
 ```
 
-- [ ] **Step 2: Perbaiki shell responsive**
+- [x] **Step 2: Perbaiki shell responsive**
 
 Implementation target:
 
@@ -191,7 +191,7 @@ Implementation target:
 - Feed/detail tidak menjadi kolom sempit.
 - Mobile bottom nav tidak menabrak konten.
 
-- [ ] **Step 3: Verifikasi responsive**
+- [x] **Step 3: Verifikasi responsive**
 
 Run:
 
@@ -208,7 +208,7 @@ Manual check:
 - `/hertz/post/hzx_live01` di 768px tidak sempit.
 - Right rail desktop tetap terlihat saat scroll.
 
-- [ ] **Step 4: Commit Task 2**
+- [x] **Step 4: Commit Task 2**
 
 Run:
 
@@ -217,7 +217,7 @@ git add frontend/src/components/hertz/HertzAppShell.module.css frontend/src/comp
 git commit -m "Fix HERTZ responsive shell and sticky rail"
 ```
 
-- [ ] **Ceklist selesai Task 2**
+- [x] **Ceklist selesai Task 2**
 
 Centang setelah visual/a11y/build pass dan commit dibuat.
 

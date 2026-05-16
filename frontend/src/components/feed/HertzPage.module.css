@@ -94,10 +94,17 @@
   margin: 0;
 }
 
-@media (max-width: 760px) {
+@media (max-width: 1024px) {
   .shell {
-    grid-template-columns: minmax(0, 680px);
-    max-width: 720px;
+    display: block;
+    border: 0;
+    max-width: 860px;
+    width: min(100vw, 860px);
+  }
+
+  .timeline {
+    border-left: 0;
+    border-right: 0;
   }
 }
 
@@ -113,6 +120,7 @@
     border: 0;
     max-width: none;
     min-height: auto;
+    width: 100%;
   }
 
   .timeline {

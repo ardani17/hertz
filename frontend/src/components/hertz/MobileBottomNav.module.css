@@ -2,7 +2,7 @@
   display: none;
 }
 
-@media (max-width: 720px) {
+@media (max-width: 1024px) {
   .mobileNav {
     align-items: stretch;
     background: rgba(2, 6, 4, 0.94);
@@ -51,5 +51,13 @@
   .active {
     background: rgba(16, 185, 129, 0.12);
     color: #34d399 !important;
+  }
+}
+
+@media (min-width: 721px) and (max-width: 1024px) {
+  .mobileNav {
+    left: 50%;
+    max-width: 860px;
+    transform: translateX(-50%);
   }
 }

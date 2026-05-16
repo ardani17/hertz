@@ -39,7 +39,7 @@ export function HertzMobileMarket() {
         <span>{status === 'loading' ? 'Memuat' : status === 'error' ? 'Tidak tersedia' : 'Live'}</span>
       </div>
       {status === 'ready' ? (
-        <div className={styles.mobileMarketScroller}>
+        <div className={styles.mobileMarketScroller} tabIndex={0} aria-label="Daftar ringkas market live">
           {groups.flatMap((group) => group.rows.slice(0, 3).map((row) => (
             <div className={styles.mobileMarketItem} key={`${group.title}-${row.symbol}`}>
               <strong>{row.symbol}</strong>
