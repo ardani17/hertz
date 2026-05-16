@@ -666,7 +666,7 @@ Centang setelah repost timeline verified dan commit selesai.
 - Test: `tests/unit/shared/hertzProfileService.test.ts`
 - Test: `tests/unit/frontend/hertzProfile.test.ts`
 
-- [ ] **Step 1: Tulis test profile activity**
+- [x] **Step 1: Tulis test profile activity**
 
 Coverage:
 
@@ -683,7 +683,7 @@ Run:
 npm run test -- tests/unit/shared/hertzProfileService.test.ts tests/unit/frontend/hertzProfile.test.ts
 ```
 
-- [ ] **Step 2: Implement profile service dan UI tabs**
+- [x] **Step 2: Implement profile service dan UI tabs**
 
 Implementation target:
 
@@ -692,7 +692,7 @@ Implementation target:
 - Tabs: Post saya, Disimpan, Repost saya, Komentar saya, Credit/history, Setting Telegram/session.
 - Guest CTA tidak kosong.
 
-- [ ] **Step 3: Verifikasi**
+- [x] **Step 3: Verifikasi**
 
 Run:
 
@@ -704,7 +704,7 @@ REVIEW_BASE_URL=https://horizon.cloudnexify.com npm run review:visual
 REVIEW_BASE_URL=https://horizon.cloudnexify.com npm run review:dom
 ```
 
-- [ ] **Step 4: Commit Task 8**
+- [x] **Step 4: Commit Task 8**
 
 Run:
 
@@ -713,7 +713,7 @@ git add frontend/src/app/hertz/profile/page.tsx frontend/src/app/hertz/profile/p
 git commit -m "Add HERTZ profile activity history"
 ```
 
-- [ ] **Ceklist selesai Task 8**
+- [x] **Ceklist selesai Task 8**
 
 Centang setelah profile tabs verified dan commit selesai.
 
