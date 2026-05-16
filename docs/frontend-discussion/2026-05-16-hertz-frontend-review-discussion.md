@@ -171,7 +171,7 @@ Alasannya: masalah screenshot sudah terbukti bukan hanya visual kecil, tetapi ga
 
 ### Keputusan yang Perlu Dikonfirmasi
 
-1. Apakah nama fitur di UI mobile cukup ditulis `DM`, sementara desktop tetap `Direct Message`?
+1. Nama fitur di UI mobile memakai `DM`, sementara desktop tetap boleh memakai `Direct Message`. Untuk aksesibilitas, kontrol mobile tetap memakai label lengkap `Direct Message`.
 2. Apakah guest boleh melihat daftar conversation kosong, atau langsung diarahkan ke CTA login Telegram?
 3. Apakah action `Arsipkan` dan `Blokir` tetap tampil di header thread, atau dipindah ke menu tiga titik?
 4. Apakah DM fase ini tetap polling tanpa websocket?
