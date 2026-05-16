@@ -161,6 +161,16 @@
   white-space: pre-wrap;
 }
 
+.content a {
+  color: #13d27b;
+  font-weight: 760;
+  text-decoration: none;
+}
+
+.content a:hover {
+  text-decoration: underline;
+}
+
 .repostLabel {
   color: #8ea897;
   font-size: 0.82rem;

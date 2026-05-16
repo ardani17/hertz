@@ -206,6 +206,10 @@ export class HertzPostRepository {
     return this.queryRows(conditions.join(' AND '), values, idx, idx + 1, params.sort ?? 'latest', client);
   }
 
+  async searchPublishedPreview(search: string, limit = 6, client?: DbClient): Promise<HertzPostRow[]> {
+    return this.listPublished({ search, limit }, client);
+  }
+
   async findById(postId: string, viewerId?: string | null, client?: DbClient): Promise<HertzPostRow | null> {
     const rows = await this.queryRows('(hp.id::text = $1 OR hp.short_id = $1)', [postId, viewerId ?? null, 1], 2, 3, 'latest', client);
     return rows[0] ?? null;

@@ -89,6 +89,31 @@
   font-weight: 700;
 }
 
+.searchChip {
+  align-items: center;
+  border: 1px solid rgba(19, 210, 123, 0.24);
+  border-radius: 8px;
+  color: #9fb4aa;
+  display: flex;
+  gap: 0.6rem;
+  justify-content: space-between;
+  margin: -0.35rem 24px 16px;
+  min-height: 34px;
+  padding: 0 0.75rem;
+}
+
+.searchChip span {
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+
+.searchChip a {
+  color: #13d27b;
+  flex: 0 0 auto;
+  font-weight: 800;
+  text-decoration: none;
+}
+
 @media (max-width: 720px) {
   .header {
     overflow: hidden;
@@ -129,5 +154,9 @@
 
   .tabs a + a::before {
     display: none;
+  }
+
+  .searchChip {
+    margin: 0 0.9rem 0.75rem;
   }
 }

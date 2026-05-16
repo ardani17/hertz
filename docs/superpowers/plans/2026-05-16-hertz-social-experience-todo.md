@@ -981,7 +981,7 @@ Centang setelah DM verified dan commit selesai.
 - Test: `tests/unit/shared/hertzSearchService.test.ts`
 - Test: `tests/unit/frontend/hertzSearch.test.ts`
 
-- [ ] **Step 1: Tulis test search**
+- [x] **Step 1: Tulis test search**
 
 Coverage:
 
@@ -997,7 +997,7 @@ Run:
 npm run test -- tests/unit/shared/hertzSearchService.test.ts tests/unit/frontend/hertzSearch.test.ts
 ```
 
-- [ ] **Step 2: Implement search API dan UI**
+- [x] **Step 2: Implement search API dan UI**
 
 Implementation target:
 
@@ -1006,7 +1006,7 @@ Implementation target:
 - Hashtag link/filter dari konten post.
 - Mobile search tidak menabrak nav.
 
-- [ ] **Step 3: Verifikasi**
+- [x] **Step 3: Verifikasi**
 
 Run:
 
@@ -1018,7 +1018,7 @@ REVIEW_BASE_URL=https://horizon.cloudnexify.com npm run review:visual
 REVIEW_BASE_URL=https://horizon.cloudnexify.com npm run review:dom
 ```
 
-- [ ] **Step 4: Commit Task 13**
+- [x] **Step 4: Commit Task 13**
 
 Run:
 
@@ -1027,7 +1027,7 @@ git add frontend/src/app/api/hertz/search/route.ts shared/services/hertzSearchSe
 git commit -m "Add HERTZ social search"
 ```
 
-- [ ] **Ceklist selesai Task 13**
+- [x] **Ceklist selesai Task 13**
 
 Centang setelah search/topik verified dan commit selesai.
 

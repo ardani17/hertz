@@ -44,6 +44,12 @@ export function HertzHeader({
           );
         })}
       </nav>
+      {activeSearch ? (
+        <div className={styles.searchChip}>
+          <span>Search: {activeSearch}</span>
+          <a href="/hertz">Clear</a>
+        </div>
+      ) : null}
     </div>
   );
 }

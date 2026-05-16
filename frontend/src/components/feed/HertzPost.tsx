@@ -3,6 +3,7 @@
 import Link from 'next/link';
 import { useRef, useState } from 'react';
 import type { MemberSessionUser, HertzPost } from '@shared/types';
+import { getHertzHashtagHref, splitHertzHashtagText } from '@/lib/hertzSearchUi';
 import { HertzActionBar } from './HertzActionBar';
 import { HertzAuthorLine } from './HertzAuthorLine';
 import { HertzAvatar } from './HertzAvatar';
@@ -26,6 +27,18 @@ function spineNodeClass(post: HertzPost) {
     styles.spineNode,
     (post.category === 'life_coffee' || post.category === 'life_story') ? styles.coffeeSpineNode : '',
   ].filter(Boolean).join(' ');
+}
+
+function HertzPostText({ text }: { text: string }) {
+  return (
+    <>
+      {splitHertzHashtagText(text).map((part, index) => (
+        part.type === 'hashtag'
+          ? <Link key={`${part.value}-${index}`} href={getHertzHashtagHref(part.value)}>{part.value}</Link>
+          : <span key={`${part.value}-${index}`}>{part.value}</span>
+      ))}
+    </>
+  );
 }
 
 export function HertzPostCard({
@@ -67,7 +80,7 @@ export function HertzPostCard({
             <HertzAuthorLine post={post} />
             <HertzPostMenu post={post} currentUser={currentUser} />
           </div>
-          {isPlainRepost ? <p className={styles.repostLabel}>Merepost</p> : <p className={styles.content}>{post.content.text}</p>}
+          {isPlainRepost ? <p className={styles.repostLabel}>Merepost</p> : <p className={styles.content}><HertzPostText text={post.content.text} /></p>}
           {post.content.isTruncated ? (
             <Link className={styles.readMore} href={`/hertz/post/${post.shortId}`}>Baca lanjut</Link>
           ) : null}
