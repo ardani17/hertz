@@ -8,6 +8,9 @@ import styles from './HertzPostMenu.module.css';
 
 export function HertzPostMenu({ post, currentUser }: { post: HertzPost; currentUser: MemberSessionUser | null }) {
   const [open, setOpen] = useState(false);
+  const [menuUser, setMenuUser] = useState<MemberSessionUser | null>(currentUser);
+  const [authChecked, setAuthChecked] = useState(Boolean(currentUser));
+  const [checkingAuth, setCheckingAuth] = useState(false);
   const [reportOpen, setReportOpen] = useState(false);
   const [editOpen, setEditOpen] = useState(false);
   const [marketOpen, setMarketOpen] = useState(false);
@@ -26,6 +29,34 @@ export function HertzPostMenu({ post, currentUser }: { post: HertzPost; currentU
     takeProfit: post.market?.takeProfit?.toString() ?? '',
     confidencePercent: post.market?.confidencePercent?.toString() ?? '',
   });
+  const effectiveUser = currentUser ?? menuUser;
+  const isOwnerOrAdmin = Boolean(effectiveUser && (effectiveUser.id === post.author.id || effectiveUser.role === 'admin'));
+  const canReport = Boolean(effectiveUser);
+  const canEdit = Boolean(post.viewer.canEdit || isOwnerOrAdmin);
+  const canDelete = Boolean(post.viewer.canDelete || isOwnerOrAdmin);
+  const isAdmin = effectiveUser?.role === 'admin';
+
+  async function refreshMenuUser() {
+    if (currentUser || authChecked || checkingAuth) return;
+    setCheckingAuth(true);
+    try {
+      const response = await fetch('/api/auth/me', { credentials: 'same-origin' });
+      const payload = await response.json().catch(() => null);
+      const user = payload?.success ? payload.data?.user ?? null : null;
+      setMenuUser(user);
+    } finally {
+      setAuthChecked(true);
+      setCheckingAuth(false);
+    }
+  }
+
+  function toggleMenu() {
+    setOpen((value) => {
+      const next = !value;
+      if (next) void refreshMenuUser();
+      return next;
+    });
+  }
 
   async function copyLink() {
     await navigator.clipboard?.writeText(`${window.location.origin}/hertz/post/${post.shortId}`);
@@ -135,17 +166,18 @@ export function HertzPostMenu({ post, currentUser }: { post: HertzPost; currentU
 
   return (
     <div className={styles.wrap}>
-      <Button type="button" variant="ghost" size="icon-sm" className={styles.trigger} onClick={() => setOpen((value) => !value)} aria-label="Post actions">
+      <Button type="button" variant="ghost" size="icon-sm" className={styles.trigger} onClick={toggleMenu} aria-label="Post actions">
         <MoreIcon />
       </Button>
       {open ? (
         <div className={styles.menu}>
           <Button type="button" variant="ghost" size="sm" onClick={copyLink}>Copy link</Button>
-          {currentUser ? <Button type="button" variant="ghost" size="sm" onClick={() => { closePanels(); setReportOpen(true); setOpen(false); }}>Report</Button> : null}
-          {post.viewer.canEdit ? <Button type="button" variant="ghost" size="sm" onClick={() => { closePanels(); setEditOpen(true); setOpen(false); }}>Edit post</Button> : null}
-          {currentUser?.role === 'admin' ? <Button type="button" variant="ghost" size="sm" onClick={() => { closePanels(); setMarketOpen(true); setOpen(false); }}>Edit market metadata</Button> : null}
-          {post.viewer.canDelete ? <Button type="button" variant="ghost" size="sm" onClick={deleteOwnPost}>Delete post</Button> : null}
-          {currentUser?.role === 'admin' ? <Button type="button" variant="ghost" size="sm" onClick={hidePost}>Hide post</Button> : null}
+          {checkingAuth ? <Button type="button" variant="ghost" size="sm" disabled>Cek login...</Button> : null}
+          {canReport ? <Button type="button" variant="ghost" size="sm" onClick={() => { closePanels(); setReportOpen(true); setOpen(false); }}>Report</Button> : null}
+          {canEdit ? <Button type="button" variant="ghost" size="sm" onClick={() => { closePanels(); setEditOpen(true); setOpen(false); }}>Edit post</Button> : null}
+          {isAdmin ? <Button type="button" variant="ghost" size="sm" onClick={() => { closePanels(); setMarketOpen(true); setOpen(false); }}>Edit market metadata</Button> : null}
+          {canDelete ? <Button type="button" variant="ghost" size="sm" onClick={deleteOwnPost}>Delete post</Button> : null}
+          {isAdmin ? <Button type="button" variant="ghost" size="sm" onClick={hidePost}>Hide post</Button> : null}
         </div>
       ) : null}
       {reportOpen ? (
