@@ -99,6 +99,66 @@ Keputusan pemakaian:
 9. Artifact review tidak masuk commit kecuali sengaja dijadikan baseline atau bukti diskusi.
 10. Plan implementasi berikutnya wajib menulis command review yang relevan per todo, bukan hanya `build`.
 
+## Keputusan Right Sidebar Market Widget
+
+Status: Siap spec
+
+Tambahan dari review screenshot user: right sidebar market perlu dipoles menjadi widget market premium compact, bukan chart dashboard besar.
+
+Target rasa visual:
+
+- ultra modern fintech UI;
+- dark mode;
+- glassmorphism halus;
+- subtle neon glow;
+- clean spacing;
+- premium crypto exchange aesthetic;
+- terinspirasi Binance, Bybit, TradingView, dan Stripe Dashboard;
+- tetap selaras dengan tema HERTZ.
+
+Scope desain:
+
+- Widget hanya hidup di right sidebar sempit, bukan full dashboard.
+- Tidak membuat chart besar.
+- Buat 3 compact stacked cards:
+  - Forex Market;
+  - Crypto Market;
+  - Stock Market.
+- Setiap card punya header dengan icon market, badge/pill label, live indicator dot, rounded container, dan border glow sesuai warna market.
+- Main asset section menampilkan symbol dominan, subtitle, current price besar tetapi tidak oversized, dan percentage badge hijau/merah.
+- Chart memakai compact Recharts `AreaChart`, tinggi sekitar 56-80px, tanpa axes, tanpa label berat, gradient halus, smooth curve, dan responsive width.
+- Secondary assets berisi 3 row compact: symbol, tiny sparkline, current price, percentage change.
+- Row harus rapi, tidak overflow sidebar, dan memakai separator halus.
+- Footer card memuat source label dan update time dengan muted typography.
+
+Warna:
+
+- Forex: emerald/green neon.
+- Crypto: purple neon.
+- Stock: blue neon.
+
+Requirement teknis:
+
+- Reusable `MarketCard` component.
+- Reusable `Sparkline` component.
+- TypeScript types bersih.
+- Production-ready.
+- Responsive dan tidak overflow.
+- Mobile friendly, tetapi tidak boleh mengalahkan konten utama mobile HERTZ.
+- Accessible.
+- Gunakan realistic dummy market data jika data live belum tersedia.
+- Gunakan Recharts untuk chart.
+- Jika dependency `recharts` belum ada, tambahkan pada task implementasi terkait.
+
+Acceptance:
+
+- Right sidebar desktop terlihat premium tetapi tetap compact.
+- Tidak ada chart lebih tinggi dari 80px di card market.
+- Tidak ada horizontal overflow pada sidebar.
+- Tiga card market terbaca di width sidebar terbatas.
+- Hover memberi transition/glow halus tanpa mengganggu readability.
+- Widget tidak berubah menjadi full dashboard.
+
 ## Urutan Review yang Disarankan
 
 | Urutan | Area | Status | Alasan |

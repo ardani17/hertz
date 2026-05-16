@@ -223,6 +223,112 @@ Centang setelah visual/a11y/build pass dan commit dibuat.
 
 ---
 
+## Task 2A: Premium Compact Right Sidebar Market Widget
+
+**Files:**
+- Modify: `package.json`
+- Modify: `package-lock.json`
+- Modify: `frontend/src/components/feed/HertzRightRail.tsx`
+- Modify: `frontend/src/components/feed/HertzRails.module.css`
+- Create: `frontend/src/components/feed/MarketSidebarWidget.tsx`
+- Create: `frontend/src/components/feed/MarketSidebarWidget.module.css`
+- Create: `frontend/src/components/feed/MarketCard.tsx`
+- Create: `frontend/src/components/feed/Sparkline.tsx`
+- Test: `tests/unit/frontend/hertzMarketSidebar.test.ts`
+- Review: `tests/review/visual.spec.ts`
+
+- [ ] **Step 1: Install/check Recharts dependency**
+
+Run:
+
+```bash
+npm ls recharts || npm install recharts
+```
+
+Expected:
+
+- `recharts` tersedia untuk `AreaChart`.
+- Jika dependency ditambahkan, `package.json` dan `package-lock.json` ikut distage pada commit task ini.
+
+- [ ] **Step 2: Tulis test market sidebar data/rendering**
+
+Coverage:
+
+- Render 3 cards: Forex Market, Crypto Market, Stock Market.
+- Setiap card punya main asset, price, percentage badge, source, update time.
+- Setiap card punya 3 secondary asset rows.
+- Widget tidak merender chart besar.
+- Dummy data realistis tersedia jika live data kosong.
+
+Run:
+
+```bash
+npm run test -- tests/unit/frontend/hertzMarketSidebar.test.ts
+```
+
+Expected:
+
+- FAIL sebelum komponen dibuat.
+
+- [ ] **Step 3: Implement reusable components**
+
+Implementation target:
+
+- `MarketSidebarWidget` menyusun 3 compact cards.
+- `MarketCard` menerima typed market config dan asset data.
+- `Sparkline` reusable untuk main area chart dan tiny row sparkline.
+- Main chart memakai Recharts `AreaChart`, height 56-80px.
+- Tiny sparkline row tetap compact dan tidak overflow.
+- No axes, no heavy labels, no large chart.
+- Forex emerald/green, Crypto purple, Stock blue.
+- Dark glassmorphism, subtle neon glow, rounded premium card.
+- Hover transition dan glow halus.
+- Accessible label untuk card, live status, price change, source, update time.
+
+- [ ] **Step 4: Integrasikan ke right rail**
+
+Implementation target:
+
+- `HertzRightRail` memakai market widget baru.
+- Widget tetap berada di right sidebar sempit.
+- Pada mobile/tablet, widget tidak mengalahkan konten utama; gunakan existing mobile market access/collapsible behavior.
+- Tidak ada horizontal overflow pada sidebar.
+
+- [ ] **Step 5: Verifikasi**
+
+Run:
+
+```bash
+npm run test -- tests/unit/frontend/hertzMarketSidebar.test.ts
+npm run lint
+npm run build:frontend
+REVIEW_BASE_URL=https://horizon.cloudnexify.com npm run review:visual
+REVIEW_BASE_URL=https://horizon.cloudnexify.com npm run review:a11y
+```
+
+Manual check:
+
+- `/hertz` desktop menampilkan 3 compact market cards.
+- Forex chart hijau, Crypto ungu, Stock biru.
+- Chart height sekitar 56-80px.
+- Tidak ada overflow di right sidebar.
+- Card terasa premium, bukan generic admin template.
+
+- [ ] **Step 6: Commit Task 2A**
+
+Run:
+
+```bash
+git add package.json package-lock.json frontend/src/components/feed/HertzRightRail.tsx frontend/src/components/feed/HertzRails.module.css frontend/src/components/feed/MarketSidebarWidget.tsx frontend/src/components/feed/MarketSidebarWidget.module.css frontend/src/components/feed/MarketCard.tsx frontend/src/components/feed/Sparkline.tsx tests/unit/frontend/hertzMarketSidebar.test.ts
+git commit -m "Add premium HERTZ market sidebar widget"
+```
+
+- [ ] **Ceklist selesai Task 2A**
+
+Centang setelah test, visual review, a11y, build, and commit selesai.
+
+---
+
 ## Task 3: Feed Card, Composer Outline, Empty/Loading/Error State
 
 **Files:**
@@ -1195,6 +1301,7 @@ Centang setelah full verification pass, role sweep pass, and cleanup commit deci
 
 - Access role and guest/member/admin gating: Task 1, Task 12, Task 17.
 - Responsive shell, tablet, right rail: Task 2, Task 17.
+- Premium compact market sidebar widget: Task 2A, Task 17.
 - Feed social polish and outlines: Task 3.
 - Composer media all categories: Task 4.
 - Edit/delete author/admin: Task 5, Task 6.

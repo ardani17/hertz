@@ -87,6 +87,57 @@ Acceptance:
 - Right rail tetap terlihat saat desktop feed discroll.
 - Guest navigation tidak menampilkan Tools.
 
+### 1A. Premium Right Sidebar Market Widget
+
+Right sidebar market widget harus terlihat seperti panel compact milik trading/crypto exchange modern. Ini bukan full dashboard dan tidak boleh memakai chart besar.
+
+Behavior:
+
+- Widget hanya hidup di right sidebar sempit.
+- Buat 3 stacked compact cards:
+  - Forex Market;
+  - Crypto Market;
+  - Stock Market.
+- Setiap card memiliki market icon, colored badge/pill label, live indicator dot, rounded container, dan subtle border glow sesuai warna market.
+- Main asset section menampilkan symbol dominan, subtitle, current price, dan percentage badge hijau/merah.
+- Typography harus jelas tetapi tidak oversized.
+- Chart memakai Recharts `AreaChart`.
+- Chart height sekitar 56-80px.
+- Chart tidak memakai axes, heavy labels, atau grid besar.
+- Chart memakai smooth curve dan soft gradient fill.
+- Secondary assets menampilkan 3 row compact: symbol, tiny sparkline, current price, percentage change.
+- Row memakai separator halus dan tidak overflow sidebar.
+- Footer memuat source label dan update time dengan muted typography.
+- Hover transition halus, glow subtle, dan badge hover feedback.
+- Gunakan realistic dummy market data jika live data belum tersedia.
+
+Design tokens:
+
+- Forex: emerald/green neon.
+- Crypto: purple neon.
+- Stock: blue neon.
+- Dark mode, glassmorphism feel, premium crypto exchange aesthetic, selaras dengan HERTZ.
+
+Technical requirements:
+
+- Reusable `MarketCard` component.
+- Reusable `Sparkline` component.
+- Clean TypeScript types.
+- Gunakan Recharts.
+- Jika `recharts` belum ada di dependency, tambahkan saat implementasi task widget.
+- Mobile friendly: di mobile widget tidak boleh mendominasi detail post/feed; gunakan mobile market access yang compact/collapsible atau hide dari alur utama sesuai breakpoint.
+- Accessible labels untuk market card, live indicator, price change, dan source/update time.
+
+Acceptance:
+
+- Desktop right sidebar menampilkan 3 compact market cards.
+- Chart utama tiap card tinggi 56-80px.
+- Secondary sparkline tiap row compact dan aligned.
+- Tidak ada horizontal overflow pada sidebar.
+- Widget tetap readable di width sidebar terbatas.
+- Visual terasa premium, bukan generic admin card.
+- Visual regression pass untuk `/hertz` desktop dan tablet.
+
 ### 2. Feed Timeline
 
 Feed harus terasa seperti timeline sosial.
@@ -678,22 +729,23 @@ Implementation plan nanti harus memecah spec ini menjadi unit kecil seperti ini:
 
 1. Access role helper dan nav gating.
 2. Tablet/mobile shell breakpoint dan right rail sticky desktop.
-3. Feed/card/composer outline consistency.
-4. Composer media lintas kategori dengan preview/remove/validation.
-5. Edit post + metadata author/admin.
-6. Delete confirm dialog.
-7. Plain repost timeline.
-8. Profile activity tabs, termasuk `Disimpan`.
-9. Share sheet desktop/mobile.
-10. Desktop detail modal dan mobile detail priority.
-11. Guest comment CTA.
-12. DM guest CTA, mobile two-screen, menu tiga titik, polling guard, image composer.
-13. Social search dan hashtag/topik.
-14. Minimal notification badges.
-15. SEO/social preview detail post.
-16. Accessibility pass untuk overlay.
-17. Review tooling baseline/check pass: visual, a11y, DOM diff, MCP/replay sesuai area.
-18. Full verification pass dan cleanup.
+3. Premium compact right sidebar market widget.
+4. Feed/card/composer outline consistency.
+5. Composer media lintas kategori dengan preview/remove/validation.
+6. Edit post + metadata author/admin.
+7. Delete confirm dialog.
+8. Plain repost timeline.
+9. Profile activity tabs, termasuk `Disimpan`.
+10. Share sheet desktop/mobile.
+11. Desktop detail modal dan mobile detail priority.
+12. Guest comment CTA.
+13. DM guest CTA, mobile two-screen, menu tiga titik, polling guard, image composer.
+14. Social search dan hashtag/topik.
+15. Minimal notification badges.
+16. SEO/social preview detail post.
+17. Accessibility pass untuk overlay.
+18. Review tooling baseline/check pass: visual, a11y, DOM diff, MCP/replay sesuai area.
+19. Full verification pass dan cleanup.
 
 Setiap unit kerja harus memiliki:
 
