@@ -27,7 +27,7 @@ API check with a temporary session for that user confirms `/api/hertz/posts` ret
 - `viewer.canEdit: true`
 - `viewer.canDelete: true`
 
-The running frontend container at `127.0.0.1:3888` still showed the older menu surface during the check, so the full live browser UI check needs the frontend container refreshed from the latest build.
+After rebuilding/restarting the frontend container, a Playwright check with a temporary session for `ARDANI | vastara.id` confirmed the owner menu exposes `Edit postingan` and `Hapus postingan`.
 
 ## Verified By Build
 
@@ -49,4 +49,4 @@ Relevant frontend changes now present:
 
 ## Remaining Manual Prerequisite
 
-Refresh/rebuild the frontend container, then open the deployed site with the `ARDANI | vastara.id` Telegram member session and run the create/edit/delete flow on `/hertz`.
+Open the deployed site with the `ARDANI | vastara.id` Telegram member session and run the full create/edit/delete flow on `/hertz`.

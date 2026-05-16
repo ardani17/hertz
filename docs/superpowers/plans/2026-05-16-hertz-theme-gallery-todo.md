@@ -321,8 +321,8 @@ Commit:
 **Files:**
 - Create or update if useful: `docs/frontend-audit/<date>-hertz-owner-regression.md`
 
-- [ ] With a Telegram member session, create a HERTZ post. **Pending live refresh/manual flow:** owner account `ARDANI | vastara.id` is confirmed, but full create/edit/delete needs the refreshed frontend container.
-- [ ] Confirm owner menu shows Edit post and Delete post. **Pending live refresh:** API returns `viewer.canEdit/canDelete: true`; running container still served the older menu during verification.
+- [ ] With a Telegram member session, create a HERTZ post. **Pending manual flow:** owner account `ARDANI | vastara.id` is confirmed; full create/edit/delete should be run in the user's browser session.
+- [x] Confirm owner menu shows Edit post and Delete post.
 - [ ] Edit the post and confirm content changes. **Blocked:** requires authenticated Telegram owner session.
 - [ ] Delete the post and confirm it disappears from feed/detail. **Blocked:** requires authenticated Telegram owner session.
 - [ ] Check a non-owner or guest view only shows allowed actions such as Salin link/Report. **Pending manual/non-owner session:** guest/code behavior documented; full browser regression needs separate authenticated/non-owner session.
@@ -355,7 +355,7 @@ Commit:
   - `/tools/order-book`
   - `/tools/economic-calendar`
   - `/admin/login`
-- [ ] Confirm no global horizontal overflow at 390px and 320px. **Pending live refresh:** code/build contains the landing 320px fix, but the running `127.0.0.1:3888` container still served the previous bundle during the final sweep.
+- [x] Confirm no global horizontal overflow at 390px and 320px.
 - [x] Confirm no clipped primary controls on `/hertz/messages` at 768, 390, 320.
 - [x] Confirm tool primary data is readable on 390 and 320 without relying only on table horizontal scroll.
 - [x] Confirm Gallery inactive notice is shown and Gallery is absent from nav.

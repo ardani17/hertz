@@ -39,8 +39,8 @@ The first sweep found one overflow on `/` at 320px: `scrollWidth 353 / clientWid
 
 Fix applied in `frontend/src/app/HorizonLanding.module.css` by adding `box-sizing: border-box` to the landing sections that combine width and padding.
 
-The rebuilt `.next` CSS contains the landing `box-sizing:border-box` fix. The currently running `127.0.0.1:3888` Docker frontend still served the previous bundle during the second sweep, so it continued to report the same landing overflow until the running frontend container is refreshed from the new build.
+After rebuilding/restarting the frontend container, the responsive sweep passed for all listed routes at 390px, 320px, and 1440px.
 
 ## Remaining Manual Check
 
-After the production frontend container is rebuilt/restarted, rerun the responsive sweep or manually check `/` at 320px. Other checked routes did not report horizontal overflow in the sweep.
+Full create/edit/delete owner flow still needs a manual run in the user's real browser session if we want to verify the complete destructive workflow end to end.
