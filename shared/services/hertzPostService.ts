@@ -22,6 +22,65 @@ import type {
 const EXCERPT_LIMIT = 420;
 const SHORT_ID_ALPHABET = 'abcdefghijklmnopqrstuvwxyz0123456789';
 const VALID_CATEGORIES: HertzPostCategory[] = ['trading_room', 'life_coffee', 'general'];
+const DEFAULT_SITE_URL = 'https://horizon.cloudnexify.com';
+
+function truncateMetadataText(text: string, maxLength: number) {
+  const cleaned = text.replace(/\s+/g, ' ').trim();
+  if (cleaned.length <= maxLength) return cleaned;
+  return `${cleaned.slice(0, maxLength - 1).trimEnd()}…`;
+}
+
+export function buildHertzPostSocialMetadata(input: {
+  shortId: string;
+  authorName: string;
+  contentText: string;
+  imageUrl?: string | null;
+  siteUrl?: string | null;
+} | null) {
+  if (!input) {
+    return {
+      title: 'HERTZ post',
+      description: 'Postingan HERTZ tidak tersedia.',
+      alternates: { canonical: `${DEFAULT_SITE_URL}/hertz` },
+      openGraph: {
+        title: 'HERTZ post',
+        description: 'Postingan HERTZ tidak tersedia.',
+        url: `${DEFAULT_SITE_URL}/hertz`,
+        type: 'article',
+      },
+      twitter: {
+        card: 'summary_large_image',
+        title: 'HERTZ post',
+        description: 'Postingan HERTZ tidak tersedia.',
+      },
+    };
+  }
+
+  const siteUrl = (input.siteUrl || DEFAULT_SITE_URL).replace(/\/$/, '');
+  const canonical = `${siteUrl}/hertz/post/${input.shortId}`;
+  const description = truncateMetadataText(input.contentText || 'Postingan HERTZ', 180);
+  const title = truncateMetadataText(`${input.authorName}: ${description}`, 90);
+  const images = input.imageUrl ? [{ url: input.imageUrl }] : [{ url: '/images/og-default.svg' }];
+
+  return {
+    title,
+    description,
+    alternates: { canonical },
+    openGraph: {
+      title,
+      description,
+      url: canonical,
+      type: 'article',
+      images,
+    },
+    twitter: {
+      card: 'summary_large_image',
+      title,
+      description,
+      images: images.map((image) => image.url),
+    },
+  };
+}
 
 export class HertzValidationError extends Error {
   constructor(message: string) {

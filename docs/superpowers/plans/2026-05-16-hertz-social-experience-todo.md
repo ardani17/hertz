@@ -1103,7 +1103,7 @@ Centang setelah notification verified dan commit selesai.
 - Modify: `shared/services/hertzPostService.ts`
 - Test: `tests/unit/frontend/seo.test.ts`
 
-- [ ] **Step 1: Tulis test metadata detail post**
+- [x] **Step 1: Tulis test metadata detail post**
 
 Coverage:
 
@@ -1118,7 +1118,7 @@ Run:
 npm run test -- tests/unit/frontend/seo.test.ts
 ```
 
-- [ ] **Step 2: Implement generateMetadata**
+- [x] **Step 2: Implement generateMetadata**
 
 Implementation target:
 
@@ -1126,7 +1126,7 @@ Implementation target:
 - Fallback aman untuk not found/hidden/deleted.
 - Tidak membocorkan konten private.
 
-- [ ] **Step 3: Verifikasi**
+- [x] **Step 3: Verifikasi**
 
 Run:
 
@@ -1136,7 +1136,7 @@ npm run lint
 npm run build:frontend
 ```
 
-- [ ] **Step 4: Commit Task 15**
+- [x] **Step 4: Commit Task 15**
 
 Run:
 
@@ -1145,7 +1145,7 @@ git add frontend/src/app/hertz/post/[shortId]/page.tsx frontend/src/app/layout.t
 git commit -m "Improve HERTZ post social metadata"
 ```
 
-- [ ] **Ceklist selesai Task 15**
+- [x] **Ceklist selesai Task 15**
 
 Centang setelah SEO verified dan commit selesai.
 
