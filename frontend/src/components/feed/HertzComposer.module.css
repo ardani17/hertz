@@ -151,7 +151,7 @@
   aspect-ratio: 1.4;
   background: #05100a;
   display: block;
-  object-fit: cover;
+  object-fit: contain;
   width: 100%;
 }
 
