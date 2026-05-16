@@ -9,6 +9,7 @@ Instruksi user: jangan edit code dulu; buat spec/todo agar scope jelas.
 1. Gallery tidak ditampilkan sebagai menu aktif karena belum diperlukan.
 2. Jika user membuka `/gallery` langsung, halaman harus memberi keterangan bahwa Gallery sementara tidak aktif.
 3. Semua frontend publik, termasuk Tools dan tool detail, mengikuti tema visual HERTZ: dark, emerald accent, rail/bottom navigation yang konsisten, panel rapat, dan responsive behavior yang sama.
+4. Semua temuan pada audit frontend `docs/frontend-audit/2026-05-16-frontend-audit-rerun.md` masuk scope pengerjaan, kecuali yang secara eksplisit dibatasi oleh keputusan Gallery dormant.
 
 ## Prinsip Scope
 
@@ -17,6 +18,7 @@ Instruksi user: jangan edit code dulu; buat spec/todo agar scope jelas.
 - Tidak menjalankan dev server di VPS. Verifikasi memakai build/check dan Playwright terhadap web VPS.
 - Worktree saat ini punya perubahan lain yang belum committed; implementasi nanti harus hanya stage file yang relevan.
 - Karena ini menyentuh banyak halaman, eksekusi harus bertahap dan tiap tahap punya commit sendiri.
+- Temuan audit yang menyentuh UX inti harus selesai dalam batch ini: DM mobile/tablet, landing 320px, tools mobile tables, public theme consistency, Gallery dormant, Profile/member center, owner edit/delete regression, social action surface, composer Trading completeness, mobile market access, copywriting consistency, and accessibility pass.
 
 ## Keputusan Produk
 
@@ -66,6 +68,8 @@ Target:
 - Jadikan shell ini standar untuk public pages.
 - Tetap tanpa Gallery di nav.
 - Label mobile `Direct Message` dipendekkan menjadi `DM`, dengan `aria-label="Direct Message"`.
+- Tambahkan entry/profile affordance menuju member center.
+- Tambahkan mobile market access pengganti right rail yang hilang di mobile.
 
 ### Landing
 
@@ -118,6 +122,7 @@ Target:
 - Tools hub dan semua tool detail mengikuti tema HERTZ.
 - Tool detail tetap punya navigasi HERTZ/mobile bottom nav atau minimal public shell yang konsisten.
 - Tabel Profitability, Order Book, Economic Calendar, dan tabel tool lain harus punya mobile card mode, bukan hanya horizontal scroll.
+- Tool detail yang sangat panjang harus punya section anchor/sticky utility nav agar mobile tidak terasa tersesat.
 
 ### Gallery Inactive
 
@@ -132,9 +137,69 @@ Target:
 - `/gallery` menampilkan inactive notice.
 - Komponen Gallery lama tidak perlu dihapus; cukup tidak dipakai sampai fitur diaktifkan lagi.
 
+### HERTZ DM
+
+Files:
+
+- `frontend/src/app/hertz/messages/page.tsx`
+- `frontend/src/app/hertz/messages/page.module.css`
+
+Target:
+
+- Fix panel thread yang terpotong pada tablet/mobile.
+- Mobile menjadi alur dua layar: inbox list dan thread detail.
+- Guest state tidak menampilkan action operasional seperti Archive, Block, Image, Send sebagai fungsi aktif.
+- Copywriting diselaraskan ke Indonesia.
+
+### HERTZ Profile/Member Center
+
+Files:
+
+- `frontend/src/app/hertz/profile/page.tsx`
+- `frontend/src/app/hertz/profile/page.module.css`
+- `frontend/src/components/feed/HertzLeftRail.tsx`
+- `frontend/src/components/hertz/MobileBottomNav.tsx`
+- API existing yang dibaca: `/api/auth/me`, `/api/credit/balance`, `/api/credit/history`
+
+Target:
+
+- User punya halaman untuk melihat status Telegram, role, credit, dan shortcut ke post/aktivitas.
+- Guest melihat CTA login Telegram.
+- Rail profile card menjadi link ke halaman ini.
+
+### HERTZ Post Actions dan Composer
+
+Files:
+
+- `frontend/src/components/feed/HertzActionBar.tsx`
+- `frontend/src/components/feed/HertzActionBar.module.css`
+- `frontend/src/components/feed/HertzPostMenu.tsx`
+- `frontend/src/components/feed/HertzPostMenu.module.css`
+- `frontend/src/components/feed/HertzComposer.tsx`
+- `frontend/src/components/feed/HertzComposer.module.css`
+
+Target:
+
+- Action bar menampilkan social surface yang sesuai API: komentar, suka, bookmark, repost/quote, dan share/copy.
+- Owner edit/delete flow tetap tersedia dari menu dan harus diuji dengan session Telegram.
+- Composer Trading menyediakan field penting saat create: pair, timeframe, direction, risk, entry, stop loss, take profit, confidence.
+- Media policy Life/General harus eksplisit: jika tetap tidak bisa upload, UI menjelaskan; jika diaktifkan, upload bekerja lintas kategori.
+
+### Copywriting dan Accessibility
+
+Files:
+
+- Semua file UI publik yang disentuh task di atas.
+
+Target:
+
+- Copy UI utama memakai Indonesia: contoh `Read-only` menjadi `Mode baca`, `Archive` menjadi `Arsipkan`, `Block` menjadi `Blokir`, `Send` menjadi `Kirim`, `Copy link` menjadi `Salin link`.
+- Icon-only controls punya `aria-label`.
+- Focus state tetap terlihat pada nav, action, tab, menu, form, dan CTA.
+
 ### Admin
 
-Admin termasuk frontend, tetapi scope implementasi tema HERTZ untuk admin dipisah sebagai tahap akhir agar tidak mengganggu workflow internal.
+Admin termasuk frontend dan tetap masuk scope audit lengkap. Implementasi admin dikerjakan setelah public frontend agar workflow internal tidak rusak di tengah pengerjaan.
 
 Files:
 
@@ -153,15 +218,17 @@ Target tahap akhir:
 - Menghapus data Gallery.
 - Menghapus route Gallery.
 - Mengubah backend API.
-- Menambahkan fitur baru seperti Profile Center, Bookmark/Repost action bar, atau DM redesign penuh.
 - Mengubah autentikasi Telegram.
-- Mengubah desain admin dashboard secara besar-besaran.
+- Mengubah desain admin dashboard menjadi public HERTZ rail.
+- Menambahkan fitur yang tidak ada di audit, kecuali diperlukan langsung untuk menyelesaikan temuan audit.
 
 ## Risiko
 
 - Menyamakan semua halaman sekaligus bisa memicu regression responsif. Karena itu perlu tahap kecil dan commit per area.
 - Tool detail punya banyak tabel/data grid; mengganti ke mobile card mode perlu audit per tool.
 - Jika HERTZ shell dipakai di semua public page, perlu memastikan right rail tidak membuat halaman detail terlalu sempit.
+- Profile/member center dapat membutuhkan API credit yang belum lengkap untuk semua data; jika ada gap, tampilkan fallback state yang jujur.
+- Owner edit/delete regression membutuhkan session Telegram asli; jika session tidak tersedia, hasil harus dicatat sebagai belum terverifikasi, bukan dianggap selesai.
 
 ## Acceptance Criteria
 
@@ -171,5 +238,12 @@ Target tahap akhir:
 - Public pages utama memakai warna, border, spacing, radius, dan navigation HERTZ.
 - Tools hub dan tool detail terasa satu tema dengan HERTZ.
 - Tool detail mobile tidak hanya bergantung pada horizontal table scroll untuk data utama.
+- `/hertz/messages` tidak memotong thread/composer pada 768px, 390px, dan 320px.
+- Profile/member center tersedia dan linked dari rail/profile affordance.
+- HERTZ action bar menampilkan Bookmark/Repost/Share/Copy sesuai API yang tersedia.
+- Composer Trading punya field market utama saat create.
+- Mobile punya akses market data pengganti hidden right rail.
+- Copywriting publik yang disentuh sudah konsisten Indonesia.
+- Focus/aria untuk kontrol utama sudah diaudit.
 - Build frontend berhasil.
-- Playwright responsive sweep minimal untuk `/`, `/hertz`, `/outlook`, `/blog`, `/gallery`, `/tools`, `/tools/profitability`, `/tools/order-book`, `/tools/economic-calendar` di 1440, 768, 390, 320.
+- Playwright responsive sweep minimal untuk `/`, `/hertz`, `/hertz/messages`, `/hertz/profile`, `/outlook`, `/blog`, `/gallery`, `/tools`, `/tools/profitability`, `/tools/order-book`, `/tools/economic-calendar`, `/admin/login` di 1440, 768, 390, 320.
