@@ -52,6 +52,21 @@ Setiap area memakai status:
 - Build di VPS hanya production build, tidak menjalankan dev server.
 - Setelah implementasi nanti, perubahan harus diverifikasi dan dicommit per scope kecil.
 
+## Keputusan Eksekusi
+
+Keputusan user: semua improvement HERTZ dikerjakan dalam **satu fase besar**, meskipun scope cukup banyak.
+
+Cara eksekusinya bukan dengan mengurangi scope, tetapi dengan mengubah urutan kerja:
+
+- Satu fase HERTZ berisi semua todo yang sudah disepakati dalam diskusi ini.
+- Todo harus dipecah kecil dan jelas.
+- Setiap todo wajib punya acceptance criteria.
+- Setiap todo wajib diverifikasi sebelum lanjut ke todo berikutnya.
+- Verifikasi minimal mencakup build/check yang relevan dan responsive check jika menyentuh UI.
+- Jika todo menyentuh fitur login, harus diverifikasi sebagai guest, member, dan/atau admin sesuai kebutuhan.
+- Commit dilakukan setelah todo atau batch kecil selesai diverifikasi, agar histori tetap mudah ditelusuri.
+- Karena berada di VPS, tidak menjalankan dev server; gunakan build produksi/check dan verifikasi live sesuai instruksi user.
+
 ## Urutan Review yang Disarankan
 
 | Urutan | Area | Status | Alasan |
