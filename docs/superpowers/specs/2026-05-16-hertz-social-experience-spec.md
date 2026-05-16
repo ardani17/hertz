@@ -123,7 +123,10 @@ Technical requirements:
 - Reusable `MarketCard` component.
 - Reusable `Sparkline` component.
 - Clean TypeScript types.
-- Gunakan Recharts.
+- Gunakan Next.js + TypeScript.
+- Gunakan Recharts untuk `AreaChart`.
+- Gunakan TailwindCSS/shadcn/ui primitives jika cocok dengan komponen yang sudah tersedia di repo, terutama `badge`, `button`, `card`, dan `separator`.
+- Jika styling HERTZ existing lebih konsisten memakai CSS module, CSS module boleh dipakai untuk layout/glassmorphism detail tanpa mengubah requirement visual.
 - Jika `recharts` belum ada di dependency, tambahkan saat implementasi task widget.
 - Mobile friendly: di mobile widget tidak boleh mendominasi detail post/feed; gunakan mobile market access yang compact/collapsible atau hide dari alur utama sesuai breakpoint.
 - Accessible labels untuk market card, live indicator, price change, dan source/update time.
@@ -790,3 +793,4 @@ Mitigasi: artifact review tetap ignored dan tidak dicommit kecuali sengaja dijad
 - Scope: semua keputusan diskusi HERTZ masuk fase ini; fitur yang ditunda dicatat eksplisit di scope tidak masuk.
 - Ambiguitas utama sudah dipilih: Tools disembunyikan untuk guest, DM guest tetap visible sebagai CTA login, websocket ditunda, upload fase ini gambar saja.
 - Tooling review sudah masuk spec sebagai gate sebelum dan sesudah implementasi, bukan scope fitur produksi.
+- Right sidebar market widget sudah selaras dengan diskusi dan todo: compact only, Recharts, TailwindCSS/shadcn-compatible primitives bila cocok, dan tidak menjadi full dashboard.

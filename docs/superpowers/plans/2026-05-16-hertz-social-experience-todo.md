@@ -278,6 +278,9 @@ Implementation target:
 - `MarketCard` menerima typed market config dan asset data.
 - `Sparkline` reusable untuk main area chart dan tiny row sparkline.
 - Main chart memakai Recharts `AreaChart`, height 56-80px.
+- Gunakan Next.js + TypeScript.
+- Gunakan TailwindCSS/shadcn/ui primitives jika cocok dengan komponen repo yang sudah ada, terutama `badge`, `button`, `card`, dan `separator`.
+- Gunakan CSS module untuk detail layout/glassmorphism jika itu lebih konsisten dengan komponen HERTZ existing.
 - Tiny sparkline row tetap compact dan tidak overflow.
 - No axes, no heavy labels, no large chart.
 - Forex emerald/green, Crypto purple, Stock blue.
@@ -1325,3 +1328,4 @@ Centang setelah full verification pass, role sweep pass, and cleanup commit deci
 - Plan tidak menginstruksikan menjalankan dev server.
 - Plan memisahkan artifact review dari commit biasa.
 - Plan menjaga perubahan lama yang tidak terkait tetap tidak distage.
+- Plan sinkron dengan diskusi dan spec untuk right sidebar market widget: Task 2A memakai Recharts, compact charts 56-80px, TailwindCSS/shadcn-compatible primitives bila cocok, CSS module untuk konsistensi HERTZ, dan bukan full dashboard.

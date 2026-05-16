@@ -164,15 +164,19 @@ Acceptance:
 | Urutan | Area | Status | Alasan |
 | --- | --- | --- | --- |
 | 1 | Direct Message | Siap spec | Keputusan UX utama sudah dicatat: label mobile, guest CTA, menu tiga titik, polling, dan batas upload gambar. |
-| 2 | HERTZ Feed dan Post Detail | Perlu keputusan | Layout live sudah tidak overflow, tetapi masih perlu keputusan untuk media post, author action, hapus, detail post, dan mobile action labels. |
-| 3 | Profile / Member Center | Belum direview | Sudah ada route, perlu pastikan isi dan navigasi sesuai kebutuhan user Telegram. |
-| 4 | Navigation Shell Desktop/Mobile | Belum direview | Menentukan rail kiri, rail kanan, bottom nav, menu yang disembunyikan, dan sticky behavior. |
-| 5 | Landing Horizon | Belum direview | Perlu pastikan mobile kecil, brand signal, dan gateway ke HERTZ. |
-| 6 | Blog | Belum direview | Perlu sinkron tema HERTZ, ownership, dan flow member/admin. |
-| 7 | Outlook | Belum direview | Perlu sinkron tema HERTZ tanpa merusak sumber WordPress. |
-| 8 | Tools Hub dan Tool Detail | Belum direview | Perlu konsistensi tema HERTZ dan responsive table/card mode. |
-| 9 | Gallery Dormant | Belum direview | Fitur harus hidden/inactive sampai dibuka lagi. |
-| 10 | Admin Frontend | Belum direview | Perlu pastikan tema cukup konsisten tanpa mengganggu operasional admin. |
+| 2 | HERTZ Feed dan Post Detail | Siap spec | Keputusan feed, media, edit/delete, repost, saved history, share sheet, detail modal, dan guest comment sudah dicatat. |
+| 3 | Profile / Member Center | Siap spec | Profile menjadi pusat aktivitas: bio, statistik, Post saya, Disimpan, Repost saya, Komentar saya, credit, dan session. |
+| 4 | Navigation Shell Desktop/Mobile | Siap spec | Access role, guest Tools gating, tablet breakpoint, right rail sticky, dan bottom nav sudah masuk spec/todo. |
+| 5 | Right Sidebar Market Widget | Siap spec | Widget market premium compact sudah masuk diskusi, spec, dan Task 2A todo. |
+| 6 | Search, Hashtag, Notifikasi Minimal | Siap spec | Search sosial, hashtag/topik, DM unread, dan activity indicator ringan sudah masuk spec/todo. |
+| 7 | Landing Horizon | Di luar HERTZ social plan | Ditangani oleh audit/theme plan terpisah, bukan scope utama HERTZ social experience ini. |
+| 8 | Blog / Outlook / Tools / Gallery / Admin | Di luar HERTZ social plan | Tetap tercatat di audit frontend/theme-gallery, tetapi tidak menjadi task utama HERTZ social experience. |
+
+Catatan sinkronisasi: untuk fase HERTZ social experience, sumber final yang harus diikuti adalah:
+
+- Diskusi keputusan: dokumen ini.
+- Spec: `docs/superpowers/specs/2026-05-16-hertz-social-experience-spec.md`.
+- Todo/plan: `docs/superpowers/plans/2026-05-16-hertz-social-experience-todo.md`.
 
 ## Review 1: Direct Message
 
@@ -213,7 +217,7 @@ Keputusan bahasa:
 - UI menampilkan guest sebagai `Guest` dengan status `Mode baca`.
 - Access role `guest` dipakai agar menu/fitur bisa diatur mudah, misalnya menyembunyikan menu Tools atau action tertentu untuk user belum login.
 
-### Masalah Produk/UX yang Masih Perlu Dibahas
+### Masalah Produk/UX yang Dibahas
 
 1. **Guest state DM**
    Guest saat belum login sebaiknya tidak melihat action operasional seperti arsip, blokir, upload gambar, dan kirim pesan sebagai kontrol utama.
@@ -304,7 +308,7 @@ Pilih **Opsi B: Polish DM Terarah**.
 
 Alasannya: masalah screenshot sudah terbukti bukan hanya visual kecil, tetapi gabungan cache, shell, guest state, composer, dan mobile flow. Opsi B cukup menyelesaikan UX yang terasa rusak tanpa membuka redesign realtime besar.
 
-### Keputusan yang Perlu Dikonfirmasi
+### Keputusan DM yang Sudah Dikonfirmasi
 
 1. Nama fitur di UI mobile memakai `DM`, sementara desktop tetap boleh memakai `Direct Message`. Untuk aksesibilitas, kontrol mobile tetap memakai label lengkap `Direct Message`.
 2. Guest yang belum login langsung melihat CTA login Telegram. Layout inbox kosong/read-only tidak ditampilkan untuk guest.
@@ -335,7 +339,7 @@ Setelah DM disepakati, area berikutnya yang disarankan adalah **HERTZ Feed dan P
 
 ## Review 2: HERTZ Feed dan Post Detail
 
-Status: Perlu keputusan
+Status: Siap spec
 
 ### Kondisi Saat Ini
 
@@ -360,7 +364,7 @@ Hasil cek live:
 - Composer Trading sudah punya field Pair, TF, Arah, Risk, Entry, SL, TP, dan Confidence.
 - Detail post sudah memakai HERTZ shell dan menampilkan comment form serta list komentar.
 
-### Masalah Produk/UX yang Masih Perlu Dibahas
+### Masalah Produk/UX yang Dibahas
 
 1. **Media untuk Life dan General**
    Saat ini upload gambar hanya aktif untuk kategori Trading. Life dan General tidak bisa upload media. Ini bisa benar jika aturan produk memang hanya chart trading, tetapi terasa membatasi untuk social feed.
@@ -666,7 +670,7 @@ Hasil umum:
 #### Temuan Konten dan Bahasa
 
 1. **Istilah masih campur**
-   Ada `Direct Message`, `Inbox`, `Unread`, `Archived`, `Quote postingan`, `Verified Member`, `Mode baca`. Perlu keputusan bahasa: UI utama Indonesia, istilah produk boleh English hanya jika konsisten.
+   Ada `Direct Message`, `Inbox`, `Unread`, `Archived`, `Quote postingan`, `Verified Member`, `Mode baca`. Keputusan final: UI utama memakai Indonesia, sementara istilah produk umum seperti `DM`, `Repost`, dan `Quote postingan` boleh dipakai jika konsisten dengan copywriting dictionary di spec.
 
 2. **Label kategori perlu lebih jelas**
    `Life` dan `General` cukup umum. Sebagai user baru, perlu hint pendek di composer atau empty state agar tahu konten apa yang cocok untuk tiap kategori.
