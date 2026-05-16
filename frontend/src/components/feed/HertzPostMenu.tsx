@@ -201,7 +201,16 @@ export function HertzPostMenu({ post, currentUser }: { post: HertzPost; currentU
 
   return (
     <div className={styles.wrap} data-menu-open={open ? "true" : undefined}>
-      <Button type="button" variant="ghost" size="icon-sm" className={styles.trigger} onClick={toggleMenu} aria-label="Aksi postingan">
+      <Button
+        type="button"
+        variant="ghost"
+        size="icon-sm"
+        className={styles.trigger}
+        onClick={toggleMenu}
+        aria-label="Aksi postingan"
+        aria-haspopup="menu"
+        aria-expanded={open}
+      >
         <MoreIcon />
       </Button>
       {open ? (

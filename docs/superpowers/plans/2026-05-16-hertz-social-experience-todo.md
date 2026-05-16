@@ -1162,7 +1162,7 @@ Centang setelah SEO verified dan commit selesai.
 - Modify: `frontend/src/components/feed/HertzActionBar.tsx`
 - Review: `tests/review/accessibility.spec.ts`
 
-- [ ] **Step 1: Audit overlay keyboard**
+- [x] **Step 1: Audit overlay keyboard**
 
 Manual/MCP checks:
 
@@ -1172,7 +1172,7 @@ Manual/MCP checks:
 - Icon-only punya accessible name.
 - Delete confirm tidak fokus default ke tombol hapus.
 
-- [ ] **Step 2: Fix accessibility gaps**
+- [x] **Step 2: Fix accessibility gaps**
 
 Implementation target:
 
@@ -1181,7 +1181,7 @@ Implementation target:
 - Focus restore.
 - Focus ring terlihat.
 
-- [ ] **Step 3: Verifikasi**
+- [x] **Step 3: Verifikasi**
 
 Run:
 
@@ -1197,7 +1197,7 @@ Optional browser-agent:
 npm run review:mcp
 ```
 
-- [ ] **Step 4: Commit Task 16**
+- [x] **Step 4: Commit Task 16**
 
 Run:
 
@@ -1206,7 +1206,7 @@ git add frontend/src/components/feed/HertzPostDetailModal.tsx frontend/src/compo
 git commit -m "Audit HERTZ overlay accessibility"
 ```
 
-- [ ] **Ceklist selesai Task 16**
+- [x] **Ceklist selesai Task 16**
 
 Centang setelah a11y pass dan commit selesai.
 
