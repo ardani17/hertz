@@ -18,7 +18,7 @@ export function ToolNav() {
   const pathname = usePathname();
 
   return (
-    <nav className={styles.toolNav} aria-label="Tools">
+    <nav className={styles.toolNav} aria-label="Navigasi tools">
       <Link
         href="/tools"
         className={pathname === '/tools' ? styles.toolNavActive : styles.toolNavHome}

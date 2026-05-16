@@ -211,7 +211,7 @@ export function HertzPostMenu({ post, currentUser }: { post: HertzPost; currentU
           <form className={styles.panel} role="dialog" aria-modal="true" aria-labelledby={`report-title-${post.id}`} onSubmit={submitReport} onClick={(event) => event.stopPropagation()}>
             <div className={styles.panelHeader}>
               <h2 id={`report-title-${post.id}`}>Laporkan postingan</h2>
-              <Button type="button" variant="ghost" size="icon-sm" className={styles.closeButton} onClick={closePanels} aria-label="Tutup laporan">x</Button>
+              <Button type="button" variant="ghost" size="icon-sm" className={styles.closeButton} onClick={closePanels} aria-label="Tutup laporan">×</Button>
             </div>
             <label htmlFor={`report-reason-${post.id}`}>Alasan report</label>
             <select id={`report-reason-${post.id}`} value={reportReason} onChange={(event) => setReportReason(event.target.value)}>
@@ -234,13 +234,13 @@ export function HertzPostMenu({ post, currentUser }: { post: HertzPost; currentU
           <form className={styles.panel} role="dialog" aria-modal="true" aria-labelledby={`quote-title-${post.id}`} onSubmit={submitQuote} onClick={(event) => event.stopPropagation()}>
             <div className={styles.panelHeader}>
               <h2 id={`quote-title-${post.id}`}>Quote postingan</h2>
-              <Button type="button" variant="ghost" size="icon-sm" className={styles.closeButton} onClick={closePanels} aria-label="Tutup quote">x</Button>
+              <Button type="button" variant="ghost" size="icon-sm" className={styles.closeButton} onClick={closePanels} aria-label="Tutup quote">×</Button>
             </div>
             <label htmlFor={`quote-post-${post.id}`}>Komentar quote</label>
             <textarea id={`quote-post-${post.id}`} value={quoteContent} onChange={(event) => setQuoteContent(event.target.value)} rows={5} maxLength={4000} />
             <div className={styles.panelActions}>
               <Button type="button" variant="ghost" onClick={closePanels}>Batal</Button>
-              <Button type="submit">Publish quote</Button>
+              <Button type="submit">Posting quote</Button>
             </div>
           </form>
         </div>
@@ -250,7 +250,7 @@ export function HertzPostMenu({ post, currentUser }: { post: HertzPost; currentU
           <form className={styles.panel} role="dialog" aria-modal="true" aria-labelledby={`edit-title-${post.id}`} onSubmit={submitEdit} onClick={(event) => event.stopPropagation()}>
             <div className={styles.panelHeader}>
               <h2 id={`edit-title-${post.id}`}>Edit postingan</h2>
-              <Button type="button" variant="ghost" size="icon-sm" className={styles.closeButton} onClick={closePanels} aria-label="Tutup edit">x</Button>
+              <Button type="button" variant="ghost" size="icon-sm" className={styles.closeButton} onClick={closePanels} aria-label="Tutup edit">×</Button>
             </div>
             <label htmlFor={`edit-post-${post.id}`}>Konten</label>
             <textarea id={`edit-post-${post.id}`} value={editContent} onChange={(event) => setEditContent(event.target.value)} rows={7} maxLength={12000} />
@@ -266,7 +266,7 @@ export function HertzPostMenu({ post, currentUser }: { post: HertzPost; currentU
           <form className={`${styles.panel} ${styles.marketPanel}`} role="dialog" aria-modal="true" aria-labelledby={`market-title-${post.id}`} onSubmit={submitMarket} onClick={(event) => event.stopPropagation()}>
             <div className={styles.panelHeader}>
               <h2 id={`market-title-${post.id}`}>Edit metadata market</h2>
-              <Button type="button" variant="ghost" size="icon-sm" className={styles.closeButton} onClick={closePanels} aria-label="Tutup metadata market">x</Button>
+              <Button type="button" variant="ghost" size="icon-sm" className={styles.closeButton} onClick={closePanels} aria-label="Tutup metadata market">×</Button>
             </div>
             <label>Pair<input value={market.pair} onChange={(event) => setMarketField('pair', event.target.value)} placeholder="XAUUSD" /></label>
             <label>Timeframe<input value={market.timeframe} onChange={(event) => setMarketField('timeframe', event.target.value)} placeholder="H4" /></label>

@@ -88,10 +88,10 @@ export function EconomicCalendarTool() {
         <div className={styles.field}>
           <label htmlFor="period">Periode</label>
           <select id="period" value={period} onChange={(e) => setPeriod(e.target.value)}>
-            <option value="today">Today</option>
-            <option value="tomorrow">Tomorrow</option>
-            <option value="this-week">This week</option>
-            <option value="next-week">Next week</option>
+            <option value="today">Hari ini</option>
+            <option value="tomorrow">Besok</option>
+            <option value="this-week">Minggu ini</option>
+            <option value="next-week">Minggu depan</option>
           </select>
         </div>
         <div className={styles.field}>
@@ -103,7 +103,7 @@ export function EconomicCalendarTool() {
           </select>
         </div>
         <div className={styles.field}>
-          <label htmlFor="country">Country</label>
+          <label htmlFor="country">Negara</label>
           <select id="country" value={country} onChange={(e) => setCountry(e.target.value)}>
             <option value="all">All</option>
             <option value="US">US</option>
@@ -136,13 +136,13 @@ export function EconomicCalendarTool() {
         <table className={styles.table}>
           <thead>
             <tr>
-              <th>Time</th>
-              <th>Country</th>
+              <th>Waktu</th>
+              <th>Negara</th>
               <th>Event</th>
               <th>Impact</th>
               <th>Actual</th>
-              <th>Forecast</th>
-              <th>Previous</th>
+              <th>Perkiraan</th>
+              <th>Sebelumnya</th>
             </tr>
           </thead>
           <tbody>
@@ -178,7 +178,7 @@ export function EconomicCalendarTool() {
             <h3>{event.name}</h3>
             <dl>
               <div>
-                <dt>Country</dt>
+                <dt>Negara</dt>
                 <dd>{event.countryCode} {event.currencyCode ? `(${event.currencyCode})` : ''}</dd>
               </div>
               <div>
@@ -186,11 +186,11 @@ export function EconomicCalendarTool() {
                 <dd>{formatValue(event.actual)}</dd>
               </div>
               <div>
-                <dt>Forecast</dt>
+                <dt>Perkiraan</dt>
                 <dd>{formatValue(event.consensus)}</dd>
               </div>
               <div>
-                <dt>Previous</dt>
+                <dt>Sebelumnya</dt>
                 <dd>{formatValue(event.previous)}</dd>
               </div>
             </dl>

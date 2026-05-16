@@ -100,7 +100,7 @@ export function HertzDetailInteractions({
           />
           <div className={styles.formFooter}>
             <span>{comment.trim().length}/2000</span>
-            <button type="submit" disabled={pending === 'comment'}>{pending === 'comment' ? 'Mengirim...' : 'Reply'}</button>
+            <button type="submit" disabled={pending === 'comment'}>{pending === 'comment' ? 'Mengirim...' : 'Balas'}</button>
           </div>
         </form>
         <div className={styles.list}>
@@ -132,20 +132,20 @@ function CommentItem({ comment, onDelete, onEdit }: { comment: HertzComment; onD
         <div className={styles.itemTop}>
           <strong>{comment.author.name}</strong>
           <span>{new Date(comment.createdAt).toLocaleString('id-ID', { dateStyle: 'medium', timeStyle: 'short' })}</span>
-          {comment.editedAt ? <span>Edited</span> : null}
+          {comment.editedAt ? <span>Diedit</span> : null}
         </div>
         {editing ? (
           <form className={styles.inlineEdit} onSubmit={(event) => { event.preventDefault(); onEdit(draft); }}>
             <textarea value={draft} onChange={(event) => setDraft(event.target.value)} rows={3} maxLength={2000} />
             <div>
-              <button type="button" onClick={() => { setDraft(comment.content); setEditing(false); }}>Cancel</button>
-              <button type="submit">Save</button>
+              <button type="button" onClick={() => { setDraft(comment.content); setEditing(false); }}>Batal</button>
+              <button type="submit">Simpan</button>
             </div>
           </form>
         ) : <p>{comment.content}</p>}
         <div className={styles.inlineActions}>
           {comment.canEdit ? <button type="button" className={styles.textButton} onClick={() => setEditing((value) => !value)}>Edit</button> : null}
-          {comment.canDelete ? <button type="button" className={styles.textButton} onClick={onDelete}>Delete</button> : null}
+          {comment.canDelete ? <button type="button" className={styles.textButton} onClick={onDelete}>Hapus</button> : null}
         </div>
       </div>
     </article>

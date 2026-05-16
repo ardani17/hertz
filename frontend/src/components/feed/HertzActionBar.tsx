@@ -96,7 +96,7 @@ export function HertzActionBar({ post, currentUser }: { post: HertzPost; current
         <Button type="button" variant="ghost" size="sm" onClick={togglePulse} className={pulsed ? styles.active : ''} disabled={pendingAction === 'pulse'} aria-label={pulsed ? 'Batal suka' : 'Suka'} aria-pressed={pulsed}><LoveIcon /> <span>Suka</span> {pulses}</Button>
         <Button type="button" variant="ghost" size="sm" onClick={toggleRepost} className={reposted ? styles.active : ''} disabled={pendingAction === 'repost'} aria-label={reposted ? 'Batal repost' : 'Repost'} aria-pressed={reposted}><RepostIcon /> <span>Repost</span> {reposts}</Button>
         <Button type="button" variant="ghost" size="sm" onClick={toggleBookmark} className={bookmarked ? styles.active : ''} disabled={pendingAction === 'bookmark'} aria-label={bookmarked ? 'Batal bookmark' : 'Bookmark'} aria-pressed={bookmarked}><BookmarkIcon /> <span>Simpan</span></Button>
-        <Button type="button" variant="ghost" size="sm" onClick={copyLink} aria-label="Salin link"><ShareIcon /> <span>Share</span></Button>
+        <Button type="button" variant="ghost" size="sm" onClick={copyLink} aria-label="Salin link"><ShareIcon /> <span>Bagikan</span></Button>
       </div>
       {message ? <p className={styles.message}>{message}</p> : null}
     </div>

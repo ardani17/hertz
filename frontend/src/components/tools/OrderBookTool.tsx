@@ -39,7 +39,7 @@ const copy = {
       orders: 'Open Orders',
       positions: 'Open Positions',
       refresh: 'Refresh',
-      loading: 'Loading...',
+      loading: 'Memuat...',
     },
     badges: {
       live: 'Live',

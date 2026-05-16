@@ -156,7 +156,7 @@ export function HertzComposer({
     });
     setMediaIds([]);
     setMediaNames([]);
-    setStatus('Published.');
+    setStatus('Postingan terkirim.');
     window.location.reload();
   }
 
@@ -239,7 +239,7 @@ export function HertzComposer({
             </>
           ) : null}
           <Button className={styles.submit} type="button" onClick={submit} disabled={!currentUser || !content.trim()}>
-            Publish
+            Posting
           </Button>
         </div>
         {mediaNames.length > 0 ? (
