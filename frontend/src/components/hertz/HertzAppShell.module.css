@@ -1,7 +1,7 @@
 .main {
   min-height: 100vh;
   overflow-x: hidden;
-  background: #000;
+  background: #0f0f14;
   color: #e7f4ec;
 }
 
@@ -15,25 +15,25 @@
 }
 
 .shell {
-  --left-rail-offset: max(0px, calc((100vw - 1600px) / 2));
-  grid-template-columns: minmax(150px, 210px) minmax(0, 1fr) minmax(260px, 340px);
-  max-width: 1600px;
-  width: min(100vw, 1600px);
+  --left-rail-offset: max(0px, calc((100vw - 1680px) / 2));
+  grid-template-columns: 256px minmax(0, 1fr) 320px;
+  max-width: 1680px;
+  width: min(100vw, 1680px);
 }
 
 .shellCompact {
-  --left-rail-offset: max(0px, calc((100vw - 1230px) / 2));
-  grid-template-columns: minmax(150px, 210px) minmax(0, 1fr);
-  max-width: 1230px;
-  width: min(100vw, 1230px);
+  --left-rail-offset: max(0px, calc((100vw - 1360px) / 2));
+  grid-template-columns: 256px minmax(0, 1fr);
+  max-width: 1360px;
+  width: min(100vw, 1360px);
 }
 
 .content {
-  border-left: 1px solid rgba(29, 185, 112, 0.22);
-  border-right: 1px solid rgba(29, 185, 112, 0.22);
+  border-left: 1px solid rgba(255, 255, 255, 0.05);
+  border-right: 1px solid rgba(255, 255, 255, 0.05);
   grid-column: 2;
   min-width: 0;
-  padding: 1.2rem 1.4rem 3rem;
+  padding: 1.25rem 1.5rem 3rem;
 }
 
 .header {

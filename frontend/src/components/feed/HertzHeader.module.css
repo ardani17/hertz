@@ -1,5 +1,6 @@
 .header {
-  background: #000;
+  background: #0f0f14;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
   position: sticky;
   top: 0;
   z-index: 5;
@@ -7,19 +8,21 @@
 
 .top {
   align-items: center;
-  border-bottom: 1px solid rgba(18, 59, 40, 0.85);
+  border-bottom: 0;
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
-  height: 62px;
+  height: 74px;
+  margin: 0 auto;
+  max-width: 42rem;
 }
 
 .feedTitle,
 .feedTitleActive {
   color: #8fa397;
-  font-size: 20px;
+  font-size: 18px;
   font-weight: 650;
-  height: 62px;
-  line-height: 62px;
+  height: 74px;
+  line-height: 74px;
   position: relative;
   text-align: center;
   text-decoration: none;
@@ -32,7 +35,7 @@
 .feedTitleActive::after {
   background: #00f58a;
   border-radius: 3px;
-  bottom: -2px;
+  bottom: 0;
   content: "";
   height: 3px;
   left: 50%;
@@ -42,39 +45,46 @@
 }
 
 .tabs {
-  background: #000;
-  border: 1px solid #10261b;
-  border-radius: 6px;
+  background: transparent;
+  border: 0;
+  border-radius: 0;
   display: grid;
   grid-template-columns: repeat(4, minmax(0, 1fr));
-  height: 36px;
-  margin: 18px 0 16px;
-  overflow: hidden;
+  gap: 12px;
+  height: auto;
+  margin: 0 24px 16px;
+  overflow: visible;
 }
 
 .tabs a {
   color: #8a9a90;
   display: grid;
   font-size: 14px;
+  font-weight: 600;
+  min-height: 38px;
   min-width: 0;
   place-items: center;
   position: relative;
   text-decoration: none;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 8px;
+  transition: border-color 160ms ease, color 160ms ease, background 160ms ease;
 }
 
 .tabs a + a::before {
-  background: rgba(23, 56, 36, 0.75);
-  content: "";
-  height: 24px;
-  left: 0;
-  position: absolute;
-  top: 6px;
-  width: 1px;
+  display: none;
+}
+
+.tabs a:hover {
+  background: rgba(255, 255, 255, 0.04);
+  border-color: rgba(255, 255, 255, 0.2);
+  color: #d1fae5;
 }
 
 .activeTab {
-  border: 1.5px solid #00d67a;
-  border-radius: 5px;
+  background: rgba(16, 185, 129, 0.05);
+  border: 2px solid #00d67a !important;
+  border-radius: 8px;
   color: #00f58a !important;
   font-weight: 700;
 }

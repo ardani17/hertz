@@ -1,27 +1,28 @@
 .composer {
-  background: #000;
-  border: 1px solid #245b3a;
-  border-radius: 8px;
+  background: transparent;
+  border: 0;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+  border-radius: 0;
   display: grid;
   gap: 12px;
-  grid-template-columns: 42px minmax(0, 1fr);
-  min-height: 94px;
-  margin: 0 0 10px;
-  padding: 13px 10px 8px 17px;
+  grid-template-columns: 48px minmax(0, 1fr);
+  min-height: 120px;
+  margin: 0;
+  padding: 24px;
 }
 
 .avatar {
   background: #084729;
-  border: 1px solid #13d27b;
-  border-radius: 7px;
+  border: 0;
+  border-radius: 8px;
   color: #a7f3d0;
   display: grid;
   font-size: 16px;
   font-weight: 800;
-  height: 42px;
+  height: 48px;
   overflow: hidden;
   place-items: center;
-  width: 42px;
+  width: 48px;
 }
 
 .avatar img {
@@ -36,17 +37,17 @@
 }
 
 .body textarea {
-  background: #000;
-  border: 1px solid #173824;
-  border-radius: 6px;
+  background: transparent;
+  border: 0;
+  border-radius: 0;
   color: #f0fbf4;
   font: inherit;
   font-size: 13px;
-  height: 38px;
+  min-height: 46px;
   line-height: 18px;
   outline: none;
   overflow: hidden;
-  padding: 9px 15px;
+  padding: 0;
   resize: none;
   width: 100%;
 }
@@ -66,9 +67,9 @@
 .uploadButton,
 .inlineField {
   align-items: center;
-  background: #000;
-  border: 1px solid #173824;
-  border-radius: 5px;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 8px;
   color: #f0fbf4;
   display: inline-flex;
   font-size: 12px;
@@ -110,7 +111,7 @@
   margin-left: auto;
   min-width: 80px;
   padding: 0;
-  width: 80px;
+  width: 92px;
 }
 
 .disabledUpload,

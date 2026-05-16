@@ -1,29 +1,29 @@
 .main {
   min-height: 100vh;
   overflow-x: hidden;
-  background: #000000;
+  background: #0f0f14;
   color: #e7f4ec;
 }
 
 .shell {
-  --left-rail-offset: max(0px, calc((100vw - 1600px) / 2));
+  --left-rail-offset: max(0px, calc((100vw - 1680px) / 2));
   display: grid;
-  grid-template-columns: minmax(150px, 210px) minmax(0, 1fr) minmax(260px, 340px);
+  grid-template-columns: 256px minmax(0, 1fr) 320px;
   gap: 0;
-  max-width: 1600px;
-  width: min(100vw, 1600px);
+  max-width: 1680px;
+  width: min(100vw, 1680px);
   margin: 0 auto;
   min-height: 100vh;
-  border-left: 1px solid #245b3a;
-  border-right: 1px solid #173824;
+  border-left: 1px solid rgba(255, 255, 255, 0.05);
+  border-right: 1px solid rgba(255, 255, 255, 0.05);
 }
 
 .timeline {
-  border-left: 1px solid #245b3a;
-  border-right: 1px solid #173824;
+  border-left: 1px solid rgba(255, 255, 255, 0.05);
+  border-right: 1px solid rgba(255, 255, 255, 0.05);
   grid-column: 2;
   min-width: 0;
-  padding: 0 clamp(8px, 0.7vw, 10px) 0 clamp(16px, 1.4vw, 21px);
+  padding: 0;
 }
 
 .header {
@@ -72,17 +72,11 @@
 
 .feed {
   position: relative;
+  padding-bottom: 1.5rem;
 }
 
 .feed::before {
-  content: "";
-  position: absolute;
-  left: 42px;
-  top: 164px;
-  bottom: 0;
-  width: 2px;
-  background: linear-gradient(#245b3a, rgba(36, 91, 58, 0.06));
-  pointer-events: none;
+  display: none;
 }
 
 .empty {
@@ -111,10 +105,7 @@
   .main {
     min-height: 100svh;
     padding-bottom: calc(78px + env(safe-area-inset-bottom));
-    background:
-      linear-gradient(90deg, rgba(16, 185, 129, 0.06) 1px, transparent 1px),
-      #000000;
-    background-size: 80px 100%, auto, auto;
+    background: #0f0f14;
   }
 
   .shell {
@@ -132,9 +123,7 @@
   }
 
   .feed::before {
-    left: 1rem;
-    top: 0.5rem;
-    opacity: 0.45;
+    display: none;
   }
 
   .empty {

@@ -4,24 +4,26 @@
   position: sticky;
   top: 0;
   height: 100vh;
-  padding: 18px 12px;
+  padding: 24px 12px;
 }
 
 .left {
-  border-right: 1px solid #245b3a;
+  background: #0a0a0f;
+  border-right: 1px solid rgba(255, 255, 255, 0.05);
   display: flex;
   flex-direction: column;
   left: var(--left-rail-offset, 0);
   overflow: hidden;
   position: fixed;
-  width: clamp(150px, 26vw, 210px);
+  width: 256px;
   z-index: 8;
 }
 
 .right {
-  border-left: 1px solid #173824;
+  background: #0f0f14;
+  border-left: 1px solid rgba(255, 255, 255, 0.05);
   overflow: auto;
-  padding: 18px clamp(10px, 1.2vw, 18px) 0 clamp(10px, 1.4vw, 22px);
+  padding: 12px;
   min-width: 0;
 }
 
@@ -29,7 +31,7 @@
   align-items: center;
   display: flex;
   gap: 0.75rem;
-  margin: 0 6px 42px;
+  margin: 0 12px 32px;
 }
 
 .brandLogo {
@@ -49,7 +51,7 @@
 
 .nav {
   display: grid;
-  gap: 0.6rem;
+  gap: 0.25rem;
   min-height: 0;
 }
 
@@ -60,16 +62,18 @@
   align-items: center;
   display: flex;
   gap: 0.72rem;
-  min-height: 52px;
+  min-height: 48px;
   padding: 0 16px;
-  color: #cde8d8;
+  color: #9ca3af;
   text-decoration: none;
   border-radius: 8px;
   transition: background 160ms ease, color 160ms ease, transform 160ms ease;
 }
 
 .nav a {
-  font-size: 17px;
+  font-size: 14px;
+  font-weight: 600;
+  position: relative;
 }
 
 .nav a svg {
@@ -81,15 +85,25 @@
 .nav a:hover,
 .toolLink:hover,
 .adminLink:hover {
-  background: rgba(16, 185, 129, 0.12);
+  background: rgba(255, 255, 255, 0.05);
   color: #f4fff8;
 }
 
 .activeNav {
-  background: #000;
-  border: 1px solid #245b3a;
-  box-shadow: inset 5px 0 0 #13d27b;
+  background: rgba(16, 185, 129, 0.05);
+  border: 0;
   color: #13d27b !important;
+}
+
+.activeNav::before {
+  background: #13d27b;
+  border-radius: 0 999px 999px 0;
+  bottom: 8px;
+  content: "";
+  left: 0;
+  position: absolute;
+  top: 8px;
+  width: 4px;
 }
 
 .profile,
@@ -103,14 +117,21 @@
 }
 
 .profile {
+  align-items: flex-start;
+  background: linear-gradient(135deg, rgba(8, 145, 178, 0.2), rgba(29, 78, 216, 0.18));
+  border: 1px solid rgba(34, 211, 238, 0.2);
+  box-shadow: none;
   display: flex;
   gap: 12px;
-  align-items: center;
-  margin: auto 6px 16px;
-  padding: 0;
-  border: 0;
-  background: transparent;
-  box-shadow: none;
+  margin: auto 3px 0;
+  padding: 14px;
+  transition: border-color 160ms ease, background 160ms ease, transform 160ms ease;
+}
+
+.profile:hover {
+  background: linear-gradient(135deg, rgba(8, 145, 178, 0.3), rgba(29, 78, 216, 0.26));
+  border-color: rgba(34, 211, 238, 0.38);
+  transform: translateY(-1px);
 }
 
 .profile strong,
@@ -183,13 +204,13 @@
 
 .searchBox {
   align-items: center;
-  background: #000000;
-  border: 1px solid #173824;
-  border-radius: 21px;
+  background: transparent;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 999px;
   color: #92aa9b;
   display: flex;
   gap: 0.7rem;
-  height: 42px;
+  height: 44px;
   padding: 0 1rem;
   min-width: 0;
 }
@@ -223,28 +244,28 @@
 }
 
 .marketPanel {
-  background: #000;
-  border: 1px solid rgba(14, 91, 57, 0.85);
+  background: #0a0a0f;
+  border: 1px solid rgba(255, 255, 255, 0.05);
   border-radius: 8px;
-  margin-top: 18px;
-  padding: 16px 12px;
+  margin-top: 12px;
+  padding: 12px;
   min-width: 0;
   overflow: hidden;
 }
 
 .marketTitle {
   align-items: center;
-  background: #00140d;
+  background: transparent;
   border: 1px solid rgba(0, 227, 138, 0.9);
   border-radius: 6px;
-  color: #e8f3ed;
+  color: #13d27b;
   display: inline-flex;
   font-size: 11px;
-  font-weight: 800;
+  font-weight: 650;
   gap: 5px;
-  height: 23px;
+  height: 26px;
   padding: 0 10px;
-  width: 138px;
+  width: fit-content;
 }
 
 .marketTitle svg {
@@ -281,11 +302,11 @@
 
 .marketRow {
   display: grid;
-  grid-template-columns: minmax(58px, 84px) minmax(54px, 1fr) minmax(56px, 72px);
+  grid-template-columns: minmax(58px, 76px) minmax(54px, 1fr) minmax(56px, 72px);
   align-items: center;
   justify-content: space-between;
   column-gap: clamp(8px, 2vw, 18px);
-  height: 42px;
+  height: 40px;
   border-top: 0;
 }
 
