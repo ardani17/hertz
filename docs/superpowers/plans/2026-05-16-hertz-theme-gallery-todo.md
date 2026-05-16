@@ -321,11 +321,11 @@ Commit:
 **Files:**
 - Create or update if useful: `docs/frontend-audit/<date>-hertz-owner-regression.md`
 
-- [ ] With a Telegram member session, create a HERTZ post. **Blocked:** no authenticated Telegram member session is available in this agent session.
-- [ ] Confirm owner menu shows Edit post and Delete post. **Blocked:** requires authenticated Telegram owner session.
+- [ ] With a Telegram member session, create a HERTZ post. **Pending live refresh/manual flow:** owner account `ARDANI | vastara.id` is confirmed, but full create/edit/delete needs the refreshed frontend container.
+- [ ] Confirm owner menu shows Edit post and Delete post. **Pending live refresh:** API returns `viewer.canEdit/canDelete: true`; running container still served the older menu during verification.
 - [ ] Edit the post and confirm content changes. **Blocked:** requires authenticated Telegram owner session.
 - [ ] Delete the post and confirm it disappears from feed/detail. **Blocked:** requires authenticated Telegram owner session.
-- [ ] Check a non-owner or guest view only shows allowed actions such as Salin link/Report. **Blocked:** non-owner guest/code behavior documented; full browser regression needs separate authenticated/non-owner session.
+- [ ] Check a non-owner or guest view only shows allowed actions such as Salin link/Report. **Pending manual/non-owner session:** guest/code behavior documented; full browser regression needs separate authenticated/non-owner session.
 - [x] If Telegram session cannot be provided, document this as blocked with exact missing prerequisite.
 
 Verification:

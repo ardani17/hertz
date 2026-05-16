@@ -32,7 +32,12 @@ export function HertzPostMenu({ post, currentUser }: { post: HertzPost; currentU
     confidencePercent: post.market?.confidencePercent?.toString() ?? '',
   });
   const effectiveUser = currentUser ?? menuUser;
-  const isOwnerOrAdmin = Boolean(effectiveUser && (effectiveUser.id === post.author.id || effectiveUser.role === 'admin'));
+  const sameAuthorIdentity = Boolean(effectiveUser && (
+    effectiveUser.id === post.author.id
+    || (effectiveUser.username && post.author.username && effectiveUser.username === post.author.username)
+    || effectiveUser.displayName === post.author.name
+  ));
+  const isOwnerOrAdmin = Boolean(effectiveUser && (sameAuthorIdentity || effectiveUser.role === 'admin'));
   const canReport = Boolean(effectiveUser);
   const canQuote = Boolean(effectiveUser);
   const canEdit = Boolean(post.viewer.canEdit || isOwnerOrAdmin);
