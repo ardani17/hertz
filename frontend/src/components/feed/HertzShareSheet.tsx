@@ -3,6 +3,7 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
 import type { HertzPost } from '@shared/types';
 import { Button } from '@/components/ui/button';
+import { trapFocusWithin } from '@/lib/focusTrap';
 import styles from './HertzShareSheet.module.css';
 
 export interface HertzShareTarget {
@@ -100,6 +101,7 @@ export function HertzShareSheet({
         role="dialog"
         aria-modal="true"
         aria-labelledby={`share-title-${post.id}`}
+        onKeyDown={(event) => trapFocusWithin(event.currentTarget, event)}
         onClick={(event) => event.stopPropagation()}
       >
         <div className={styles.header}>

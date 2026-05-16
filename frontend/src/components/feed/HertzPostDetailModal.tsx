@@ -3,6 +3,7 @@
 import { useEffect, useRef, useState } from 'react';
 import type { HertzPostDetail, MemberSessionUser } from '@shared/types';
 import { Button } from '@/components/ui/button';
+import { trapFocusWithin } from '@/lib/focusTrap';
 import {
   getHertzPostDetailMobileMarketPosition,
   shouldOpenDesktopPostModal,
@@ -75,6 +76,7 @@ export function HertzPostDetailModal({
         role="dialog"
         aria-modal="true"
         aria-labelledby={`post-detail-modal-${shortId}`}
+        onKeyDown={(event) => trapFocusWithin(event.currentTarget, event)}
         onClick={(event) => event.stopPropagation()}
       >
         <div className={styles.header}>

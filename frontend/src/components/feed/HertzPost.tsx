@@ -4,6 +4,7 @@ import Link from 'next/link';
 import { useRef, useState } from 'react';
 import type { MemberSessionUser, HertzPost } from '@shared/types';
 import { getHertzHashtagHref, splitHertzHashtagText } from '@/lib/hertzSearchUi';
+import { getPlainRepostLabel, isPlainRepostTimelineItem } from '@/lib/hertzRepostUi';
 import { HertzActionBar } from './HertzActionBar';
 import { HertzAuthorLine } from './HertzAuthorLine';
 import { HertzAvatar } from './HertzAvatar';
@@ -50,7 +51,7 @@ export function HertzPostCard({
   currentUser: MemberSessionUser | null;
   enableDesktopModal?: boolean;
 }) {
-  const isPlainRepost = post.type === 'repost' && post.quotedPost;
+  const isPlainRepost = isPlainRepostTimelineItem(post);
   const [detailOpen, setDetailOpen] = useState(false);
   const triggerRef = useRef<HTMLDivElement | null>(null);
 
@@ -80,7 +81,7 @@ export function HertzPostCard({
             <HertzAuthorLine post={post} />
             <HertzPostMenu post={post} currentUser={currentUser} />
           </div>
-          {isPlainRepost ? <p className={styles.repostLabel}>Merepost</p> : <p className={styles.content}><HertzPostText text={post.content.text} /></p>}
+          {isPlainRepost ? <p className={styles.repostLabel}>{getPlainRepostLabel(post)}</p> : <p className={styles.content}><HertzPostText text={post.content.text} /></p>}
           {post.content.isTruncated ? (
             <Link className={styles.readMore} href={`/hertz/post/${post.shortId}`}>Baca lanjut</Link>
           ) : null}

@@ -3,6 +3,7 @@
 import { useState, type FormEvent } from 'react';
 import type { MarketContext, MemberSessionUser, HertzPost } from '@shared/types';
 import { Button } from '@/components/ui/button';
+import { trapFocusWithin } from '@/lib/focusTrap';
 import { HertzDeletePostDialog } from './HertzDeletePostDialog';
 import { MoreIcon } from './HertzIcons';
 import { buildCanonicalPostUrl } from './HertzShareSheet';
@@ -214,7 +215,7 @@ export function HertzPostMenu({ post, currentUser }: { post: HertzPost; currentU
         <MoreIcon />
       </Button>
       {open ? (
-        <div className={styles.menu}>
+        <div className={styles.menu} role="menu" onKeyDown={(event) => trapFocusWithin(event.currentTarget, event)}>
           <Button type="button" variant="ghost" size="sm" onClick={copyLink}>Salin link</Button>
           {checkingAuth ? <Button type="button" variant="ghost" size="sm" disabled>Cek login...</Button> : null}
           {canQuote ? <Button type="button" variant="ghost" size="sm" onClick={() => { closePanels(); setQuoteOpen(true); setOpen(false); }}>Quote postingan</Button> : null}
@@ -227,7 +228,7 @@ export function HertzPostMenu({ post, currentUser }: { post: HertzPost; currentU
       ) : null}
       {reportOpen ? (
         <div className={styles.modalBackdrop} role="presentation" onClick={(event) => { event.stopPropagation(); closePanels(); }}>
-          <form className={styles.panel} role="dialog" aria-modal="true" aria-labelledby={`report-title-${post.id}`} onSubmit={submitReport} onClick={(event) => event.stopPropagation()}>
+          <form className={styles.panel} role="dialog" aria-modal="true" aria-labelledby={`report-title-${post.id}`} onSubmit={submitReport} onKeyDown={(event) => trapFocusWithin(event.currentTarget, event)} onClick={(event) => event.stopPropagation()}>
             <div className={styles.panelHeader}>
               <h2 id={`report-title-${post.id}`}>Laporkan postingan</h2>
               <Button type="button" variant="ghost" size="icon-sm" className={styles.closeButton} onClick={closePanels} aria-label="Tutup laporan">×</Button>
@@ -250,7 +251,7 @@ export function HertzPostMenu({ post, currentUser }: { post: HertzPost; currentU
       ) : null}
       {quoteOpen ? (
         <div className={styles.modalBackdrop} role="presentation" onClick={(event) => { event.stopPropagation(); closePanels(); }}>
-          <form className={styles.panel} role="dialog" aria-modal="true" aria-labelledby={`quote-title-${post.id}`} onSubmit={submitQuote} onClick={(event) => event.stopPropagation()}>
+          <form className={styles.panel} role="dialog" aria-modal="true" aria-labelledby={`quote-title-${post.id}`} onSubmit={submitQuote} onKeyDown={(event) => trapFocusWithin(event.currentTarget, event)} onClick={(event) => event.stopPropagation()}>
             <div className={styles.panelHeader}>
               <h2 id={`quote-title-${post.id}`}>Quote postingan</h2>
               <Button type="button" variant="ghost" size="icon-sm" className={styles.closeButton} onClick={closePanels} aria-label="Tutup quote">×</Button>
@@ -266,7 +267,7 @@ export function HertzPostMenu({ post, currentUser }: { post: HertzPost; currentU
       ) : null}
       {editOpen ? (
         <div className={styles.modalBackdrop} role="presentation" onClick={(event) => { event.stopPropagation(); closePanels(); }}>
-          <form className={styles.panel} role="dialog" aria-modal="true" aria-labelledby={`edit-title-${post.id}`} onSubmit={submitEdit} onClick={(event) => event.stopPropagation()}>
+          <form className={styles.panel} role="dialog" aria-modal="true" aria-labelledby={`edit-title-${post.id}`} onSubmit={submitEdit} onKeyDown={(event) => trapFocusWithin(event.currentTarget, event)} onClick={(event) => event.stopPropagation()}>
             <div className={styles.panelHeader}>
               <h2 id={`edit-title-${post.id}`}>Edit postingan</h2>
               <Button type="button" variant="ghost" size="icon-sm" className={styles.closeButton} onClick={closePanels} aria-label="Tutup edit">×</Button>
@@ -282,7 +283,7 @@ export function HertzPostMenu({ post, currentUser }: { post: HertzPost; currentU
       ) : null}
       {marketOpen ? (
         <div className={styles.modalBackdrop} role="presentation" onClick={(event) => { event.stopPropagation(); closePanels(); }}>
-          <form className={`${styles.panel} ${styles.marketPanel}`} role="dialog" aria-modal="true" aria-labelledby={`market-title-${post.id}`} onSubmit={submitMarket} onClick={(event) => event.stopPropagation()}>
+          <form className={`${styles.panel} ${styles.marketPanel}`} role="dialog" aria-modal="true" aria-labelledby={`market-title-${post.id}`} onSubmit={submitMarket} onKeyDown={(event) => trapFocusWithin(event.currentTarget, event)} onClick={(event) => event.stopPropagation()}>
             <div className={styles.panelHeader}>
               <h2 id={`market-title-${post.id}`}>Edit metadata market</h2>
               <Button type="button" variant="ghost" size="icon-sm" className={styles.closeButton} onClick={closePanels} aria-label="Tutup metadata market">×</Button>

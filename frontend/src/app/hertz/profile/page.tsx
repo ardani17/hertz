@@ -6,6 +6,8 @@ import { buildProfileActivityTabs, HertzProfileService, type HertzProfileActivit
 import { HertzAppShell } from '@/components/hertz/HertzAppShell';
 import { HertzTelegramLogin } from '@/components/feed/HertzTelegramLogin';
 import { getCurrentMember } from '@/lib/memberAuth';
+import type { ProfileActivityTab } from '@/lib/hertzProfileActivity';
+import { ProfileActivityTabs } from './ProfileActivityTabs';
 import styles from './page.module.css';
 
 export const dynamic = 'force-dynamic';
@@ -61,36 +63,11 @@ function formatDate(value: Date | string) {
   }).format(date);
 }
 
-function ActivitySection({
-  title,
-  empty,
-  items,
-}: {
-  title: string;
-  empty: string;
-  items: HertzProfileActivity['posts'];
-}) {
-  return (
-    <div className={styles.activitySection}>
-      <h3>{title}</h3>
-      <div className={styles.activityGrid}>
-        {items.length > 0 ? items.map((item) => (
-          <Link key={item.id} href={`/hertz/post/${item.shortId}`}>
-            <span>{item.label}</span>
-            <strong>{item.text || 'Postingan HERTZ'}</strong>
-            <em>{formatDate(item.createdAt)}</em>
-          </Link>
-        )) : <p>{empty}</p>}
-      </div>
-    </div>
-  );
-}
-
 export default async function HertzProfilePage() {
   const currentUser = await getCurrentMember();
   const credit = await getCreditSummary(currentUser?.id ?? null);
   const activity = await getActivity(currentUser?.id ?? null);
-  const tabs = activity ? buildProfileActivityTabs(activity) : [];
+  const tabs = activity ? buildProfileActivityTabs(activity) as ProfileActivityTab[] : [];
 
   return (
     <HertzAppShell
@@ -163,24 +140,7 @@ export default async function HertzProfilePage() {
             <section className={`${styles.panel} ${styles.historyPanel}`}>
               <span className={styles.badge}>Aktivitas</span>
               <h2>Aktivitas HERTZ</h2>
-              <div className={styles.tabs}>
-                {tabs.map((tab) => (
-                  <span key={tab.key}>
-                    {tab.label}
-                    {tab.count === null ? null : <strong>{tab.count}</strong>}
-                  </span>
-                ))}
-              </div>
-              <div className={styles.activitySections}>
-                <ActivitySection title="Post saya" empty="Belum ada postingan yang dibuat." items={activity.posts} />
-                <ActivitySection title="Disimpan" empty="Belum ada postingan yang disimpan." items={activity.saved} />
-                <ActivitySection title="Repost saya" empty="Belum ada repost yang aktif." items={activity.reposts} />
-                <ActivitySection title="Komentar saya" empty="Belum ada komentar yang tercatat." items={activity.comments} />
-              </div>
-              <div className={styles.sessionActions}>
-                <Link href="/hertz/profile">Credit/history</Link>
-                <Link href="/hertz/profile">Setting Telegram/session</Link>
-              </div>
+              <ProfileActivityTabs activity={activity} tabs={tabs} />
             </section>
           ) : null}
         </div>
