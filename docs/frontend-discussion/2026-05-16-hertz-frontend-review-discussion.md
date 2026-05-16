@@ -4,6 +4,20 @@ Tanggal: 16 Mei 2026
 Status: Draft diskusi sebelum spec  
 Tujuan: review frontend satu per satu, mencatat keputusan, lalu menurunkannya menjadi spec/todo implementasi yang jelas.
 
+## Target Experience
+
+Keputusan produk utama: saat user memakai HERTZ, pengalaman harus terasa seperti memakai **Twitter/X untuk komunitas trading**.
+
+Artinya:
+
+- HERTZ harus terasa sebagai social timeline yang hidup, bukan forum statis.
+- Post harus cepat dibaca, cepat dibalas, cepat direpost, cepat disimpan, dan cepat dibagikan.
+- Desktop harus mendukung browsing feed tanpa kehilangan posisi scroll.
+- Mobile harus terasa seperti aplikasi sosial: navigasi ringkas, action cepat, detail post nyaman, dan composer mudah dijangkau.
+- Repost, quote, reply/comment, like/suka, bookmark/simpan, share, profile activity, dan DM harus terasa sebagai bagian dari satu pengalaman sosial.
+- Trading context seperti market rail dan metadata setup tetap penting, tetapi tidak boleh mengalahkan alur sosial utama.
+- Bahasa dan microcopy harus konsisten agar produk terasa matang.
+
 ## Cara Pakai Dokumen Ini
 
 Dokumen ini bukan spec final. Ini tempat diskusi agar scope tidak melebar saat masuk implementasi.
@@ -452,6 +466,8 @@ Prioritas dari 9 temuan tambahan:
 ### Review Perspektif Pengguna Sosial Media
 
 Review ini melihat HERTZ sebagai produk sosial media, bukan hanya sebagai halaman yang tidak overflow.
+
+Target rasa produk: **seperti Twitter/X untuk komunitas trading**.
 
 Perangkat yang dicek live:
 
