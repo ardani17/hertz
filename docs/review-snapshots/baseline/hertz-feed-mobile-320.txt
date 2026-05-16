@@ -83,7 +83,7 @@
                       <span> via Telegram
                       <span> XAUUSD
                       <span> Risk 1 %
-                      <span> 6h
+                      <span> [relative-time]
                   <div class="HertzPostMenu-module__wpNBIa__wrap">
                     <button class="inline-flex shrink-0 items-center justify-center gap-2 rounded-md text-sm font-medium whitespace-nowrap transition-all outline-none focus-visible:border-ring focus-visible:ring-[3px] focus-visible:ring-ring/50 disabled:pointer-events-none disabled:opacity-50 aria-invalid:border-destructive aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 [&_svg]:pointer-events-none [&_svg]:shrink-0 [&_svg:not([class*='size-'])]:size-4 hover:bg-accent hover:text-accent-foreground dark:hover:bg-accent/50 size-8 HertzPostMenu-module__wpNBIa__trigger" aria-label="Aksi postingan" type="button">
                       <svg>
@@ -141,7 +141,7 @@
                       <span> via Web
                       <span> xau
                       <span> Risk 2 %
-                      <span> 1h
+                      <span> [relative-time]
                   <div class="HertzPostMenu-module__wpNBIa__wrap">
                     <button class="inline-flex shrink-0 items-center justify-center gap-2 rounded-md text-sm font-medium whitespace-nowrap transition-all outline-none focus-visible:border-ring focus-visible:ring-[3px] focus-visible:ring-ring/50 disabled:pointer-events-none disabled:opacity-50 aria-invalid:border-destructive aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 [&_svg]:pointer-events-none [&_svg]:shrink-0 [&_svg:not([class*='size-'])]:size-4 hover:bg-accent hover:text-accent-foreground dark:hover:bg-accent/50 size-8 HertzPostMenu-module__wpNBIa__trigger" aria-label="Aksi postingan" type="button">
                       <svg>
@@ -197,7 +197,7 @@
                       <span class="HertzPost-module__Itjpeq__generalBadge"> General
                     <div class="HertzPost-module__Itjpeq__metaLine">
                       <span> via Web
-                      <span> 2h
+                      <span> [relative-time]
                   <div class="HertzPostMenu-module__wpNBIa__wrap">
                     <button class="inline-flex shrink-0 items-center justify-center gap-2 rounded-md text-sm font-medium whitespace-nowrap transition-all outline-none focus-visible:border-ring focus-visible:ring-[3px] focus-visible:ring-ring/50 disabled:pointer-events-none disabled:opacity-50 aria-invalid:border-destructive aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 [&_svg]:pointer-events-none [&_svg]:shrink-0 [&_svg:not([class*='size-'])]:size-4 hover:bg-accent hover:text-accent-foreground dark:hover:bg-accent/50 size-8 HertzPostMenu-module__wpNBIa__trigger" aria-label="Aksi postingan" type="button">
                       <svg>
@@ -240,7 +240,7 @@
                       <span class="HertzPost-module__Itjpeq__generalBadge"> General
                     <div class="HertzPost-module__Itjpeq__metaLine">
                       <span> via Web
-                      <span> 2h
+                      <span> [relative-time]
                   <div class="HertzPostMenu-module__wpNBIa__wrap">
                     <button class="inline-flex shrink-0 items-center justify-center gap-2 rounded-md text-sm font-medium whitespace-nowrap transition-all outline-none focus-visible:border-ring focus-visible:ring-[3px] focus-visible:ring-ring/50 disabled:pointer-events-none disabled:opacity-50 aria-invalid:border-destructive aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 [&_svg]:pointer-events-none [&_svg]:shrink-0 [&_svg:not([class*='size-'])]:size-4 hover:bg-accent hover:text-accent-foreground dark:hover:bg-accent/50 size-8 HertzPostMenu-module__wpNBIa__trigger" aria-label="Aksi postingan" type="button">
                       <svg>
@@ -283,7 +283,7 @@
                       <span class="HertzPost-module__Itjpeq__generalBadge"> General
                     <div class="HertzPost-module__Itjpeq__metaLine">
                       <span> via Web
-                      <span> 3h
+                      <span> [relative-time]
                   <div class="HertzPostMenu-module__wpNBIa__wrap">
                     <button class="inline-flex shrink-0 items-center justify-center gap-2 rounded-md text-sm font-medium whitespace-nowrap transition-all outline-none focus-visible:border-ring focus-visible:ring-[3px] focus-visible:ring-ring/50 disabled:pointer-events-none disabled:opacity-50 aria-invalid:border-destructive aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 [&_svg]:pointer-events-none [&_svg]:shrink-0 [&_svg:not([class*='size-'])]:size-4 hover:bg-accent hover:text-accent-foreground dark:hover:bg-accent/50 size-8 HertzPostMenu-module__wpNBIa__trigger" aria-label="Aksi postingan" type="button">
                       <svg>
@@ -327,7 +327,7 @@
                       <span class="HertzPost-module__Itjpeq__lifeBadge"> Life
                     <div class="HertzPost-module__Itjpeq__metaLine">
                       <span> via Web
-                      <span> 3h
+                      <span> [relative-time]
                   <div class="HertzPostMenu-module__wpNBIa__wrap">
                     <button class="inline-flex shrink-0 items-center justify-center gap-2 rounded-md text-sm font-medium whitespace-nowrap transition-all outline-none focus-visible:border-ring focus-visible:ring-[3px] focus-visible:ring-ring/50 disabled:pointer-events-none disabled:opacity-50 aria-invalid:border-destructive aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 [&_svg]:pointer-events-none [&_svg]:shrink-0 [&_svg:not([class*='size-'])]:size-4 hover:bg-accent hover:text-accent-foreground dark:hover:bg-accent/50 size-8 HertzPostMenu-module__wpNBIa__trigger" aria-label="Aksi postingan" type="button">
                       <svg>
@@ -370,7 +370,7 @@
                       <span class="HertzPost-module__Itjpeq__generalBadge"> General
                     <div class="HertzPost-module__Itjpeq__metaLine">
                       <span> via Web
-                      <span> 3h
+                      <span> [relative-time]
                   <div class="HertzPostMenu-module__wpNBIa__wrap">
                     <button class="inline-flex shrink-0 items-center justify-center gap-2 rounded-md text-sm font-medium whitespace-nowrap transition-all outline-none focus-visible:border-ring focus-visible:ring-[3px] focus-visible:ring-ring/50 disabled:pointer-events-none disabled:opacity-50 aria-invalid:border-destructive aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 [&_svg]:pointer-events-none [&_svg]:shrink-0 [&_svg:not([class*='size-'])]:size-4 hover:bg-accent hover:text-accent-foreground dark:hover:bg-accent/50 size-8 HertzPostMenu-module__wpNBIa__trigger" aria-label="Aksi postingan" type="button">
                       <svg>
@@ -415,7 +415,7 @@
                       <span> via Web
                       <span> EURUSD
                       <span> Risk 0.75 %
-                      <span> 6h
+                      <span> [relative-time]
                   <div class="HertzPostMenu-module__wpNBIa__wrap">
                     <button class="inline-flex shrink-0 items-center justify-center gap-2 rounded-md text-sm font-medium whitespace-nowrap transition-all outline-none focus-visible:border-ring focus-visible:ring-[3px] focus-visible:ring-ring/50 disabled:pointer-events-none disabled:opacity-50 aria-invalid:border-destructive aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 [&_svg]:pointer-events-none [&_svg]:shrink-0 [&_svg:not([class*='size-'])]:size-4 hover:bg-accent hover:text-accent-foreground dark:hover:bg-accent/50 size-8 HertzPostMenu-module__wpNBIa__trigger" aria-label="Aksi postingan" type="button">
                       <svg>
@@ -472,7 +472,7 @@
                       <span class="HertzPost-module__Itjpeq__lifeBadge"> Life
                     <div class="HertzPost-module__Itjpeq__metaLine">
                       <span> via Web
-                      <span> 7h
+                      <span> [relative-time]
                   <div class="HertzPostMenu-module__wpNBIa__wrap">
                     <button class="inline-flex shrink-0 items-center justify-center gap-2 rounded-md text-sm font-medium whitespace-nowrap transition-all outline-none focus-visible:border-ring focus-visible:ring-[3px] focus-visible:ring-ring/50 disabled:pointer-events-none disabled:opacity-50 aria-invalid:border-destructive aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 [&_svg]:pointer-events-none [&_svg]:shrink-0 [&_svg:not([class*='size-'])]:size-4 hover:bg-accent hover:text-accent-foreground dark:hover:bg-accent/50 size-8 HertzPostMenu-module__wpNBIa__trigger" aria-label="Aksi postingan" type="button">
                       <svg>
@@ -515,7 +515,7 @@
                       <span class="HertzPost-module__Itjpeq__generalBadge"> General
                     <div class="HertzPost-module__Itjpeq__metaLine">
                       <span> via Web
-                      <span> 7h
+                      <span> [relative-time]
                   <div class="HertzPostMenu-module__wpNBIa__wrap">
                     <button class="inline-flex shrink-0 items-center justify-center gap-2 rounded-md text-sm font-medium whitespace-nowrap transition-all outline-none focus-visible:border-ring focus-visible:ring-[3px] focus-visible:ring-ring/50 disabled:pointer-events-none disabled:opacity-50 aria-invalid:border-destructive aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 [&_svg]:pointer-events-none [&_svg]:shrink-0 [&_svg:not([class*='size-'])]:size-4 hover:bg-accent hover:text-accent-foreground dark:hover:bg-accent/50 size-8 HertzPostMenu-module__wpNBIa__trigger" aria-label="Aksi postingan" type="button">
                       <svg>
@@ -560,7 +560,7 @@
                       <span> via Telegram
                       <span> BTC/USDT
                       <span> Risk 0.5 %
-                      <span> 7h
+                      <span> [relative-time]
                   <div class="HertzPostMenu-module__wpNBIa__wrap">
                     <button class="inline-flex shrink-0 items-center justify-center gap-2 rounded-md text-sm font-medium whitespace-nowrap transition-all outline-none focus-visible:border-ring focus-visible:ring-[3px] focus-visible:ring-ring/50 disabled:pointer-events-none disabled:opacity-50 aria-invalid:border-destructive aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 [&_svg]:pointer-events-none [&_svg]:shrink-0 [&_svg:not([class*='size-'])]:size-4 hover:bg-accent hover:text-accent-foreground dark:hover:bg-accent/50 size-8 HertzPostMenu-module__wpNBIa__trigger" aria-label="Aksi postingan" type="button">
                       <svg>
@@ -617,7 +617,7 @@
                       <span class="HertzPost-module__Itjpeq__lifeBadge"> Life
                     <div class="HertzPost-module__Itjpeq__metaLine">
                       <span> via Web
-                      <span> 8h
+                      <span> [relative-time]
                   <div class="HertzPostMenu-module__wpNBIa__wrap">
                     <button class="inline-flex shrink-0 items-center justify-center gap-2 rounded-md text-sm font-medium whitespace-nowrap transition-all outline-none focus-visible:border-ring focus-visible:ring-[3px] focus-visible:ring-ring/50 disabled:pointer-events-none disabled:opacity-50 aria-invalid:border-destructive aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 [&_svg]:pointer-events-none [&_svg]:shrink-0 [&_svg:not([class*='size-'])]:size-4 hover:bg-accent hover:text-accent-foreground dark:hover:bg-accent/50 size-8 HertzPostMenu-module__wpNBIa__trigger" aria-label="Aksi postingan" type="button">
                       <svg>
@@ -660,7 +660,7 @@
                       <span class="HertzPost-module__Itjpeq__generalBadge"> General
                     <div class="HertzPost-module__Itjpeq__metaLine">
                       <span> via Web
-                      <span> 8h
+                      <span> [relative-time]
                   <div class="HertzPostMenu-module__wpNBIa__wrap">
                     <button class="inline-flex shrink-0 items-center justify-center gap-2 rounded-md text-sm font-medium whitespace-nowrap transition-all outline-none focus-visible:border-ring focus-visible:ring-[3px] focus-visible:ring-ring/50 disabled:pointer-events-none disabled:opacity-50 aria-invalid:border-destructive aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 [&_svg]:pointer-events-none [&_svg]:shrink-0 [&_svg:not([class*='size-'])]:size-4 hover:bg-accent hover:text-accent-foreground dark:hover:bg-accent/50 size-8 HertzPostMenu-module__wpNBIa__trigger" aria-label="Aksi postingan" type="button">
                       <svg>
@@ -705,29 +705,29 @@
               <svg class="HertzRails-module__j2on7W__sparkline">
                 <path>
               <div>
-                <b> 4,555.80
-                <em class="HertzRails-module__j2on7W__down"> -2.61%
+                <b> [market-price]
+                <em class="HertzRails-module__j2on7W__down"> [market-change]
             <div class="HertzRails-module__j2on7W__marketRow">
               <strong> EURUSD
               <svg class="HertzRails-module__j2on7W__sparkline">
                 <path>
               <div>
-                <b> 1.16310
-                <em class="HertzRails-module__j2on7W__down"> -0.34%
+                <b> [market-price]
+                <em class="HertzRails-module__j2on7W__down"> [market-change]
             <div class="HertzRails-module__j2on7W__marketRow">
               <strong> GBPUSD
               <svg class="HertzRails-module__j2on7W__sparkline">
                 <path>
               <div>
-                <b> 1.33240
-                <em class="HertzRails-module__j2on7W__down"> -0.58%
+                <b> [market-price]
+                <em class="HertzRails-module__j2on7W__down"> [market-change]
             <div class="HertzRails-module__j2on7W__marketRow">
               <strong> USDJPY
               <svg class="HertzRails-module__j2on7W__sparkline">
                 <path>
               <div>
-                <b> 158.73
-                <em class="HertzRails-module__j2on7W__up"> +0.24%
+                <b> [market-price]
+                <em class="HertzRails-module__j2on7W__up"> [market-change]
             <p class="HertzRails-module__j2on7W__marketSource"> GlobalData: Yahoo Finance · Update [time] WIB
           <section class="HertzRails-module__j2on7W__marketPanel">
             <div class="HertzRails-module__j2on7W__marketTitle">
@@ -739,29 +739,29 @@
               <svg class="HertzRails-module__j2on7W__sparkline">
                 <path>
               <div>
-                <b> 78,091.52
-                <em class="HertzRails-module__j2on7W__down"> -2.85%
+                <b> [market-price]
+                <em class="HertzRails-module__j2on7W__down"> [market-change]
             <div class="HertzRails-module__j2on7W__marketRow">
               <strong> ETH/USDT
               <svg class="HertzRails-module__j2on7W__sparkline">
                 <path>
               <div>
-                <b> 2,173.57
-                <em class="HertzRails-module__j2on7W__down"> -3.55%
+                <b> [market-price]
+                <em class="HertzRails-module__j2on7W__down"> [market-change]
             <div class="HertzRails-module__j2on7W__marketRow">
               <strong> SOL/USDT
               <svg class="HertzRails-module__j2on7W__sparkline">
                 <path>
               <div>
-                <b> 86.130
-                <em class="HertzRails-module__j2on7W__down"> -5.37%
+                <b> [market-price]
+                <em class="HertzRails-module__j2on7W__down"> [market-change]
             <div class="HertzRails-module__j2on7W__marketRow">
               <strong> BNB/USDT
               <svg class="HertzRails-module__j2on7W__sparkline">
                 <path>
               <div>
-                <b> 652.20
-                <em class="HertzRails-module__j2on7W__down"> -4.42%
+                <b> [market-price]
+                <em class="HertzRails-module__j2on7W__down"> [market-change]
             <p class="HertzRails-module__j2on7W__marketSource"> GlobalData: Binance · Update [time] WIB
           <section class="HertzRails-module__j2on7W__marketPanel">
             <div class="HertzRails-module__j2on7W__marketTitle">
@@ -773,29 +773,29 @@
               <svg class="HertzRails-module__j2on7W__sparkline">
                 <path>
               <div>
-                <b> 26,225.15
-                <em class="HertzRails-module__j2on7W__down"> -1.54%
+                <b> [market-price]
+                <em class="HertzRails-module__j2on7W__down"> [market-change]
             <div class="HertzRails-module__j2on7W__marketRow">
               <strong> S&P 500
               <svg class="HertzRails-module__j2on7W__sparkline">
                 <path>
               <div>
-                <b> 7,408.50
-                <em class="HertzRails-module__j2on7W__down"> -1.24%
+                <b> [market-price]
+                <em class="HertzRails-module__j2on7W__down"> [market-change]
             <div class="HertzRails-module__j2on7W__marketRow">
               <strong> DOW
               <svg class="HertzRails-module__j2on7W__sparkline">
                 <path>
               <div>
-                <b> 49,526.17
-                <em class="HertzRails-module__j2on7W__down"> -1.07%
+                <b> [market-price]
+                <em class="HertzRails-module__j2on7W__down"> [market-change]
             <div class="HertzRails-module__j2on7W__marketRow">
               <strong> TSLA
               <svg class="HertzRails-module__j2on7W__sparkline">
                 <path>
               <div>
-                <b> 422.24
-                <em class="HertzRails-module__j2on7W__down"> -4.75%
+                <b> [market-price]
+                <em class="HertzRails-module__j2on7W__down"> [market-change]
             <p class="HertzRails-module__j2on7W__marketSource"> GlobalData: Yahoo Finance · Update [time] WIB
       <nav class="MobileBottomNav-module__1pK7LW__mobileNav" aria-label="Mobile navigation">
         <a class="MobileBottomNav-module__1pK7LW__active" aria-label="Home" href="/hertz">

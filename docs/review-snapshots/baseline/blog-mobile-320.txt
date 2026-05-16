@@ -280,29 +280,29 @@
               <svg class="HertzRails-module__j2on7W__sparkline">
                 <path>
               <div>
-                <b> 4,555.80
-                <em class="HertzRails-module__j2on7W__down"> -2.61%
+                <b> [market-price]
+                <em class="HertzRails-module__j2on7W__down"> [market-change]
             <div class="HertzRails-module__j2on7W__marketRow">
               <strong> EURUSD
               <svg class="HertzRails-module__j2on7W__sparkline">
                 <path>
               <div>
-                <b> 1.16310
-                <em class="HertzRails-module__j2on7W__down"> -0.34%
+                <b> [market-price]
+                <em class="HertzRails-module__j2on7W__down"> [market-change]
             <div class="HertzRails-module__j2on7W__marketRow">
               <strong> GBPUSD
               <svg class="HertzRails-module__j2on7W__sparkline">
                 <path>
               <div>
-                <b> 1.33240
-                <em class="HertzRails-module__j2on7W__down"> -0.58%
+                <b> [market-price]
+                <em class="HertzRails-module__j2on7W__down"> [market-change]
             <div class="HertzRails-module__j2on7W__marketRow">
               <strong> USDJPY
               <svg class="HertzRails-module__j2on7W__sparkline">
                 <path>
               <div>
-                <b> 158.73
-                <em class="HertzRails-module__j2on7W__up"> +0.24%
+                <b> [market-price]
+                <em class="HertzRails-module__j2on7W__up"> [market-change]
             <p class="HertzRails-module__j2on7W__marketSource"> GlobalData: Yahoo Finance · Update [time] WIB
           <section class="HertzRails-module__j2on7W__marketPanel">
             <div class="HertzRails-module__j2on7W__marketTitle">
@@ -314,29 +314,29 @@
               <svg class="HertzRails-module__j2on7W__sparkline">
                 <path>
               <div>
-                <b> 78,091.52
-                <em class="HertzRails-module__j2on7W__down"> -2.85%
+                <b> [market-price]
+                <em class="HertzRails-module__j2on7W__down"> [market-change]
             <div class="HertzRails-module__j2on7W__marketRow">
               <strong> ETH/USDT
               <svg class="HertzRails-module__j2on7W__sparkline">
                 <path>
               <div>
-                <b> 2,173.57
-                <em class="HertzRails-module__j2on7W__down"> -3.55%
+                <b> [market-price]
+                <em class="HertzRails-module__j2on7W__down"> [market-change]
             <div class="HertzRails-module__j2on7W__marketRow">
               <strong> SOL/USDT
               <svg class="HertzRails-module__j2on7W__sparkline">
                 <path>
               <div>
-                <b> 86.130
-                <em class="HertzRails-module__j2on7W__down"> -5.37%
+                <b> [market-price]
+                <em class="HertzRails-module__j2on7W__down"> [market-change]
             <div class="HertzRails-module__j2on7W__marketRow">
               <strong> BNB/USDT
               <svg class="HertzRails-module__j2on7W__sparkline">
                 <path>
               <div>
-                <b> 652.20
-                <em class="HertzRails-module__j2on7W__down"> -4.42%
+                <b> [market-price]
+                <em class="HertzRails-module__j2on7W__down"> [market-change]
             <p class="HertzRails-module__j2on7W__marketSource"> GlobalData: Binance · Update [time] WIB
           <section class="HertzRails-module__j2on7W__marketPanel">
             <div class="HertzRails-module__j2on7W__marketTitle">
@@ -348,29 +348,29 @@
               <svg class="HertzRails-module__j2on7W__sparkline">
                 <path>
               <div>
-                <b> 26,225.15
-                <em class="HertzRails-module__j2on7W__down"> -1.54%
+                <b> [market-price]
+                <em class="HertzRails-module__j2on7W__down"> [market-change]
             <div class="HertzRails-module__j2on7W__marketRow">
               <strong> S&P 500
               <svg class="HertzRails-module__j2on7W__sparkline">
                 <path>
               <div>
-                <b> 7,408.50
-                <em class="HertzRails-module__j2on7W__down"> -1.24%
+                <b> [market-price]
+                <em class="HertzRails-module__j2on7W__down"> [market-change]
             <div class="HertzRails-module__j2on7W__marketRow">
               <strong> DOW
               <svg class="HertzRails-module__j2on7W__sparkline">
                 <path>
               <div>
-                <b> 49,526.17
-                <em class="HertzRails-module__j2on7W__down"> -1.07%
+                <b> [market-price]
+                <em class="HertzRails-module__j2on7W__down"> [market-change]
             <div class="HertzRails-module__j2on7W__marketRow">
               <strong> TSLA
               <svg class="HertzRails-module__j2on7W__sparkline">
                 <path>
               <div>
-                <b> 422.24
-                <em class="HertzRails-module__j2on7W__down"> -4.75%
+                <b> [market-price]
+                <em class="HertzRails-module__j2on7W__down"> [market-change]
             <p class="HertzRails-module__j2on7W__marketSource"> GlobalData: Yahoo Finance · Update [time] WIB
       <nav class="MobileBottomNav-module__1pK7LW__mobileNav" aria-label="Mobile navigation">
         <a aria-label="Home" href="/hertz">

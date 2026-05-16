@@ -77,6 +77,10 @@ export function normalizeSnapshotText({ tagName, className, ancestorClassName, t
   const normalizedTag = String(tagName || '').toLowerCase();
   const combinedClassName = `${className || ''} ${ancestorClassName || ''}`;
 
+  if (normalizedTag === 'span' && /^\d+\s*[smhd]$/.test(text)) {
+    return '[relative-time]';
+  }
+
   if (containsToken(className, 'marketSource')) {
     return text.replace(/Update\s+\d{1,2}[.:]\d{2}\s+WIB/g, 'Update [time] WIB');
   }
@@ -129,13 +133,21 @@ async function captureOutline(page) {
         .join(' ')
         .slice(0, 180);
 
-      const ancestorClassName = Array.from(element.parentElement?.classList || []).join(' ');
+      const ancestorClassName = [];
+      for (let current = element.parentElement; current; current = current.parentElement) {
+        ancestorClassName.push(Array.from(current.classList || []).join(' '));
+      }
       const combinedClassName = `${Array.from(element.classList || []).join(' ')} ${ancestorClassName}`;
+      const tagName = element.tagName.toLowerCase();
+
+      if (tagName === 'span' && /^\d+\s*[smhd]$/.test(text)) {
+        return '[relative-time]';
+      }
+
       if (String(element.className || '').toLowerCase().includes('marketsource')) {
         return text.replace(/Update\s+\d{1,2}[.:]\d{2}\s+WIB/g, 'Update [time] WIB');
       }
       if (combinedClassName.toLowerCase().includes('marketrow') || combinedClassName.toLowerCase().includes('mobilemarketitem')) {
-        const tagName = element.tagName.toLowerCase();
         if (tagName === 'b' || tagName === 'span') return '[market-price]';
         if (tagName === 'em') return '[market-change]';
       }
