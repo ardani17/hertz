@@ -5,6 +5,7 @@ import type { MarketContext, MemberSessionUser, HertzPost } from '@shared/types'
 import { Button } from '@/components/ui/button';
 import { HertzDeletePostDialog } from './HertzDeletePostDialog';
 import { MoreIcon } from './HertzIcons';
+import { buildCanonicalPostUrl } from './HertzShareSheet';
 import styles from './HertzPostMenu.module.css';
 
 export function HertzPostMenu({ post, currentUser }: { post: HertzPost; currentUser: MemberSessionUser | null }) {
@@ -70,7 +71,7 @@ export function HertzPostMenu({ post, currentUser }: { post: HertzPost; currentU
   }
 
   async function copyLink() {
-    await navigator.clipboard?.writeText(`${window.location.origin}/hertz/post/${post.shortId}`);
+    await navigator.clipboard?.writeText(buildCanonicalPostUrl(post.shortId, window.location.origin));
     setMessage('Link disalin.');
     setOpen(false);
   }

@@ -4,6 +4,7 @@ import { useState } from 'react';
 import type { MemberSessionUser, HertzPost } from '@shared/types';
 import { Button } from '@/components/ui/button';
 import { BookmarkIcon, CommentIcon, LoveIcon, RepostIcon, ShareIcon } from './HertzIcons';
+import { HertzShareSheet } from './HertzShareSheet';
 import styles from './HertzActionBar.module.css';
 
 export function HertzActionBar({ post, currentUser }: { post: HertzPost; currentUser: MemberSessionUser | null }) {
@@ -14,6 +15,7 @@ export function HertzActionBar({ post, currentUser }: { post: HertzPost; current
   const [bookmarked, setBookmarked] = useState(post.viewer.hasBookmarked);
   const [reposted, setReposted] = useState(post.viewer.hasReposted);
   const [reposts, setReposts] = useState(post.counts.reposts);
+  const [shareOpen, setShareOpen] = useState(false);
 
   function requireLogin() {
     if (!currentUser) {
@@ -83,12 +85,6 @@ export function HertzActionBar({ post, currentUser }: { post: HertzPost; current
     }
   }
 
-  async function copyLink() {
-    const link = `${window.location.origin}/hertz/post/${post.shortId}`;
-    await navigator.clipboard?.writeText(link);
-    setMessage('Link disalin.');
-  }
-
   return (
     <div className={styles.wrap}>
       <div className={styles.actions}>
@@ -96,9 +92,12 @@ export function HertzActionBar({ post, currentUser }: { post: HertzPost; current
         <Button type="button" variant="ghost" size="sm" onClick={togglePulse} className={pulsed ? styles.active : ''} disabled={pendingAction === 'pulse'} aria-label={pulsed ? 'Batal suka' : 'Suka'} aria-pressed={pulsed}><LoveIcon /> <span>Suka</span> {pulses}</Button>
         <Button type="button" variant="ghost" size="sm" onClick={toggleRepost} className={reposted ? styles.active : ''} disabled={pendingAction === 'repost'} aria-label={reposted ? 'Batal repost' : 'Repost'} aria-pressed={reposted}><RepostIcon /> <span>Repost</span> {reposts}</Button>
         <Button type="button" variant="ghost" size="sm" onClick={toggleBookmark} className={bookmarked ? styles.active : ''} disabled={pendingAction === 'bookmark'} aria-label={bookmarked ? 'Batal bookmark' : 'Bookmark'} aria-pressed={bookmarked}><BookmarkIcon /> <span>Simpan</span></Button>
-        <Button type="button" variant="ghost" size="sm" onClick={copyLink} aria-label="Salin link"><ShareIcon /> <span>Bagikan</span></Button>
+        <Button type="button" variant="ghost" size="sm" onClick={() => setShareOpen(true)} aria-label="Bagikan postingan" aria-haspopup="dialog"><ShareIcon /> <span>Bagikan</span></Button>
       </div>
       {message ? <p className={styles.message}>{message}</p> : null}
+      {shareOpen ? (
+        <HertzShareSheet post={post} onClose={() => setShareOpen(false)} onMessage={setMessage} />
+      ) : null}
     </div>
   );
 }

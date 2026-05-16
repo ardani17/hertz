@@ -728,7 +728,7 @@ Centang setelah profile tabs verified dan commit selesai.
 - Modify: `frontend/src/components/feed/HertzPostMenu.tsx`
 - Test: `tests/unit/frontend/shareButtons.test.ts`
 
-- [ ] **Step 1: Tulis test share targets**
+- [x] **Step 1: Tulis test share targets**
 
 Coverage:
 
@@ -743,7 +743,7 @@ Run:
 npm run test -- tests/unit/frontend/shareButtons.test.ts
 ```
 
-- [ ] **Step 2: Implement share sheet**
+- [x] **Step 2: Implement share sheet**
 
 Implementation target:
 
@@ -752,7 +752,7 @@ Implementation target:
 - Feedback `Link disalin`.
 - `Salin link` di menu tiga titik tetap shortcut langsung.
 
-- [ ] **Step 3: Verifikasi**
+- [x] **Step 3: Verifikasi**
 
 Run:
 
@@ -764,7 +764,7 @@ REVIEW_BASE_URL=https://horizon.cloudnexify.com npm run review:a11y
 REVIEW_BASE_URL=https://horizon.cloudnexify.com REVIEW_REPLAY_ROUTE=/hertz REVIEW_REPLAY_SECONDS=30 npm run review:replay
 ```
 
-- [ ] **Step 4: Commit Task 9**
+- [x] **Step 4: Commit Task 9**
 
 Run:
 
@@ -773,7 +773,7 @@ git add frontend/src/components/feed/HertzShareSheet.tsx frontend/src/components
 git commit -m "Add HERTZ social share sheet"
 ```
 
-- [ ] **Ceklist selesai Task 9**
+- [x] **Ceklist selesai Task 9**
 
 Centang setelah share sheet verified dan commit selesai.
 
