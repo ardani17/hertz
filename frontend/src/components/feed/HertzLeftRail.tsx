@@ -3,6 +3,7 @@
 import Image from 'next/image';
 import { Compass, FileText, Hexagon, Home, MessageCircle, SlidersVertical } from 'lucide-react';
 import type { MemberSessionUser } from '@shared/types';
+import { canShowNavItem, getAccessRole } from '@/lib/accessRole';
 import { HertzAvatar } from './HertzAvatar';
 import styles from './HertzRails.module.css';
 
@@ -24,6 +25,9 @@ export function HertzLeftRail({
   currentUser: MemberSessionUser | null;
   active?: ActiveNav;
 }) {
+  const accessRole = getAccessRole(currentUser);
+  const visibleItems = navItems.filter(({ key }) => canShowNavItem(accessRole, key));
+
   return (
     <aside className={styles.left} aria-label="Horizon navigation">
       <div className={styles.brand}>
@@ -38,7 +42,7 @@ export function HertzLeftRail({
         <strong>HERTZ</strong>
       </div>
       <nav className={styles.nav}>
-        {navItems.map(({ key, href, label, Icon }) => (
+        {visibleItems.map(({ key, href, label, Icon }) => (
           <a key={key} href={href} className={active === key ? styles.activeNav : undefined}>
             <Icon />
             {label}

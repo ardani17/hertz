@@ -36,7 +36,7 @@ export function HertzPage({ posts, currentUser, activeCategory, activeSearch, ac
         </section>
         <HertzRightRail activeSearch={activeSearch} />
       </div>
-      <MobileBottomNav active="home" />
+      <MobileBottomNav active="home" currentUser={currentUser} />
     </main>
   );
 }

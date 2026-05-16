@@ -97,7 +97,7 @@ Centang hanya setelah baseline decision jelas: dibuat dan dicommit, atau sengaja
 - Modify: `frontend/src/components/hertz/HertzAppShell.tsx`
 - Test: `tests/unit/frontend/accessRole.test.ts`
 
-- [ ] **Step 1: Tulis test access role**
+- [x] **Step 1: Tulis test access role**
 
 Coverage:
 
@@ -118,7 +118,7 @@ Expected:
 
 - FAIL sebelum helper dibuat.
 
-- [ ] **Step 2: Implement helper dan pakai di nav**
+- [x] **Step 2: Implement helper dan pakai di nav**
 
 Implementation target:
 
@@ -129,7 +129,7 @@ Implementation target:
 - Mobile bottom nav guest menyembunyikan Tools.
 - DM mobile tetap label `DM` dengan accessible label `Direct Message`.
 
-- [ ] **Step 3: Verifikasi unit dan DOM**
+- [x] **Step 3: Verifikasi unit dan DOM**
 
 Run:
 
@@ -147,7 +147,7 @@ Expected:
 - Build frontend pass.
 - DOM diff menunjukkan nav gating sesuai expected, bukan regression.
 
-- [ ] **Step 4: Commit Task 1**
+- [x] **Step 4: Commit Task 1**
 
 Run:
 
@@ -156,7 +156,7 @@ git add frontend/src/lib/accessRole.ts frontend/src/components/hertz/MobileBotto
 git commit -m "Add HERTZ access role navigation gates"
 ```
 
-- [ ] **Ceklist selesai Task 1**
+- [x] **Ceklist selesai Task 1**
 
 Centang setelah verifikasi pass dan commit dibuat.
 

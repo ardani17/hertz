@@ -39,7 +39,7 @@ export function HertzAppShell({
         </section>
         {hideRightRail ? null : <HertzRightRail />}
       </div>
-      <MobileBottomNav active={active} />
+      <MobileBottomNav active={active} currentUser={currentUser} />
     </main>
   );
 }

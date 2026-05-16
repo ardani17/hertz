@@ -1,4 +1,6 @@
 import { Compass, FileText, Home, MessageCircle, SlidersVertical, UserCircle } from 'lucide-react';
+import type { MemberSessionUser } from '@shared/types';
+import { canShowNavItem, getAccessRole } from '@/lib/accessRole';
 import styles from './MobileBottomNav.module.css';
 
 type ActiveNav = 'home' | 'outlook' | 'blog' | 'gallery' | 'tools' | 'messages' | 'profile';
@@ -13,10 +15,19 @@ const navItems = [
 ] as const;
 // Gallery is intentionally dormant and stays out of navigation until re-enabled.
 
-export function MobileBottomNav({ active }: { active: ActiveNav }) {
+export function MobileBottomNav({
+  active,
+  currentUser = null,
+}: {
+  active: ActiveNav;
+  currentUser?: MemberSessionUser | null;
+}) {
+  const accessRole = getAccessRole(currentUser);
+  const visibleItems = navItems.filter(({ key }) => canShowNavItem(accessRole, key));
+
   return (
     <nav className={styles.mobileNav} aria-label="Mobile navigation">
-      {navItems.map(({ key, href, label, Icon, ...item }) => (
+      {visibleItems.map(({ key, href, label, Icon, ...item }) => (
         <a
           key={key}
           href={href}
