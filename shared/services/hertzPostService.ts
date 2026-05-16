@@ -23,7 +23,6 @@ import type {
 } from '../types/feed';
 
 const EXCERPT_LIMIT = 420;
-const EDIT_WINDOW_MS = 15 * 60 * 1000;
 const SHORT_ID_ALPHABET = 'abcdefghijklmnopqrstuvwxyz0123456789';
 const VALID_CATEGORIES: HertzPostCategory[] = ['trading_room', 'life_coffee', 'general', 'community_note'];
 
@@ -277,8 +276,7 @@ export class HertzPostService {
   async editPost(postId: string, user: MemberSessionUser, content: string): Promise<void> {
     const post = await this.posts.findById(postId, user.id);
     if (!post) throw new HertzNotFoundError();
-    const createdAt = post.created_at instanceof Date ? post.created_at : new Date(post.created_at);
-    if (user.role !== 'admin' && (post.author_id !== user.id || Date.now() - createdAt.getTime() > EDIT_WINDOW_MS)) {
+    if (post.author_id !== user.id && user.role !== 'admin') {
       throw new HertzForbiddenError();
     }
     await this.posts.updateContent(post.id, cleanText(content));
