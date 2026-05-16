@@ -102,6 +102,11 @@
   font-size: 11px;
   line-height: 13px;
 }
+.authorHandle {
+  color: #8aa896 !important;
+  font-size: 12px !important;
+  font-weight: 650;
+}
 .lifeBadge {
   align-items: center;
   background: #5a331b;
@@ -435,6 +440,12 @@
   }
   .authorLine span {
     font-size: 0.78rem;
+  }
+  .authorHandle {
+    max-width: 8.5rem;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
   }
   .badge,
   .adminBadge,

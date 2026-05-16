@@ -1,4 +1,5 @@
 import type { HertzPost } from '@shared/types';
+import { formatHertzAuthorHandle } from '@/lib/hertzAuthorDisplay';
 import styles from './HertzPost.module.css';
 
 function relativeTime(date: string) {
@@ -10,16 +11,11 @@ function relativeTime(date: string) {
 }
 
 export function HertzAuthorLine({ post }: { post: HertzPost }) {
-  const isTrading = post.category === 'trading_room' || post.category === 'trading';
-  const isLifeCoffee = post.category === 'life_coffee' || post.category === 'life_story';
-  const badge = isTrading ? 'Trading' : isLifeCoffee ? 'Life' : 'General';
-  const badgeClass = isTrading ? styles.badge : isLifeCoffee ? styles.lifeBadge : styles.generalBadge;
-
   return (
     <div>
       <div className={styles.authorLine}>
         <strong>{post.author.name}</strong>
-        <span className={badgeClass}>{badge}</span>
+        <span className={styles.authorHandle}>{formatHertzAuthorHandle(post.author.username)}</span>
       </div>
       <div className={styles.metaLine}>
         <span>{post.source === 'telegram' || post.source === 'admin' ? 'via Telegram' : 'via Web'}</span>
