@@ -449,6 +449,101 @@ Prioritas dari 9 temuan tambahan:
 4. Share popup dan post detail modal dengan accessibility benar.
 5. SEO/social preview untuk detail post karena berkaitan langsung dengan share.
 
+### Review Perspektif Pengguna Sosial Media
+
+Review ini melihat HERTZ sebagai produk sosial media, bukan hanya sebagai halaman yang tidak overflow.
+
+Perangkat yang dicek live:
+
+- Desktop 1440x950
+- Tablet 768x1024
+- Mobile 390x844
+- Mobile kecil 320x740
+
+Hasil umum:
+
+- Tidak ada horizontal overflow pada route utama yang dicek.
+- `/hertz`, `/hertz/post/hzx_live01`, `/hertz/profile`, dan `/hertz/messages` bisa dibuka.
+- Masalah terbesar bukan crash layout, tetapi rasa produk sosial media yang belum lengkap dan beberapa breakpoint yang kurang nyaman.
+
+#### Temuan Kenyamanan Desktop
+
+1. **Feed terasa terlalu utilitarian, belum cukup sosial**
+   Layout sudah rapi, tetapi belum ada elemen yang membuat user merasa ada aktivitas komunitas yang hidup: notifikasi, siapa baru repost, siapa baru komentar, trending people/topic, atau activity hint.
+
+2. **Detail post desktop masih terasa seperti halaman, bukan percakapan**
+   Keputusan modal desktop sudah benar. Sebagai user desktop, pindah halaman untuk membaca komentar terasa memperlambat flow feed.
+
+3. **Share belum mendukung kebiasaan sosial media**
+   Tombol `Bagikan` harus menjadi share sheet. Kalau hanya copy link, user merasa fitur belum selesai.
+
+4. **Right rail market kuat, tetapi konteks sosial kurang**
+   Right rail memberi data market, tetapi belum ada panel sosial seperti `Trending di HERTZ`, `Aktif hari ini`, `Post tersimpan`, atau `DM unread`. Untuk sosial media trading, kombinasi market + komunitas akan terasa lebih lengkap.
+
+#### Temuan Kenyamanan Tablet
+
+1. **Tablet 768px adalah breakpoint paling bermasalah**
+   Cek live menunjukkan post pertama di `/hertz` pada tablet hanya sekitar 156px lebar, dan detail post sekitar 106px lebar. Ini bukan overflow, tetapi konten jadi terlalu sempit karena layout masih memperlakukan tablet seperti desktop dengan rail kiri.
+
+2. **Tablet sebaiknya memakai layout mobile/tablet, bukan desktop rail penuh**
+   Pada lebar 768px, left rail desktop dan content feed tidak punya ruang cukup. Perlu breakpoint khusus tablet: rail kiri disembunyikan/compact, content full-width, bottom nav tetap aktif.
+
+3. **Tablet detail post perlu prioritas konten**
+   Jika rail kanan/market atau header terlalu dominan, user tablet harus scroll sebelum membaca post. Detail post tablet sebaiknya lebih dekat ke mobile behavior.
+
+#### Temuan Kenyamanan Mobile
+
+1. **Mobile action bar terlalu tersandi**
+   Icon-only action bar hemat ruang, tetapi user baru mungkin tidak langsung tahu angka `1 7 1` itu komentar/suka/repost. Minimal perlu tooltip/aria sudah ada, tetapi visual mobile bisa memakai label pendek atau mode reveal saat ruang cukup.
+
+2. **Mobile detail post kebanyakan market sebelum konten**
+   Pada `/hertz/post/hzx_live01`, mobile menampilkan `Market Live` panjang sebelum post. Sebagai user yang membuka detail post, prioritas utama seharusnya post dan komentar. Market mobile sebaiknya collapsible atau lebih rendah di halaman detail.
+
+3. **Bottom nav 6 item padat**
+   `Home Outlook Blog Tools DM Akun` masih muat, tetapi semakin padat. Jika access role guest/member/admin nanti mengubah menu, perlu aturan prioritas agar bottom nav tidak terasa penuh.
+
+4. **Guest feed terlalu dekat ke mode read-only umum**
+   Guest melihat feed dan banyak action, lalu baru diberi pesan login saat mencoba. Untuk user baru, CTA login perlu lebih jelas tetapi tidak menghalangi eksplorasi.
+
+5. **Create post di mobile belum terasa cepat**
+   Composer ada di atas feed. Setelah user scroll jauh, tidak ada tombol cepat untuk kembali membuat post. Sosial media biasanya punya floating compose button atau shortcut yang jelas untuk member.
+
+#### Temuan Direct Message
+
+1. **Guest DM masih menampilkan kontrol operasional**
+   Live `/hertz/messages` masih menampilkan filter `Inbox/Unread/Admin/Archived` dan action seperti `Arsipkan`, `Blokir`, `Gambar`, `Kirim` walaupun guest belum login. Ini bertentangan dengan keputusan diskusi bahwa guest langsung melihat CTA login Telegram.
+
+2. **DM mobile belum terasa seperti inbox**
+   Pada mobile guest, halaman hanya menunjukkan pesan login + filter. Untuk member nanti perlu benar-benar dua layar: inbox dan thread. Untuk guest, cukup CTA login.
+
+#### Temuan Profile
+
+1. **Profile guest terlalu kosong**
+   Profile guest hanya CTA login. Itu benar secara fungsi, tetapi sebagai calon member belum menjelaskan manfaat konkret: bisa posting, simpan post, DM, komentar, dan melihat histori aktivitas.
+
+2. **Profile member perlu menjadi dashboard sosial**
+   Profile harus menjadi pusat aktivitas, bukan hanya status Telegram dan credit. Tab `Post saya`, `Disimpan`, `Repost saya`, `Komentar saya`, dan `Credit` menjadi kebutuhan utama.
+
+#### Temuan Konten dan Bahasa
+
+1. **Istilah masih campur**
+   Ada `Direct Message`, `Inbox`, `Unread`, `Archived`, `Quote postingan`, `Verified Member`, `Mode baca`. Perlu keputusan bahasa: UI utama Indonesia, istilah produk boleh English hanya jika konsisten.
+
+2. **Label kategori perlu lebih jelas**
+   `Life` dan `General` cukup umum. Sebagai user baru, perlu hint pendek di composer atau empty state agar tahu konten apa yang cocok untuk tiap kategori.
+
+#### Prioritas UX dari Perspektif User
+
+1. Fix breakpoint tablet 768px agar feed/detail tidak menjadi kolom sempit.
+2. Terapkan guest access role pada DM dan menu/action.
+3. Buat desktop detail post modal dan mobile detail tetap halaman penuh.
+4. Buat Profile menjadi pusat aktivitas: Post saya, Disimpan, Repost saya.
+5. Tampilkan plain repost di timeline.
+6. Buat share sheet.
+7. Tambahkan media preview/remove di composer.
+8. Kurangi dominasi Market Live pada mobile detail post.
+9. Tambahkan notification/unread indicator minimal untuk DM dan activity.
+
 ### Catatan Role Saat Ini
 
 Role database aplikasi saat ini hanya:
