@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { queryOne, execute } from '@shared/db';
 import { validateSession } from '@/lib/auth';
 import { getCurrentMember } from '@/lib/memberAuth';
-import { validateMediaType } from '@shared/utils/mediaValidation';
+import { validateHertzImageUploadType, validateMediaType } from '@shared/utils/mediaValidation';
 import { randomUUID } from 'crypto';
 
 /**
@@ -45,6 +45,17 @@ export async function POST(request: NextRequest) {
         { success: false, error: { error_code: 'MEDIA_TYPE_INVALID', message: `Tipe file "${file.type}" tidak didukung. Hanya file gambar dan video yang diperbolehkan.`, details: { provided: file.type }, timestamp: new Date().toISOString() } },
         { status: 422 },
       );
+    }
+
+    if (member) {
+      try {
+        validateHertzImageUploadType(file.type);
+      } catch {
+        return NextResponse.json(
+          { success: false, error: { error_code: 'MEDIA_TYPE_INVALID', message: 'Upload HERTZ hanya mendukung gambar JPG, PNG, atau WEBP.', details: { provided: file.type }, timestamp: new Date().toISOString() } },
+          { status: 422 },
+        );
+      }
     }
 
     // Determine media type

@@ -408,7 +408,7 @@ Centang setelah test, visual review, build, dan commit selesai.
 - Test: `tests/unit/shared/hertzValidation.test.ts`
 - Test: `tests/unit/shared/mediaValidation.test.ts`
 
-- [ ] **Step 1: Tulis/ubah test validasi media**
+- [x] **Step 1: Tulis/ubah test validasi media**
 
 Coverage:
 
@@ -424,7 +424,7 @@ Run:
 npm run test -- tests/unit/shared/hertzValidation.test.ts tests/unit/shared/mediaValidation.test.ts
 ```
 
-- [ ] **Step 2: Implement composer preview/remove/progress**
+- [x] **Step 2: Implement composer preview/remove/progress**
 
 Implementation target:
 
@@ -434,7 +434,7 @@ Implementation target:
 - Progress upload.
 - Mobile member punya shortcut compose setelah scroll.
 
-- [ ] **Step 3: Verifikasi**
+- [x] **Step 3: Verifikasi**
 
 Run:
 
@@ -446,7 +446,7 @@ REVIEW_BASE_URL=https://horizon.cloudnexify.com npm run review:visual
 REVIEW_BASE_URL=https://horizon.cloudnexify.com REVIEW_REPLAY_ROUTE=/hertz REVIEW_REPLAY_SECONDS=30 npm run review:replay
 ```
 
-- [ ] **Step 4: Commit Task 4**
+- [x] **Step 4: Commit Task 4**
 
 Run:
 
@@ -455,7 +455,7 @@ git add frontend/src/components/feed/HertzComposer.tsx frontend/src/components/f
 git commit -m "Enable HERTZ media composer across categories"
 ```
 
-- [ ] **Ceklist selesai Task 4**
+- [x] **Ceklist selesai Task 4**
 
 Centang setelah media flow verified dan commit selesai.
 

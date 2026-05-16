@@ -8,6 +8,12 @@ import { HertzTelegramLogin } from './HertzTelegramLogin';
 import styles from './HertzComposer.module.css';
 
 type ComposerCategory = 'trading_room' | 'life_coffee' | 'general';
+const ALLOWED_IMAGE_TYPES = new Set(['image/jpeg', 'image/png', 'image/webp']);
+interface QueuedMedia {
+  id: string;
+  name: string;
+  url: string;
+}
 
 function resolveComposerCategory(activeCategory?: HertzPostCategory | string | null): ComposerCategory {
   if (activeCategory === 'trading_room' || activeCategory === 'trading') return 'trading_room';
@@ -35,8 +41,7 @@ export function HertzComposer({
     takeProfit: '',
     confidencePercent: '',
   });
-  const [mediaIds, setMediaIds] = useState<string[]>([]);
-  const [mediaNames, setMediaNames] = useState<string[]>([]);
+  const [mediaItems, setMediaItems] = useState<QueuedMedia[]>([]);
   const [uploading, setUploading] = useState(false);
   const [status, setStatus] = useState<string | null>(null);
 
@@ -52,8 +57,6 @@ export function HertzComposer({
       takeProfit: '',
       confidencePercent: '',
     });
-    setMediaIds([]);
-    setMediaNames([]);
   }, [isTradingPost]);
 
   function setMarketField(field: keyof typeof market, value: string) {
@@ -81,8 +84,8 @@ export function HertzComposer({
   }
 
   async function uploadImages(files: FileList | null) {
-    if (!currentUser || !isTradingPost || !files?.length) return;
-    const nextFiles = Array.from(files).slice(0, Math.max(0, 4 - mediaIds.length));
+    if (!currentUser || !files?.length) return;
+    const nextFiles = Array.from(files).slice(0, Math.max(0, 4 - mediaItems.length));
     if (nextFiles.length === 0) {
       setStatus('Maksimal 4 gambar per post.');
       return;
@@ -92,10 +95,9 @@ export function HertzComposer({
     setStatus('Mengunggah gambar...');
     try {
       const uploadedIds: string[] = [];
-      const uploadedNames: string[] = [];
       for (const file of nextFiles) {
-        if (!file.type.startsWith('image/')) {
-          setStatus('Upload web phase awal hanya mendukung gambar.');
+        if (!ALLOWED_IMAGE_TYPES.has(file.type.toLowerCase())) {
+          setStatus('HERTZ hanya mendukung gambar JPG, PNG, atau WEBP.');
           continue;
         }
         const formData = new FormData();
@@ -106,16 +108,19 @@ export function HertzComposer({
           throw new Error(payload?.error?.message ?? 'Gagal mengunggah gambar.');
         }
         uploadedIds.push(payload.data.media.id);
-        uploadedNames.push(file.name);
+        const url = typeof payload.data.media.file_url === 'string' ? payload.data.media.file_url : '';
+        setMediaItems((items) => [...items, { id: payload.data.media.id, name: file.name, url }].slice(0, 4));
       }
-      setMediaIds((items) => [...items, ...uploadedIds].slice(0, 4));
-      setMediaNames((items) => [...items, ...uploadedNames].slice(0, 4));
       setStatus(uploadedIds.length > 0 ? 'Gambar siap dipublish.' : null);
     } catch (error) {
       setStatus(error instanceof Error ? error.message : 'Gagal mengunggah gambar.');
     } finally {
       setUploading(false);
     }
+  }
+
+  function removeMedia(id: string) {
+    setMediaItems((items) => items.filter((item) => item.id !== id));
   }
 
   async function submit() {
@@ -135,7 +140,7 @@ export function HertzComposer({
         category,
         content,
         market: isTradingPost ? marketPayload() : null,
-        mediaIds: isTradingPost ? mediaIds : [],
+        mediaIds: mediaItems.map((item) => item.id),
       }),
     });
     if (!response.ok) {
@@ -154,8 +159,7 @@ export function HertzComposer({
       takeProfit: '',
       confidencePercent: '',
     });
-    setMediaIds([]);
-    setMediaNames([]);
+    setMediaItems([]);
     setStatus('Postingan terkirim.');
     window.location.reload();
   }
@@ -188,22 +192,22 @@ export function HertzComposer({
           rows={1}
         />
         <div className={styles.controls}>
+          <label className={`${styles.uploadButton} ${(!currentUser || uploading || mediaItems.length >= 4) ? styles.disabledUpload : ''}`}>
+            <span>+</span>
+            <span>Gambar</span>
+            <input
+              type="file"
+              accept="image/jpeg,image/png,image/webp"
+              multiple
+              disabled={!currentUser || uploading || mediaItems.length >= 4}
+              onChange={(event) => {
+                void uploadImages(event.target.files);
+                event.currentTarget.value = '';
+              }}
+            />
+          </label>
           {isTradingPost ? (
             <>
-              <label className={`${styles.uploadButton} ${(!currentUser || uploading || mediaIds.length >= 4) ? styles.disabledUpload : ''}`}>
-                <span>+</span>
-                <span>Chart</span>
-                <input
-                  type="file"
-                  accept="image/*"
-                  multiple
-                  disabled={!currentUser || uploading || mediaIds.length >= 4}
-                  onChange={(event) => {
-                    void uploadImages(event.target.files);
-                    event.currentTarget.value = '';
-                  }}
-                />
-              </label>
               <label className={styles.inlineField}>
                 <span>Pair</span>
                 <input value={market.pair} onChange={(event) => setMarketField('pair', event.target.value)} placeholder="XAUUSD" disabled={!currentUser} />
@@ -242,14 +246,18 @@ export function HertzComposer({
             Posting
           </Button>
         </div>
-        {mediaNames.length > 0 ? (
-          <div className={styles.mediaQueue} aria-label="Uploaded images">
-            {mediaNames.map((name, index) => (
-              <span key={`${name}-${index}`}>{name}</span>
+        {mediaItems.length > 0 ? (
+          <div className={styles.mediaQueue} aria-label="Gambar siap diposting">
+            {mediaItems.map((item) => (
+              <figure key={item.id}>
+                {item.url ? <img src={item.url} alt="" /> : null}
+                <figcaption>{item.name}</figcaption>
+                <button type="button" onClick={() => removeMedia(item.id)} aria-label={`Hapus ${item.name}`}>×</button>
+              </figure>
             ))}
           </div>
         ) : null}
-        {isTradingPost ? <p className={styles.mediaPolicy}>Chart trading mendukung gambar saja, maksimal 4 file per postingan.</p> : null}
+        <p className={styles.mediaPolicy}>Posting HERTZ mendukung gambar JPG, PNG, atau WEBP, maksimal 4 file per postingan.</p>
         {status ? <p className={styles.status}>{status}</p> : null}
       </div>
     </section>
