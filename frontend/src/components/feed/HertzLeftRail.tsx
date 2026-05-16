@@ -6,7 +6,7 @@ import type { MemberSessionUser } from '@shared/types';
 import { HertzAvatar } from './HertzAvatar';
 import styles from './HertzRails.module.css';
 
-type ActiveNav = 'home' | 'outlook' | 'blog' | 'gallery' | 'tools' | 'messages';
+type ActiveNav = 'home' | 'outlook' | 'blog' | 'gallery' | 'tools' | 'messages' | 'profile';
 
 const navItems = [
   { key: 'home', href: '/hertz', label: 'Home', Icon: Home },
@@ -53,7 +53,7 @@ export function HertzLeftRail({
         </a>
       ) : null}
       {currentUser?.role === 'admin' ? <a href="/admin/hertz" className={styles.adminNav}><Hexagon />Admin</a> : null}
-      <div className={styles.profile}>
+      <a href="/hertz/profile" className={`${styles.profile} ${active === 'profile' ? styles.activeProfile : ''}`}>
         <HertzAvatar
           className={styles.avatar}
           src={currentUser?.avatarUrl}
@@ -62,9 +62,9 @@ export function HertzLeftRail({
         />
         <div>
           <strong>{currentUser?.displayName ?? 'Guest'}</strong>
-          <span>{currentUser ? (currentUser.badge === 'admin' ? 'Admin' : 'Verified Member') : 'Read-only'}</span>
+          <span>{currentUser ? (currentUser.badge === 'admin' ? 'Admin' : 'Verified Member') : 'Mode baca'}</span>
         </div>
-      </div>
+      </a>
     </aside>
   );
 }

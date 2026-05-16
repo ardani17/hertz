@@ -1,40 +1,34 @@
+'use client';
+
+import { useEffect, useState } from 'react';
+import type { MarketRailGroup, MarketTone } from '@/lib/globalDataMarket';
 import { SearchIcon, PulseIcon } from './HertzIcons';
 import styles from './HertzRails.module.css';
 
-const groups = [
-  {
-    title: 'Forex Market',
-    rows: [
-      { symbol: 'XAUUSD', price: '2,337.62', change: '+0.36%', tone: 'up' },
-      { symbol: 'EURUSD', price: '1.08421', change: '+0.19%', tone: 'up' },
-      { symbol: 'GBPUSD', price: '1.26380', change: '-0.08%', tone: 'down' },
-      { symbol: 'USDJPY', price: '155.72', change: '+0.12%', tone: 'up' },
-    ],
-  },
-  {
-    title: 'Crypto Market',
-    rows: [
-      { symbol: 'BTC/USDT', price: '66,721.18', change: '-0.19%', tone: 'down' },
-      { symbol: 'ETH/USDT', price: '3,107.40', change: '+0.84%', tone: 'up' },
-      { symbol: 'SOL/USDT', price: '148.22', change: '+1.21%', tone: 'up' },
-      { symbol: 'BNB/USDT', price: '594.80', change: '-0.32%', tone: 'down' },
-    ],
-  },
-  {
-    title: 'Stock Market',
-    rows: [
-      { symbol: 'NASDAQ', price: '18,093.75', change: '+0.42%', tone: 'up' },
-      { symbol: 'S&P 500', price: '5,221.30', change: '+0.28%', tone: 'up' },
-      { symbol: 'DOW', price: '39,872.99', change: '-0.11%', tone: 'down' },
-      { symbol: 'TSLA', price: '178.90', change: '+1.04%', tone: 'up' },
-    ],
-  },
-] as const;
+function buildSparklinePath(points: number[] | undefined, tone: MarketTone) {
+  const values = points && points.length >= 2
+    ? points.filter((point) => Number.isFinite(point))
+    : tone === 'down'
+      ? [5, 4.7, 4.9, 4.3, 4.5, 3.8, 3.5]
+      : [3.5, 3.8, 3.7, 4.2, 4, 4.7, 5];
+  const min = Math.min(...values);
+  const max = Math.max(...values);
+  const range = max - min || 1;
+  const width = 94;
+  const height = 30;
+  const pad = 3;
 
-function Sparkline({ tone }: { tone: 'up' | 'down' }) {
-  const d = tone === 'down'
-    ? 'M2 8 L16 12 L30 11 L44 17 L58 15 L72 22 L92 24'
-    : 'M2 23 L16 17 L30 19 L44 12 L58 15 L74 8 L92 10';
+  return values
+    .map((value, index) => {
+      const x = values.length === 1 ? width / 2 : (index / (values.length - 1)) * (width - pad * 2) + pad;
+      const y = height - pad - ((value - min) / range) * (height - pad * 2);
+      return `${index === 0 ? 'M' : 'L'}${x.toFixed(1)} ${y.toFixed(1)}`;
+    })
+    .join(' ');
+}
+
+function Sparkline({ tone, points }: { tone: MarketTone; points?: number[] }) {
+  const d = buildSparklinePath(points, tone);
   return (
     <svg className={styles.sparkline} viewBox="0 0 94 30" aria-hidden="true">
       <path d={d} />
@@ -42,14 +36,70 @@ function Sparkline({ tone }: { tone: 'up' | 'down' }) {
   );
 }
 
+function formatUpdatedAt(value?: string) {
+  if (!value) return null;
+  const date = new Date(value);
+  if (Number.isNaN(date.getTime())) return null;
+  return new Intl.DateTimeFormat('id-ID', {
+    hour: '2-digit',
+    minute: '2-digit',
+    timeZone: 'Asia/Jakarta',
+  }).format(date);
+}
+
 export function HertzRightRail({ activeSearch }: { activeSearch?: string | null }) {
+  const [groups, setGroups] = useState<MarketRailGroup[]>([]);
+  const [status, setStatus] = useState<'loading' | 'ready' | 'error'>('loading');
+
+  useEffect(() => {
+    let cancelled = false;
+
+    async function loadMarketRail() {
+      try {
+        const response = await fetch('/api/market/rail');
+        const payload = await response.json();
+        if (cancelled) return;
+        const nextGroups = Array.isArray(payload?.data?.groups) ? payload.data.groups : [];
+        setGroups(nextGroups);
+        setStatus(response.ok && nextGroups.length > 0 ? 'ready' : 'error');
+      } catch {
+        if (!cancelled) {
+          setStatus('error');
+        }
+      }
+    }
+
+    loadMarketRail();
+    return () => {
+      cancelled = true;
+    };
+  }, []);
+
   return (
     <aside className={styles.right} aria-label="Market intelligence">
       <form className={styles.searchBox} action="/hertz">
         <SearchIcon />
         <input name="q" defaultValue={activeSearch ?? ''} placeholder="Cari pair, jurnal, atau member" aria-label="Cari HERTZ" />
       </form>
-      {groups.map((group) => (
+      {status === 'loading' ? (
+        <section className={styles.marketPanel}>
+          <div className={styles.marketTitle}>
+            <PulseIcon />
+            <span>Market Data</span>
+          </div>
+          <p className={styles.marketEmpty}>Memuat data market...</p>
+        </section>
+      ) : null}
+      {status === 'error' ? (
+        <section className={styles.marketPanel}>
+          <div className={styles.marketTitle}>
+            <PulseIcon />
+            <span>Market Data</span>
+          </div>
+          <p className={styles.marketEmpty}>Data market belum tersedia.</p>
+        </section>
+      ) : null}
+      {status === 'ready' ? groups.map((group) => (
         <section className={styles.marketPanel} key={group.title}>
           <div className={styles.marketTitle}>
             <PulseIcon />
@@ -58,15 +108,18 @@ export function HertzRightRail({ activeSearch }: { activeSearch?: string | null 
           {group.rows.map((row) => (
             <div className={styles.marketRow} key={row.symbol}>
               <strong>{row.symbol}</strong>
-              <Sparkline tone={row.tone} />
+              <Sparkline tone={row.tone} points={row.sparkline} />
               <div>
                 <b>{row.price}</b>
                 <em className={row.tone === 'down' ? styles.down : styles.up}>{row.change}</em>
               </div>
             </div>
           ))}
+          <p className={styles.marketSource}>
+            {group.source}{formatUpdatedAt(group.updatedAt) ? ` · Update ${formatUpdatedAt(group.updatedAt)} WIB` : ''}
+          </p>
         </section>
-      ))}
+      )) : null}
     </aside>
   );
 }

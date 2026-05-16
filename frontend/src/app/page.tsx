@@ -3,6 +3,7 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { HertzPostService } from '@shared/services/hertzPostService';
 import type { HertzPost } from '@shared/types';
+import { getMarketRailGroups } from '@/lib/globalDataMarket';
 import styles from './HorizonLanding.module.css';
 
 export const dynamic = 'force-dynamic';
@@ -19,25 +20,6 @@ export const metadata: Metadata = {
   },
 };
 
-const marketGroups = [
-  {
-    title: 'Forex Market',
-    rows: [
-      { symbol: 'XAUUSD', change: '+0.36%', tone: 'up' },
-      { symbol: 'EURUSD', change: '+0.19%', tone: 'up' },
-      { symbol: 'GBPUSD', change: '-0.08%', tone: 'down' },
-    ],
-  },
-  {
-    title: 'Crypto Market',
-    rows: [
-      { symbol: 'BTC/USDT', change: '-0.19%', tone: 'down' },
-      { symbol: 'ETH/USDT', change: '+0.84%', tone: 'up' },
-      { symbol: 'SOL/USDT', change: '+1.21%', tone: 'up' },
-    ],
-  },
-] as const;
-
 async function getLandingPreviewPost(): Promise<HertzPost | null> {
   try {
     const feed = new HertzPostService();
@@ -45,6 +27,14 @@ async function getLandingPreviewPost(): Promise<HertzPost | null> {
     return result.items[0] ?? null;
   } catch {
     return null;
+  }
+}
+
+async function getLandingMarketGroups() {
+  try {
+    return (await getMarketRailGroups()).slice(0, 2);
+  } catch {
+    return [];
   }
 }
 
@@ -64,7 +54,10 @@ function categoryInitials(post: HertzPost) {
 }
 
 export default async function HorizonLanding() {
-  const previewPost = await getLandingPreviewPost();
+  const [previewPost, marketGroups] = await Promise.all([
+    getLandingPreviewPost(),
+    getLandingMarketGroups(),
+  ]);
 
   return (
     <main className={styles.main}>

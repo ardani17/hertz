@@ -1,7 +1,7 @@
-import { Compass, FileText, Home, MessageCircle, SlidersVertical } from 'lucide-react';
+import { Compass, FileText, Home, MessageCircle, SlidersVertical, UserCircle } from 'lucide-react';
 import styles from './MobileBottomNav.module.css';
 
-type ActiveNav = 'home' | 'outlook' | 'blog' | 'gallery' | 'tools' | 'messages';
+type ActiveNav = 'home' | 'outlook' | 'blog' | 'gallery' | 'tools' | 'messages' | 'profile';
 
 const navItems = [
   { key: 'home', href: '/hertz', label: 'Home', Icon: Home },
@@ -9,6 +9,7 @@ const navItems = [
   { key: 'blog', href: '/blog', label: 'Blog', Icon: FileText },
   { key: 'tools', href: '/tools', label: 'Tools', Icon: SlidersVertical },
   { key: 'messages', href: '/hertz/messages', label: 'DM', ariaLabel: 'Direct Message', Icon: MessageCircle },
+  { key: 'profile', href: '/hertz/profile', label: 'Akun', Icon: UserCircle },
 ] as const;
 // Gallery is intentionally dormant and stays out of navigation until re-enabled.
 
