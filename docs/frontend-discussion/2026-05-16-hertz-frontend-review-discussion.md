@@ -580,6 +580,234 @@ Hasil umum:
 9. Tambahkan notification/unread indicator minimal untuk DM dan activity.
 10. Fungsikan search sosial dan hashtag/topik.
 
+### Review Lintas Persona Pengguna
+
+Bagian ini melihat HERTZ dari beberapa tipe user yang kemungkinan memakai produk dengan ekspektasi berbeda.
+
+#### 1. Guest / Calon Member
+
+Ekspektasi:
+
+- Bisa memahami HERTZ dalam 10-20 detik.
+- Bisa membaca feed tanpa dipaksa login.
+- Tahu manfaat login Telegram dengan jelas.
+
+Yang kurang nyaman:
+
+- Guest masih melihat beberapa action yang terlihat aktif, lalu baru ditolak saat dipakai.
+- DM guest masih menampilkan kontrol operasional.
+- Profile guest belum menjelaskan manfaat konkret login.
+- Tools/fitur yang tidak boleh dipakai guest belum punya aturan menu yang jelas.
+
+Implikasi spec:
+
+- Access role `guest` harus mengontrol menu dan action.
+- Guest CTA harus jelas, tetapi tidak menghalangi user membaca feed.
+- DM guest harus langsung CTA login Telegram.
+
+#### 2. Member Pembaca / Lurker
+
+Ekspektasi:
+
+- Feed cepat dibaca.
+- Bisa simpan post penting.
+- Bisa menemukan ulang post yang disimpan.
+- Bisa cari topik, member, atau hashtag.
+
+Yang kurang nyaman:
+
+- `Simpan` belum punya histori di profile.
+- Search sosial belum jelas hasilnya.
+- Hashtag/topik belum menjadi affordance navigasi.
+- Mobile action bar icon-only membuat fungsi kurang eksplisit untuk user baru.
+
+Implikasi spec:
+
+- Profile wajib punya `Disimpan`.
+- Search kanan atas menjadi search sosial.
+- Hashtag/topik dibuat clickable.
+- Mobile action perlu tetap hemat ruang tetapi lebih mudah dipahami.
+
+#### 3. Member Pembuat Post
+
+Ekspektasi:
+
+- Cepat membuat post seperti di X.
+- Bisa upload gambar untuk Trading, Life, dan General.
+- Bisa edit/delete post sendiri tanpa bingung.
+- Bisa memperbaiki metadata trading yang salah.
+
+Yang kurang nyaman:
+
+- Composer mobile hanya di atas feed; setelah scroll jauh tidak ada shortcut cepat.
+- Media belum punya preview/remove.
+- Delete belum punya confirm.
+- Edit metadata market untuk member pembuat post belum sesuai keputusan.
+
+Implikasi spec:
+
+- Composer perlu preview media dan remove per file.
+- Member pembuat post bisa edit teks dan metadata trading miliknya.
+- Delete wajib confirm.
+- Mobile member perlu shortcut compose atau affordance kembali ke composer.
+
+#### 4. Trader Aktif
+
+Ekspektasi:
+
+- Bisa membaca setup cepat: pair, arah, risk, entry, SL, TP, confidence.
+- Bisa membandingkan post dengan market context.
+- Bisa melihat diskusi komunitas tanpa kehilangan market context.
+
+Yang kurang nyaman:
+
+- Market context penting, tetapi pada mobile detail post terlalu mendominasi sebelum konten.
+- Right rail market desktop kuat, tetapi belum ada konteks komunitas seperti trending/topik aktif.
+- Search belum bisa mencari pair/topik secara sosial.
+
+Implikasi spec:
+
+- Mobile detail post harus memprioritaskan post dan komentar; market mobile bisa collapsible.
+- Search sosial harus mengenali post/topik/pair.
+- Right rail bisa berkembang menjadi kombinasi market + community signals.
+
+#### 5. Mobile-First User
+
+Ekspektasi:
+
+- Navigasi terasa seperti app sosial.
+- Membuka detail post nyaman.
+- Action cepat tanpa teks bertabrakan.
+- Tidak perlu scroll terlalu banyak untuk aksi utama.
+
+Yang kurang nyaman:
+
+- Bottom nav 6 item sudah padat.
+- Icon-only action bar hemat ruang tetapi kurang jelas.
+- Create post tidak punya shortcut setelah user scroll.
+- Detail post mobile didahului market ticker panjang.
+
+Implikasi spec:
+
+- Bottom nav perlu aturan prioritas berdasarkan access role.
+- Action icon mobile butuh label pendek, tooltip, atau layout yang lebih jelas.
+- Pertimbangkan floating compose untuk member.
+- Market mobile detail dibuat collapsible atau dipindah setelah konten utama.
+
+#### 6. Desktop Power User
+
+Ekspektasi:
+
+- Bisa scroll feed lama tanpa kehilangan posisi.
+- Detail post terbuka cepat seperti modal.
+- Share, repost, quote, dan simpan terasa instan.
+- Right rail membantu keputusan, bukan mengganggu.
+
+Yang kurang nyaman:
+
+- Detail post masih route penuh jika dibuka langsung dari feed.
+- Share belum berupa sheet.
+- Right rail belum punya sinyal sosial.
+- Beberapa action masih reload penuh.
+
+Implikasi spec:
+
+- Desktop post detail memakai modal.
+- Share sheet desktop dibuat popover/modal kecil.
+- Action tertentu sebaiknya local update agar feed tidak kehilangan posisi.
+- Right rail bisa menampilkan DM unread, trending topik, atau aktivitas komunitas ringan.
+
+#### 7. Tablet User
+
+Ekspektasi:
+
+- Layout tidak terasa seperti desktop dipaksa sempit.
+- Feed tetap terbaca nyaman.
+- Navigasi tetap mudah dengan sentuhan.
+
+Yang kurang nyaman:
+
+- Tablet 768px membuat card post sangat sempit karena rail desktop masih mengambil ruang.
+- Detail post tablet juga sempit.
+
+Implikasi spec:
+
+- Breakpoint tablet harus memakai layout compact/mobile-like.
+- Rail desktop disembunyikan atau dibuat compact pada tablet.
+- Content feed/detail mengambil full-width yang layak.
+
+#### 8. Admin Aplikasi
+
+Ekspektasi:
+
+- Bisa melihat dan memoderasi aktivitas.
+- Bisa edit/delete semua postingan.
+- Bisa melihat laporan/report dengan status jelas.
+- Tidak tercampur antara action member dan action admin.
+
+Yang kurang nyaman:
+
+- Report feedback untuk member masih dasar; admin flow perlu tetap jelas nanti.
+- Action admin di menu post perlu tetap terlihat hanya untuk admin.
+- Access role harus memastikan admin punya akses penuh tanpa UI terlalu ramai untuk member.
+
+Implikasi spec:
+
+- Admin tetap bisa edit/delete semua post dan metadata.
+- Report lanjutan tidak masuk fase ini, tetapi feedback sukses dasar tetap ada.
+- Menu admin harus gated oleh access role `admin`.
+
+#### 9. Returning User
+
+Ekspektasi:
+
+- Bisa melihat apa yang baru sejak terakhir buka.
+- Bisa lanjut dari notifikasi/DM.
+- Bisa kembali ke post tersimpan atau repost sendiri.
+
+Yang kurang nyaman:
+
+- Belum ada notification indicator.
+- Belum ada profile activity tabs.
+- Tidak ada saved/repost history.
+
+Implikasi spec:
+
+- Notifikasi minimal: DM unread + activity indicator ringan.
+- Profile tabs: Post saya, Disimpan, Repost saya, Komentar saya.
+- Activity ring bisa menjadi fase pertama yang sederhana.
+
+#### 10. User Aksesibilitas / Keyboard
+
+Ekspektasi:
+
+- Modal bisa dipakai dengan keyboard.
+- Tombol icon punya nama jelas.
+- Focus tidak hilang setelah menutup modal.
+- Tidak ada action destruktif tanpa konfirmasi.
+
+Yang kurang nyaman:
+
+- Banyak overlay direncanakan: detail modal, share sheet, edit modal, delete confirm, DM menu.
+- Jika tidak dirancang dari awal, keyboard/focus bisa rusak.
+
+Implikasi spec:
+
+- Semua overlay wajib punya `aria-label`, focus trap, Escape close, restore focus, dan close button.
+- Delete confirm harus jelas dan tidak destructive by default.
+- Icon-only mobile tetap harus punya accessible name.
+
+#### Kesimpulan Lintas Persona
+
+Jika HERTZ ingin terasa seperti Twitter/X untuk komunitas trading, fase spec pertama perlu memprioritaskan:
+
+1. Social continuity: repost timeline, saved history, profile activity.
+2. Fast interaction: share sheet, detail modal desktop, local update untuk action penting.
+3. Mobile comfort: tablet breakpoint, mobile detail prioritizing post, compose shortcut.
+4. Trust and control: confirm delete, guest access role, admin gating.
+5. Discoverability: social search, hashtag/topik, profile bio/statistik.
+6. Feedback loop: minimal notifications dan clear empty/error states.
+
 ### Catatan Role Saat Ini
 
 Role database aplikasi saat ini hanya:
