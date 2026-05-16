@@ -46,6 +46,7 @@ export default function HertzMessagesPage() {
   const [attachments, setAttachments] = useState<PendingAttachment[]>([]);
   const [uploading, setUploading] = useState(false);
   const [status, setStatus] = useState<string | null>(null);
+  const [mobileThreadOpen, setMobileThreadOpen] = useState(false);
 
   const activeConversation = conversations.find((item) => item.id === activeId) ?? null;
 
@@ -91,6 +92,7 @@ export default function HertzMessagesPage() {
     const payload = await response.json().catch(() => null);
     if (response.ok && payload?.success) {
       setActiveId(payload.data.conversation.id);
+      setMobileThreadOpen(true);
       setMembers([]);
       setQuery('');
       await loadInbox();
@@ -222,7 +224,7 @@ export default function HertzMessagesPage() {
       currentUser={currentUser}
       hideRightRail
     >
-      <div className={styles.dmLayout}>
+      <div className={`${styles.dmLayout} ${mobileThreadOpen ? styles.threadOpen : ''}`}>
       <aside className={styles.sidebar}>
         {status ? <p>{status}</p> : null}
         <div className={styles.filters}>
@@ -248,7 +250,15 @@ export default function HertzMessagesPage() {
             if (filter === 'admin') return item.peer?.role === 'admin';
             return true;
           }).map((item) => (
-            <button className={styles.item} type="button" key={item.id} onClick={() => setActiveId(item.id)}>
+            <button
+              className={styles.item}
+              type="button"
+              key={item.id}
+              onClick={() => {
+                setActiveId(item.id);
+                setMobileThreadOpen(true);
+              }}
+            >
               <strong>{item.peer?.displayName ?? `Conversation ${item.id.slice(0, 8)}`}</strong>
               <span>{item.lastMessageBody ?? 'Belum ada pesan'}</span>
               {item.unreadCount > 0 ? <em>{item.unreadCount}</em> : null}
@@ -258,15 +268,18 @@ export default function HertzMessagesPage() {
       </aside>
       <section className={styles.thread}>
         <div className={styles.threadHeader}>
+          <button type="button" className={styles.backButton} onClick={() => setMobileThreadOpen(false)}>
+            Inbox
+          </button>
           <div>
             <strong>{activeConversation?.peer?.displayName ?? 'Pilih conversation'}</strong>
             <span>{activeConversation?.peer?.username ? `@${activeConversation.peer.username}` : 'HERTZ DM'}</span>
           </div>
           <div className={styles.threadActions}>
             <button type="button" onClick={() => archiveConversation(filter !== 'archived')} disabled={!activeId}>
-              {filter === 'archived' ? 'Unarchive' : 'Archive'}
+              {filter === 'archived' ? 'Buka arsip' : 'Arsipkan'}
             </button>
-            <button type="button" onClick={blockPeer} disabled={!activeConversation?.peer?.id}>Block</button>
+            <button type="button" onClick={blockPeer} disabled={!activeConversation?.peer?.id}>Blokir</button>
           </div>
         </div>
         <div className={styles.messages}>
@@ -303,7 +316,7 @@ export default function HertzMessagesPage() {
         ) : null}
         <div className={styles.composer}>
           <label className={styles.attachButton}>
-            Image
+            Gambar
             <input
               type="file"
               accept="image/jpeg,image/png,image/webp"
@@ -316,7 +329,7 @@ export default function HertzMessagesPage() {
             />
           </label>
           <input value={body} onChange={(event) => setBody(event.target.value)} placeholder="Tulis pesan..." />
-          <button type="button" onClick={send} disabled={!activeId || uploading}>Send</button>
+          <button type="button" onClick={send} disabled={!activeId || uploading}>Kirim</button>
         </div>
       </section>
       </div>
