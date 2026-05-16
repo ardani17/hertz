@@ -178,6 +178,7 @@ Files:
 - `frontend/src/components/feed/HertzPostMenu.module.css`
 - `frontend/src/components/feed/HertzComposer.tsx`
 - `frontend/src/components/feed/HertzComposer.module.css`
+- `frontend/src/components/feed/HertzPost.module.css`
 
 Target:
 
@@ -185,6 +186,8 @@ Target:
 - Owner edit/delete flow tetap tersedia dari menu dan harus diuji dengan session Telegram.
 - Composer Trading menyediakan field penting saat create: pair, timeframe, direction, risk, entry, stop loss, take profit, confidence.
 - Media policy Life/General harus eksplisit: jika tetap tidak bisa upload, UI menjelaskan; jika diaktifkan, upload bekerja lintas kategori.
+- New posting/composer harus punya outline hijau tipis.
+- Outline card posting harus ditipiskan dan disamakan dengan outline new posting agar feed konsisten.
 
 ### Copywriting dan Accessibility
 
@@ -243,6 +246,7 @@ Target tahap akhir:
 - Profile/member center tersedia dan linked dari rail/profile affordance.
 - HERTZ action bar menampilkan Bookmark/Repost/Share/Copy sesuai API yang tersedia.
 - Composer Trading punya field market utama saat create.
+- New posting dan card posting memakai outline hijau tipis yang konsisten.
 - Mobile punya akses market data pengganti hidden right rail.
 - Desktop right rail tetap visible/sticky/fixed saat scroll halaman utama.
 - Copywriting publik yang disentuh sudah konsisten Indonesia.

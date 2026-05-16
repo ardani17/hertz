@@ -168,6 +168,7 @@ Commit:
 - Modify: `frontend/src/components/feed/HertzPostMenu.module.css`
 - Modify: `frontend/src/components/feed/HertzComposer.tsx`
 - Modify: `frontend/src/components/feed/HertzComposer.module.css`
+- Modify: `frontend/src/components/feed/HertzPost.module.css`
 
 - [ ] Add visible Bookmark action using `/api/hertz/posts/[shortId]/bookmark`.
 - [ ] Add Repost/Quote action using `/api/hertz/posts/[shortId]/repost` or a clearly scoped repost UI if quote text is not supported.
@@ -175,12 +176,16 @@ Commit:
 - [ ] Keep owner Edit/Delete in the menu and ensure menu text is Indonesian.
 - [ ] Add Trading composer fields: pair, timeframe, direction, risk, entry, stop loss, take profit, confidence.
 - [ ] Decide media policy in UI: either allow media for Life/General or show clear copy that chart/media upload is Trading-only.
+- [ ] Add a thin green outline to the new posting/composer surface.
+- [ ] Thin the post card outline and match its color/opacity with the new posting/composer outline.
+- [ ] Confirm composer and post cards still have enough contrast on desktop and mobile.
 
 Verification:
 
 - [ ] `npm --prefix frontend run build`
 - [ ] Guest action buttons show login-required feedback without breaking layout.
 - [ ] Authenticated owner flow is checked if Telegram session is available: create post, edit, delete.
+- [ ] Visual check `/hertz`: composer outline and post card outline use the same thin green treatment.
 
 Commit:
 
