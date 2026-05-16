@@ -1,5 +1,6 @@
 import { query } from '../db';
 import { HertzPostRepository } from '../repositories/hertzPostRepository';
+import { stripHtml } from '../utils/textToHtml';
 
 export interface HertzSearchResult {
   type: 'post' | 'member' | 'topic' | 'pair';
@@ -22,6 +23,12 @@ export function normalizeHertzSearchQuery(value: unknown): string | null {
 export function extractHertzTopics(text: string): string[] {
   const matches = text.match(/#[A-Za-z0-9_]+/g) ?? [];
   return Array.from(new Set(matches.map((item) => item.slice(1).toLowerCase())));
+}
+
+export function formatHertzSearchPostLabel(contentHtml: string | null | undefined, maxLength = 70): string {
+  const spacedHtml = (contentHtml ?? '').replace(/<[^>]*>/g, ' ');
+  const cleaned = stripHtml(spacedHtml).replace(/\s+/g, ' ').trim();
+  return cleaned.slice(0, maxLength) || 'Postingan HERTZ';
 }
 
 export class HertzSearchService {
@@ -78,7 +85,7 @@ export class HertzSearchService {
         ...posts.map((post) => ({
           type: 'post' as const,
           id: post.id,
-          label: (post.content_html ?? '').slice(0, 70) || 'Postingan HERTZ',
+          label: formatHertzSearchPostLabel(post.content_html),
           description: post.author_display_name,
           href: `/hertz/post/${post.short_id}`,
         })),
