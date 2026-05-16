@@ -4,6 +4,7 @@ import Link from 'next/link';
 import { useRef, useState } from 'react';
 import type { MemberSessionUser, HertzPost } from '@shared/types';
 import { getHertzHashtagHref, splitHertzHashtagText } from '@/lib/hertzSearchUi';
+import { getHertzPostSpineKind } from '@/lib/hertzPostDisplay';
 import { getPlainRepostLabel, isPlainRepostTimelineItem } from '@/lib/hertzRepostUi';
 import { HertzActionBar } from './HertzActionBar';
 import { HertzAuthorLine } from './HertzAuthorLine';
@@ -14,19 +15,22 @@ import { HertzPostMedia } from './HertzPostMedia';
 import { HertzMarketMeta } from './HertzMarketMeta';
 import { HertzPostMenu } from './HertzPostMenu';
 import { QuotePostCard } from './QuotePostCard';
-import { CoffeeIcon, ImageIcon, TelegramIcon } from './HertzIcons';
+import { CoffeeIcon, InsightIcon, TelegramIcon } from './HertzIcons';
 import styles from './HertzPost.module.css';
 
 function SpineIcon({ post }: { post: HertzPost }) {
-  if (post.category === 'life_coffee' || post.category === 'life_story') return <CoffeeIcon />;
-  if (post.quotedPost) return <ImageIcon />;
+  const kind = getHertzPostSpineKind(post.category);
+  if (kind === 'life') return <CoffeeIcon />;
+  if (kind === 'trading') return <InsightIcon />;
   return <TelegramIcon />;
 }
 
 function spineNodeClass(post: HertzPost) {
+  const kind = getHertzPostSpineKind(post.category);
   return [
     styles.spineNode,
-    (post.category === 'life_coffee' || post.category === 'life_story') ? styles.coffeeSpineNode : '',
+    kind === 'life' ? styles.coffeeSpineNode : '',
+    kind === 'trading' ? styles.tradingSpineNode : '',
   ].filter(Boolean).join(' ');
 }
 
