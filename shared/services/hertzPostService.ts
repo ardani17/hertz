@@ -169,7 +169,6 @@ export class HertzPostService {
     return {
       ...post,
       comments: await this.listComments(row.id, viewer ?? null),
-      communityNotes: [],
     };
   }
 
@@ -337,7 +336,6 @@ export class HertzPostService {
           reposts: Number(row.repost_count ?? 0),
           views: Number(row.view_count ?? 0),
         },
-        primaryCommunityNote: null,
         createdAt: dateToIso(row.created_at)!,
         updatedAt: dateToIso(row.updated_at)!,
         editedAt: dateToIso(row.edited_at),

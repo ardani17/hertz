@@ -73,7 +73,7 @@ export interface HertzPost {
   quotedPost: HertzPost | null;
   viewer: HertzViewerState;
   counts: HertzPostCounts;
-  primaryCommunityNote: CommunityNote | null;
+  primaryCommunityNote?: CommunityNote | null;
   createdAt: string;
   updatedAt: string;
   editedAt: string | null;
@@ -81,7 +81,7 @@ export interface HertzPost {
 
 export interface HertzPostDetail extends HertzPost {
   comments: HertzComment[];
-  communityNotes: CommunityNote[];
+  communityNotes?: CommunityNote[];
 }
 
 export interface HertzComment {
