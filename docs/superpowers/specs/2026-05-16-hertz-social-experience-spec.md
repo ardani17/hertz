@@ -26,6 +26,8 @@ HERTZ harus berkembang dari feed trading/community menjadi pengalaman sosial yan
 - Setelah unit kerja atau batch kecil selesai diverifikasi, langsung commit agar histori jelas.
 - Worktree bisa memiliki perubahan lain milik user. Implementasi nanti hanya boleh stage file yang relevan dengan unit kerja.
 - Karena proyek memakai Next.js dengan aturan lokal khusus, sebelum edit kode implementasi nanti wajib membaca guide relevan di `node_modules/next/dist/docs/`.
+- Tooling review yang sudah tersedia harus dipakai sejak planning, bukan ditambahkan setelah kode selesai: Playwright visual regression, Playwright MCP/browser agent, Axe accessibility audit, DOM snapshot/diff, dan rrweb session replay audit-only.
+- Artifact review tidak masuk commit kecuali sengaja dijadikan baseline atau bukti diskusi.
 
 ## Role dan Access State
 
@@ -499,6 +501,141 @@ UI utama memakai bahasa Indonesia, dengan istilah produk yang umum tetap boleh d
 - `Member`: logged-in regular user.
 - `Admin`: application admin.
 
+## Review Tooling Gates
+
+Tooling review sudah tersedia di `docs/review-tooling/README.md` dan menjadi bagian dari spec ini.
+
+### Baseline Sebelum Kode
+
+Sebelum implementation plan dieksekusi untuk batch UI besar:
+
+- Buat atau perbarui baseline visual hanya jika kondisi live saat ini memang diterima sebagai baseline.
+- Buat baseline DOM untuk route utama sebelum perubahan struktural besar.
+- Catat route dan viewport yang akan dibandingkan pada task terkait.
+
+Command:
+
+```bash
+REVIEW_BASE_URL=https://horizon.cloudnexify.com npm run review:visual:update
+REVIEW_BASE_URL=https://horizon.cloudnexify.com npm run review:dom:update
+```
+
+Baseline tidak boleh diperbarui setelah perubahan hanya untuk membuat test hijau. Jika snapshot berubah, perubahan harus dijelaskan sebagai expected change atau diperbaiki.
+
+### Visual Regression
+
+Wajib dipakai untuk perubahan yang menyentuh:
+
+- layout shell;
+- feed card;
+- composer;
+- profile;
+- DM;
+- detail post;
+- modal/sheet;
+- responsive breakpoint;
+- spacing, border, atau theme.
+
+Command:
+
+```bash
+REVIEW_BASE_URL=https://horizon.cloudnexify.com npm run review:visual
+```
+
+Jika visual diff muncul, hasilnya harus diklasifikasikan:
+
+- expected: sesuai spec dan boleh diterima;
+- regression: harus diperbaiki sebelum lanjut;
+- baseline stale: baseline hanya boleh di-update setelah user/developer menerima tampilan baru.
+
+### Accessibility Audit
+
+Wajib dipakai untuk perubahan yang menyentuh:
+
+- overlay;
+- dialog;
+- menu tiga titik;
+- share sheet;
+- delete confirm;
+- edit dialog;
+- composer;
+- form komentar;
+- DM composer;
+- navigation;
+- icon-only action.
+
+Command:
+
+```bash
+REVIEW_BASE_URL=https://horizon.cloudnexify.com npm run review:a11y
+```
+
+Critical dan serious violation harus diperbaiki sebelum task dianggap selesai, kecuali dicatat eksplisit sebagai existing issue yang tidak tersentuh task.
+
+### Snapshot + DOM Diff
+
+Wajib dipakai untuk perubahan yang menyentuh:
+
+- conditional rendering guest/member/admin;
+- nav gating;
+- profile tabs;
+- saved/repost/comment lists;
+- DM guest/member state;
+- search result sections;
+- SEO/direct link route structure.
+
+Command:
+
+```bash
+REVIEW_BASE_URL=https://horizon.cloudnexify.com npm run review:dom
+```
+
+DOM diff dipakai untuk memastikan elemen yang harus hilang/ada benar-benar berubah, misalnya Tools hilang untuk guest atau DM guest tidak lagi menampilkan composer operasional.
+
+### Browser Agent / Computer-Use
+
+Gunakan Playwright MCP ketika static check tidak cukup.
+
+Command:
+
+```bash
+npm run review:mcp
+```
+
+Pakai untuk:
+
+- membuka route live;
+- klik post dan memastikan modal desktop terbuka;
+- keyboard Escape/backdrop close;
+- membuka share sheet;
+- mengetes menu tiga titik;
+- memastikan focus tidak hilang;
+- melihat network request saat action sosial berjalan.
+
+MCP server berjalan sampai dihentikan manual. Jangan biarkan sesi MCP berjalan saat pekerjaan sudah selesai.
+
+### Session Replay
+
+Gunakan replay untuk flow yang perlu bukti run dan akan sering direview ulang.
+
+Command:
+
+```bash
+REVIEW_BASE_URL=https://horizon.cloudnexify.com REVIEW_REPLAY_ROUTE=/hertz REVIEW_REPLAY_SECONDS=30 npm run review:replay
+```
+
+Replay dipakai untuk:
+
+- post detail modal desktop;
+- share sheet desktop/mobile;
+- DM mobile two-screen;
+- composer upload preview/remove;
+- delete confirm;
+- profile saved history;
+- repost timeline.
+
+rrweb replay adalah audit-only injection. Recorder tidak boleh dipasang permanen ke UI produksi dalam fase ini.
+
 ## Verification Matrix
 
 Viewport wajib:
@@ -529,7 +666,11 @@ Command/check:
 - Tidak menjalankan dev server.
 - Jalankan lint/typecheck/test yang tersedia dan relevan.
 - Jalankan build produksi frontend sebelum mengklaim selesai.
-- Untuk UI responsive, lakukan screenshot/check live VPS setelah build dan deploy/reload sesuai proses yang dipakai di proyek.
+- Untuk UI responsive/layout, jalankan `npm run review:visual` pada route terdampak.
+- Untuk overlay/form/nav/action keyboard, jalankan `npm run review:a11y`.
+- Untuk conditional UI atau perubahan struktur route, jalankan `npm run review:dom`.
+- Untuk flow interaktif yang tidak cukup dibuktikan oleh screenshot/static audit, gunakan `npm run review:mcp` atau `npm run review:replay`.
+- Lakukan screenshot/check live VPS setelah build dan deploy/reload sesuai proses yang dipakai di proyek.
 
 ## Unit Kerja untuk Implementation Plan Berikutnya
 
@@ -551,7 +692,8 @@ Implementation plan nanti harus memecah spec ini menjadi unit kecil seperti ini:
 14. Minimal notification badges.
 15. SEO/social preview detail post.
 16. Accessibility pass untuk overlay.
-17. Full verification pass dan cleanup.
+17. Review tooling baseline/check pass: visual, a11y, DOM diff, MCP/replay sesuai area.
+18. Full verification pass dan cleanup.
 
 Setiap unit kerja harus memiliki:
 
@@ -559,7 +701,7 @@ Setiap unit kerja harus memiliki:
 - failing test atau baseline verification sebelum implementasi jika memungkinkan;
 - implementasi minimal;
 - build/check;
-- responsive/auth verification jika relevan;
+- responsive/auth/review tooling verification jika relevan;
 - commit setelah verified.
 
 ## Risiko dan Mitigasi
@@ -582,6 +724,12 @@ Mitigasi: pakai pola modal/sheet/menu yang reusable sejak awal.
 Risiko: share/SEO butuh direct link yang tetap stabil.  
 Mitigasi: route detail tetap dipertahankan walaupun desktop feed memakai modal.
 
+Risiko: snapshot/visual baseline bisa disalahgunakan untuk menerima regression.  
+Mitigasi: baseline hanya di-update sebelum coding atau setelah perubahan visual diterima eksplisit; visual diff setelah coding harus diklasifikasikan.
+
+Risiko: artifact replay/screenshot memenuhi repo.  
+Mitigasi: artifact review tetap ignored dan tidak dicommit kecuali sengaja dijadikan baseline atau bukti diskusi.
+
 ## Self-Review Spec
 
 - Placeholder: tidak ada bagian yang sengaja dibiarkan kosong.
@@ -589,3 +737,4 @@ Mitigasi: route detail tetap dipertahankan walaupun desktop feed memakai modal.
 - Konsistensi responsive: desktop memakai modal detail, mobile memakai route detail penuh, tablet memakai compact/mobile-like layout.
 - Scope: semua keputusan diskusi HERTZ masuk fase ini; fitur yang ditunda dicatat eksplisit di scope tidak masuk.
 - Ambiguitas utama sudah dipilih: Tools disembunyikan untuk guest, DM guest tetap visible sebagai CTA login, websocket ditunda, upload fase ini gambar saja.
+- Tooling review sudah masuk spec sebagai gate sebelum dan sesudah implementasi, bukan scope fitur produksi.

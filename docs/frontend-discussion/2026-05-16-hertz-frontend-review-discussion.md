@@ -41,6 +41,8 @@ Setiap area memakai status:
 - `docs/frontend-audit/2026-05-16-frontend-audit.md`
 - `docs/frontend-audit/2026-05-16-frontend-audit-rerun.md`
 - `docs/superpowers/specs/2026-05-16-hertz-theme-gallery-scope.md`
+- `docs/superpowers/specs/2026-05-16-hertz-social-experience-spec.md`
+- `docs/review-tooling/README.md`
 - Screenshot masalah DM: `docs/teswebimg/pasted file.png`
 
 ## Prinsip Review
@@ -51,6 +53,7 @@ Setiap area memakai status:
 - Public frontend harus tetap mengikuti tema HERTZ.
 - Build di VPS hanya production build, tidak menjalankan dev server.
 - Setelah implementasi nanti, perubahan harus diverifikasi dan dicommit per scope kecil.
+- Karena tooling review sudah bertambah, spec dan plan harus mengikat penggunaan Playwright, MCP/browser agent, visual regression, accessibility audit, DOM diff, dan session replay sebelum coding dimulai.
 
 ## Keputusan Eksekusi
 
@@ -66,6 +69,35 @@ Cara eksekusinya bukan dengan mengurangi scope, tetapi dengan mengubah urutan ke
 - Jika todo menyentuh fitur login, harus diverifikasi sebagai guest, member, dan/atau admin sesuai kebutuhan.
 - Commit dilakukan setelah todo atau batch kecil selesai diverifikasi, agar histori tetap mudah ditelusuri.
 - Karena berada di VPS, tidak menjalankan dev server; gunakan build produksi/check dan verifikasi live sesuai instruksi user.
+- Untuk todo UI, baseline review harus dibuat atau diperbarui sebelum perubahan besar agar hasil visual/DOM sesudah implementasi bisa dibandingkan.
+- Untuk todo layout/responsive, wajib memakai Playwright visual regression pada route dan viewport terdampak.
+- Untuk todo overlay/action keyboard, wajib memakai accessibility audit dan minimal keyboard/manual browser-agent check.
+- Untuk todo flow interaktif yang rawan regress seperti detail modal, share sheet, DM, composer, dan delete confirm, gunakan MCP/browser agent atau session replay sebagai bukti audit jika visual/static check belum cukup.
+
+## Keputusan Review Tooling
+
+Status: Siap spec
+
+Tooling review yang sudah tersedia:
+
+- Playwright untuk browser automation, visual regression, screenshot, trace, dan video.
+- Playwright MCP untuk browser agent/computer-use saat perlu investigasi interaktif.
+- Axe + Playwright untuk accessibility audit.
+- DOM snapshot/diff untuk menangkap perubahan struktur halaman.
+- rrweb session replay audit-only untuk merekam flow review tanpa memasang recorder permanen di UI produksi.
+
+Keputusan pemakaian:
+
+1. Tidak menjalankan dev server di VPS. Semua review memakai `REVIEW_BASE_URL` ke web live setelah build/deploy.
+2. `npm run review:visual:update` hanya dipakai saat baseline memang ingin diterima sebagai kondisi baru.
+3. `npm run review:visual` dipakai setelah perubahan layout/responsive pada route terdampak.
+4. `npm run review:a11y` dipakai setelah perubahan overlay, form, icon-only control, nav, atau action keyboard.
+5. `npm run review:dom:update` dipakai untuk membuat baseline DOM sebelum batch UI besar.
+6. `npm run review:dom` dipakai setelah perubahan untuk melihat diff struktur yang tidak selalu terlihat dari screenshot.
+7. `npm run review:mcp` dipakai untuk browser-agent review saat perlu klik, navigasi, keyboard, network, atau snapshot aksesibilitas secara interaktif.
+8. `npm run review:replay` dipakai untuk flow yang perlu bukti run, misalnya post detail modal desktop, share sheet, DM mobile, composer upload, dan delete confirm.
+9. Artifact review tidak masuk commit kecuali sengaja dijadikan baseline atau bukti diskusi.
+10. Plan implementasi berikutnya wajib menulis command review yang relevan per todo, bukan hanya `build`.
 
 ## Urutan Review yang Disarankan
 
