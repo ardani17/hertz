@@ -358,15 +358,23 @@ Pilih **Opsi B: Polish Feed Terarah**.
 
 Alasannya: layout dasar sudah cukup stabil, action bar sudah lebih lengkap, dan composer Trading sudah berkembang. Sisa masalah paling penting adalah keputusan produk yang langsung memengaruhi member pembuat post: upload media non-Trading, edit metadata, confirm delete, dan detail/guest state.
 
-### Keputusan yang Perlu Dikonfirmasi
+### Keputusan Feed/Post yang Sudah Disepakati
 
 1. Life dan General boleh upload gambar juga. Upload media tidak lagi khusus Trading, tetapi tetap dibatasi sebagai gambar pada fase ini.
 2. Member pembuat Trading post boleh edit metadata market miliknya sendiri. Admin juga boleh edit metadata market semua postingan.
 3. Plain repost harus muncul di feed/timeline sebagai item repost, bukan hanya menaikkan count. Tampilan yang disarankan: card original tetap dipakai, dengan label/header kecil seperti `ARDANI | vastara.id merepost`.
 4. Profile/member center harus punya section/tab `Disimpan` untuk melihat histori postingan yang disimpan/bookmarked.
-5. Apakah delete post wajib memakai confirm dialog sebelum hapus?
+5. Delete post wajib memakai confirm dialog sebelum benar-benar hapus.
 6. Tombol `Bagikan` di action bar membuka popup/share sheet. Isi minimal: Salin link, Telegram, WhatsApp, X/Twitter, Facebook, dan native share jika browser mendukung.
-7. Untuk guest di detail post, apakah form komentar diganti CTA login Telegram atau tetap form dengan pesan login saat dipakai?
+7. Untuk guest di detail post, form komentar diganti atau didampingi CTA login Telegram sesuai rekomendasi UX. Guest tidak melihat pengalaman seolah form aktif penuh.
+8. Guest menu/access dikontrol lewat access role `guest/member/admin`.
+9. Notifikasi minimal masuk scope: minimal unread indicator untuk DM dan activity indicator ringan untuk aktivitas sosial.
+10. Follow/following tidak masuk fase ini.
+11. Profile bio masuk scope sesuai rekomendasi: bio singkat, statistik dasar, joined date, dan aktivitas utama.
+12. Search sosial di kanan atas harus difungsikan sebagai search sosial untuk post/member/topik, bukan sekadar dekorasi.
+13. Hashtag/topik masuk scope.
+14. Block/mute/report lanjutan tidak masuk fase ini. Report yang sudah ada cukup memakai feedback sukses dasar.
+15. Notification settings tidak masuk fase ini; mengikuti rekomendasi untuk ditunda.
 
 ### Keputusan Share Popup
 
@@ -405,6 +413,11 @@ Alasannya: layout dasar sudah cukup stabil, action bar sudah lebih lengkap, dan 
 - Tombol `Simpan` punya histori yang bisa dilihat di profile sebagai `Disimpan`.
 - Section `Disimpan` hanya muncul untuk `member` dan `admin`; `guest` melihat CTA login.
 - Tombol `Bagikan` membuka share popup/sheet dengan opsi sosial dan copy link.
+- Guest detail comment menampilkan CTA login, bukan form aktif yang membingungkan.
+- Search kanan atas mengembalikan hasil sosial: post, member, dan hashtag/topik.
+- Hashtag/topik dapat muncul sebagai link/filter sosial.
+- Profile member punya bio, statistik dasar, joined date, dan tab aktivitas utama.
+- Notifikasi minimal tampil untuk DM unread dan activity indicator ringan.
 - Delete tidak terjadi tanpa confirm.
 - Action bar tetap usable di mobile icon-only.
 - Desktop detail post bisa dibuka sebagai modal tanpa meninggalkan feed.
@@ -419,6 +432,9 @@ Selain poin yang sudah dibahas, berikut 9 temuan HERTZ yang menurut saya perlu m
 
 2. **Profile belum menjadi pusat aktivitas**
    Profile saat ini baru menampilkan status akun dan credit. Seharusnya member center berkembang menjadi tempat:
+   - Bio singkat
+   - Statistik dasar
+   - Joined date
    - Post saya
    - Disimpan
    - Repost saya
@@ -427,7 +443,7 @@ Selain poin yang sudah dibahas, berikut 9 temuan HERTZ yang menurut saya perlu m
    - Setting Telegram/session
 
 3. **Belum ada notifikasi HERTZ**
-   HERTZ belum punya notification center untuk komentar baru, repost, like/suka, DM unread, atau status report/moderation. Minimal badge unread untuk DM dan activity ring di profile akan membuat produk terasa lebih hidup.
+   HERTZ belum punya notification center untuk komentar baru, repost, like/suka, DM unread, atau status report/moderation. Keputusan fase ini: buat notifikasi minimal berupa badge unread DM dan activity indicator ringan. Notification settings ditunda.
 
 4. **Feed belum punya state yang matang**
    Empty state, loading state, error state, dan skeleton belum konsisten. Contoh: ketika filter kosong, search kosong, guest belum login, atau API gagal, UI perlu pesan yang jelas dan actionable. Ini juga termasuk menentukan action mana yang cukup update lokal dan mana yang boleh reload halaman, supaya pengalaman tidak terasa patah.
@@ -442,7 +458,7 @@ Selain poin yang sudah dibahas, berikut 9 temuan HERTZ yang menurut saya perlu m
    - Repost sendiri tidak boleh, dan errornya harus terlihat jelas.
 
 7. **Report/moderation feedback belum lengkap untuk member**
-   Member bisa melaporkan postingan, tetapi belum ada status apakah report diterima, sedang ditinjau, atau selesai. Untuk fase awal mungkin cukup feedback sukses, tetapi nanti perlu histori report atau notifikasi.
+   Member bisa melaporkan postingan, tetapi belum ada status apakah report diterima, sedang ditinjau, atau selesai. Keputusan fase ini: cukup feedback sukses dasar. Block/mute/report lanjutan dan histori report ditunda.
 
 8. **SEO dan social preview detail post masih tipis**
    Detail post metadata saat ini masih memakai title berbasis shortId. Untuk share popup, post detail sebaiknya punya title, description, dan Open Graph/Twitter metadata dari konten post agar link terlihat bagus saat dibagikan ke Telegram, WhatsApp, atau X.
@@ -548,6 +564,9 @@ Hasil umum:
 2. **Label kategori perlu lebih jelas**
    `Life` dan `General` cukup umum. Sebagai user baru, perlu hint pendek di composer atau empty state agar tahu konten apa yang cocok untuk tiap kategori.
 
+3. **Search sosial dan hashtag perlu terasa seperti X**
+   Search di kanan atas harus difungsikan untuk pencarian sosial: post, member, dan hashtag/topik. Hashtag pada post sebaiknya bisa diklik untuk filter/topik, agar HERTZ terasa seperti timeline sosial, bukan daftar artikel.
+
 #### Prioritas UX dari Perspektif User
 
 1. Fix breakpoint tablet 768px agar feed/detail tidak menjadi kolom sempit.
@@ -559,6 +578,7 @@ Hasil umum:
 7. Tambahkan media preview/remove di composer.
 8. Kurangi dominasi Market Live pada mobile detail post.
 9. Tambahkan notification/unread indicator minimal untuk DM dan activity.
+10. Fungsikan search sosial dan hashtag/topik.
 
 ### Catatan Role Saat Ini
 
