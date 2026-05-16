@@ -324,7 +324,7 @@ Alasannya: layout dasar sudah cukup stabil, action bar sudah lebih lengkap, dan 
 ### Keputusan yang Perlu Dikonfirmasi
 
 1. Life dan General boleh upload gambar juga. Upload media tidak lagi khusus Trading, tetapi tetap dibatasi sebagai gambar pada fase ini.
-2. Apakah owner Trading post boleh edit metadata market miliknya sendiri?
+2. Owner/pembuat Trading post boleh edit metadata market miliknya sendiri. Admin juga boleh edit metadata market semua postingan.
 3. Apakah delete post wajib memakai confirm dialog sebelum hapus?
 4. Apakah `Bagikan` di action bar dan `Salin link` di menu tetap dua-duanya ada?
 5. Untuk guest di detail post, apakah form komentar diganti CTA login Telegram atau tetap form dengan pesan login saat dipakai?
@@ -334,9 +334,27 @@ Alasannya: layout dasar sudah cukup stabil, action bar sudah lebih lengkap, dan 
 - Feed dan detail tidak horizontal overflow di 320px, 390px, tablet, dan desktop.
 - Login owner `ARDANI | vastara.id` melihat `Edit postingan` dan `Hapus postingan` pada post miliknya sendiri.
 - Non-owner tidak melihat edit/delete owner.
+- Owner Trading post bisa edit Pair, TF, Arah, Risk, Entry, SL, TP, dan Confidence miliknya sendiri.
+- Admin bisa edit/delete semua postingan dan edit metadata market semua postingan.
 - Delete tidak terjadi tanpa confirm.
 - Action bar tetap usable di mobile icon-only.
 - Detail post punya back affordance dan state komentar yang jelas.
+
+### Catatan Role Saat Ini
+
+Role aplikasi saat ini hanya:
+
+- `member`
+- `admin`
+
+Bukti:
+
+- `shared/types/index.ts` mendefinisikan `UserRole.MEMBER` dan `UserRole.ADMIN`.
+- Admin user form hanya menawarkan `Member` dan `Admin`.
+- API update user hanya menerima `member` dan `admin`.
+- Data live VPS saat dicek: `admin` 3 user, `member` 17 user.
+
+Istilah `owner` belum menjadi role terpisah. Dalam konteks post, `owner` berarti pembuat/author postingan. Jika dibutuhkan owner platform dengan privilege khusus di luar admin, itu harus dibuat sebagai keputusan role baru.
 
 ## Catatan untuk Spec Nanti
 
