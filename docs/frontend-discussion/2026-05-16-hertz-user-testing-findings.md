@@ -127,3 +127,44 @@ Next investigation:
 - Decide whether to use `YAxis hide domain={['dataMin', 'dataMax']}` with padding, or normalize sparkline values to percent/indexed movement before rendering.
 - Prefer 24-point intraday data for main chart if the visual target needs more visible movement than daily 12-point series.
 - Add a unit test around sparkline data normalization/domain behavior before implementation.
+
+### UTF-003: Mobile HERTZ tidak menampilkan logo atom Horizon di kiri atas
+
+Status: Open  
+Severity: Medium  
+Area: HERTZ mobile shell / top header  
+Reported at: 2026-05-16
+
+User report:
+
+- Pada menu mobile saat membuka HERTZ, kiri atas seharusnya menampilkan logo atom Horizon.
+
+Expected:
+
+- Di viewport mobile/tablet, bagian atas HERTZ memiliki brand signal yang jelas di kiri atas: logo atom Horizon.
+- Logo tidak mengganggu tab `For You` / `Trending`, kategori, search chip, atau bottom nav.
+- Logo tetap accessible dengan `alt="Horizon"` atau label setara.
+
+Actual:
+
+- Mobile header HERTZ hanya menampilkan area title/tabs/feed navigation; logo atom kiri atas tidak terlihat.
+
+Initial evidence:
+
+- `HertzLeftRail` desktop memiliki logo atom Horizon, tetapi rail desktop disembunyikan pada breakpoint mobile.
+- `HertzAppShell` mobile hanya merender header title/description di content, tanpa brand logo mobile.
+- `HertzHeader` feed merender `For You` / `Trending` dan tabs kategori, tetapi tidak punya brand slot di kiri atas.
+- HTML live tetap memuat asset logo untuk desktop rail/favicon, jadi asset tersedia; masalahnya adalah placement/responsive rendering.
+
+Likely affected files:
+
+- `frontend/src/components/hertz/HertzAppShell.tsx`
+- `frontend/src/components/hertz/HertzAppShell.module.css`
+- `frontend/src/components/feed/HertzHeader.tsx`
+- `frontend/src/components/feed/HertzHeader.module.css`
+
+Next investigation:
+
+- Tentukan apakah logo masuk sebagai mobile app bar global di `HertzAppShell` atau sebagai bagian feed header `HertzHeader`.
+- Cek semua route HERTZ mobile: `/hertz`, `/hertz/messages`, `/hertz/profile`, dan `/hertz/post/{shortId}` agar brand tidak muncul ganda.
+- Tambahkan test/render assertion atau DOM review marker untuk memastikan logo mobile hadir.
