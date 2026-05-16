@@ -262,10 +262,13 @@ Hasil cek live:
 7. **Plain repost belum muncul di timeline**
    Temuan live: saat member menekan `Repost`, tombol menjadi aktif dan count naik, tetapi postingan tidak muncul ulang di feed sebagai repost. Root cause: plain repost hanya membuat record di `hertz_reposts`; query feed saat ini hanya membaca `hertz_posts`, sehingga repost tanpa quote hanya dihitung sebagai interaction. Data live membuktikan repost `ARDANI | vastara.id` tersimpan untuk `hzx_live01` dan `hzx_live04`, tetapi `repost_post_id` kosong.
 
-8. **Detail post perlu identitas halaman yang lebih kuat**
+8. **Postingan tersimpan belum punya histori di profile**
+   Tombol `Simpan` sudah menyimpan bookmark ke `hertz_bookmarks`, tetapi user belum punya tempat untuk melihat daftar postingan yang pernah disimpan. Profile/member center perlu punya section atau tab `Disimpan` yang menampilkan histori bookmark milik member.
+
+9. **Detail post perlu identitas halaman yang lebih kuat**
    Keputusan baru: desktop tidak pindah halaman saat membuka detail post dari feed. Desktop memakai popup/modal elegan agar user tetap berada di feed dan tidak perlu kembali manual. Mobile tetap pindah ke halaman detail karena modal detail post kurang nyaman di layar kecil.
 
-9. **Komentar guest masih menampilkan form**
+10. **Komentar guest masih menampilkan form**
    Guest melihat textarea komentar dan baru diberi pesan login saat fokus/submit. Bisa dipertahankan, tetapi CTA login Telegram mungkin lebih jelas jika belum login.
 
 ### Opsi Arah Desain Feed/Post
@@ -301,6 +304,7 @@ Scope:
 - Detail post diberi header/identity lebih jelas.
 - Guest comment form diganti atau didampingi CTA login Telegram.
 - Plain repost muncul sebagai item timeline dengan label member yang melakukan repost.
+- Profile/member center menampilkan tab atau section `Disimpan` untuk histori postingan yang dibookmark dari tombol `Simpan`.
 - `Bagikan` dan `Salin link` tetap ada, tetapi copy dan placement dibuat konsisten.
 
 Kelebihan:
@@ -345,9 +349,10 @@ Alasannya: layout dasar sudah cukup stabil, action bar sudah lebih lengkap, dan 
 1. Life dan General boleh upload gambar juga. Upload media tidak lagi khusus Trading, tetapi tetap dibatasi sebagai gambar pada fase ini.
 2. Member pembuat Trading post boleh edit metadata market miliknya sendiri. Admin juga boleh edit metadata market semua postingan.
 3. Plain repost harus muncul di feed/timeline sebagai item repost, bukan hanya menaikkan count. Tampilan yang disarankan: card original tetap dipakai, dengan label/header kecil seperti `ARDANI | vastara.id merepost`.
-4. Apakah delete post wajib memakai confirm dialog sebelum hapus?
-5. Apakah `Bagikan` di action bar dan `Salin link` di menu tetap dua-duanya ada?
-6. Untuk guest di detail post, apakah form komentar diganti CTA login Telegram atau tetap form dengan pesan login saat dipakai?
+4. Profile/member center harus punya section/tab `Disimpan` untuk melihat histori postingan yang disimpan/bookmarked.
+5. Apakah delete post wajib memakai confirm dialog sebelum hapus?
+6. Apakah `Bagikan` di action bar dan `Salin link` di menu tetap dua-duanya ada?
+7. Untuk guest di detail post, apakah form komentar diganti CTA login Telegram atau tetap form dengan pesan login saat dipakai?
 
 ### Keputusan Detail Post Desktop/Mobile
 
@@ -367,6 +372,8 @@ Alasannya: layout dasar sudah cukup stabil, action bar sudah lebih lengkap, dan 
 - Admin bisa edit/delete semua postingan dan edit metadata market semua postingan.
 - Plain repost muncul sebagai item timeline dengan identitas member yang melakukan repost.
 - Repost toggle/count tetap sinkron dengan item timeline.
+- Tombol `Simpan` punya histori yang bisa dilihat di profile sebagai `Disimpan`.
+- Section `Disimpan` hanya muncul untuk `member` dan `admin`; `guest` melihat CTA login.
 - Delete tidak terjadi tanpa confirm.
 - Action bar tetap usable di mobile icon-only.
 - Desktop detail post bisa dibuka sebagai modal tanpa meninggalkan feed.
