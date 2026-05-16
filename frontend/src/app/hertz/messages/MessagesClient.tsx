@@ -2,6 +2,8 @@
 
 import { useCallback, useEffect, useState } from 'react';
 import { HertzAppShell } from '@/components/hertz/HertzAppShell';
+import { HertzTelegramLogin } from '@/components/feed/HertzTelegramLogin';
+import { MoreIcon } from '@/components/feed/HertzIcons';
 import type { MemberSessionUser } from '@shared/types';
 import styles from './page.module.css';
 
@@ -34,8 +36,36 @@ interface PendingAttachment {
   name: string;
 }
 
+export const HERTZ_DM_POLL_INTERVAL_MS = 7000;
+
+export function getDmAccessState(user: Pick<MemberSessionUser, 'id'> | null) {
+  if (!user) {
+    return {
+      mode: 'guest' as const,
+      title: 'Login Telegram untuk Direct Message',
+      body: 'DM hanya tersedia untuk member HERTZ yang sudah login.',
+    };
+  }
+
+  return {
+    mode: 'member' as const,
+    title: 'Direct Message',
+    body: 'Percakapan privat antar member HERTZ.',
+  };
+}
+
+export function canAddDmImages(currentCount: number, incomingCount: number) {
+  return currentCount < 4 && currentCount + incomingCount <= 4;
+}
+
+export function getDmThreadMenuActions({ active, archived }: { active: boolean; archived: boolean }) {
+  if (!active) return [];
+  return [archived ? 'Buka arsip' : 'Arsipkan', 'Blokir'];
+}
+
 export function HertzMessagesClient() {
   const [currentUser, setCurrentUser] = useState<MemberSessionUser | null>(null);
+  const [authState, setAuthState] = useState<'loading' | 'guest' | 'member'>('loading');
   const [conversations, setConversations] = useState<Conversation[]>([]);
   const [members, setMembers] = useState<MemberResult[]>([]);
   const [activeId, setActiveId] = useState<string | null>(null);
@@ -47,13 +77,18 @@ export function HertzMessagesClient() {
   const [uploading, setUploading] = useState(false);
   const [status, setStatus] = useState<string | null>(null);
   const [mobileThreadOpen, setMobileThreadOpen] = useState(false);
+  const [threadMenuOpen, setThreadMenuOpen] = useState(false);
 
   const activeConversation = conversations.find((item) => item.id === activeId) ?? null;
+  const accessState = getDmAccessState(currentUser);
+  const threadActions = getDmThreadMenuActions({ active: Boolean(activeId), archived: filter === 'archived' });
 
   const loadCurrentUser = useCallback(async () => {
     const response = await fetch('/api/auth/me', { cache: 'no-store' });
     const payload = await response.json().catch(() => null);
-    if (response.ok && payload?.success) setCurrentUser(payload.data.user);
+    const user = response.ok && payload?.success ? payload.data.user ?? null : null;
+    setCurrentUser(user);
+    setAuthState(user ? 'member' : 'guest');
   }, []);
 
   const loadInbox = useCallback(async () => {
@@ -165,6 +200,10 @@ export function HertzMessagesClient() {
 
   async function uploadImages(files: FileList | null) {
     if (!files?.length) return;
+    if (!canAddDmImages(attachments.length, files.length)) {
+      setStatus('Maksimal 4 gambar per pesan.');
+      return;
+    }
     const nextFiles = Array.from(files).slice(0, Math.max(0, 4 - attachments.length));
     if (nextFiles.length === 0) {
       setStatus('Maksimal 4 gambar per pesan.');
@@ -206,13 +245,17 @@ export function HertzMessagesClient() {
 
   useEffect(() => {
     void loadCurrentUser();
+  }, [loadCurrentUser]);
+
+  useEffect(() => {
+    if (authState !== 'member') return;
     void loadInbox();
-  }, [loadCurrentUser, loadInbox]);
+  }, [authState, loadInbox]);
 
   useEffect(() => {
     if (!activeId) return undefined;
     void loadThread(activeId);
-    const timer = window.setInterval(() => void loadThread(activeId), 7000);
+    const timer = window.setInterval(() => void loadThread(activeId), HERTZ_DM_POLL_INTERVAL_MS);
     return () => window.clearInterval(timer);
   }, [activeId, loadThread]);
 
@@ -224,6 +267,14 @@ export function HertzMessagesClient() {
       currentUser={currentUser}
       hideRightRail
     >
+      {authState !== 'member' ? (
+        <section className={styles.guestPanel}>
+          <span>{authState === 'loading' ? 'Memuat session' : 'Mode guest'}</span>
+          <h2>{accessState.title}</h2>
+          <p>{accessState.body}</p>
+          {authState === 'guest' ? <HertzTelegramLogin /> : null}
+        </section>
+      ) : (
       <div className={`${styles.dmLayout} ${mobileThreadOpen ? styles.threadOpen : ''}`}>
       <aside className={styles.sidebar}>
         {status ? <p>{status}</p> : null}
@@ -275,11 +326,34 @@ export function HertzMessagesClient() {
             <strong>{activeConversation?.peer?.displayName ?? 'Pilih conversation'}</strong>
             <span>{activeConversation?.peer?.username ? `@${activeConversation.peer.username}` : 'HERTZ DM'}</span>
           </div>
-          <div className={styles.threadActions}>
-            <button type="button" onClick={() => archiveConversation(filter !== 'archived')} disabled={!activeId}>
-              {filter === 'archived' ? 'Buka arsip' : 'Arsipkan'}
+          <div className={styles.threadMenu}>
+            <button
+              type="button"
+              className={styles.menuTrigger}
+              onClick={() => setThreadMenuOpen((value) => !value)}
+              disabled={!activeId}
+              aria-label="Menu percakapan"
+              aria-expanded={threadMenuOpen}
+            >
+              <MoreIcon />
             </button>
-            <button type="button" onClick={blockPeer} disabled={!activeConversation?.peer?.id}>Blokir</button>
+            {threadMenuOpen ? (
+              <div className={styles.threadActions}>
+                {threadActions.includes('Arsipkan') ? (
+                  <button type="button" onClick={() => { setThreadMenuOpen(false); void archiveConversation(true); }}>
+                    Arsipkan
+                  </button>
+                ) : null}
+                {threadActions.includes('Buka arsip') ? (
+                  <button type="button" onClick={() => { setThreadMenuOpen(false); void archiveConversation(false); }}>
+                    Buka arsip
+                  </button>
+                ) : null}
+                <button type="button" onClick={() => { setThreadMenuOpen(false); void blockPeer(); }} disabled={!activeConversation?.peer?.id}>
+                  Blokir
+                </button>
+              </div>
+            ) : null}
           </div>
         </div>
         <div className={styles.messages}>
@@ -333,6 +407,7 @@ export function HertzMessagesClient() {
         </div>
       </section>
       </div>
+      )}
     </HertzAppShell>
   );
 }

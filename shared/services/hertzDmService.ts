@@ -67,7 +67,7 @@ export class HertzDmService {
 
   async send(user: MemberSessionUser, conversationId: string, body: unknown, attachments: unknown = []) {
     const text = typeof body === 'string' ? body.trim() : '';
-    const files = validateAttachments(attachments);
+    const files = validateDmAttachments(attachments);
     if (!text && files.length === 0) throw new HertzValidationError('Pesan tidak boleh kosong');
     const message = await withTransaction(async (client) => {
       const message = await this.repo.sendMessage(conversationId, user.id, text ? text.slice(0, 4000) : null, client);
@@ -115,7 +115,7 @@ export class HertzDmService {
   }
 }
 
-function validateAttachments(value: unknown) {
+export function validateDmAttachments(value: unknown) {
   if (!Array.isArray(value)) return [];
   if (value.length > 4) throw new HertzValidationError('Maksimal 4 gambar per pesan');
   return value.map((item) => {

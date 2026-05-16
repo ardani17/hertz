@@ -5,6 +5,35 @@
   min-width: 0;
 }
 
+.guestPanel {
+  background: #020906;
+  border: 1px solid rgba(19, 210, 123, 0.28);
+  border-radius: 8px;
+  display: grid;
+  gap: 0.8rem;
+  margin: 0 auto;
+  max-width: 560px;
+  padding: 1.25rem;
+}
+
+.guestPanel span {
+  color: #13d27b;
+  font-size: 0.72rem;
+  font-weight: 850;
+  text-transform: uppercase;
+}
+
+.guestPanel h2 {
+  color: #f3fff8;
+  font-size: 1.35rem;
+  margin: 0;
+}
+
+.guestPanel p {
+  color: #9fb4aa;
+  margin: 0;
+}
+
 .sidebar,
 .thread {
   border-right: 1px solid rgba(52, 211, 153, 0.24);
@@ -42,17 +71,23 @@
   margin-top: 0.2rem;
 }
 
-.threadActions,
+.threadMenu,
 .messageActions {
   display: flex;
   flex-wrap: wrap;
   gap: 0.5rem;
 }
 
+.threadMenu {
+  justify-content: flex-end;
+  position: relative;
+}
+
 .backButton {
   display: none;
 }
 
+.menuTrigger,
 .threadActions button,
 .messageActions button {
   background: #020906;
@@ -64,6 +99,34 @@
   font-size: 0.8rem;
   min-height: 32px;
   padding: 0 0.75rem;
+}
+
+.menuTrigger {
+  align-items: center;
+  display: inline-flex;
+  justify-content: center;
+  padding: 0;
+  width: 34px;
+}
+
+.menuTrigger svg {
+  height: 18px;
+  width: 18px;
+}
+
+.threadActions {
+  background: #020906;
+  border: 1px solid rgba(52, 211, 153, 0.24);
+  border-radius: 8px;
+  box-shadow: 0 18px 40px rgba(0, 0, 0, 0.4);
+  display: grid;
+  gap: 0.35rem;
+  min-width: 150px;
+  padding: 0.35rem;
+  position: absolute;
+  right: 0;
+  top: calc(100% + 0.4rem);
+  z-index: 5;
 }
 
 .threadActions button:hover,
@@ -277,11 +340,11 @@
   }
 
   .threadActions {
-    width: 100%;
+    min-width: 160px;
   }
 
   .threadActions button {
-    flex: 1;
+    width: 100%;
   }
 
   .messages {

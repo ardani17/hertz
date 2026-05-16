@@ -914,7 +914,7 @@ Centang setelah comment CTA verified dan commit selesai.
 - Test: `tests/unit/frontend/hertzMessages.test.ts`
 - Test: `tests/unit/shared/hertzDmService.test.ts`
 
-- [ ] **Step 1: Tulis test DM state**
+- [x] **Step 1: Tulis test DM state**
 
 Coverage:
 
@@ -930,7 +930,7 @@ Run:
 npm run test -- tests/unit/frontend/hertzMessages.test.ts tests/unit/shared/hertzDmService.test.ts
 ```
 
-- [ ] **Step 2: Implement DM UX**
+- [x] **Step 2: Implement DM UX**
 
 Implementation target:
 
@@ -940,7 +940,7 @@ Implementation target:
 - Arsipkan/Blokir ke menu tiga titik.
 - Composer file input custom HERTZ style.
 
-- [ ] **Step 3: Verifikasi**
+- [x] **Step 3: Verifikasi**
 
 Run:
 
@@ -954,7 +954,7 @@ REVIEW_BASE_URL=https://horizon.cloudnexify.com npm run review:dom
 REVIEW_BASE_URL=https://horizon.cloudnexify.com REVIEW_REPLAY_ROUTE=/hertz/messages REVIEW_REPLAY_SECONDS=30 npm run review:replay
 ```
 
-- [ ] **Step 4: Commit Task 12**
+- [x] **Step 4: Commit Task 12**
 
 Run:
 
@@ -963,7 +963,7 @@ git add frontend/src/app/hertz/messages/MessagesClient.tsx frontend/src/app/hert
 git commit -m "Polish HERTZ direct messages"
 ```
 
-- [ ] **Ceklist selesai Task 12**
+- [x] **Ceklist selesai Task 12**
 
 Centang setelah DM verified dan commit selesai.
 
