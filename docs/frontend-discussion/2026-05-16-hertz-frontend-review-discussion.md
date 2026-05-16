@@ -42,7 +42,7 @@ Setiap area memakai status:
 
 | Urutan | Area | Status | Alasan |
 | --- | --- | --- | --- |
-| 1 | Direct Message | Perlu keputusan | Ada bukti screenshot UI lama/terpotong dan baru saja ada cache/prerender fix. Perlu putuskan UX final DM. |
+| 1 | Direct Message | Siap spec | Keputusan UX utama sudah dicatat: label mobile, guest CTA, menu tiga titik, polling, dan batas upload gambar. |
 | 2 | HERTZ Feed dan Post Detail | Belum direview | Core produk, termasuk owner edit/delete, action bar, composer, dan detail post. |
 | 3 | Profile / Member Center | Belum direview | Sudah ada route, perlu pastikan isi dan navigasi sesuai kebutuhan user Telegram. |
 | 4 | Navigation Shell Desktop/Mobile | Belum direview | Menentukan rail kiri, rail kanan, bottom nav, menu yang disembunyikan, dan sticky behavior. |
@@ -55,7 +55,7 @@ Setiap area memakai status:
 
 ## Review 1: Direct Message
 
-Status: Perlu keputusan
+Status: Siap spec
 
 ### Kondisi Saat Ini
 
@@ -176,6 +176,16 @@ Alasannya: masalah screenshot sudah terbukti bukan hanya visual kecil, tetapi ga
 3. Action sekunder `Arsipkan` dan `Blokir` dipindah ke menu tiga titik di header thread. Header utama hanya memuat identitas conversation dan navigasi/back.
 4. DM fase ini tetap memakai polling 5-10 detik tanpa websocket. Websocket/realtime ditunda ke fase terpisah setelah kebutuhan realtime dan kapasitas server jelas.
 5. Upload gambar DM tetap maksimal 4 gambar per pesan dan hanya mendukung JPG, PNG, atau WEBP.
+
+### Ringkasan Keputusan Final DM
+
+- Desktop boleh tetap memakai nama `Direct Message`.
+- Mobile memakai label pendek `DM`.
+- Guest langsung melihat CTA login Telegram.
+- Member melihat inbox/search dan thread dalam alur dua layar di mobile.
+- Header thread dibuat bersih; action sekunder masuk menu tiga titik.
+- DM tetap polling 5-10 detik.
+- Upload gambar tetap tersedia dengan batas 4 gambar per pesan.
 
 ## Review Berikutnya
 
