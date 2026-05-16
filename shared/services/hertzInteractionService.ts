@@ -50,7 +50,16 @@ export class HertzRepostService {
     if (!original || original.status !== 'published' || original.deleted_at) throw new HertzNotFoundError('Post tidak ditemukan');
     if (input.type === 'repost') {
       if (original.author_id === user.id) throw new HertzForbiddenError('Tidak bisa repost post sendiri');
-      return this.reposts.togglePlainRepost(original.id, user.id);
+      const result = await this.reposts.togglePlainRepost(original.id, user.id);
+      if (!result.active) {
+        if (result.repostPostId) await this.posts.updateStatus(result.repostPostId, 'deleted');
+        return result;
+      }
+      if (result.repostId) {
+        const repostPostId = await this.hertz.createPlainRepostPost(user, original);
+        await this.reposts.setPlainRepostPostId(result.repostId, repostPostId);
+      }
+      return result;
     }
     const quote = await this.hertz.createQuotePost(user, original.id, {
       category: original.category,

@@ -230,6 +230,23 @@ export class HertzPostService {
     return this.getPostDetail(postId, user);
   }
 
+  async createPlainRepostPost(user: MemberSessionUser, original: HertzPostRow): Promise<string> {
+    assertMember(user);
+    return withTransaction(async (client) => {
+      const post = await this.posts.createPost({
+        shortId: await this.generateShortId(),
+        authorId: user.id,
+        type: 'repost',
+        source: 'web',
+        category: normalizeHertzCategory(original.category),
+        status: 'published',
+        content: '',
+        quotedPostId: original.id,
+      }, client);
+      return post.id;
+    });
+  }
+
   async createTelegramPost(params: {
     userId: string;
     isAdmin: boolean;
@@ -359,7 +376,7 @@ export class HertzPostService {
     );
     return basePosts.map((post) => ({
       ...post,
-      quotedPost: post.type === 'quote'
+      quotedPost: post.type === 'quote' || post.type === 'repost'
         ? quotedPosts.find((quoted) => quoted.id === rows.find((row) => row.id === post.id)?.quoted_post_id) ?? null
         : null,
     }));

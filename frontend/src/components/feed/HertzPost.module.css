@@ -160,6 +160,13 @@
   user-select: text;
   white-space: pre-wrap;
 }
+
+.repostLabel {
+  color: #8ea897;
+  font-size: 0.82rem;
+  font-weight: 800;
+  margin: 8px 0 0;
+}
 .readMore {
   position: relative;
   z-index: 2;

@@ -47,16 +47,16 @@ export class HertzBookmarkRepository {
 }
 
 export class HertzRepostRepository {
-  async togglePlainRepost(originalPostId: string, userId: string, client?: DbClient): Promise<{ active: boolean; repostId: string | null }> {
-    const existing = await queryOne<{ id: string }>(
-      `SELECT id FROM hertz_reposts
+  async togglePlainRepost(originalPostId: string, userId: string, client?: DbClient): Promise<{ active: boolean; repostId: string | null; repostPostId: string | null }> {
+    const existing = await queryOne<{ id: string; repost_post_id: string | null }>(
+      `SELECT id, repost_post_id FROM hertz_reposts
        WHERE original_post_id = $1 AND user_id = $2 AND repost_type = 'repost' AND deleted_at IS NULL`,
       [originalPostId, userId],
       client,
     );
     if (existing) {
       await execute('UPDATE hertz_reposts SET deleted_at = NOW() WHERE id = $1', [existing.id], client);
-      return { active: false, repostId: existing.id };
+      return { active: false, repostId: existing.id, repostPostId: existing.repost_post_id };
     }
     const row = await queryOne<{ id: string }>(
       `INSERT INTO hertz_reposts (original_post_id, user_id, repost_type)
@@ -65,7 +65,15 @@ export class HertzRepostRepository {
       [originalPostId, userId],
       client,
     );
-    return { active: true, repostId: row?.id ?? null };
+    return { active: true, repostId: row?.id ?? null, repostPostId: null };
+  }
+
+  async setPlainRepostPostId(repostId: string, repostPostId: string, client?: DbClient): Promise<void> {
+    await execute(
+      `UPDATE hertz_reposts SET repost_post_id = $2 WHERE id = $1`,
+      [repostId, repostPostId],
+      client,
+    );
   }
 
   async createQuote(originalPostId: string, userId: string, repostPostId: string, client?: DbClient): Promise<void> {

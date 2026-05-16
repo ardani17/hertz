@@ -601,7 +601,7 @@ Centang setelah delete confirm verified dan commit selesai.
 - Test: `tests/unit/shared/hertzPostService.test.ts`
 - Test: `tests/unit/frontend/feed.test.ts`
 
-- [ ] **Step 1: Tulis test repost timeline**
+- [x] **Step 1: Tulis test repost timeline**
 
 Coverage:
 
@@ -618,7 +618,7 @@ Run:
 npm run test -- tests/unit/shared/hertzPostService.test.ts tests/unit/frontend/feed.test.ts
 ```
 
-- [ ] **Step 2: Implement feed union/repost presentation**
+- [x] **Step 2: Implement feed union/repost presentation**
 
 Implementation target:
 
@@ -627,7 +627,7 @@ Implementation target:
 - UI menampilkan `nama merepost`.
 - Toggle update local state jika memungkinkan.
 
-- [ ] **Step 3: Verifikasi**
+- [x] **Step 3: Verifikasi**
 
 Run:
 
@@ -639,7 +639,7 @@ REVIEW_BASE_URL=https://horizon.cloudnexify.com npm run review:dom
 REVIEW_BASE_URL=https://horizon.cloudnexify.com REVIEW_REPLAY_ROUTE=/hertz REVIEW_REPLAY_SECONDS=30 npm run review:replay
 ```
 
-- [ ] **Step 4: Commit Task 7**
+- [x] **Step 4: Commit Task 7**
 
 Run:
 
@@ -648,7 +648,7 @@ git add shared/types/feed.ts shared/repositories/hertzPostRepository.ts shared/r
 git commit -m "Show plain reposts in HERTZ timeline"
 ```
 
-- [ ] **Ceklist selesai Task 7**
+- [x] **Ceklist selesai Task 7**
 
 Centang setelah repost timeline verified dan commit selesai.
 

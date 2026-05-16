@@ -25,6 +25,7 @@ function spineNodeClass(post: HertzPost) {
 }
 
 export function HertzPostCard({ post, currentUser }: { post: HertzPost; currentUser: MemberSessionUser | null }) {
+  const isPlainRepost = post.type === 'repost' && post.quotedPost;
   return (
     <HertzPostArticle className={styles.post} href={`/hertz/post/${post.shortId}`}>
       <div className={spineNodeClass(post)} aria-hidden="true">
@@ -41,7 +42,7 @@ export function HertzPostCard({ post, currentUser }: { post: HertzPost; currentU
           <HertzAuthorLine post={post} />
           <HertzPostMenu post={post} currentUser={currentUser} />
         </div>
-        <p className={styles.content}>{post.content.text}</p>
+        {isPlainRepost ? <p className={styles.repostLabel}>Merepost</p> : <p className={styles.content}>{post.content.text}</p>}
         {post.content.isTruncated ? (
           <Link className={styles.readMore} href={`/hertz/post/${post.shortId}`}>Baca lanjut</Link>
         ) : null}
