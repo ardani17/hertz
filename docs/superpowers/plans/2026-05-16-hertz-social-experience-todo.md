@@ -237,7 +237,7 @@ Centang setelah visual/a11y/build pass dan commit dibuat.
 - Test: `tests/unit/frontend/hertzMarketSidebar.test.ts`
 - Review: `tests/review/visual.spec.ts`
 
-- [ ] **Step 1: Install/check Recharts dependency**
+- [x] **Step 1: Install/check Recharts dependency**
 
 Run:
 
@@ -250,7 +250,7 @@ Expected:
 - `recharts` tersedia untuk `AreaChart`.
 - Jika dependency ditambahkan, `package.json` dan `package-lock.json` ikut distage pada commit task ini.
 
-- [ ] **Step 2: Tulis test market sidebar data/rendering**
+- [x] **Step 2: Tulis test market sidebar data/rendering**
 
 Coverage:
 
@@ -270,7 +270,7 @@ Expected:
 
 - FAIL sebelum komponen dibuat.
 
-- [ ] **Step 3: Implement reusable components**
+- [x] **Step 3: Implement reusable components**
 
 Implementation target:
 
@@ -288,7 +288,7 @@ Implementation target:
 - Hover transition dan glow halus.
 - Accessible label untuk card, live status, price change, source, update time.
 
-- [ ] **Step 4: Integrasikan ke right rail**
+- [x] **Step 4: Integrasikan ke right rail**
 
 Implementation target:
 
@@ -297,7 +297,7 @@ Implementation target:
 - Pada mobile/tablet, widget tidak mengalahkan konten utama; gunakan existing mobile market access/collapsible behavior.
 - Tidak ada horizontal overflow pada sidebar.
 
-- [ ] **Step 5: Verifikasi**
+- [x] **Step 5: Verifikasi**
 
 Run:
 
@@ -317,7 +317,7 @@ Manual check:
 - Tidak ada overflow di right sidebar.
 - Card terasa premium, bukan generic admin template.
 
-- [ ] **Step 6: Commit Task 2A**
+- [x] **Step 6: Commit Task 2A**
 
 Run:
 
@@ -326,7 +326,7 @@ git add package.json package-lock.json frontend/src/components/feed/HertzRightRa
 git commit -m "Add premium HERTZ market sidebar widget"
 ```
 
-- [ ] **Ceklist selesai Task 2A**
+- [x] **Ceklist selesai Task 2A**
 
 Centang setelah test, visual review, a11y, build, and commit selesai.
 

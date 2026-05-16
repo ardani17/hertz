@@ -1,0 +1,275 @@
+.widget {
+  display: grid;
+  gap: 14px;
+  min-width: 0;
+}
+
+.card {
+  background:
+    radial-gradient(circle at 22% 0%, rgba(var(--market-rgb), 0.18), transparent 42%),
+    linear-gradient(145deg, rgba(10, 16, 18, 0.96), rgba(5, 8, 12, 0.92));
+  border: 1px solid rgba(var(--market-rgb), 0.42);
+  border-radius: 16px;
+  box-shadow:
+    0 18px 42px rgba(0, 0, 0, 0.34),
+    0 0 24px rgba(var(--market-rgb), 0.08),
+    inset 0 1px 0 rgba(255, 255, 255, 0.07);
+  display: grid;
+  gap: 12px;
+  min-width: 0;
+  overflow: hidden;
+  padding: 14px;
+  transition: border-color 180ms ease, box-shadow 180ms ease, transform 180ms ease;
+}
+
+.card:hover {
+  border-color: rgba(var(--market-rgb), 0.78);
+  box-shadow:
+    0 20px 46px rgba(0, 0, 0, 0.42),
+    0 0 32px rgba(var(--market-rgb), 0.16),
+    inset 0 1px 0 rgba(255, 255, 255, 0.08);
+  transform: translateY(-1px);
+}
+
+.header,
+.mainAsset,
+.footer,
+.row {
+  align-items: center;
+  display: flex;
+  min-width: 0;
+}
+
+.header {
+  justify-content: space-between;
+  gap: 10px;
+}
+
+.badge {
+  align-items: center;
+  background: rgba(var(--market-rgb), 0.08);
+  border: 1px solid rgba(var(--market-rgb), 0.38);
+  border-radius: 14px;
+  color: var(--market-color);
+  display: inline-flex;
+  gap: 8px;
+  max-width: 100%;
+  min-height: 36px;
+  min-width: 0;
+  padding: 0 10px 0 7px;
+}
+
+.badge span:last-child {
+  font-size: 0.88rem;
+  font-weight: 850;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.iconShell {
+  align-items: center;
+  background: rgba(var(--market-rgb), 0.12);
+  border-radius: 11px;
+  display: inline-flex;
+  height: 28px;
+  justify-content: center;
+  width: 28px;
+}
+
+.iconShell svg {
+  height: 17px;
+  width: 17px;
+}
+
+.live {
+  align-items: center;
+  color: #b7c8bd;
+  display: inline-flex;
+  flex: 0 0 auto;
+  font-size: 0.78rem;
+  gap: 7px;
+}
+
+.live span {
+  background: var(--market-color);
+  border-radius: 999px;
+  box-shadow: 0 0 12px rgba(var(--market-rgb), 0.78);
+  height: 9px;
+  width: 9px;
+}
+
+.mainAsset {
+  gap: 12px;
+  justify-content: space-between;
+}
+
+.assetTitle {
+  display: grid;
+  gap: 4px;
+  min-width: 0;
+}
+
+.assetTitle strong,
+.priceStack strong {
+  color: #f5fbf7;
+  letter-spacing: 0;
+}
+
+.assetTitle strong {
+  font-size: 1.38rem;
+  line-height: 1.05;
+}
+
+.assetTitle span {
+  color: #93a99b;
+  font-size: 0.82rem;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.priceStack {
+  display: grid;
+  flex: 0 0 auto;
+  gap: 7px;
+  justify-items: end;
+  min-width: 0;
+  text-align: right;
+}
+
+.priceStack strong {
+  font-size: 1.45rem;
+  line-height: 1;
+}
+
+.priceStack em {
+  align-items: center;
+  border-radius: 8px;
+  display: inline-flex;
+  font-size: 0.82rem;
+  font-style: normal;
+  font-weight: 850;
+  gap: 5px;
+  line-height: 1;
+  padding: 7px 8px;
+}
+
+.priceStack svg {
+  height: 14px;
+  width: 14px;
+}
+
+.positive {
+  background: rgba(16, 185, 129, 0.16);
+  color: #45f3a1;
+}
+
+.negative {
+  background: rgba(248, 113, 113, 0.16);
+  color: #ff7373;
+}
+
+.mainChart {
+  height: 68px;
+  min-width: 0;
+}
+
+.rows {
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+  display: grid;
+  min-width: 0;
+}
+
+.row {
+  border-bottom: 1px solid rgba(255, 255, 255, 0.07);
+  display: grid;
+  grid-template-columns: minmax(62px, 0.95fr) minmax(44px, 0.75fr) minmax(58px, 0.8fr) minmax(44px, auto);
+  gap: 8px;
+  min-height: 39px;
+}
+
+.row:last-child {
+  border-bottom: 0;
+}
+
+.row strong,
+.rowPrice,
+.row em {
+  font-size: 0.78rem;
+  line-height: 1.1;
+  min-width: 0;
+}
+
+.row strong {
+  color: #eef8f1;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.rowChart {
+  display: block;
+  height: 24px;
+  min-width: 0;
+}
+
+.rowPrice {
+  color: #dbece3;
+  overflow: hidden;
+  text-align: right;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.row em {
+  font-style: normal;
+  font-weight: 850;
+  text-align: right;
+}
+
+.positiveText {
+  color: #45f3a1;
+}
+
+.negativeText {
+  color: #ff6767;
+}
+
+.footer {
+  color: #8ea69a;
+  font-size: 0.72rem;
+  justify-content: space-between;
+  gap: 8px;
+}
+
+.footer span {
+  align-items: center;
+  display: inline-flex;
+  gap: 5px;
+  min-width: 0;
+}
+
+.footer span:first-child {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.footer svg {
+  color: #9db5a7;
+  flex: 0 0 auto;
+  height: 13px;
+  width: 13px;
+}
+
+@media (max-width: 1360px) {
+  .card {
+    padding: 12px;
+  }
+
+  .assetTitle strong,
+  .priceStack strong {
+    font-size: 1.24rem;
+  }
+}
