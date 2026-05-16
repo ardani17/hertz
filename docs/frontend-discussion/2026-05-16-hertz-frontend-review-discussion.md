@@ -323,7 +323,7 @@ Alasannya: layout dasar sudah cukup stabil, action bar sudah lebih lengkap, dan 
 
 ### Keputusan yang Perlu Dikonfirmasi
 
-1. Apakah Life dan General boleh upload gambar, atau media tetap khusus Trading?
+1. Life dan General boleh upload gambar juga. Upload media tidak lagi khusus Trading, tetapi tetap dibatasi sebagai gambar pada fase ini.
 2. Apakah owner Trading post boleh edit metadata market miliknya sendiri?
 3. Apakah delete post wajib memakai confirm dialog sebelum hapus?
 4. Apakah `Bagikan` di action bar dan `Salin link` di menu tetap dua-duanya ada?
