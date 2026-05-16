@@ -1,0 +1,116 @@
+<body>
+  <div>
+  <a class="skip-to-content" href="/hertz/messages"> Langsung ke konten
+  <div id="main-content">
+    <main class="HertzAppShell-module__2Pd3_W__main">
+      <div class="HertzAppShell-module__2Pd3_W__shellCompact">
+        <aside class="HertzRails-module__j2on7W__left" aria-label="Horizon navigation">
+          <div class="HertzRails-module__j2on7W__brand">
+            <img class="HertzRails-module__j2on7W__brandLogo" alt="Horizon">
+            <strong> HERTZ
+          <nav class="HertzRails-module__j2on7W__nav">
+            <a href="/hertz"> Home
+              <svg class="lucide lucide-house">
+                <path>
+                <path>
+            <a href="/outlook"> Outlook
+              <svg class="lucide lucide-compass">
+                <circle>
+                <path>
+            <a href="/blog"> Blog
+              <svg class="lucide lucide-file-text">
+                <path>
+                <path>
+                <path>
+                <path>
+                <path>
+            <a href="/tools"> Tools
+              <svg class="lucide lucide-sliders-vertical">
+                <path>
+                <path>
+                <path>
+                <path>
+                <path>
+                <path>
+                <path>
+                <path>
+                <path>
+            <a class="HertzRails-module__j2on7W__activeNav" href="/hertz/messages"> Direct Message
+              <svg class="lucide lucide-message-circle">
+                <path>
+          <a class="HertzRails-module__j2on7W__profile" href="/hertz/profile">
+            <div class="HertzRails-module__j2on7W__avatar"> G
+            <div>
+              <strong> Guest
+              <span> Mode baca
+        <section class="HertzAppShell-module__2Pd3_W__content">
+          <header class="HertzAppShell-module__2Pd3_W__header">
+            <h1> Direct Message
+            <p> Percakapan privat antar member HERTZ.
+          <div class="page-module__Wol0XW__dmLayout">
+            <aside class="page-module__Wol0XW__sidebar">
+              <p> Login member diperlukan
+              <div class="page-module__Wol0XW__filters">
+                <button class="page-module__Wol0XW__activeFilter" type="button"> inbox
+                <button type="button"> unread
+                <button type="button"> admin
+                <button type="button"> archived
+              <input class="page-module__Wol0XW__search">
+              <div class="page-module__Wol0XW__list">
+            <section class="page-module__Wol0XW__thread">
+              <div class="page-module__Wol0XW__threadHeader">
+                <button class="page-module__Wol0XW__backButton" type="button"> Inbox
+                <div>
+                  <strong> Pilih conversation
+                  <span> HERTZ DM
+                <div class="page-module__Wol0XW__threadActions">
+                  <button type="button"> Arsipkan
+                  <button type="button"> Blokir
+              <div class="page-module__Wol0XW__messages">
+              <div class="page-module__Wol0XW__composer">
+                <label class="page-module__Wol0XW__attachButton"> Gambar
+                  <input type="file">
+                <input>
+                <button type="button"> Kirim
+      <nav class="MobileBottomNav-module__1pK7LW__mobileNav" aria-label="Mobile navigation">
+        <a aria-label="Home" href="/hertz">
+          <svg class="lucide lucide-house">
+            <path>
+            <path>
+          <span> Home
+        <a aria-label="Outlook" href="/outlook">
+          <svg class="lucide lucide-compass">
+            <circle>
+            <path>
+          <span> Outlook
+        <a aria-label="Blog" href="/blog">
+          <svg class="lucide lucide-file-text">
+            <path>
+            <path>
+            <path>
+            <path>
+            <path>
+          <span> Blog
+        <a aria-label="Tools" href="/tools">
+          <svg class="lucide lucide-sliders-vertical">
+            <path>
+            <path>
+            <path>
+            <path>
+            <path>
+            <path>
+            <path>
+            <path>
+            <path>
+          <span> Tools
+        <a class="MobileBottomNav-module__1pK7LW__active" aria-label="Direct Message" href="/hertz/messages">
+          <svg class="lucide lucide-message-circle">
+            <path>
+          <span> DM
+        <a aria-label="Akun" href="/hertz/profile">
+          <svg class="lucide lucide-circle-user">
+            <circle>
+            <circle>
+            <path>
+          <span> Akun
+  <next-route-announcer>

@@ -27,7 +27,7 @@
 - Read: `docs/review-tooling/README.md`
 - Generated artifacts ignored: `docs/review-snapshots/latest/`, `docs/review-replays/`, `playwright-report/`, `test-results/`
 
-- [ ] **Step 1: Baca spec dan tooling docs**
+- [x] **Step 1: Baca spec dan tooling docs**
 
 Run:
 
@@ -41,7 +41,7 @@ Expected:
 - Paham scope HERTZ satu fase besar.
 - Paham kapan memakai visual regression, accessibility audit, DOM diff, MCP, dan replay.
 
-- [ ] **Step 2: Buat baseline visual jika kondisi live saat ini diterima**
+- [x] **Step 2: Buat baseline visual jika kondisi live saat ini diterima**
 
 Run:
 
@@ -54,7 +54,7 @@ Expected:
 - Snapshot baseline tersimpan oleh Playwright.
 - Jika baseline tidak ingin dibuat karena UI live belum layak, jangan jalankan command ini dan catat alasannya di final task.
 
-- [ ] **Step 3: Buat baseline DOM**
+- [x] **Step 3: Buat baseline DOM**
 
 Run:
 
@@ -66,7 +66,7 @@ Expected:
 
 - DOM baseline route review tersimpan.
 
-- [ ] **Step 4: Commit baseline jika baseline sengaja diterima**
+- [x] **Step 4: Commit baseline jika baseline sengaja diterima**
 
 Run:
 
@@ -81,7 +81,7 @@ Expected:
 - Hanya baseline yang sengaja diterima ikut commit.
 - Jika tidak ada baseline yang dicommit, step ini boleh dicentang setelah dicatat bahwa baseline tidak dibuat.
 
-- [ ] **Ceklist selesai Task Baseline**
+- [x] **Ceklist selesai Task Baseline**
 
 Centang hanya setelah baseline decision jelas: dibuat dan dicommit, atau sengaja tidak dibuat dengan alasan tertulis.
 
