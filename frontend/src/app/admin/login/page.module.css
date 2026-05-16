@@ -7,16 +7,16 @@
   align-items: center;
   justify-content: center;
   min-height: 100vh;
-  background-color: var(--color-bg);
+  background: #0f0f14;
   padding: var(--space-4);
 }
 
 .loginCard {
   width: 100%;
   max-width: 400px;
-  background-color: var(--color-surface);
-  border: var(--border-width) solid var(--color-border);
-  border-radius: var(--border-radius);
+  background: rgba(2, 12, 7, 0.88);
+  border: 1px solid rgba(19, 210, 123, 0.32);
+  border-radius: 8px;
   padding: var(--space-8);
   box-shadow: var(--shadow-md);
 }
@@ -36,7 +36,7 @@
   font-size: var(--text-2xl);
   font-weight: 700;
   color: var(--color-text);
-  letter-spacing: -0.01em;
+  letter-spacing: 0;
   margin-bottom: var(--space-2);
 }
 
@@ -70,8 +70,8 @@
   padding: var(--space-2) var(--space-3);
   font-size: var(--text-base);
   color: var(--color-text);
-  background-color: var(--color-bg);
-  border: var(--border-width) solid var(--color-border);
+  background: rgba(0, 0, 0, 0.34);
+  border: 1px solid rgba(19, 210, 123, 0.28);
   border-radius: 6px;
   min-height: 44px;
   transition: border-color 0.15s ease, box-shadow 0.15s ease;
@@ -88,9 +88,9 @@
   padding: var(--space-3) var(--space-4);
   font-size: var(--text-base);
   font-weight: 600;
-  color: #ffffff;
-  background-color: var(--color-accent);
-  border: var(--border-width) solid var(--color-accent);
+  color: #031008;
+  background-color: #13d27b;
+  border: 1px solid #13d27b;
   border-radius: 8px;
   cursor: pointer;
   min-height: 44px;
@@ -98,7 +98,7 @@
 }
 
 .submitButton:hover {
-  background-color: #059669;
+  background-color: #34d399;
 }
 
 .submitButton:focus-visible {
@@ -114,7 +114,7 @@
 
 .errorMessage {
   padding: var(--space-2) var(--space-3);
-  background-color: var(--color-surface);
+  background-color: rgba(239, 68, 68, 0.12);
   border: 1px solid var(--color-danger);
   border-left: 3px solid var(--color-danger);
   border-radius: var(--border-radius);

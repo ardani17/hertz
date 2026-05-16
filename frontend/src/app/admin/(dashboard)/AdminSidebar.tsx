@@ -11,7 +11,7 @@ const navSections = [
     items: [
       { label: 'Dashboard', href: '/admin', icon: 'DB' },
       { label: 'HERTZ', href: '/admin/hertz', icon: 'HZ' },
-      { label: 'Articles', href: '/admin/articles', icon: 'AR' },
+      { label: 'Artikel', href: '/admin/articles', icon: 'AR' },
       { label: 'Outlook', href: '/admin/outlook', icon: 'OU' },
       { label: 'Blog', href: '/admin/blog', icon: 'BL' },
     ],
@@ -19,15 +19,15 @@ const navSections = [
   {
     label: 'Pengguna',
     items: [
-      { label: 'Users', href: '/admin/users', icon: 'US' },
-      { label: 'Credits', href: '/admin/credits', icon: 'CR' },
-      { label: 'Comments', href: '/admin/comments', icon: 'CM' },
+      { label: 'User', href: '/admin/users', icon: 'US' },
+      { label: 'Kredit', href: '/admin/credits', icon: 'CR' },
+      { label: 'Komentar', href: '/admin/comments', icon: 'CM' },
     ],
   },
   {
     label: 'Sistem',
     items: [
-      { label: 'Logs', href: '/admin/logs', icon: 'LG' },
+      { label: 'Log', href: '/admin/logs', icon: 'LG' },
       { label: 'API Keys', href: '/admin/api-keys', icon: 'AK' },
     ],
   },
@@ -58,7 +58,7 @@ export function AdminSidebar({ isOpen, onClose }: AdminSidebarProps) {
 
       <aside
         className={`${styles.sidebar} ${isOpen ? styles.sidebarOpen : ''}`}
-        aria-label="Admin navigation"
+        aria-label="Navigasi admin"
       >
         <div className={styles.sidebarHeader}>
           <Link href="/admin" className={styles.sidebarLogo} onClick={onClose}>

@@ -37,11 +37,11 @@ export function AdminHeader({ username, onMenuToggle }: AdminHeaderProps) {
           type="button"
           className={styles.menuToggle}
           onClick={onMenuToggle}
-          aria-label="Toggle navigation menu"
+          aria-label="Buka navigasi admin"
         >
           ☰
         </button>
-        <span className={styles.pageTitle}>Admin Dashboard</span>
+        <span className={styles.pageTitle}>Dashboard Admin</span>
       </div>
 
       <div className={styles.topBarRight}>
@@ -55,7 +55,7 @@ export function AdminHeader({ username, onMenuToggle }: AdminHeaderProps) {
           onClick={handleLogout}
           disabled={loggingOut}
         >
-          {loggingOut ? 'Keluar...' : 'Logout'}
+          {loggingOut ? 'Keluar...' : 'Keluar'}
         </button>
       </div>
     </header>
