@@ -1,0 +1,26 @@
+import { readFileSync } from 'node:fs';
+import { resolve } from 'node:path';
+import { describe, expect, it } from 'vitest';
+
+const rootDir = resolve(__dirname, '../../..');
+
+function read(relativePath: string) {
+  return readFileSync(resolve(rootDir, relativePath), 'utf8');
+}
+
+describe('HERTZ mobile brand', () => {
+  it('renders the Horizon atom logo in the app shell', () => {
+    const source = read('frontend/src/components/hertz/HertzAppShell.tsx');
+
+    expect(source).toContain('mobileBrand');
+    expect(source).toContain('Logo-Horizon-Atom-Online-White_8.png');
+    expect(source).toContain('alt="Horizon"');
+  });
+
+  it('keeps the mobile brand hidden on desktop and visible on mobile', () => {
+    const css = read('frontend/src/components/hertz/HertzAppShell.module.css');
+
+    expect(css).toMatch(/\.mobileBrand\s*\{[^}]*display:\s*none;/s);
+    expect(css).toMatch(/@media \(max-width: 1024px\)[\s\S]*\.mobileBrand\s*\{[^}]*display:\s*inline-flex;/s);
+  });
+});

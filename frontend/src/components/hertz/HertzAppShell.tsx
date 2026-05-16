@@ -1,5 +1,6 @@
 'use client';
 
+import Image from 'next/image';
 import type { ReactNode } from 'react';
 import type { MemberSessionUser } from '@shared/types';
 import { HertzLeftRail } from '@/components/feed/HertzLeftRail';
@@ -35,6 +36,15 @@ export function HertzAppShell({
       <div className={hideRightRail ? styles.shellCompact : styles.shell}>
         <HertzLeftRail currentUser={currentUser} active={active} />
         <section className={styles.content}>
+          <a className={styles.mobileBrand} href="/hertz" aria-label="Horizon Home">
+            <Image
+              src="/images/logo/Logo-Horizon-Atom-Online-White_8.png"
+              alt="Horizon"
+              width={34}
+              height={34}
+              priority
+            />
+          </a>
           <header className={styles.header}>
             <h1>{title}</h1>
             <p>{description}</p>

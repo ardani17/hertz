@@ -52,6 +52,10 @@
   margin: 0.3rem 0 0;
 }
 
+.mobileBrand {
+  display: none;
+}
+
 @media (max-width: 1024px) {
   .main {
     padding-bottom: calc(78px + env(safe-area-inset-bottom));
@@ -69,6 +73,23 @@
     border: 0;
     padding: 1rem 1rem 1.35rem;
     min-width: 0;
+  }
+
+  .mobileBrand {
+    align-items: center;
+    display: inline-flex;
+    height: 40px;
+    justify-content: center;
+    margin: 0 0 0.75rem;
+    text-decoration: none;
+    width: 40px;
+  }
+
+  .mobileBrand img {
+    display: block;
+    height: 34px;
+    object-fit: contain;
+    width: 34px;
   }
 }
 
