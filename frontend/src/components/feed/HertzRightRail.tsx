@@ -18,6 +18,7 @@ interface SearchResult {
 export function HertzRightRail({ activeSearch }: { activeSearch?: string | null }) {
   const [groups, setGroups] = useState<MarketRailGroup[]>([]);
   const [status, setStatus] = useState<'loading' | 'ready' | 'error'>('loading');
+  const [unreadDmCount, setUnreadDmCount] = useState(0);
   const [searchQuery, setSearchQuery] = useState(activeSearch ?? '');
   const [searchResults, setSearchResults] = useState<SearchResult[]>([]);
   const [searchStatus, setSearchStatus] = useState<'idle' | 'loading' | 'ready'>('idle');
@@ -41,6 +42,22 @@ export function HertzRightRail({ activeSearch }: { activeSearch?: string | null 
     }
 
     loadMarketRail();
+    return () => {
+      cancelled = true;
+    };
+  }, []);
+
+  useEffect(() => {
+    let cancelled = false;
+    async function loadActivity() {
+      const response = await fetch('/api/auth/me', { cache: 'no-store' });
+      const payload = await response.json().catch(() => null);
+      if (!cancelled && response.ok && payload?.success) {
+        setUnreadDmCount(Number(payload.data.notifications?.unreadDmCount ?? 0));
+      }
+    }
+
+    void loadActivity();
     return () => {
       cancelled = true;
     };
@@ -81,6 +98,7 @@ export function HertzRightRail({ activeSearch }: { activeSearch?: string | null 
   }, [searchQuery]);
 
   const emptyState = getHertzSearchEmptyState(searchQuery.trim());
+  const activityCopy = getHertzActivityIndicatorCopy(unreadDmCount);
 
   return (
     <aside className={styles.right} aria-label="Market intelligence">
@@ -111,7 +129,24 @@ export function HertzRightRail({ activeSearch }: { activeSearch?: string | null 
           )}
         </div>
       ) : null}
+      <div className={styles.activityCard}>
+        <strong>{activityCopy.title}</strong>
+        <span>{activityCopy.body}</span>
+      </div>
       <MarketSidebarWidget groups={status === 'ready' ? groups : []} />
     </aside>
   );
+}
+
+export function getHertzActivityIndicatorCopy(unreadDmCount: number) {
+  if (unreadDmCount > 0) {
+    return {
+      title: 'Aktivitas',
+      body: `${unreadDmCount} DM belum dibaca.`,
+    };
+  }
+  return {
+    title: 'Aktivitas',
+    body: 'Tidak ada DM baru.',
+  };
 }

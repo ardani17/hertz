@@ -1,5 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import { DeviceTokenService, DeviceTokenValidationError } from '../../../shared/services/deviceTokenService';
+import { buildHertzNotificationSummary } from '../../../shared/services/hertzNotificationService';
 import { readFileSync } from 'fs';
 import { join } from 'path';
 
@@ -28,5 +29,21 @@ describe('mobile notification persistence wiring', () => {
 
     expect(source).toContain('listRetryable');
     expect(source).toContain("status IN ('pending', 'failed')");
+  });
+});
+
+describe('HERTZ minimal notification summary', () => {
+  it('builds an unread DM badge only for real unread messages', () => {
+    expect(buildHertzNotificationSummary({ unreadDmCount: 3 })).toEqual({
+      unreadDmCount: 3,
+      hasUnreadDm: true,
+    });
+  });
+
+  it('does not create a fake badge for guests or zero unread state', () => {
+    expect(buildHertzNotificationSummary({ unreadDmCount: 0 })).toEqual({
+      unreadDmCount: 0,
+      hasUnreadDm: false,
+    });
   });
 });

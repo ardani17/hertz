@@ -69,6 +69,21 @@ export class HertzDmRepository {
     return result.rows;
   }
 
+  async countUnread(userId: string, client?: DbClient): Promise<number> {
+    const row = await queryOne<{ count: string }>(
+      `SELECT COUNT(*)::text AS count
+       FROM hertz_messages m
+       JOIN hertz_conversation_participants p
+         ON p.conversation_id = m.conversation_id AND p.user_id = $1
+       WHERE m.sender_id <> $1
+         AND m.deleted_at IS NULL
+         AND (p.last_read_at IS NULL OR m.created_at > p.last_read_at)`,
+      [userId],
+      client,
+    );
+    return Number(row?.count ?? 0);
+  }
+
   async createDirectConversation(userA: string, userB: string, client?: DbClient): Promise<{ id: string }> {
     const directKey = [userA, userB].sort().join(':');
     const conversation = await queryOne<{ id: string }>(

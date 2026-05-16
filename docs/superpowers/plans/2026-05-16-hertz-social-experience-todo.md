@@ -1045,7 +1045,7 @@ Centang setelah search/topik verified dan commit selesai.
 - Test: `tests/unit/shared/mobileNotifications.test.ts`
 - Test: `tests/unit/frontend/hertzNotifications.test.ts`
 
-- [ ] **Step 1: Tulis test notification minimal**
+- [x] **Step 1: Tulis test notification minimal**
 
 Coverage:
 
@@ -1059,7 +1059,7 @@ Run:
 npm run test -- tests/unit/shared/mobileNotifications.test.ts tests/unit/frontend/hertzNotifications.test.ts
 ```
 
-- [ ] **Step 2: Implement unread/activity**
+- [x] **Step 2: Implement unread/activity**
 
 Implementation target:
 
@@ -1068,7 +1068,7 @@ Implementation target:
 - Indicator ringan right rail/mobile.
 - Tidak membuat notification center penuh.
 
-- [ ] **Step 3: Verifikasi**
+- [x] **Step 3: Verifikasi**
 
 Run:
 
@@ -1080,7 +1080,7 @@ REVIEW_BASE_URL=https://horizon.cloudnexify.com npm run review:visual
 REVIEW_BASE_URL=https://horizon.cloudnexify.com npm run review:dom
 ```
 
-- [ ] **Step 4: Commit Task 14**
+- [x] **Step 4: Commit Task 14**
 
 Run:
 
@@ -1089,7 +1089,7 @@ git add shared/repositories/hertzDmRepository.ts shared/services/hertzDmService.
 git commit -m "Add HERTZ minimal notification indicators"
 ```
 
-- [ ] **Ceklist selesai Task 14**
+- [x] **Ceklist selesai Task 14**
 
 Centang setelah notification verified dan commit selesai.
 

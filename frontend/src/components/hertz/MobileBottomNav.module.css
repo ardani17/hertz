@@ -33,6 +33,7 @@
     min-height: 50px;
     min-width: 0;
     padding: 0.24rem 0.1rem;
+    position: relative;
     text-align: center;
     text-decoration: none;
   }
@@ -51,6 +52,20 @@
   .active {
     background: rgba(16, 185, 129, 0.12);
     color: #34d399 !important;
+  }
+
+  .badge {
+    background: #13d27b;
+    border-radius: 999px;
+    color: #02100a;
+    font-size: 0.58rem;
+    font-style: normal;
+    font-weight: 900;
+    min-width: 16px;
+    padding: 0.06rem 0.24rem;
+    position: absolute;
+    right: 22%;
+    top: 0.25rem;
   }
 }
 
