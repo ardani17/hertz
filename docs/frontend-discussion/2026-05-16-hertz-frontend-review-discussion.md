@@ -396,12 +396,12 @@ Alasannya: layout dasar sudah cukup stabil, action bar sudah lebih lengkap, dan 
 - Desktop detail post bisa dibuka sebagai modal tanpa meninggalkan feed.
 - Mobile detail post tetap memakai halaman penuh dengan back affordance dan state komentar yang jelas.
 
-### Review Tambahan dari Codex
+### 9 Temuan Tambahan dari Codex
 
-Selain poin yang sudah dibahas, beberapa hal HERTZ yang menurut saya masih kurang:
+Selain poin yang sudah dibahas, berikut 9 temuan HERTZ yang menurut saya perlu masuk bahan diskusi sebelum spec:
 
 1. **Access role belum menjadi helper terpusat**
-   Kita sudah sepakat memakai access role `guest`, `member`, dan `admin` di frontend. Saat ini pengecekan masih tersebar lewat `currentUser` atau `currentUser.role`. Spec perlu membuat helper kecil agar menu/fitur bisa dikontrol konsisten, misalnya menyembunyikan Tools untuk guest jika itu keputusan produk.
+   Kita sudah sepakat memakai access role `guest`, `member`, dan `admin` di frontend. Saat ini pengecekan masih tersebar lewat `currentUser` atau `currentUser.role`. Spec perlu membuat helper kecil agar menu/fitur bisa dikontrol konsisten, misalnya menyembunyikan Tools untuk guest jika itu keputusan produk. Aturan ini juga harus menjaga mobile navigation tetap rapi ketika menu berbeda untuk guest/member/admin.
 
 2. **Profile belum menjadi pusat aktivitas**
    Profile saat ini baru menampilkan status akun dan credit. Seharusnya member center berkembang menjadi tempat:
@@ -416,7 +416,7 @@ Selain poin yang sudah dibahas, beberapa hal HERTZ yang menurut saya masih kuran
    HERTZ belum punya notification center untuk komentar baru, repost, like/suka, DM unread, atau status report/moderation. Minimal badge unread untuk DM dan activity ring di profile akan membuat produk terasa lebih hidup.
 
 4. **Feed belum punya state yang matang**
-   Empty state, loading state, error state, dan skeleton belum konsisten. Contoh: ketika filter kosong, search kosong, guest belum login, atau API gagal, UI perlu pesan yang jelas dan actionable.
+   Empty state, loading state, error state, dan skeleton belum konsisten. Contoh: ketika filter kosong, search kosong, guest belum login, atau API gagal, UI perlu pesan yang jelas dan actionable. Ini juga termasuk menentukan action mana yang cukup update lokal dan mana yang boleh reload halaman, supaya pengalaman tidak terasa patah.
 
 5. **Composer belum punya preview media dan remove per file**
    Setelah Life/General boleh upload gambar, composer perlu preview thumbnail, tombol hapus per file, validasi ukuran/format yang terlihat, dan progress upload yang tidak membuat user bingung.
@@ -436,16 +436,12 @@ Selain poin yang sudah dibahas, beberapa hal HERTZ yang menurut saya masih kuran
 9. **Accessibility modal harus dirancang dari awal**
    Desktop post detail modal, share popup, delete confirm, edit dialog, dan DM menu perlu focus trap, Escape close, aria label, dan restore focus. Ini penting karena HERTZ akan punya banyak overlay.
 
-10. **Optimistic update belum konsisten**
-   Beberapa action update lokal, beberapa action reload halaman. Ini bisa diterima fase awal, tetapi spec perlu menentukan mana yang harus local update dan mana yang boleh reload supaya pengalaman tidak terasa patah.
+Catatan verifikasi untuk semua temuan ini:
 
-11. **Mobile navigation makin padat**
-   Bottom nav sudah berisi banyak item. Jika nanti akses role menyembunyikan/menampilkan menu berbeda untuk guest/member/admin, perlu aturan prioritas agar mobile tetap rapi.
+- Banyak fitur HERTZ hanya bisa valid jika login member/admin.
+- Spec implementasi harus punya checklist login sebagai member `ARDANI | vastara.id`, non-author member, guest, dan admin.
 
-12. **Audit authenticated belum menjadi checklist rutin**
-   Banyak fitur HERTZ hanya bisa valid jika login member/admin. Spec implementasi harus punya checklist login sebagai member `ARDANI | vastara.id`, non-author member, guest, dan admin.
-
-Prioritas dari review tambahan:
+Prioritas dari 9 temuan tambahan:
 
 1. Access role helper untuk `guest/member/admin`.
 2. Profile tabs: Post saya, Disimpan, Repost saya.
