@@ -21,7 +21,7 @@ import type {
 
 const EXCERPT_LIMIT = 420;
 const SHORT_ID_ALPHABET = 'abcdefghijklmnopqrstuvwxyz0123456789';
-const VALID_CATEGORIES: HertzPostCategory[] = ['trading_room', 'life_coffee', 'general', 'community_note'];
+const VALID_CATEGORIES: HertzPostCategory[] = ['trading_room', 'life_coffee', 'general'];
 
 export class HertzValidationError extends Error {
   constructor(message: string) {

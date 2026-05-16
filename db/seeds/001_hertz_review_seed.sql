@@ -179,30 +179,6 @@ VALUES
   ('60000000-0000-0000-0000-000000000004', '30000000-0000-0000-0000-000000000003', '10000000-0000-0000-0000-000000000001', 'Setuju turunkan size menjelang NFP.', 'visible', NOW() - INTERVAL '33 minutes', NOW() - INTERVAL '33 minutes'),
   ('60000000-0000-0000-0000-000000000005', '30000000-0000-0000-0000-000000000006', '10000000-0000-0000-0000-000000000007', 'Saya tambahkan satu: setelah TP jangan langsung cari trade baru.', 'visible', NOW() - INTERVAL '1 hour', NOW() - INTERVAL '1 hour');
 
-INSERT INTO community_notes (id, post_id, author_id, content, helpful_count, not_helpful_count, status, created_at, updated_at)
-VALUES
-  ('50000000-0000-0000-0000-000000000001', '30000000-0000-0000-0000-000000000001', '10000000-0000-0000-0000-000000000004', 'Pembaca menambahkan konteks: XAUUSD biasanya melebar saat rilis data USD besar. Gunakan kalender ekonomi sebelum mengikuti setup intraday.', 5, 1, 'published', NOW() - INTERVAL '5 minutes', NOW() - INTERVAL '5 minutes'),
-  ('50000000-0000-0000-0000-000000000002', '30000000-0000-0000-0000-000000000003', '10000000-0000-0000-0000-000000000008', 'BTC bisa bergerak tajam saat data tenaga kerja AS. Level teknikal tetap perlu dikombinasikan dengan jadwal rilis makro.', 3, 0, 'published', NOW() - INTERVAL '28 minutes', NOW() - INTERVAL '28 minutes'),
-  ('50000000-0000-0000-0000-000000000003', '30000000-0000-0000-0000-000000000009', '10000000-0000-0000-0000-000000000002', 'Market Pulse di seed ini berasal dari tabel database review. Label data seed wajib tetap terlihat sampai endpoint live dibuat.', 4, 0, 'published', NOW() - INTERVAL '3 hours', NOW() - INTERVAL '3 hours');
-
-INSERT INTO community_note_sources (id, note_id, source_url, source_title)
-VALUES
-  ('51000000-0000-0000-0000-000000000001', '50000000-0000-0000-0000-000000000001', 'https://www.investing.com/economic-calendar/', 'Economic Calendar'),
-  ('51000000-0000-0000-0000-000000000002', '50000000-0000-0000-0000-000000000001', 'https://www.cmegroup.com/markets/metals/precious/gold.html', 'CME Gold Futures'),
-  ('51000000-0000-0000-0000-000000000003', '50000000-0000-0000-0000-000000000002', 'https://www.bls.gov/schedule/news_release/empsit.htm', 'BLS Employment Situation'),
-  ('51000000-0000-0000-0000-000000000004', '50000000-0000-0000-0000-000000000003', 'https://horizon.local/tools', 'Horizon Tools Roadmap');
-
-INSERT INTO community_note_ratings (note_id, user_id, rating)
-VALUES
-  ('50000000-0000-0000-0000-000000000001', '10000000-0000-0000-0000-000000000001', 'helpful'),
-  ('50000000-0000-0000-0000-000000000001', '10000000-0000-0000-0000-000000000002', 'helpful'),
-  ('50000000-0000-0000-0000-000000000001', '10000000-0000-0000-0000-000000000003', 'helpful'),
-  ('50000000-0000-0000-0000-000000000001', '10000000-0000-0000-0000-000000000005', 'not_helpful'),
-  ('50000000-0000-0000-0000-000000000002', '10000000-0000-0000-0000-000000000001', 'helpful'),
-  ('50000000-0000-0000-0000-000000000002', '10000000-0000-0000-0000-000000000006', 'helpful'),
-  ('50000000-0000-0000-0000-000000000003', '10000000-0000-0000-0000-000000000008', 'helpful')
-ON CONFLICT (note_id, user_id) DO UPDATE SET rating = EXCLUDED.rating, updated_at = NOW();
-
 INSERT INTO post_views (post_id, user_id, session_hash, ip_hash, user_agent_hash, viewed_at)
 SELECT post_id::uuid, NULL, 'seed-session-' || post_id || '-' || n, 'seed-ip-' || n, 'seed-ua-' || n, NOW() - (n || ' minutes')::interval
 FROM (
@@ -241,5 +217,4 @@ SELECT
   (SELECT COUNT(*) FROM feed_posts WHERE status = 'published' AND id::text LIKE '30000000-0000-0000-0000-0000000000%') AS published_posts,
   (SELECT COUNT(*) FROM feed_posts WHERE status = 'pending_review' AND id::text LIKE '30000000-0000-0000-0000-0000000000%') AS pending_posts,
   (SELECT COUNT(*) FROM media WHERE id::text LIKE '40000000-0000-0000-0000-0000000000%') AS media_items,
-  (SELECT COUNT(*) FROM post_comments WHERE id::text LIKE '60000000-0000-0000-0000-0000000000%') AS comments,
-  (SELECT COUNT(*) FROM community_notes WHERE id::text LIKE '50000000-0000-0000-0000-0000000000%') AS community_notes;
+  (SELECT COUNT(*) FROM post_comments WHERE id::text LIKE '60000000-0000-0000-0000-0000000000%') AS comments;

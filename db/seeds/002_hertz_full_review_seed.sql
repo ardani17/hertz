@@ -114,7 +114,7 @@ VALUES
   ('51000000-0000-0000-0000-000000000008', '11000000-0000-0000-0000-000000000004', '<p>Gold reject 2338. Tunggu retest, jangan kejar candle. Setup baru valid kalau M15 close tetap di atas 2331.</p>', 'Gold reject 2338', 'trading', 'telegram', 'published', 'hertz-gold-reject-2338', NOW() - INTERVAL '9 minutes'),
   ('51000000-0000-0000-0000-000000000009', '11000000-0000-0000-0000-000000000002', '<p>Struktur EURUSD masih compression. Saya ingin lihat sweep bawah dulu sebelum cari long kecil.</p>', 'EURUSD compression London setup', 'trading', 'web', 'published', 'hertz-eurusd-compression-london', NOW() - INTERVAL '18 minutes'),
   ('51000000-0000-0000-0000-000000000010', '11000000-0000-0000-0000-000000000005', '<p>Hari ini saya hanya ambil satu posisi kecil. Fokusnya bukan jumlah trade, tapi kualitas keputusan setelah market bergerak cepat.</p>', 'Satu posisi kecil lebih baik dari lima entry panik', 'life_story', 'web', 'published', 'hertz-satu-posisi-kecil', NOW() - INTERVAL '31 minutes'),
-  ('51000000-0000-0000-0000-000000000011', '11000000-0000-0000-0000-000000000007', '<p>Catatan komunitas: data liquidity menunjukkan buy limit menumpuk di area 2332-2335. Diskusi lengkap ada di komentar.</p>', 'Liquidity note untuk sesi New York', 'general', 'web', 'published', 'hertz-liquidity-note-new-york', NOW() - INTERVAL '45 minutes'),
+  ('51000000-0000-0000-0000-000000000011', '11000000-0000-0000-0000-000000000007', '<p>Liquidity snapshot: data menunjukkan buy limit menumpuk di area 2332-2335. Saya simpan konteks ini untuk diskusi sesi New York.</p>', 'Liquidity snapshot untuk sesi New York', 'general', 'web', 'published', 'hertz-liquidity-snapshot-new-york', NOW() - INTERVAL '45 minutes'),
   ('51000000-0000-0000-0000-000000000012', '11000000-0000-0000-0000-000000000010', '<p>Telegram draft: setup GBPUSD masih menunggu approval admin sebelum tampil ke publik.</p>', 'Draft telegram menunggu publish', 'trading', 'telegram', 'pending_review', 'hertz-draft-telegram-gbpusd', NOW() - INTERVAL '52 minutes'),
   ('51000000-0000-0000-0000-000000000013', '11000000-0000-0000-0000-000000000003', '<p>DXY membuka sesi Asia dengan range sempit. Jika index gagal bertahan di atas 104.20, pair mayor bisa punya ruang koreksi pendek.</p>', 'Forex Outlook: DXY menjaga range Asia', 'outlook', 'web', 'published', 'outlook-dxy-range-asia', NOW() - INTERVAL '10 hours'),
   ('51000000-0000-0000-0000-000000000014', '11000000-0000-0000-0000-000000000007', '<p>ETH/USDT masih mengikuti ritme BTC, tetapi relative strength mulai membaik. Break 3.120 dapat membuat altcoin beta ikut bergerak.</p>', 'Crypto Outlook: ETH mulai mengejar BTC', 'outlook', 'web', 'published', 'outlook-eth-relative-strength', NOW() - INTERVAL '14 hours'),
@@ -152,7 +152,7 @@ VALUES
 INSERT INTO hertz_posts (id, short_id, article_id, author_id, type, source, category, status, content, telegram_message_id, telegram_chat_id, pinned_at, published_at, created_at, updated_at)
 VALUES
   ('71000000-0000-0000-0000-000000000001', 'hzx_live01', '51000000-0000-0000-0000-000000000008', '11000000-0000-0000-0000-000000000004', 'original', 'telegram', 'trading_room', 'published', 'Gold reject 2338. Tunggu retest, jangan kejar candle.', 9203001, -1001916607651, NOW() - INTERVAL '8 minutes', NOW() - INTERVAL '9 minutes', NOW() - INTERVAL '9 minutes', NOW() - INTERVAL '9 minutes'),
-  ('71000000-0000-0000-0000-000000000002', 'hzx_live02', '51000000-0000-0000-0000-000000000011', '11000000-0000-0000-0000-000000000007', 'original', 'web', 'community_note', 'published', 'Data liquidity menunjukkan akumulasi buy limit di 2332-2335. Diskusi lengkap di komentar.', NULL, NULL, NULL, NOW() - INTERVAL '45 minutes', NOW() - INTERVAL '45 minutes', NOW() - INTERVAL '45 minutes'),
+  ('71000000-0000-0000-0000-000000000002', 'hzx_live02', '51000000-0000-0000-0000-000000000011', '11000000-0000-0000-0000-000000000007', 'original', 'web', 'general', 'published', 'Data liquidity menunjukkan akumulasi buy limit di 2332-2335. Saya simpan untuk diskusi sesi New York.', NULL, NULL, NULL, NOW() - INTERVAL '45 minutes', NOW() - INTERVAL '45 minutes', NOW() - INTERVAL '45 minutes'),
   ('71000000-0000-0000-0000-000000000003', 'hzx_live03', '51000000-0000-0000-0000-000000000010', '11000000-0000-0000-0000-000000000005', 'original', 'web', 'life_coffee', 'published', 'Satu posisi kecil lebih baik dari lima entry panik.', NULL, NULL, NULL, NOW() - INTERVAL '31 minutes', NOW() - INTERVAL '31 minutes', NOW() - INTERVAL '31 minutes'),
   ('71000000-0000-0000-0000-000000000004', 'hzx_live04', '51000000-0000-0000-0000-000000000009', '11000000-0000-0000-0000-000000000002', 'original', 'web', 'trading_room', 'published', 'EURUSD compression, saya tunggu sweep bawah dulu.', NULL, NULL, NULL, NOW() - INTERVAL '18 minutes', NOW() - INTERVAL '18 minutes', NOW() - INTERVAL '18 minutes'),
   ('71000000-0000-0000-0000-000000000005', 'hzx_live05', '51000000-0000-0000-0000-000000000019', '11000000-0000-0000-0000-000000000004', 'original', 'telegram', 'trading_room', 'published', 'BTC retest 66.4K berjalan rapi. Tunggu H1 reclaim.', 9203006, -1001916607651, NULL, NOW() - INTERVAL '1 hour', NOW() - INTERVAL '1 hour', NOW() - INTERVAL '1 hour'),
@@ -191,16 +191,6 @@ VALUES
   ('62600000-0000-0000-0000-000000000002', '61000000-0000-0000-0000-000000000001', '11000000-0000-0000-0000-000000000003', 'Setuju, jangan entry kalau spread melebar pas news.', 'visible', NOW() - INTERVAL '5 minutes', NOW() - INTERVAL '5 minutes'),
   ('62600000-0000-0000-0000-000000000003', '61000000-0000-0000-0000-000000000002', '11000000-0000-0000-0000-000000000006', 'Tambahkan juga kalender USD biar konteksnya lengkap.', 'visible', NOW() - INTERVAL '30 minutes', NOW() - INTERVAL '30 minutes');
 
-INSERT INTO community_notes (id, post_id, author_id, content, status, helpful_count, not_helpful_count, created_at, updated_at)
-VALUES
-  ('63000000-0000-0000-0000-000000000001', '61000000-0000-0000-0000-000000000001', '11000000-0000-0000-0000-000000000007', 'XAUUSD rawan melebar saat data USD besar. Wajib cek kalender ekonomi sebelum mengikuti setup intraday.', 'published', 8, 1, NOW() - INTERVAL '4 minutes', NOW() - INTERVAL '4 minutes'),
-  ('63000000-0000-0000-0000-000000000002', '61000000-0000-0000-0000-000000000003', '11000000-0000-0000-0000-000000000009', 'EURUSD sering false break saat London lunch. Tunggu konfirmasi volume atau candle close.', 'published', 5, 0, NOW() - INTERVAL '12 minutes', NOW() - INTERVAL '12 minutes');
-
-INSERT INTO community_note_sources (id, note_id, source_url, source_title, created_at)
-VALUES
-  ('63100000-0000-0000-0000-000000000001', '63000000-0000-0000-0000-000000000001', 'https://www.forexfactory.com/calendar', 'Forex Factory Calendar', NOW() - INTERVAL '4 minutes'),
-  ('63100000-0000-0000-0000-000000000002', '63000000-0000-0000-0000-000000000002', 'https://www.babypips.com/news', 'Babypips Market News', NOW() - INTERVAL '12 minutes');
-
 INSERT INTO hertz_reactions (id, post_id, user_id, type, created_at)
 SELECT ('74000000-0000-0000-0000-' || lpad(row_number() OVER ()::text, 12, '0'))::uuid, p.id, u.id, 'pulse', NOW() - INTERVAL '2 minutes'
 FROM hertz_posts p
@@ -219,14 +209,6 @@ INSERT INTO hertz_comments (id, post_id, user_id, content, status, created_at, u
 VALUES
   ('74600000-0000-0000-0000-000000000001', '71000000-0000-0000-0000-000000000001', '11000000-0000-0000-0000-000000000001', 'Saya tandai 2326 sebagai invalidasi utama.', 'visible', NOW() - INTERVAL '5 minutes', NOW() - INTERVAL '5 minutes'),
   ('74600000-0000-0000-0000-000000000002', '71000000-0000-0000-0000-000000000002', '11000000-0000-0000-0000-000000000006', 'Sumber liquidity-nya bagus, saya cek lagi nanti.', 'visible', NOW() - INTERVAL '29 minutes', NOW() - INTERVAL '29 minutes');
-
-INSERT INTO hertz_community_notes (id, post_id, author_id, content, status, helpful_count, not_helpful_count, created_at, updated_at)
-VALUES
-  ('73000000-0000-0000-0000-000000000001', '71000000-0000-0000-0000-000000000001', '11000000-0000-0000-0000-000000000007', 'Setup gold ini perlu dibaca bersama kalender USD dan spread broker, terutama menjelang rilis data besar.', 'published', 9, 1, NOW() - INTERVAL '4 minutes', NOW() - INTERVAL '4 minutes');
-
-INSERT INTO hertz_community_note_sources (id, note_id, source_url, source_title, created_at)
-VALUES
-  ('73100000-0000-0000-0000-000000000001', '73000000-0000-0000-0000-000000000001', 'https://www.forexfactory.com/calendar', 'Forex Factory Calendar', NOW() - INTERVAL '4 minutes');
 
 INSERT INTO hertz_conversations (id, conversation_type, direct_key, last_message_at, created_at, updated_at)
 VALUES
@@ -248,17 +230,17 @@ VALUES
   ('83000000-0000-0000-0000-000000000001', '82000000-0000-0000-0000-000000000001', '11000000-0000-0000-0000-000000000004', 'Bang, gold tadi valid kalau retest 2330 dulu ya?', NOW() - INTERVAL '38 minutes'),
   ('83000000-0000-0000-0000-000000000002', '82000000-0000-0000-0000-000000000001', '11000000-0000-0000-0000-000000000001', 'Iya, tunggu reaksi. Kalau langsung spike jangan dikejar.', NOW() - INTERVAL '31 minutes'),
   ('83000000-0000-0000-0000-000000000003', '82000000-0000-0000-0000-000000000001', '11000000-0000-0000-0000-000000000004', 'Noted. Saya kecilkan risk ke 0.5 dulu.', NOW() - INTERVAL '3 minutes'),
-  ('83000000-0000-0000-0000-000000000004', '82000000-0000-0000-0000-000000000002', '11000000-0000-0000-0000-000000000007', 'Saya kirim sumber liquidity untuk catatan komunitas ya.', NOW() - INTERVAL '52 minutes'),
-  ('83000000-0000-0000-0000-000000000005', '82000000-0000-0000-0000-000000000002', '11000000-0000-0000-0000-000000000001', 'Mantap, pastikan source URL wajib ada supaya note kuat.', NOW() - INTERVAL '17 minutes'),
+  ('83000000-0000-0000-0000-000000000004', '82000000-0000-0000-0000-000000000002', '11000000-0000-0000-0000-000000000007', 'Saya kirim sumber liquidity untuk konteks sesi New York ya.', NOW() - INTERVAL '52 minutes'),
+  ('83000000-0000-0000-0000-000000000005', '82000000-0000-0000-0000-000000000002', '11000000-0000-0000-0000-000000000001', 'Mantap, pastikan source URL tersimpan supaya konteksnya kuat.', NOW() - INTERVAL '17 minutes'),
   ('83000000-0000-0000-0000-000000000006', '82000000-0000-0000-0000-000000000003', '11000000-0000-0000-0000-000000000005', 'Aku lagi susun jurnal psikologi buat blog. Perlu review?', NOW() - INTERVAL '1 hour'),
   ('83000000-0000-0000-0000-000000000007', '82000000-0000-0000-0000-000000000003', '11000000-0000-0000-0000-000000000002', 'Boleh, kirim draft pendek dulu. Fokus ke proses, bukan hasil trade.', NOW() - INTERVAL '44 minutes'),
   ('83000000-0000-0000-0000-000000000008', '82000000-0000-0000-0000-000000000001', '11000000-0000-0000-0000-000000000001', 'Kalau sudah ada screenshot, simpan di jurnal juga.', NOW() - INTERVAL '2 minutes'),
   ('83000000-0000-0000-0000-000000000009', '82000000-0000-0000-0000-000000000002', '11000000-0000-0000-0000-000000000007', 'Source sudah saya rapikan. Ada dua link: kalender dan news context.', NOW() - INTERVAL '12 minutes'),
-  ('83000000-0000-0000-0000-000000000010', '82000000-0000-0000-0000-000000000002', '11000000-0000-0000-0000-000000000001', 'Bagus. Nanti note ini bisa langsung tampil tanpa approve dulu.', NOW() - INTERVAL '7 minutes'),
+  ('83000000-0000-0000-0000-000000000010', '82000000-0000-0000-0000-000000000002', '11000000-0000-0000-0000-000000000001', 'Bagus. Nanti konteks ini bisa jadi bahan diskusi di komentar.', NOW() - INTERVAL '7 minutes'),
   ('83000000-0000-0000-0000-000000000011', '82000000-0000-0000-0000-000000000003', '11000000-0000-0000-0000-000000000005', 'Aku buat versi pendeknya dulu untuk feed, versi panjang masuk blog.', NOW() - INTERVAL '35 minutes'),
   ('83000000-0000-0000-0000-000000000012', '82000000-0000-0000-0000-000000000003', '11000000-0000-0000-0000-000000000002', 'Sip. Judulnya jangan terlalu teknikal, biar member baru tetap nyaman baca.', NOW() - INTERVAL '21 minutes'),
   ('83000000-0000-0000-0000-000000000013', '82000000-0000-0000-0000-000000000001', '11000000-0000-0000-0000-000000000004', 'Oke, aku juga lihat spread sempat melebar di brokerku.', NOW() - INTERVAL '1 minute'),
-  ('83000000-0000-0000-0000-000000000014', '82000000-0000-0000-0000-000000000002', '11000000-0000-0000-0000-000000000007', 'Kalau market sudah lebih tenang, saya update catatan komunitasnya.', NOW() - INTERVAL '4 minutes'),
+  ('83000000-0000-0000-0000-000000000014', '82000000-0000-0000-0000-000000000002', '11000000-0000-0000-0000-000000000007', 'Kalau market sudah lebih tenang, saya update konteks liquidity-nya.', NOW() - INTERVAL '4 minutes'),
   ('83000000-0000-0000-0000-000000000015', '82000000-0000-0000-0000-000000000003', '11000000-0000-0000-0000-000000000005', 'Draft blog selesai malam ini. Saya tag kamu untuk review.', NOW() - INTERVAL '8 minutes');
 
 UPDATE hertz_conversations
@@ -298,7 +280,6 @@ VALUES
 
 INSERT INTO credit_transactions (id, user_id, amount, transaction_type, source_type, source_id, description, created_at)
 VALUES
-  ('86000000-0000-0000-0000-000000000001', '11000000-0000-0000-0000-000000000004', 10, 'earned', 'hertz_post', '61000000-0000-0000-0000-000000000001', 'Seed reward: published Telegram HERTZ post', NOW() - INTERVAL '9 minutes'),
-  ('86000000-0000-0000-0000-000000000003', '11000000-0000-0000-0000-000000000007', 10, 'earned', 'community_note', '63000000-0000-0000-0000-000000000001', 'Seed reward: sourced community note', NOW() - INTERVAL '4 minutes');
+  ('86000000-0000-0000-0000-000000000001', '11000000-0000-0000-0000-000000000004', 10, 'earned', 'hertz_post', '61000000-0000-0000-0000-000000000001', 'Seed reward: published Telegram HERTZ post', NOW() - INTERVAL '9 minutes');
 
 COMMIT;
