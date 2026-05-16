@@ -3,6 +3,7 @@
 import { useState, type FormEvent } from 'react';
 import type { MarketContext, MemberSessionUser, HertzPost } from '@shared/types';
 import { Button } from '@/components/ui/button';
+import { HertzDeletePostDialog } from './HertzDeletePostDialog';
 import { MoreIcon } from './HertzIcons';
 import styles from './HertzPostMenu.module.css';
 
@@ -15,6 +16,7 @@ export function HertzPostMenu({ post, currentUser }: { post: HertzPost; currentU
   const [editOpen, setEditOpen] = useState(false);
   const [marketOpen, setMarketOpen] = useState(false);
   const [quoteOpen, setQuoteOpen] = useState(false);
+  const [deleteOpen, setDeleteOpen] = useState(false);
   const [message, setMessage] = useState<string | null>(null);
   const [reportReason, setReportReason] = useState('misleading');
   const [reportDetails, setReportDetails] = useState('');
@@ -78,6 +80,7 @@ export function HertzPostMenu({ post, currentUser }: { post: HertzPost; currentU
     setEditOpen(false);
     setMarketOpen(false);
     setQuoteOpen(false);
+    setDeleteOpen(false);
   }
 
   async function deleteOwnPost() {
@@ -208,7 +211,7 @@ export function HertzPostMenu({ post, currentUser }: { post: HertzPost; currentU
           {canReport ? <Button type="button" variant="ghost" size="sm" onClick={() => { closePanels(); setReportOpen(true); setOpen(false); }}>Laporkan</Button> : null}
           {canEdit ? <Button type="button" variant="ghost" size="sm" onClick={() => { closePanels(); setEditOpen(true); setOpen(false); }}>Edit postingan</Button> : null}
           {canEditMarket ? <Button type="button" variant="ghost" size="sm" onClick={() => { closePanels(); setMarketOpen(true); setOpen(false); }}>Edit metadata market</Button> : null}
-          {canDelete ? <Button type="button" variant="ghost" size="sm" onClick={deleteOwnPost}>Hapus postingan</Button> : null}
+          {canDelete ? <Button type="button" variant="ghost" size="sm" onClick={() => { closePanels(); setDeleteOpen(true); setOpen(false); }}>Hapus postingan</Button> : null}
           {isAdmin ? <Button type="button" variant="ghost" size="sm" onClick={hidePost}>Sembunyikan postingan</Button> : null}
         </div>
       ) : null}
@@ -289,6 +292,13 @@ export function HertzPostMenu({ post, currentUser }: { post: HertzPost; currentU
             </div>
           </form>
         </div>
+      ) : null}
+      {deleteOpen ? (
+        <HertzDeletePostDialog
+          postText={post.content.text}
+          onCancel={closePanels}
+          onConfirm={deleteOwnPost}
+        />
       ) : null}
       {message ? <p className={styles.message}>{message}</p> : null}
     </div>

@@ -537,7 +537,7 @@ Centang setelah permission verified dan commit selesai.
 - Modify: `frontend/src/components/feed/HertzPostMenu.tsx`
 - Test: `tests/unit/frontend/hertzPostActions.test.ts`
 
-- [ ] **Step 1: Tulis test delete confirm**
+- [x] **Step 1: Tulis test delete confirm**
 
 Coverage:
 
@@ -552,7 +552,7 @@ Run:
 npm run test -- tests/unit/frontend/hertzPostActions.test.ts
 ```
 
-- [ ] **Step 2: Implement confirm dialog**
+- [x] **Step 2: Implement confirm dialog**
 
 Implementation target:
 
@@ -561,7 +561,7 @@ Implementation target:
 - Close button, batal, Escape.
 - Confirm baru menjalankan DELETE.
 
-- [ ] **Step 3: Verifikasi**
+- [x] **Step 3: Verifikasi**
 
 Run:
 
@@ -573,7 +573,7 @@ REVIEW_BASE_URL=https://horizon.cloudnexify.com npm run review:a11y
 REVIEW_BASE_URL=https://horizon.cloudnexify.com REVIEW_REPLAY_ROUTE=/hertz REVIEW_REPLAY_SECONDS=20 npm run review:replay
 ```
 
-- [ ] **Step 4: Commit Task 6**
+- [x] **Step 4: Commit Task 6**
 
 Run:
 
@@ -582,7 +582,7 @@ git add frontend/src/components/feed/HertzDeletePostDialog.tsx frontend/src/comp
 git commit -m "Add HERTZ delete post confirmation"
 ```
 
-- [ ] **Ceklist selesai Task 6**
+- [x] **Ceklist selesai Task 6**
 
 Centang setelah delete confirm verified dan commit selesai.
 
