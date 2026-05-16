@@ -32,6 +32,7 @@ export default async function HertzPage({ searchParams }: HertzPageProps) {
   const search = params?.q?.trim() || null;
   const sort = params?.sort === 'trending' ? 'trending' : 'latest';
   let items: HertzPost[] = [];
+  let errorMessage: string | null = null;
 
   try {
     const feed = new HertzPostService();
@@ -39,7 +40,8 @@ export default async function HertzPage({ searchParams }: HertzPageProps) {
     items = result.items;
   } catch {
     items = [];
+    errorMessage = 'Timeline sedang tidak tersedia. Coba muat ulang beberapa saat lagi.';
   }
 
-  return <HertzFeedPage posts={items} currentUser={currentUser} activeCategory={category} activeSearch={search} activeSort={sort} />;
+  return <HertzFeedPage posts={items} currentUser={currentUser} activeCategory={category} activeSearch={search} activeSort={sort} errorMessage={errorMessage} />;
 }

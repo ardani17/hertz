@@ -343,7 +343,7 @@ Centang setelah test, visual review, a11y, build, and commit selesai.
 - Modify: `frontend/src/components/feed/FeedList.module.css`
 - Test: `tests/unit/frontend/hertzFeedUi.test.ts`
 
-- [ ] **Step 1: Tulis test UI state feed**
+- [x] **Step 1: Tulis test UI state feed**
 
 Coverage:
 
@@ -362,7 +362,7 @@ Expected:
 
 - FAIL sebelum UI state lengkap.
 
-- [ ] **Step 2: Implement feed state dan outline**
+- [x] **Step 2: Implement feed state dan outline**
 
 Implementation target:
 
@@ -371,7 +371,7 @@ Implementation target:
 - Empty/loading/error state jelas.
 - Action lokal tidak memaksa scroll hilang jika tidak perlu.
 
-- [ ] **Step 3: Verifikasi**
+- [x] **Step 3: Verifikasi**
 
 Run:
 
@@ -382,7 +382,7 @@ npm run build:frontend
 REVIEW_BASE_URL=https://horizon.cloudnexify.com npm run review:visual
 ```
 
-- [ ] **Step 4: Commit Task 3**
+- [x] **Step 4: Commit Task 3**
 
 Run:
 
@@ -391,7 +391,7 @@ git add frontend/src/components/feed/HertzComposer.tsx frontend/src/components/f
 git commit -m "Polish HERTZ feed states and outlines"
 ```
 
-- [ ] **Ceklist selesai Task 3**
+- [x] **Ceklist selesai Task 3**
 
 Centang setelah test, visual review, build, dan commit selesai.
 

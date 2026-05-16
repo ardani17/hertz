@@ -5,6 +5,7 @@ import { HertzLeftRail } from './HertzLeftRail';
 import { HertzPostCard } from './HertzPost';
 import { HertzRightRail } from './HertzRightRail';
 import { MobileBottomNav } from '@/components/hertz/MobileBottomNav';
+import { getHertzFeedEmptyState, getHertzFeedErrorState } from '@/lib/hertzFeedUi';
 import styles from './HertzPage.module.css';
 
 interface HertzPageProps {
@@ -13,9 +14,14 @@ interface HertzPageProps {
   activeCategory?: HertzPostCategory | string | null;
   activeSearch?: string | null;
   activeSort?: 'latest' | 'trending';
+  errorMessage?: string | null;
 }
 
-export function HertzPage({ posts, currentUser, activeCategory, activeSearch, activeSort = 'latest' }: HertzPageProps) {
+export function HertzPage({ posts, currentUser, activeCategory, activeSearch, activeSort = 'latest', errorMessage }: HertzPageProps) {
+  const stateCopy = errorMessage
+    ? getHertzFeedErrorState(errorMessage)
+    : getHertzFeedEmptyState({ activeCategory, activeSearch });
+
   return (
     <main className={styles.main}>
       <div className={styles.shell}>
@@ -27,9 +33,9 @@ export function HertzPage({ posts, currentUser, activeCategory, activeSearch, ac
             {posts.length > 0 ? posts.map((post) => (
               <HertzPostCard key={post.id} post={post} currentUser={currentUser} />
             )) : (
-              <div className={styles.empty}>
-                <h2>Belum ada post</h2>
-                <p>Postingan Telegram dan web member akan muncul di sini.</p>
+              <div className={errorMessage ? `${styles.empty} ${styles.error}` : styles.empty} role={errorMessage ? 'alert' : 'status'}>
+                <h2>{stateCopy.title}</h2>
+                <p>{stateCopy.body}</p>
               </div>
             )}
           </div>

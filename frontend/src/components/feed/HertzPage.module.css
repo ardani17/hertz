@@ -80,8 +80,12 @@
 }
 
 .empty {
-  padding: 3rem 1.5rem;
+  background: rgba(2, 9, 6, 0.62);
+  border: 1px solid rgba(19, 210, 123, 0.26);
+  border-radius: 8px;
   color: #9ab5a5;
+  margin: 16px;
+  padding: 2.2rem 1.5rem;
 }
 
 .empty h2 {
@@ -92,6 +96,16 @@
 
 .empty p {
   margin: 0;
+  line-height: 1.5;
+}
+
+.error {
+  border-color: rgba(248, 113, 113, 0.38);
+  background: rgba(35, 8, 10, 0.42);
+}
+
+.error h2 {
+  color: #fecaca;
 }
 
 @media (max-width: 1024px) {
@@ -135,6 +149,7 @@
   }
 
   .empty {
-    padding: 2.5rem 1.25rem 6rem 3rem;
+    margin: 0.65rem;
+    padding: 1.4rem 1rem 1.55rem;
   }
 }
