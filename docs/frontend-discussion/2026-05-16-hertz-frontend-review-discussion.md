@@ -257,7 +257,7 @@ Hasil cek live:
    Mobile menyembunyikan teks `Komentar`, `Suka`, `Repost`, `Simpan`, `Bagikan`. Ini hemat ruang, tetapi discoverability bisa lebih rendah. Minimal `aria-label` harus lengkap dan visual icon/count harus konsisten.
 
 6. **Copy link muncul di dua tempat**
-   `Bagikan` di action bar dan `Salin link` di menu tiga titik sama-sama copy link. Ini tidak salah, tetapi perlu diputuskan apakah dua entry ini memang sengaja: action bar untuk cepat, menu untuk fallback.
+   `Bagikan` di action bar saat ini hanya copy link, sedangkan `Salin link` di menu tiga titik juga copy link. Keputusan baru: tombol `Bagikan` di action bar membuka popup/share sheet berisi pilihan kanal berbagi seperti sosial media umum. `Salin link` tetap tersedia sebagai action langsung di menu tiga titik.
 
 7. **Plain repost belum muncul di timeline**
    Temuan live: saat member menekan `Repost`, tombol menjadi aktif dan count naik, tetapi postingan tidak muncul ulang di feed sebagai repost. Root cause: plain repost hanya membuat record di `hertz_reposts`; query feed saat ini hanya membaca `hertz_posts`, sehingga repost tanpa quote hanya dihitung sebagai interaction. Data live membuktikan repost `ARDANI | vastara.id` tersimpan untuk `hzx_live01` dan `hzx_live04`, tetapi `repost_post_id` kosong.
@@ -305,7 +305,7 @@ Scope:
 - Guest comment form diganti atau didampingi CTA login Telegram.
 - Plain repost muncul sebagai item timeline dengan label member yang melakukan repost.
 - Profile/member center menampilkan tab atau section `Disimpan` untuk histori postingan yang dibookmark dari tombol `Simpan`.
-- `Bagikan` dan `Salin link` tetap ada, tetapi copy dan placement dibuat konsisten.
+- `Bagikan` membuka share popup/sheet; `Salin link` tetap tersedia sebagai aksi cepat di menu tiga titik.
 
 Kelebihan:
 
@@ -351,8 +351,24 @@ Alasannya: layout dasar sudah cukup stabil, action bar sudah lebih lengkap, dan 
 3. Plain repost harus muncul di feed/timeline sebagai item repost, bukan hanya menaikkan count. Tampilan yang disarankan: card original tetap dipakai, dengan label/header kecil seperti `ARDANI | vastara.id merepost`.
 4. Profile/member center harus punya section/tab `Disimpan` untuk melihat histori postingan yang disimpan/bookmarked.
 5. Apakah delete post wajib memakai confirm dialog sebelum hapus?
-6. Apakah `Bagikan` di action bar dan `Salin link` di menu tetap dua-duanya ada?
+6. Tombol `Bagikan` di action bar membuka popup/share sheet. Isi minimal: Salin link, Telegram, WhatsApp, X/Twitter, Facebook, dan native share jika browser mendukung.
 7. Untuk guest di detail post, apakah form komentar diganti CTA login Telegram atau tetap form dengan pesan login saat dipakai?
+
+### Keputusan Share Popup
+
+- Klik `Bagikan` tidak langsung copy link.
+- Desktop: tampil sebagai popover/modal kecil yang elegan dekat action bar atau centered jika ruang sempit.
+- Mobile: tampil sebagai bottom sheet.
+- Opsi minimal:
+  - Salin link
+  - Telegram
+  - WhatsApp
+  - X/Twitter
+  - Facebook
+  - Native share, jika `navigator.share` tersedia
+- Semua opsi memakai URL canonical `/hertz/post/[shortId]`.
+- Setelah aksi berhasil, user melihat feedback singkat seperti `Link disalin` atau `Membuka Telegram`.
+- `Salin link` di menu tiga titik tetap ada sebagai shortcut langsung.
 
 ### Keputusan Detail Post Desktop/Mobile
 
@@ -374,6 +390,7 @@ Alasannya: layout dasar sudah cukup stabil, action bar sudah lebih lengkap, dan 
 - Repost toggle/count tetap sinkron dengan item timeline.
 - Tombol `Simpan` punya histori yang bisa dilihat di profile sebagai `Disimpan`.
 - Section `Disimpan` hanya muncul untuk `member` dan `admin`; `guest` melihat CTA login.
+- Tombol `Bagikan` membuka share popup/sheet dengan opsi sosial dan copy link.
 - Delete tidak terjadi tanpa confirm.
 - Action bar tetap usable di mobile icon-only.
 - Desktop detail post bisa dibuka sebagai modal tanpa meninggalkan feed.
