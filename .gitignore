@@ -28,6 +28,11 @@ npm-debug.log*
 
 # Testing
 coverage/
+playwright-report/
+test-results/
+docs/review-artifacts/
+docs/review-replays/
+docs/review-snapshots/latest/
 
 # Docker
 postgres-data/
