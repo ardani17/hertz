@@ -7,6 +7,7 @@ import { ShareButtons } from '@/components/article/ShareButtons';
 import { CommentSection } from '@/components/article/CommentSection';
 import { LikeButton } from '@/components/article/LikeButton';
 import { HertzAppShell } from '@/components/hertz/HertzAppShell';
+import { getCurrentMember } from '@/lib/memberAuth';
 import styles from './page.module.css';
 
 export const dynamic = 'force-dynamic';
@@ -148,7 +149,7 @@ export default async function OutlookDetailPage({
   params: Promise<{ slug: string }>;
 }) {
   const { slug } = await params;
-  const article = await getOutlookBySlug(slug);
+  const [article, currentUser] = await Promise.all([getOutlookBySlug(slug), getCurrentMember()]);
 
   if (!article) {
     notFound();
@@ -202,7 +203,7 @@ export default async function OutlookDetailPage({
         active="outlook"
         title="Outlook"
         description="Narasi market dan konteks besar sebelum eksekusi."
-        currentUser={null}
+        currentUser={currentUser}
       >
         <div className={styles.content}>
         <Link href="/outlook" className={styles.backLink}>
