@@ -1219,7 +1219,7 @@ Centang setelah a11y pass dan commit selesai.
 - Review docs if implementation decisions changed: `docs/frontend-discussion/2026-05-16-hertz-frontend-review-discussion.md`
 - Review spec only if behavior intentionally changed: `docs/superpowers/specs/2026-05-16-hertz-social-experience-spec.md`
 
-- [ ] **Step 1: Run full automated verification**
+- [x] **Step 1: Run full automated verification**
 
 Run:
 
@@ -1233,7 +1233,7 @@ Expected:
 
 - All pass.
 
-- [ ] **Step 2: Run review tooling**
+- [x] **Step 2: Run review tooling**
 
 Run:
 
@@ -1249,7 +1249,7 @@ Expected:
 - Critical/serious a11y issues are fixed or documented as pre-existing.
 - DOM diff matches intended structural changes.
 
-- [ ] **Step 3: Replay critical flows**
+- [x] **Step 3: Replay critical flows**
 
 Run for representative flows:
 
@@ -1264,7 +1264,7 @@ Expected:
 - Replay confirms feed/detail/share/repost/profile/DM flows.
 - Artifact remains ignored unless intentionally attached to discussion.
 
-- [ ] **Step 4: Manual auth role sweep**
+- [x] **Step 4: Manual auth role sweep**
 
 Check:
 
@@ -1279,7 +1279,7 @@ Expected:
 - No guest-only UI exposes member actions.
 - Admin actions do not appear for regular member.
 
-- [ ] **Step 5: Final commit decision if cleanup changes were made**
+- [x] **Step 5: Final commit decision if cleanup changes were made**
 
 Run:
 
@@ -1294,7 +1294,7 @@ Expected:
 - If no cleanup edits happened, do not create an empty commit.
 - No unrelated existing dirty files staged.
 
-- [ ] **Ceklist selesai Task 17**
+- [x] **Ceklist selesai Task 17**
 
 Centang setelah full verification pass, role sweep pass, and cleanup commit decision selesai.
 
