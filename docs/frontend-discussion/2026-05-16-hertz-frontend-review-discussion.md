@@ -175,7 +175,7 @@ Alasannya: masalah screenshot sudah terbukti bukan hanya visual kecil, tetapi ga
 2. Guest yang belum login langsung melihat CTA login Telegram. Layout inbox kosong/read-only tidak ditampilkan untuk guest.
 3. Action sekunder `Arsipkan` dan `Blokir` dipindah ke menu tiga titik di header thread. Header utama hanya memuat identitas conversation dan navigasi/back.
 4. DM fase ini tetap memakai polling 5-10 detik tanpa websocket. Websocket/realtime ditunda ke fase terpisah setelah kebutuhan realtime dan kapasitas server jelas.
-5. Apakah upload gambar DM tetap maksimal 4 gambar dan hanya JPG/PNG/WEBP?
+5. Upload gambar DM tetap maksimal 4 gambar per pesan dan hanya mendukung JPG, PNG, atau WEBP.
 
 ## Review Berikutnya
 
