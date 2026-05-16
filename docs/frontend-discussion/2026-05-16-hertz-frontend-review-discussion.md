@@ -260,7 +260,7 @@ Hasil cek live:
    `Bagikan` di action bar dan `Salin link` di menu tiga titik sama-sama copy link. Ini tidak salah, tetapi perlu diputuskan apakah dua entry ini memang sengaja: action bar untuk cepat, menu untuk fallback.
 
 7. **Detail post perlu identitas halaman yang lebih kuat**
-   Detail post saat ini punya back link dan post card, tetapi belum ada header compact seperti `Detail postingan`, status category, atau affordance navigasi yang kuat di mobile.
+   Keputusan baru: desktop tidak pindah halaman saat membuka detail post dari feed. Desktop memakai popup/modal elegan agar user tetap berada di feed dan tidak perlu kembali manual. Mobile tetap pindah ke halaman detail karena modal detail post kurang nyaman di layar kecil.
 
 8. **Komentar guest masih menampilkan form**
    Guest melihat textarea komentar dan baru diberi pesan login saat fokus/submit. Bisa dipertahankan, tetapi CTA login Telegram mungkin lebih jelas jika belum login.
@@ -317,6 +317,7 @@ Scope:
 - Membuat composer multi-mode penuh.
 - Media preview, drag/drop, dan attachment manager.
 - Detail post dengan related posts/threading.
+- Desktop detail popup/modal dengan route fallback tetap tersedia.
 - Feed filters dan saved/bookmarked views.
 - Draft post dan optimistic update tanpa full reload.
 
@@ -343,6 +344,15 @@ Alasannya: layout dasar sudah cukup stabil, action bar sudah lebih lengkap, dan 
 4. Apakah `Bagikan` di action bar dan `Salin link` di menu tetap dua-duanya ada?
 5. Untuk guest di detail post, apakah form komentar diganti CTA login Telegram atau tetap form dengan pesan login saat dipakai?
 
+### Keputusan Detail Post Desktop/Mobile
+
+- Desktop: klik post dari feed membuka detail dalam popup/modal elegan.
+- Desktop modal tetap menampilkan post, action bar, komentar, dan form/CTA komentar.
+- Desktop modal harus punya close button, backdrop click close, dan keyboard escape close.
+- Desktop modal tidak boleh membuat feed kehilangan posisi scroll.
+- Mobile: klik post tetap pindah ke `/hertz/post/[shortId]`.
+- Route detail tetap dipertahankan untuk mobile, direct link, SEO/canonical, copy link, dan fallback jika modal gagal.
+
 ### Acceptance Criteria untuk Spec Nanti
 
 - Feed dan detail tidak horizontal overflow di 320px, 390px, tablet, dan desktop.
@@ -352,7 +362,8 @@ Alasannya: layout dasar sudah cukup stabil, action bar sudah lebih lengkap, dan 
 - Admin bisa edit/delete semua postingan dan edit metadata market semua postingan.
 - Delete tidak terjadi tanpa confirm.
 - Action bar tetap usable di mobile icon-only.
-- Detail post punya back affordance dan state komentar yang jelas.
+- Desktop detail post bisa dibuka sebagai modal tanpa meninggalkan feed.
+- Mobile detail post tetap memakai halaman penuh dengan back affordance dan state komentar yang jelas.
 
 ### Catatan Role Saat Ini
 
