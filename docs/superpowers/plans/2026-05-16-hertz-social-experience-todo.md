@@ -791,7 +791,7 @@ Centang setelah share sheet verified dan commit selesai.
 - Modify: `frontend/src/components/feed/HertzDetailInteractions.tsx`
 - Test: `tests/unit/frontend/hertzPostDetail.test.ts`
 
-- [ ] **Step 1: Tulis test detail behavior**
+- [x] **Step 1: Tulis test detail behavior**
 
 Coverage:
 
@@ -807,7 +807,7 @@ Run:
 npm run test -- tests/unit/frontend/hertzPostDetail.test.ts
 ```
 
-- [ ] **Step 2: Implement modal desktop dan mobile priority**
+- [x] **Step 2: Implement modal desktop dan mobile priority**
 
 Implementation target:
 
@@ -816,7 +816,7 @@ Implementation target:
 - Mobile route tetap full page.
 - Market Live mobile collapsible atau setelah konten.
 
-- [ ] **Step 3: Verifikasi**
+- [x] **Step 3: Verifikasi**
 
 Run:
 
@@ -829,7 +829,7 @@ REVIEW_BASE_URL=https://horizon.cloudnexify.com npm run review:a11y
 REVIEW_BASE_URL=https://horizon.cloudnexify.com REVIEW_REPLAY_ROUTE=/hertz REVIEW_REPLAY_SECONDS=30 npm run review:replay
 ```
 
-- [ ] **Step 4: Commit Task 10**
+- [x] **Step 4: Commit Task 10**
 
 Run:
 
@@ -838,7 +838,7 @@ git add frontend/src/app/hertz/page.tsx frontend/src/app/hertz/post/[shortId]/pa
 git commit -m "Add HERTZ desktop post detail modal"
 ```
 
-- [ ] **Ceklist selesai Task 10**
+- [x] **Ceklist selesai Task 10**
 
 Centang setelah modal/detail verified dan commit selesai.
 

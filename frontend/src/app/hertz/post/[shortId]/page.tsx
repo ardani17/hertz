@@ -6,6 +6,7 @@ import { HertzPostCard } from '@/components/feed/HertzPost';
 import { HertzDetailInteractions } from '@/components/feed/HertzDetailInteractions';
 import { HertzViewTracker } from '@/components/feed/HertzViewTracker';
 import { HertzAppShell } from '@/components/hertz/HertzAppShell';
+import { getHertzPostDetailMobileMarketPosition } from '@/lib/hertzPostDetailUi';
 import styles from './post-detail.module.css';
 
 interface PageProps {
@@ -39,11 +40,12 @@ export default async function HertzPostDetailPage({ params }: PageProps) {
       title="HERTZ"
       description="Detail postingan HERTZ."
       currentUser={viewer}
+      mobileMarketPosition={getHertzPostDetailMobileMarketPosition()}
     >
       <div className={styles.container}>
         <a className={styles.back} href="/hertz">Kembali ke HERTZ</a>
         <HertzViewTracker shortId={post.shortId} />
-        <HertzPostCard post={post} currentUser={viewer} />
+        <HertzPostCard post={post} currentUser={viewer} enableDesktopModal={false} />
         <HertzDetailInteractions post={post} currentUser={viewer} />
       </div>
     </HertzAppShell>

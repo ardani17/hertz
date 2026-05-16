@@ -17,6 +17,7 @@ export function HertzAppShell({
   currentUser,
   children,
   hideRightRail = false,
+  mobileMarketPosition = 'before',
 }: {
   active: ActiveNav;
   title: string;
@@ -24,7 +25,11 @@ export function HertzAppShell({
   currentUser: MemberSessionUser | null;
   children: ReactNode;
   hideRightRail?: boolean;
+  mobileMarketPosition?: 'before' | 'after' | 'hidden';
 }) {
+  const showMobileMarketBefore = !hideRightRail && mobileMarketPosition === 'before';
+  const showMobileMarketAfter = !hideRightRail && mobileMarketPosition === 'after';
+
   return (
     <main className={styles.main}>
       <div className={hideRightRail ? styles.shellCompact : styles.shell}>
@@ -34,8 +39,9 @@ export function HertzAppShell({
             <h1>{title}</h1>
             <p>{description}</p>
           </header>
-          {hideRightRail ? null : <HertzMobileMarket />}
+          {showMobileMarketBefore ? <HertzMobileMarket /> : null}
           {children}
+          {showMobileMarketAfter ? <HertzMobileMarket /> : null}
         </section>
         {hideRightRail ? null : <HertzRightRail />}
       </div>
