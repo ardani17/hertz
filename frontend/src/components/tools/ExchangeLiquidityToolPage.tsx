@@ -65,7 +65,7 @@ export function ExchangeLiquidityToolPage() {
   const copy = pageCopy[language];
 
   return (
-    <main className={styles.shell}>
+    <section className={styles.shell}>
       <ToolNav />
       <section className={styles.header}>
         <p className={styles.eyebrow}>{copy.eyebrow}</p>
@@ -87,6 +87,6 @@ export function ExchangeLiquidityToolPage() {
         </details>
       </section>
       <ExchangeLiquidityTool />
-    </main>
+    </section>
   );
 }

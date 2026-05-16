@@ -19,6 +19,13 @@ export function ToolNav() {
 
   return (
     <nav className={styles.toolNav} aria-label="Tools">
+      <Link
+        href="/tools"
+        className={pathname === '/tools' ? styles.toolNavActive : styles.toolNavHome}
+        aria-current={pathname === '/tools' ? 'page' : undefined}
+      >
+        Semua tools
+      </Link>
       {links.map((link) => (
         <Link
           key={link.href}

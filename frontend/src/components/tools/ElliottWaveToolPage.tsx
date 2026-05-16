@@ -74,7 +74,7 @@ export function ElliottWaveToolPage() {
   const copy = pageCopy[language];
 
   return (
-    <main className={styles.shell}>
+    <section className={styles.shell}>
       <ToolNav />
       <section className={styles.header}>
         <p className={styles.eyebrow}>{copy.eyebrow}</p>
@@ -96,6 +96,6 @@ export function ElliottWaveToolPage() {
         </details>
       </section>
       <ElliottWaveTool />
-    </main>
+    </section>
   );
 }

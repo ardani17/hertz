@@ -163,7 +163,7 @@ export function CftcToolPage() {
   const copy = pageCopy[language];
 
   return (
-    <main className={styles.shell}>
+    <section className={styles.shell}>
       <ToolNav />
       <section className={`${styles.header} ${styles.cftcHeader}`}>
         <div>
@@ -239,6 +239,6 @@ export function CftcToolPage() {
           ))}
         </div>
       </section>
-    </main>
+    </section>
   );
 }
