@@ -853,7 +853,7 @@ Centang setelah modal/detail verified dan commit selesai.
 - Test: `tests/unit/shared/hertzPostService.test.ts`
 - Test: `tests/unit/frontend/hertzPostDetail.test.ts`
 
-- [ ] **Step 1: Tulis test guest comment CTA**
+- [x] **Step 1: Tulis test guest comment CTA**
 
 Coverage:
 
@@ -868,7 +868,7 @@ Run:
 npm run test -- tests/unit/shared/hertzPostService.test.ts tests/unit/frontend/hertzPostDetail.test.ts
 ```
 
-- [ ] **Step 2: Implement comment UX**
+- [x] **Step 2: Implement comment UX**
 
 Implementation target:
 
@@ -876,7 +876,7 @@ Implementation target:
 - Member form punya loading/error/success.
 - Comment action feed membuka modal/page sesuai device.
 
-- [ ] **Step 3: Verifikasi**
+- [x] **Step 3: Verifikasi**
 
 Run:
 
@@ -887,7 +887,7 @@ npm run build:frontend
 REVIEW_BASE_URL=https://horizon.cloudnexify.com npm run review:a11y
 ```
 
-- [ ] **Step 4: Commit Task 11**
+- [x] **Step 4: Commit Task 11**
 
 Run:
 
@@ -896,7 +896,7 @@ git add frontend/src/components/feed/HertzDetailInteractions.tsx frontend/src/co
 git commit -m "Improve HERTZ comment guest state"
 ```
 
-- [ ] **Ceklist selesai Task 11**
+- [x] **Ceklist selesai Task 11**
 
 Centang setelah comment CTA verified dan commit selesai.
 

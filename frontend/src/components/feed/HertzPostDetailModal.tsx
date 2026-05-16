@@ -98,7 +98,7 @@ export function HertzPostDetailModal({
                 <HertzPostMedia media={post.media} />
                 <HertzMarketMeta post={post} />
                 <QuotePostCard post={post.quotedPost} />
-                <HertzActionBar post={post} currentUser={currentUser} />
+                <HertzActionBar post={post} currentUser={currentUser} enableDetailModal={false} />
               </div>
             </article>
             <HertzDetailInteractions post={post} currentUser={currentUser} />

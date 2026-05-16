@@ -4,7 +4,26 @@ import { useState, type FormEvent } from 'react';
 import type { MemberSessionUser, HertzComment, HertzPostDetail } from '@shared/types';
 import { HertzAvatar } from './HertzAvatar';
 import { CommentIcon } from './HertzIcons';
+import { HertzTelegramLogin } from './HertzTelegramLogin';
 import styles from './HertzDetailInteractions.module.css';
+
+export function getHertzCommentComposerState(user: Pick<MemberSessionUser, 'id'> | null, pending: boolean) {
+  if (!user) {
+    return {
+      mode: 'guest' as const,
+      title: 'Login Telegram untuk ikut diskusi',
+      body: 'Komentar hanya tersedia untuk member yang sudah login.',
+      submitLabel: 'Login Telegram',
+    };
+  }
+
+  return {
+    mode: 'member' as const,
+    title: 'Tulis komentar',
+    body: 'Tambahkan sudut pandang Anda',
+    submitLabel: pending ? 'Mengirim...' : 'Balas',
+  };
+}
 
 export function HertzDetailInteractions({
   post,
@@ -16,6 +35,7 @@ export function HertzDetailInteractions({
   const [comment, setComment] = useState('');
   const [message, setMessage] = useState<string | null>(null);
   const [pending, setPending] = useState<string | null>(null);
+  const composerState = getHertzCommentComposerState(currentUser, pending === 'comment');
 
   function requireLogin() {
     if (!currentUser) {
@@ -33,19 +53,25 @@ export function HertzDetailInteractions({
       setMessage('Komentar tidak boleh kosong.');
       return;
     }
-    setPending('comment');
-    const response = await fetch(`/api/hertz/posts/${post.shortId}/comments`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ content }),
-    });
-    setPending(null);
-    if (!response.ok) {
-      const data = await response.json().catch(() => null);
-      setMessage(data?.error?.message ?? 'Komentar gagal dikirim.');
-      return;
+    try {
+      setPending('comment');
+      const response = await fetch(`/api/hertz/posts/${post.shortId}/comments`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ content }),
+      });
+      if (!response.ok) {
+        const data = await response.json().catch(() => null);
+        setMessage(data?.error?.message ?? 'Komentar gagal dikirim.');
+        return;
+      }
+      setMessage('Komentar terkirim.');
+      window.location.reload();
+    } catch {
+      setMessage('Komentar gagal dikirim.');
+    } finally {
+      setPending(null);
     }
-    window.location.reload();
   }
 
   async function deleteComment(commentId: string) {
@@ -87,22 +113,29 @@ export function HertzDetailInteractions({
           <h2><CommentIcon /> Komentar</h2>
           <span>{post.comments.length}</span>
         </div>
-        <form className={styles.form} onSubmit={submitComment}>
-          <label htmlFor={`comment-${post.id}`}>Tulis komentar</label>
-          <textarea
-            id={`comment-${post.id}`}
-            value={comment}
-            onChange={(event) => setComment(event.target.value)}
-            onFocus={requireLogin}
-            placeholder={currentUser ? 'Tambahkan sudut pandang Anda' : 'Login untuk komentar'}
-            rows={3}
-            maxLength={2000}
-          />
-          <div className={styles.formFooter}>
-            <span>{comment.trim().length}/2000</span>
-            <button type="submit" disabled={pending === 'comment'}>{pending === 'comment' ? 'Mengirim...' : 'Balas'}</button>
+        {composerState.mode === 'guest' ? (
+          <div className={styles.guestCta}>
+            <strong>{composerState.title}</strong>
+            <p>{composerState.body}</p>
+            <HertzTelegramLogin />
           </div>
-        </form>
+        ) : (
+          <form className={styles.form} onSubmit={submitComment}>
+            <label htmlFor={`comment-${post.id}`}>{composerState.title}</label>
+            <textarea
+              id={`comment-${post.id}`}
+              value={comment}
+              onChange={(event) => setComment(event.target.value)}
+              placeholder={composerState.body}
+              rows={3}
+              maxLength={2000}
+            />
+            <div className={styles.formFooter}>
+              <span>{comment.trim().length}/2000</span>
+              <button type="submit" disabled={pending === 'comment'}>{composerState.submitLabel}</button>
+            </div>
+          </form>
+        )}
         <div className={styles.list}>
           {post.comments.length > 0
             ? post.comments.map((item) => (

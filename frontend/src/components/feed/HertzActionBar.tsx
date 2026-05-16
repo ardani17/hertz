@@ -3,11 +3,22 @@
 import { useState } from 'react';
 import type { MemberSessionUser, HertzPost } from '@shared/types';
 import { Button } from '@/components/ui/button';
+import { shouldOpenDesktopPostModal } from '@/lib/hertzPostDetailUi';
 import { BookmarkIcon, CommentIcon, LoveIcon, RepostIcon, ShareIcon } from './HertzIcons';
 import { HertzShareSheet } from './HertzShareSheet';
 import styles from './HertzActionBar.module.css';
 
-export function HertzActionBar({ post, currentUser }: { post: HertzPost; currentUser: MemberSessionUser | null }) {
+export function HertzActionBar({
+  post,
+  currentUser,
+  enableDetailModal = true,
+  onOpenDetail,
+}: {
+  post: HertzPost;
+  currentUser: MemberSessionUser | null;
+  enableDetailModal?: boolean;
+  onOpenDetail?: () => void;
+}) {
   const [message, setMessage] = useState<string | null>(null);
   const [pendingAction, setPendingAction] = useState<string | null>(null);
   const [pulsed, setPulsed] = useState(post.viewer.hasPulsed);
@@ -85,10 +96,19 @@ export function HertzActionBar({ post, currentUser }: { post: HertzPost; current
     }
   }
 
+  function openComments() {
+    const detailUrl = `/hertz/post/${post.shortId}#comments`;
+    if (enableDetailModal && onOpenDetail && shouldOpenDesktopPostModal(window.innerWidth)) {
+      onOpenDetail();
+      return;
+    }
+    window.location.href = detailUrl;
+  }
+
   return (
     <div className={styles.wrap}>
       <div className={styles.actions}>
-        <a href={`/hertz/post/${post.shortId}#comments`} aria-label="Komentar"><CommentIcon /> <span>Komentar</span> {post.counts.comments}</a>
+        <Button type="button" variant="ghost" size="sm" onClick={openComments} aria-label="Komentar"><CommentIcon /> <span>Komentar</span> {post.counts.comments}</Button>
         <Button type="button" variant="ghost" size="sm" onClick={togglePulse} className={pulsed ? styles.active : ''} disabled={pendingAction === 'pulse'} aria-label={pulsed ? 'Batal suka' : 'Suka'} aria-pressed={pulsed}><LoveIcon /> <span>Suka</span> {pulses}</Button>
         <Button type="button" variant="ghost" size="sm" onClick={toggleRepost} className={reposted ? styles.active : ''} disabled={pendingAction === 'repost'} aria-label={reposted ? 'Batal repost' : 'Repost'} aria-pressed={reposted}><RepostIcon /> <span>Repost</span> {reposts}</Button>
         <Button type="button" variant="ghost" size="sm" onClick={toggleBookmark} className={bookmarked ? styles.active : ''} disabled={pendingAction === 'bookmark'} aria-label={bookmarked ? 'Batal bookmark' : 'Bookmark'} aria-pressed={bookmarked}><BookmarkIcon /> <span>Simpan</span></Button>

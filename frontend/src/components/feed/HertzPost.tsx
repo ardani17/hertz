@@ -75,7 +75,12 @@ export function HertzPostCard({
           <HertzMarketMeta post={post} />
           <QuotePostCard post={post.quotedPost} />
           <div className={styles.interactiveArea}>
-            <HertzActionBar post={post} currentUser={currentUser} />
+            <HertzActionBar
+              post={post}
+              currentUser={currentUser}
+              enableDetailModal={enableDesktopModal}
+              onOpenDetail={() => setDetailOpen(true)}
+            />
           </div>
         </div>
       </HertzPostArticle>
