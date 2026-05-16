@@ -43,7 +43,7 @@ Setiap area memakai status:
 | Urutan | Area | Status | Alasan |
 | --- | --- | --- | --- |
 | 1 | Direct Message | Siap spec | Keputusan UX utama sudah dicatat: label mobile, guest CTA, menu tiga titik, polling, dan batas upload gambar. |
-| 2 | HERTZ Feed dan Post Detail | Belum direview | Core produk, termasuk owner edit/delete, action bar, composer, dan detail post. |
+| 2 | HERTZ Feed dan Post Detail | Perlu keputusan | Layout live sudah tidak overflow, tetapi masih perlu keputusan untuk media post, owner action, hapus, detail post, dan mobile action labels. |
 | 3 | Profile / Member Center | Belum direview | Sudah ada route, perlu pastikan isi dan navigasi sesuai kebutuhan user Telegram. |
 | 4 | Navigation Shell Desktop/Mobile | Belum direview | Menentukan rail kiri, rail kanan, bottom nav, menu yang disembunyikan, dan sticky behavior. |
 | 5 | Landing Horizon | Belum direview | Perlu pastikan mobile kecil, brand signal, dan gateway ke HERTZ. |
@@ -197,6 +197,146 @@ Setelah DM disepakati, area berikutnya yang disarankan adalah **HERTZ Feed dan P
 - composer kategori Trading/Life/General;
 - detail post;
 - responsive card post.
+
+## Review 2: HERTZ Feed dan Post Detail
+
+Status: Perlu keputusan
+
+### Kondisi Saat Ini
+
+Area yang dicek:
+
+- `/hertz`
+- `/hertz/post/hzx_live01`
+- `frontend/src/components/feed/HertzComposer.tsx`
+- `frontend/src/components/feed/HertzPost.tsx`
+- `frontend/src/components/feed/HertzActionBar.tsx`
+- `frontend/src/components/feed/HertzPostMenu.tsx`
+- `frontend/src/components/feed/HertzDetailInteractions.tsx`
+
+Hasil cek live:
+
+- Desktop 1365px, mobile 390px, dan mobile kecil 320px tidak menunjukkan horizontal overflow global.
+- Feed sudah menampilkan composer guest CTA login Telegram.
+- Action bar di desktop sudah punya `Komentar`, `Suka`, `Repost`, `Simpan`, dan `Bagikan`.
+- Mobile menyembunyikan teks action dan menyisakan ikon/count agar tidak penuh.
+- Menu tiga titik sudah punya `Salin link`, `Quote postingan`, `Laporkan`, `Edit postingan`, `Hapus postingan`, dan action admin jika user berhak.
+- Deteksi owner edit/delete memakai kombinasi `post.viewer.canEdit/canDelete` dan fallback user dari `/api/auth/me`.
+- Composer Trading sudah punya field Pair, TF, Arah, Risk, Entry, SL, TP, dan Confidence.
+- Detail post sudah memakai HERTZ shell dan menampilkan comment form serta list komentar.
+
+### Masalah Produk/UX yang Masih Perlu Dibahas
+
+1. **Media untuk Life dan General**
+   Saat ini upload gambar hanya aktif untuk kategori Trading. Life dan General tidak bisa upload media. Ini bisa benar jika aturan produk memang hanya chart trading, tetapi terasa membatasi untuk social feed.
+
+2. **Delete post belum punya confirm**
+   `Hapus postingan` langsung memanggil DELETE dan reload. Untuk aksi destruktif, perlu confirm dialog agar owner tidak salah hapus.
+
+3. **Edit post hanya edit konten**
+   Owner bisa edit teks post, tetapi metadata market hanya admin yang bisa edit. Jika owner Trading post salah input Pair/Risk/Entry, belum jelas apakah dia boleh memperbaiki sendiri.
+
+4. **Owner regression harus diuji sebagai user login**
+   Kode sudah mendukung owner edit/delete, tetapi acceptance criteria harus mencakup test login Telegram sebagai `ARDANI | vastara.id`: post milik sendiri menampilkan edit/delete, post orang lain tidak.
+
+5. **Mobile action labels**
+   Mobile menyembunyikan teks `Komentar`, `Suka`, `Repost`, `Simpan`, `Bagikan`. Ini hemat ruang, tetapi discoverability bisa lebih rendah. Minimal `aria-label` harus lengkap dan visual icon/count harus konsisten.
+
+6. **Copy link muncul di dua tempat**
+   `Bagikan` di action bar dan `Salin link` di menu tiga titik sama-sama copy link. Ini tidak salah, tetapi perlu diputuskan apakah dua entry ini memang sengaja: action bar untuk cepat, menu untuk fallback.
+
+7. **Detail post perlu identitas halaman yang lebih kuat**
+   Detail post saat ini punya back link dan post card, tetapi belum ada header compact seperti `Detail postingan`, status category, atau affordance navigasi yang kuat di mobile.
+
+8. **Komentar guest masih menampilkan form**
+   Guest melihat textarea komentar dan baru diberi pesan login saat fokus/submit. Bisa dipertahankan, tetapi CTA login Telegram mungkin lebih jelas jika belum login.
+
+### Opsi Arah Desain Feed/Post
+
+#### Opsi A: Stabilkan yang Sudah Ada
+
+Scope:
+
+- Tambah confirm untuk delete.
+- Pastikan owner edit/delete regression.
+- Rapikan copywriting action.
+- Pertahankan media hanya untuk Trading.
+- Pertahankan mobile icon-only action bar.
+
+Kelebihan:
+
+- cepat dan risiko rendah;
+- cocok jika feed saat ini dianggap sudah cukup.
+
+Kekurangan:
+
+- Life/General tetap tidak punya media;
+- detail post masih minimal;
+- owner Trading tidak bisa edit metadata sendiri.
+
+#### Opsi B: Polish Feed Terarah
+
+Scope:
+
+- Semua scope Opsi A.
+- Putuskan media untuk kategori non-Trading.
+- Owner Trading boleh edit metadata market miliknya sendiri.
+- Detail post diberi header/identity lebih jelas.
+- Guest comment form diganti atau didampingi CTA login Telegram.
+- `Bagikan` dan `Salin link` tetap ada, tetapi copy dan placement dibuat konsisten.
+
+Kelebihan:
+
+- menyelesaikan gap produk yang paling terasa tanpa redesign besar;
+- cocok untuk spec implementasi berikutnya;
+- memperjelas owner workflow yang sempat jadi concern utama.
+
+Kekurangan:
+
+- butuh test authenticated;
+- menyentuh composer, post menu, detail, dan interaction components.
+
+#### Opsi C: Redesign Feed Lebih Besar
+
+Scope:
+
+- Membuat composer multi-mode penuh.
+- Media preview, drag/drop, dan attachment manager.
+- Detail post dengan related posts/threading.
+- Feed filters dan saved/bookmarked views.
+- Draft post dan optimistic update tanpa full reload.
+
+Kelebihan:
+
+- pengalaman feed jauh lebih matang.
+
+Kekurangan:
+
+- terlalu besar untuk batch setelah DM;
+- perlu spec terpisah dan kemungkinan perubahan data/API tambahan.
+
+### Rekomendasi Awal
+
+Pilih **Opsi B: Polish Feed Terarah**.
+
+Alasannya: layout dasar sudah cukup stabil, action bar sudah lebih lengkap, dan composer Trading sudah berkembang. Sisa masalah paling penting adalah keputusan produk yang langsung memengaruhi user owner: upload media non-Trading, edit metadata, confirm delete, dan detail/guest state.
+
+### Keputusan yang Perlu Dikonfirmasi
+
+1. Apakah Life dan General boleh upload gambar, atau media tetap khusus Trading?
+2. Apakah owner Trading post boleh edit metadata market miliknya sendiri?
+3. Apakah delete post wajib memakai confirm dialog sebelum hapus?
+4. Apakah `Bagikan` di action bar dan `Salin link` di menu tetap dua-duanya ada?
+5. Untuk guest di detail post, apakah form komentar diganti CTA login Telegram atau tetap form dengan pesan login saat dipakai?
+
+### Acceptance Criteria untuk Spec Nanti
+
+- Feed dan detail tidak horizontal overflow di 320px, 390px, tablet, dan desktop.
+- Login owner `ARDANI | vastara.id` melihat `Edit postingan` dan `Hapus postingan` pada post miliknya sendiri.
+- Non-owner tidak melihat edit/delete owner.
+- Delete tidak terjadi tanpa confirm.
+- Action bar tetap usable di mobile icon-only.
+- Detail post punya back affordance dan state komentar yang jelas.
 
 ## Catatan untuk Spec Nanti
 
