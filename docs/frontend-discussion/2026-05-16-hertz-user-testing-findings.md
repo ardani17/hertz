@@ -61,3 +61,69 @@ Next investigation:
 - Capture API response status/body for `DELETE /api/hertz/posts/{shortId}`.
 - Check whether post is legacy `feed_posts` data, HERTZ `hertz_posts` data, plain repost item, or quoted post.
 - Add/adjust automated test once root cause is known.
+
+### UTF-002: Right sidebar market sparkline terlihat seperti garis horizontal
+
+Status: Investigating  
+Severity: Medium  
+Area: HERTZ right sidebar / MarketSidebarWidget / Sparkline  
+Reported at: 2026-05-16
+
+User report:
+
+- Grafik line di sidebar kanan masih terlihat seperti garis horizontal dan belum menyerupai contoh grafik yang diharapkan.
+- User meminta audit sumber data GlobalData terlebih dahulu, termasuk testing endpoint yang diperlukan, sebelum implementasi.
+
+Expected:
+
+- Sparkline di card Forex, Crypto, dan Stock menampilkan gerakan harga yang jelas secara visual.
+- Grafik memakai data GlobalData live/historical yang valid, bukan fallback statis atau garis datar.
+- Implementasi baru hanya dilakukan setelah endpoint yang diperlukan terbukti bisa diambil.
+
+Actual:
+
+- Grafik sidebar kanan terlihat terlalu datar/horizontal.
+
+Endpoint audit:
+
+- `GET http://globaldata-api:3201/api/chart/price?symbol=OANDA:XAUUSD&timeframe=D&range=12`
+  - `success: true`, 12 candle, close range `4519.5` sampai `4720.3999`.
+- `GET http://globaldata-api:3201/api/chart/price?symbol=OANDA:EURUSD&timeframe=D&range=12`
+  - `success: true`, 12 candle, close range `1.163061` sampai `1.177995`.
+- `GET http://globaldata-api:3201/api/v1/crypto/klines?symbol=BTCUSDT&interval=1h&limit=12`
+  - `success: true`, 12 candle, close range sekitar `77928.39` sampai `79155.54`.
+- `GET http://globaldata-api:3201/api/chart/price?symbol=TSLA&timeframe=D&range=12`
+  - `success: true`, 12 candle, close range `381.63` sampai `445.27`.
+- Intraday endpoint juga valid:
+  - `GET /api/v2/timeseries?symbol=XAU/USD&interval=1h&outputsize=24`
+  - `GET /api/v2/timeseries?symbol=EUR/USD&interval=1h&outputsize=24`
+  - `GET /api/v2/timeseries?symbol=BTC-USD&interval=1h&outputsize=24`
+  - `GET /api/v2/timeseries?symbol=TSLA&interval=1h&outputsize=24`
+  - `GET /api/v1/crypto/klines?symbol=BTCUSDT&interval=15m&limit=24`
+
+Initial analysis:
+
+- Data GlobalData tersedia dan tidak datar; setiap asset punya lebih dari 2 point dan min/max berbeda.
+- Current HERTZ market API `/api/market/rail` juga sudah mengembalikan `sparkline` numeric array per asset.
+- Kemungkinan utama masalah visual adalah domain Y chart. `Sparkline.tsx` memakai `AreaChart` tanpa `YAxis domain={['dataMin', 'dataMax']}` atau normalisasi data.
+- Jika Recharts memakai implicit domain dari `0` sampai max price, perubahan 1-3% pada BTC/NASDAQ/EURUSD akan terlihat sangat dekat garis horizontal.
+
+Evidence from current `/api/market/rail`:
+
+- `BTC/USDT`: 12 point, range `77928.39` sampai `79155.54`, zero-domain amplitude sekitar `1.55%`.
+- `EURUSD`: 12 point, range `1.163061` sampai `1.177995`, zero-domain amplitude sekitar `1.27%`.
+- `DOW`: 12 point, range `48941.8984` sampai `50063.4609`, zero-domain amplitude sekitar `2.24%`.
+- `TSLA`: 12 point, range `381.63` sampai `445.27`, zero-domain amplitude sekitar `14.29%`.
+
+Likely affected files:
+
+- `frontend/src/components/feed/Sparkline.tsx`
+- `frontend/src/components/feed/MarketCard.tsx`
+- `frontend/src/lib/globalDataMarket.ts`
+
+Next investigation:
+
+- Confirm rendered SVG path/domain from Recharts in browser.
+- Decide whether to use `YAxis hide domain={['dataMin', 'dataMax']}` with padding, or normalize sparkline values to percent/indexed movement before rendering.
+- Prefer 24-point intraday data for main chart if the visual target needs more visible movement than daily 12-point series.
+- Add a unit test around sparkline data normalization/domain behavior before implementation.
