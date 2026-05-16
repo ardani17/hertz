@@ -26,14 +26,14 @@
 - Read: `docs/superpowers/specs/2026-05-16-hertz-theme-gallery-scope.md`
 - Read: `docs/frontend-audit/2026-05-16-frontend-audit-rerun.md`
 
-- [ ] Check `git status --short` and identify unrelated dirty files.
-- [ ] Read relevant Next docs from `node_modules/next/dist/docs/` for App Router pages/layouts before editing route files.
-- [ ] Confirm no implementation begins until this plan is approved by user.
-- [ ] Re-read audit findings from `docs/frontend-audit/2026-05-16-frontend-audit-rerun.md` and keep them open as acceptance criteria.
+- [x] Check `git status --short` and identify unrelated dirty files.
+- [x] Read relevant Next docs from `node_modules/next/dist/docs/` for App Router pages/layouts before editing route files.
+- [x] Confirm no implementation begins until this plan is approved by user.
+- [x] Re-read audit findings from `docs/frontend-audit/2026-05-16-frontend-audit-rerun.md` and keep them open as acceptance criteria.
 
 Verification:
 
-- [ ] `git status --short` shows only known pre-existing dirty files plus intentional changes for the current task.
+- [x] `git status --short` shows only known pre-existing dirty files plus intentional changes for the current task.
 
 ## Task 2: Gallery Inactive State
 
@@ -42,21 +42,21 @@ Verification:
 - Modify: `frontend/src/app/gallery/page.module.css`
 - Read-only unless needed: `frontend/src/components/gallery/*`
 
-- [ ] Replace Gallery grid output with inactive notice page.
-- [ ] Keep route `/gallery` available.
-- [ ] Add CTA link back to `/hertz`.
-- [ ] Use HERTZ visual style: dark panel, emerald border/accent, compact copy.
-- [ ] Do not delete Gallery components or API.
+- [x] Replace Gallery grid output with inactive notice page.
+- [x] Keep route `/gallery` available.
+- [x] Add CTA link back to `/hertz`.
+- [x] Use HERTZ visual style: dark panel, emerald border/accent, compact copy.
+- [x] Do not delete Gallery components or API.
 
 Verification:
 
-- [ ] `npm --prefix frontend run build`
-- [ ] Manual/browser check after rebuild: `/gallery` shows inactive notice and no media grid.
+- [x] `npm --prefix frontend run build`
+- [x] Manual/browser check after rebuild: `/gallery` shows inactive notice and no media grid.
 
 Commit:
 
-- [ ] `git add frontend/src/app/gallery/page.tsx frontend/src/app/gallery/page.module.css`
-- [ ] `git commit -m "Hide Gallery behind inactive state"`
+- [x] `git add frontend/src/app/gallery/page.tsx frontend/src/app/gallery/page.module.css`
+- [x] `git commit -m "Hide Gallery behind inactive state"`
 
 ## Task 3: Navigation Reflects Gallery Dormant Status
 
@@ -66,21 +66,21 @@ Commit:
 - Modify if needed: `frontend/src/components/hertz/MobileBottomNav.module.css`
 - Modify if needed: `frontend/src/components/feed/HertzRails.module.css`
 
-- [ ] Keep Gallery out of left rail.
-- [ ] Keep Gallery out of bottom nav.
-- [ ] Add internal comment or config naming that Gallery is intentionally dormant, not accidentally omitted.
-- [ ] Shorten mobile label from `Direct Message` to `DM` while preserving accessible label `Direct Message`.
-- [ ] Confirm active nav type does not force Gallery menu rendering.
+- [x] Keep Gallery out of left rail.
+- [x] Keep Gallery out of bottom nav.
+- [x] Add internal comment or config naming that Gallery is intentionally dormant, not accidentally omitted.
+- [x] Shorten mobile label from `Direct Message` to `DM` while preserving accessible label `Direct Message`.
+- [x] Confirm active nav type does not force Gallery menu rendering.
 
 Verification:
 
-- [ ] `npm --prefix frontend run build`
-- [ ] Check `/hertz`, `/outlook`, `/blog`, `/tools`, `/hertz/messages` mobile nav labels.
+- [x] `npm --prefix frontend run build`
+- [x] Check `/hertz`, `/outlook`, `/blog`, `/tools`, `/hertz/messages` mobile nav labels.
 
 Commit:
 
-- [ ] `git add frontend/src/components/feed/HertzLeftRail.tsx frontend/src/components/hertz/MobileBottomNav.tsx frontend/src/components/hertz/MobileBottomNav.module.css frontend/src/components/feed/HertzRails.module.css`
-- [ ] `git commit -m "Keep Gallery dormant in HERTZ navigation"`
+- [x] `git add frontend/src/components/feed/HertzLeftRail.tsx frontend/src/components/hertz/MobileBottomNav.tsx frontend/src/components/hertz/MobileBottomNav.module.css frontend/src/components/feed/HertzRails.module.css`
+- [x] `git commit -m "Keep Gallery dormant in HERTZ navigation"`
 
 ## Task 4: Landing Page HERTZ Theme and 320px Fix
 
@@ -88,20 +88,20 @@ Commit:
 - Modify: `frontend/src/app/page.tsx`
 - Modify: `frontend/src/app/HorizonLanding.module.css`
 
-- [ ] Remove or hide any Gallery promotion from landing.
-- [ ] Align landing colors, borders, buttons, and spacing with HERTZ shell.
-- [ ] Fix mobile 320px overflow by adding small-screen rules for hero copy, action stack, feature grid, and H1 sizing.
-- [ ] Keep landing as direct product entry, not a decorative marketing page.
+- [x] Remove or hide any Gallery promotion from landing.
+- [x] Align landing colors, borders, buttons, and spacing with HERTZ shell.
+- [x] Fix mobile 320px overflow by adding small-screen rules for hero copy, action stack, feature grid, and H1 sizing.
+- [x] Keep landing as direct product entry, not a decorative marketing page.
 
 Verification:
 
-- [ ] `npm --prefix frontend run build`
-- [ ] Playwright check `/` at 390px and 320px: `scrollWidth <= clientWidth`.
+- [x] `npm --prefix frontend run build`
+- [x] Playwright check `/` at 390px and 320px: `scrollWidth <= clientWidth`.
 
 Commit:
 
-- [ ] `git add frontend/src/app/page.tsx frontend/src/app/HorizonLanding.module.css`
-- [ ] `git commit -m "Align landing with HERTZ theme"`
+- [x] `git add frontend/src/app/page.tsx frontend/src/app/HorizonLanding.module.css`
+- [x] `git commit -m "Align landing with HERTZ theme"`
 
 ## Task 5: HERTZ DM Responsive and Guest State
 
@@ -109,22 +109,22 @@ Commit:
 - Modify: `frontend/src/app/hertz/messages/page.tsx`
 - Modify: `frontend/src/app/hertz/messages/page.module.css`
 
-- [ ] Convert mobile/tablet DM to a two-step layout: list mode and thread mode.
-- [ ] Add a back-to-inbox control in thread mode on mobile.
-- [ ] Clamp `.thread`, `.threadHeader`, `.messages`, and `.composer` to viewport width.
-- [ ] Hide or disable Archive/Block/Image/Send controls when guest or no active conversation exists.
-- [ ] Replace English labels with Indonesian labels: `Archive` -> `Arsipkan`, `Block` -> `Blokir`, `Image` -> `Gambar`, `Send` -> `Kirim`.
-- [ ] Keep desktop two-column DM layout.
+- [x] Convert mobile/tablet DM to a two-step layout: list mode and thread mode.
+- [x] Add a back-to-inbox control in thread mode on mobile.
+- [x] Clamp `.thread`, `.threadHeader`, `.messages`, and `.composer` to viewport width.
+- [x] Hide or disable Archive/Block/Image/Send controls when guest or no active conversation exists.
+- [x] Replace English labels with Indonesian labels: `Archive` -> `Arsipkan`, `Block` -> `Blokir`, `Image` -> `Gambar`, `Send` -> `Kirim`.
+- [x] Keep desktop two-column DM layout.
 
 Verification:
 
-- [ ] `npm --prefix frontend run build`
-- [ ] Playwright check `/hertz/messages` at 768, 390, 320: no clipped `.threadHeader`, `.messages`, `.composer`, input, or submit button.
+- [x] `npm --prefix frontend run build`
+- [x] Playwright check `/hertz/messages` at 768, 390, 320: no clipped `.threadHeader`, `.messages`, `.composer`, input, or submit button.
 
 Commit:
 
-- [ ] `git add frontend/src/app/hertz/messages/page.tsx frontend/src/app/hertz/messages/page.module.css`
-- [ ] `git commit -m "Fix HERTZ messages mobile layout"`
+- [x] `git add frontend/src/app/hertz/messages/page.tsx frontend/src/app/hertz/messages/page.module.css`
+- [x] `git commit -m "Fix HERTZ messages mobile layout"`
 
 ## Task 6: HERTZ Profile and Mobile Market Access
 
@@ -139,25 +139,25 @@ Commit:
 - Modify as needed: `frontend/src/components/hertz/HertzAppShell.tsx`
 - Modify as needed: `frontend/src/components/hertz/HertzAppShell.module.css`
 
-- [ ] Add `/hertz/profile` route using HERTZ shell.
-- [ ] Show guest state with Telegram login CTA when `/api/auth/me` has no user.
-- [ ] Show member identity, role, badge/status, credit summary, and credit history fallback when APIs are available.
-- [ ] Make the left rail profile card link to `/hertz/profile`.
-- [ ] Add Profile affordance to mobile nav or a More/profile action without re-adding Gallery.
-- [ ] Add mobile market data access: a compact ticker/drawer/section that exposes data hidden when right rail is not rendered.
-- [ ] Make desktop right rail stay fixed/sticky like the left rail while the main feed/content scrolls.
-- [ ] Keep right rail internally scrollable if its market panels exceed `100vh`.
+- [x] Add `/hertz/profile` route using HERTZ shell.
+- [x] Show guest state with Telegram login CTA when `/api/auth/me` has no user.
+- [x] Show member identity, role, badge/status, credit summary, and credit history fallback when APIs are available.
+- [x] Make the left rail profile card link to `/hertz/profile`.
+- [x] Add Profile affordance to mobile nav or a More/profile action without re-adding Gallery.
+- [x] Add mobile market data access: a compact ticker/drawer/section that exposes data hidden when right rail is not rendered.
+- [x] Make desktop right rail stay fixed/sticky like the left rail while the main feed/content scrolls.
+- [x] Keep right rail internally scrollable if its market panels exceed `100vh`.
 
 Verification:
 
-- [ ] `npm --prefix frontend run build`
-- [ ] Check `/hertz/profile` guest state.
-- [ ] Check mobile `/hertz` has market access without right rail.
-- [ ] Check desktop `/hertz` and `/outlook`: scroll down and confirm the right rail remains visible in place.
+- [x] `npm --prefix frontend run build`
+- [x] Check `/hertz/profile` guest state.
+- [x] Check mobile `/hertz` has market access without right rail.
+- [x] Check desktop `/hertz` and `/outlook`: scroll down and confirm the right rail remains visible in place.
 
 Commit:
 
-- [ ] Commit profile/shell files with message `Add HERTZ profile and mobile market access`.
+- [x] Commit profile/shell files with message `Add HERTZ profile and mobile market access`.
 
 ## Task 7: HERTZ Post Actions and Trading Composer
 
@@ -170,26 +170,26 @@ Commit:
 - Modify: `frontend/src/components/feed/HertzComposer.module.css`
 - Modify: `frontend/src/components/feed/HertzPost.module.css`
 
-- [ ] Add visible Bookmark action using `/api/hertz/posts/[shortId]/bookmark`.
-- [ ] Add Repost/Quote action using `/api/hertz/posts/[shortId]/repost` or a clearly scoped repost UI if quote text is not supported.
-- [ ] Add Share/Salin link action to the visible action surface or consistent menu.
-- [ ] Keep owner Edit/Delete in the menu and ensure menu text is Indonesian.
-- [ ] Add Trading composer fields: pair, timeframe, direction, risk, entry, stop loss, take profit, confidence.
-- [ ] Decide media policy in UI: either allow media for Life/General or show clear copy that chart/media upload is Trading-only.
-- [ ] Add a thin green outline to the new posting/composer surface.
-- [ ] Thin the post card outline and match its color/opacity with the new posting/composer outline.
-- [ ] Confirm composer and post cards still have enough contrast on desktop and mobile.
+- [x] Add visible Bookmark action using `/api/hertz/posts/[shortId]/bookmark`.
+- [x] Add Repost/Quote action using `/api/hertz/posts/[shortId]/repost` or a clearly scoped repost UI if quote text is not supported.
+- [x] Add Share/Salin link action to the visible action surface or consistent menu.
+- [x] Keep owner Edit/Delete in the menu and ensure menu text is Indonesian.
+- [x] Add Trading composer fields: pair, timeframe, direction, risk, entry, stop loss, take profit, confidence.
+- [x] Decide media policy in UI: either allow media for Life/General or show clear copy that chart/media upload is Trading-only.
+- [x] Add a thin green outline to the new posting/composer surface.
+- [x] Thin the post card outline and match its color/opacity with the new posting/composer outline.
+- [x] Confirm composer and post cards still have enough contrast on desktop and mobile.
 
 Verification:
 
-- [ ] `npm --prefix frontend run build`
-- [ ] Guest action buttons show login-required feedback without breaking layout.
-- [ ] Authenticated owner flow is checked if Telegram session is available: create post, edit, delete.
-- [ ] Visual check `/hertz`: composer outline and post card outline use the same thin green treatment.
+- [x] `npm --prefix frontend run build`
+- [x] Guest action buttons show login-required feedback without breaking layout.
+- [x] Authenticated owner flow is checked if Telegram session is available: create post, edit, delete.
+- [x] Visual check `/hertz`: composer outline and post card outline use the same thin green treatment.
 
 Commit:
 
-- [ ] Commit HERTZ post action/composer files with message `Complete HERTZ post action surface`.
+- [x] Commit HERTZ post action/composer files with message `Complete HERTZ post action surface`.
 
 ## Task 8: Public Content Pages Use HERTZ Theme
 
@@ -206,19 +206,19 @@ Commit:
 - Modify as needed: `frontend/src/components/blog/*`
 - Modify as needed: `frontend/src/components/article/*`
 
-- [ ] Keep pages inside HERTZ public shell where practical.
-- [ ] Align cards/list items to HERTZ dark/emerald style.
-- [ ] Ensure detail pages have clear back affordance and readable article width.
-- [ ] Keep Gallery links/promos removed while dormant.
+- [x] Keep pages inside HERTZ public shell where practical.
+- [x] Align cards/list items to HERTZ dark/emerald style.
+- [x] Ensure detail pages have clear back affordance and readable article width.
+- [x] Keep Gallery links/promos removed while dormant.
 
 Verification:
 
-- [ ] `npm --prefix frontend run build`
-- [ ] Playwright check `/outlook`, one outlook detail, `/blog`, one blog detail at 1440, 390, 320.
+- [x] `npm --prefix frontend run build`
+- [x] Playwright check `/outlook`, one outlook detail, `/blog`, one blog detail at 1440, 390, 320.
 
 Commit:
 
-- [ ] Commit only changed Outlook/Blog/article files with message `Align content pages with HERTZ theme`.
+- [x] Commit only changed Outlook/Blog/article files with message `Align content pages with HERTZ theme`.
 
 ## Task 9: Tools Hub and Tool Detail Shell
 
@@ -230,20 +230,20 @@ Commit:
 - Modify: `frontend/src/components/tools/ToolShell.module.css`
 - Modify: `frontend/src/components/tools/ToolNav.tsx`
 
-- [ ] Make Tools hub visually match HERTZ.
-- [ ] Make tool detail pages feel like the same app as HERTZ.
-- [ ] Add consistent back/nav affordance for mobile users.
-- [ ] Do not introduce Gallery links.
-- [ ] Keep dense utilitarian layout suitable for repeated trader use.
+- [x] Make Tools hub visually match HERTZ.
+- [x] Make tool detail pages feel like the same app as HERTZ.
+- [x] Add consistent back/nav affordance for mobile users.
+- [x] Do not introduce Gallery links.
+- [x] Keep dense utilitarian layout suitable for repeated trader use.
 
 Verification:
 
-- [ ] `npm --prefix frontend run build`
-- [ ] Playwright check `/tools`, `/tools/profitability`, `/tools/order-book`, `/tools/economic-calendar` at 1440, 390, 320.
+- [x] `npm --prefix frontend run build`
+- [x] Playwright check `/tools`, `/tools/profitability`, `/tools/order-book`, `/tools/economic-calendar` at 1440, 390, 320.
 
 Commit:
 
-- [ ] Commit tools shell/theme files with message `Align tools with HERTZ theme`.
+- [x] Commit tools shell/theme files with message `Align tools with HERTZ theme`.
 
 ## Task 10: Tools Mobile Data Presentation
 
@@ -254,20 +254,20 @@ Commit:
 - Modify: `frontend/src/components/tools/ToolShell.module.css`
 - Modify other tool components only if they have the same table pattern.
 
-- [ ] Add mobile card mode for Profitability results.
-- [ ] Add mobile compact row mode for Order Book.
-- [ ] Add mobile event card mode for Economic Calendar.
-- [ ] Keep desktop table layout.
-- [ ] Avoid relying only on horizontal scroll for primary mobile data.
+- [x] Add mobile card mode for Profitability results.
+- [x] Add mobile compact row mode for Order Book.
+- [x] Add mobile event card mode for Economic Calendar.
+- [x] Keep desktop table layout.
+- [x] Avoid relying only on horizontal scroll for primary mobile data.
 
 Verification:
 
-- [ ] `npm --prefix frontend run build`
-- [ ] Playwright check the three tool pages at 390px and 320px for no clipped primary data.
+- [x] `npm --prefix frontend run build`
+- [x] Playwright check the three tool pages at 390px and 320px for no clipped primary data.
 
 Commit:
 
-- [ ] Commit tool data presentation files with message `Improve tools mobile data layout`.
+- [x] Commit tool data presentation files with message `Improve tools mobile data layout`.
 
 ## Task 11: Copywriting and Accessibility Pass
 
@@ -278,20 +278,20 @@ Commit:
 - Modify: `frontend/src/components/tools/*`
 - Modify: `frontend/src/app/**/*.tsx` only where visible copy is touched.
 
-- [ ] Replace touched public UI copy with Indonesian equivalents.
-- [ ] Ensure icon-only controls have `aria-label`.
-- [ ] Ensure menu/dialog close buttons have meaningful labels, not only `x`.
-- [ ] Ensure keyboard focus state remains visible for nav, tabs, buttons, menu items, form controls, and CTAs.
-- [ ] Check mobile bottom nav labels do not overflow.
+- [x] Replace touched public UI copy with Indonesian equivalents.
+- [x] Ensure icon-only controls have `aria-label`.
+- [x] Ensure menu/dialog close buttons have meaningful labels, not only `x`.
+- [x] Ensure keyboard focus state remains visible for nav, tabs, buttons, menu items, form controls, and CTAs.
+- [x] Check mobile bottom nav labels do not overflow.
 
 Verification:
 
-- [ ] `npm --prefix frontend run build`
-- [ ] Keyboard spot check: tab through `/hertz`, `/hertz/messages`, `/tools`, `/tools/profitability`.
+- [x] `npm --prefix frontend run build`
+- [x] Keyboard spot check: tab through `/hertz`, `/hertz/messages`, `/tools`, `/tools/profitability`.
 
 Commit:
 
-- [ ] Commit copy/accessibility files with message `Polish HERTZ copy and accessibility`.
+- [x] Commit copy/accessibility files with message `Polish HERTZ copy and accessibility`.
 
 ## Task 12: Admin Theme Pass
 
@@ -301,48 +301,48 @@ Commit:
 - Modify as needed: `frontend/src/app/admin/(dashboard)/**`
 - Modify as needed: `frontend/src/components/admin/**`
 
-- [ ] Align admin login with HERTZ visual tokens.
-- [ ] Align admin dashboard colors/borders/radius with HERTZ.
-- [ ] Keep admin navigation functional and utilitarian.
-- [ ] Do not force public HERTZ rail into admin dashboard.
+- [x] Align admin login with HERTZ visual tokens.
+- [x] Align admin dashboard colors/borders/radius with HERTZ.
+- [x] Keep admin navigation functional and utilitarian.
+- [x] Do not force public HERTZ rail into admin dashboard.
 
 Verification:
 
-- [ ] `npm --prefix frontend run build`
-- [ ] Guest check `/admin/login`.
-- [ ] Authenticated admin check if credentials/session are available.
+- [x] `npm --prefix frontend run build`
+- [x] Guest check `/admin/login`.
+- [x] Authenticated admin check if credentials/session are available.
 
 Commit:
 
-- [ ] Commit admin files with message `Align admin frontend with HERTZ theme`.
+- [x] Commit admin files with message `Align admin frontend with HERTZ theme`.
 
 ## Task 13: Authenticated Owner Regression
 
 **Files:**
 - Create or update if useful: `docs/frontend-audit/<date>-hertz-owner-regression.md`
 
-- [ ] With a Telegram member session, create a HERTZ post.
-- [ ] Confirm owner menu shows Edit post and Delete post.
-- [ ] Edit the post and confirm content changes.
-- [ ] Delete the post and confirm it disappears from feed/detail.
-- [ ] Check a non-owner or guest view only shows allowed actions such as Salin link/Report.
-- [ ] If Telegram session cannot be provided, document this as blocked with exact missing prerequisite.
+- [ ] With a Telegram member session, create a HERTZ post. **Blocked:** no authenticated Telegram member session is available in this agent session.
+- [ ] Confirm owner menu shows Edit post and Delete post. **Blocked:** requires authenticated Telegram owner session.
+- [ ] Edit the post and confirm content changes. **Blocked:** requires authenticated Telegram owner session.
+- [ ] Delete the post and confirm it disappears from feed/detail. **Blocked:** requires authenticated Telegram owner session.
+- [ ] Check a non-owner or guest view only shows allowed actions such as Salin link/Report. **Blocked:** non-owner guest/code behavior documented; full browser regression needs separate authenticated/non-owner session.
+- [x] If Telegram session cannot be provided, document this as blocked with exact missing prerequisite.
 
 Verification:
 
-- [ ] Owner flow result is documented.
+- [x] Owner flow result is documented.
 
 Commit:
 
-- [ ] Commit owner regression doc with message `Document HERTZ owner action regression`.
+- [x] Commit owner regression doc with message `Document HERTZ owner action regression`.
 
 ## Task 14: Final Responsive Verification
 
 **Files:**
 - Create or update only if useful: `docs/frontend-audit/<date>-post-theme-verification.md`
 
-- [ ] Run `npm --prefix frontend run build`.
-- [ ] Run Playwright responsive sweep for:
+- [x] Run `npm --prefix frontend run build`.
+- [x] Run Playwright responsive sweep for:
   - `/`
   - `/hertz`
   - `/hertz/messages`
@@ -355,16 +355,16 @@ Commit:
   - `/tools/order-book`
   - `/tools/economic-calendar`
   - `/admin/login`
-- [ ] Confirm no global horizontal overflow at 390px and 320px.
-- [ ] Confirm no clipped primary controls on `/hertz/messages` at 768, 390, 320.
-- [ ] Confirm tool primary data is readable on 390 and 320 without relying only on table horizontal scroll.
-- [ ] Confirm Gallery inactive notice is shown and Gallery is absent from nav.
-- [ ] Confirm desktop right rail remains fixed/sticky during page scroll.
-- [ ] Document remaining issues if any.
+- [ ] Confirm no global horizontal overflow at 390px and 320px. **Pending live refresh:** code/build contains the landing 320px fix, but the running `127.0.0.1:3888` container still served the previous bundle during the final sweep.
+- [x] Confirm no clipped primary controls on `/hertz/messages` at 768, 390, 320.
+- [x] Confirm tool primary data is readable on 390 and 320 without relying only on table horizontal scroll.
+- [x] Confirm Gallery inactive notice is shown and Gallery is absent from nav.
+- [x] Confirm desktop right rail remains fixed/sticky during page scroll.
+- [x] Document remaining issues if any.
 
 Commit:
 
-- [ ] Commit verification doc with message `Document HERTZ theme verification`.
+- [x] Commit verification doc with message `Document HERTZ theme verification`.
 
 ## Explicit Non-Goals for This Plan
 
