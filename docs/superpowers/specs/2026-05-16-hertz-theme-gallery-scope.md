@@ -70,6 +70,7 @@ Target:
 - Label mobile `Direct Message` dipendekkan menjadi `DM`, dengan `aria-label="Direct Message"`.
 - Tambahkan entry/profile affordance menuju member center.
 - Tambahkan mobile market access pengganti right rail yang hilang di mobile.
+- Pada desktop, right sidebar/market rail harus tetap diam saat halaman discroll, konsisten dengan left sidebar. Konten di dalam right rail boleh scroll sendiri jika melebihi tinggi viewport.
 
 ### Landing
 
@@ -243,6 +244,7 @@ Target tahap akhir:
 - HERTZ action bar menampilkan Bookmark/Repost/Share/Copy sesuai API yang tersedia.
 - Composer Trading punya field market utama saat create.
 - Mobile punya akses market data pengganti hidden right rail.
+- Desktop right rail tetap visible/sticky/fixed saat scroll halaman utama.
 - Copywriting publik yang disentuh sudah konsisten Indonesia.
 - Focus/aria untuk kontrol utama sudah diaudit.
 - Build frontend berhasil.

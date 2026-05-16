@@ -132,6 +132,7 @@ Commit:
 - Create: `frontend/src/app/hertz/profile/page.tsx`
 - Create: `frontend/src/app/hertz/profile/page.module.css`
 - Modify: `frontend/src/components/feed/HertzLeftRail.tsx`
+- Modify: `frontend/src/components/feed/HertzRightRail.tsx`
 - Modify: `frontend/src/components/feed/HertzRails.module.css`
 - Modify: `frontend/src/components/hertz/MobileBottomNav.tsx`
 - Modify: `frontend/src/components/hertz/MobileBottomNav.module.css`
@@ -144,12 +145,15 @@ Commit:
 - [ ] Make the left rail profile card link to `/hertz/profile`.
 - [ ] Add Profile affordance to mobile nav or a More/profile action without re-adding Gallery.
 - [ ] Add mobile market data access: a compact ticker/drawer/section that exposes data hidden when right rail is not rendered.
+- [ ] Make desktop right rail stay fixed/sticky like the left rail while the main feed/content scrolls.
+- [ ] Keep right rail internally scrollable if its market panels exceed `100vh`.
 
 Verification:
 
 - [ ] `npm --prefix frontend run build`
 - [ ] Check `/hertz/profile` guest state.
 - [ ] Check mobile `/hertz` has market access without right rail.
+- [ ] Check desktop `/hertz` and `/outlook`: scroll down and confirm the right rail remains visible in place.
 
 Commit:
 
@@ -350,6 +354,7 @@ Commit:
 - [ ] Confirm no clipped primary controls on `/hertz/messages` at 768, 390, 320.
 - [ ] Confirm tool primary data is readable on 390 and 320 without relying only on table horizontal scroll.
 - [ ] Confirm Gallery inactive notice is shown and Gallery is absent from nav.
+- [ ] Confirm desktop right rail remains fixed/sticky during page scroll.
 - [ ] Document remaining issues if any.
 
 Commit:
