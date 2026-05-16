@@ -56,40 +56,40 @@
             <div class="HertzRails-module__j2on7W__mobileMarketScroller">
               <div class="HertzRails-module__j2on7W__mobileMarketItem">
                 <strong> XAUUSD
-                <span> 4,555.80
-                <em class="HertzRails-module__j2on7W__down"> -2.61%
+                <span> [market-price]
+                <em class="HertzRails-module__j2on7W__down"> [market-change]
               <div class="HertzRails-module__j2on7W__mobileMarketItem">
                 <strong> EURUSD
-                <span> 1.16310
-                <em class="HertzRails-module__j2on7W__down"> -0.34%
+                <span> [market-price]
+                <em class="HertzRails-module__j2on7W__down"> [market-change]
               <div class="HertzRails-module__j2on7W__mobileMarketItem">
                 <strong> GBPUSD
-                <span> 1.33240
-                <em class="HertzRails-module__j2on7W__down"> -0.58%
+                <span> [market-price]
+                <em class="HertzRails-module__j2on7W__down"> [market-change]
               <div class="HertzRails-module__j2on7W__mobileMarketItem">
                 <strong> BTC/USDT
-                <span> 78,146.60
-                <em class="HertzRails-module__j2on7W__down"> -2.84%
+                <span> [market-price]
+                <em class="HertzRails-module__j2on7W__down"> [market-change]
               <div class="HertzRails-module__j2on7W__mobileMarketItem">
                 <strong> ETH/USDT
-                <span> 2,174.91
-                <em class="HertzRails-module__j2on7W__down"> -3.54%
+                <span> [market-price]
+                <em class="HertzRails-module__j2on7W__down"> [market-change]
               <div class="HertzRails-module__j2on7W__mobileMarketItem">
                 <strong> SOL/USDT
-                <span> 86.120
-                <em class="HertzRails-module__j2on7W__down"> -5.42%
+                <span> [market-price]
+                <em class="HertzRails-module__j2on7W__down"> [market-change]
               <div class="HertzRails-module__j2on7W__mobileMarketItem">
                 <strong> NASDAQ
-                <span> 26,225.15
-                <em class="HertzRails-module__j2on7W__down"> -1.54%
+                <span> [market-price]
+                <em class="HertzRails-module__j2on7W__down"> [market-change]
               <div class="HertzRails-module__j2on7W__mobileMarketItem">
                 <strong> S&P 500
-                <span> 7,408.50
-                <em class="HertzRails-module__j2on7W__down"> -1.24%
+                <span> [market-price]
+                <em class="HertzRails-module__j2on7W__down"> [market-change]
               <div class="HertzRails-module__j2on7W__mobileMarketItem">
                 <strong> DOW
-                <span> 49,526.17
-                <em class="HertzRails-module__j2on7W__down"> -1.07%
+                <span> [market-price]
+                <em class="HertzRails-module__j2on7W__down"> [market-change]
           <div class="page-module__UGD7-W__list">
             <article class="OutlookCard-module__rocf_q__card">
               <div class="OutlookCard-module__rocf_q__thumbnail">
@@ -214,7 +214,7 @@
               <div>
                 <b> 158.73
                 <em class="HertzRails-module__j2on7W__up"> +0.24%
-            <p class="HertzRails-module__j2on7W__marketSource"> GlobalData: Yahoo Finance · Update 16.48 WIB
+            <p class="HertzRails-module__j2on7W__marketSource"> GlobalData: Yahoo Finance · Update [time] WIB
           <section class="HertzRails-module__j2on7W__marketPanel">
             <div class="HertzRails-module__j2on7W__marketTitle">
               <svg>
@@ -225,30 +225,30 @@
               <svg class="HertzRails-module__j2on7W__sparkline">
                 <path>
               <div>
-                <b> 78,146.60
-                <em class="HertzRails-module__j2on7W__down"> -2.84%
+                <b> 78,091.52
+                <em class="HertzRails-module__j2on7W__down"> -2.85%
             <div class="HertzRails-module__j2on7W__marketRow">
               <strong> ETH/USDT
               <svg class="HertzRails-module__j2on7W__sparkline">
                 <path>
               <div>
-                <b> 2,174.91
-                <em class="HertzRails-module__j2on7W__down"> -3.54%
+                <b> 2,173.57
+                <em class="HertzRails-module__j2on7W__down"> -3.55%
             <div class="HertzRails-module__j2on7W__marketRow">
               <strong> SOL/USDT
               <svg class="HertzRails-module__j2on7W__sparkline">
                 <path>
               <div>
-                <b> 86.120
-                <em class="HertzRails-module__j2on7W__down"> -5.42%
+                <b> 86.130
+                <em class="HertzRails-module__j2on7W__down"> -5.37%
             <div class="HertzRails-module__j2on7W__marketRow">
               <strong> BNB/USDT
               <svg class="HertzRails-module__j2on7W__sparkline">
                 <path>
               <div>
-                <b> 652.12
-                <em class="HertzRails-module__j2on7W__down"> -4.47%
-            <p class="HertzRails-module__j2on7W__marketSource"> GlobalData: Binance · Update 16.48 WIB
+                <b> 652.20
+                <em class="HertzRails-module__j2on7W__down"> -4.42%
+            <p class="HertzRails-module__j2on7W__marketSource"> GlobalData: Binance · Update [time] WIB
           <section class="HertzRails-module__j2on7W__marketPanel">
             <div class="HertzRails-module__j2on7W__marketTitle">
               <svg>
@@ -282,7 +282,7 @@
               <div>
                 <b> 422.24
                 <em class="HertzRails-module__j2on7W__down"> -4.75%
-            <p class="HertzRails-module__j2on7W__marketSource"> GlobalData: Yahoo Finance · Update 16.47 WIB
+            <p class="HertzRails-module__j2on7W__marketSource"> GlobalData: Yahoo Finance · Update [time] WIB
       <nav class="MobileBottomNav-module__1pK7LW__mobileNav" aria-label="Mobile navigation">
         <a aria-label="Home" href="/hertz">
           <svg class="lucide lucide-house">

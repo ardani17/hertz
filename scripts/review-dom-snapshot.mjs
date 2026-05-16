@@ -69,6 +69,28 @@ function makeFileName(pageName, viewportName) {
   return `${pageName}-${viewportName}.txt`;
 }
 
+function containsToken(className, token) {
+  return String(className || '').toLowerCase().includes(token.toLowerCase());
+}
+
+export function normalizeSnapshotText({ tagName, className, ancestorClassName, text }) {
+  const normalizedTag = String(tagName || '').toLowerCase();
+  const combinedClassName = `${className || ''} ${ancestorClassName || ''}`;
+
+  if (containsToken(className, 'marketSource')) {
+    return text.replace(/Update\s+\d{1,2}[.:]\d{2}\s+WIB/g, 'Update [time] WIB');
+  }
+
+  const isMarketValue =
+    containsToken(combinedClassName, 'marketRow') ||
+    containsToken(combinedClassName, 'mobileMarketItem');
+
+  if (!isMarketValue) return text;
+  if (normalizedTag === 'b' || normalizedTag === 'span') return '[market-price]';
+  if (normalizedTag === 'em') return '[market-change]';
+  return text;
+}
+
 async function captureOutline(page) {
   return page.evaluate(() => {
     const ignoredTags = new Set(['SCRIPT', 'STYLE', 'NOSCRIPT', 'TEMPLATE']);
@@ -100,12 +122,25 @@ async function captureOutline(page) {
     }
 
     function directText(element) {
-      return Array.from(element.childNodes)
+      const text = Array.from(element.childNodes)
         .filter((node) => node.nodeType === Node.TEXT_NODE)
         .map((node) => compact(node.textContent))
         .filter(Boolean)
         .join(' ')
         .slice(0, 180);
+
+      const ancestorClassName = Array.from(element.parentElement?.classList || []).join(' ');
+      const combinedClassName = `${Array.from(element.classList || []).join(' ')} ${ancestorClassName}`;
+      if (String(element.className || '').toLowerCase().includes('marketsource')) {
+        return text.replace(/Update\s+\d{1,2}[.:]\d{2}\s+WIB/g, 'Update [time] WIB');
+      }
+      if (combinedClassName.toLowerCase().includes('marketrow') || combinedClassName.toLowerCase().includes('mobilemarketitem')) {
+        const tagName = element.tagName.toLowerCase();
+        if (tagName === 'b' || tagName === 'span') return '[market-price]';
+        if (tagName === 'em') return '[market-change]';
+      }
+
+      return text;
     }
 
     function walk(element, depth, lines) {
@@ -222,7 +257,9 @@ async function main() {
   }
 }
 
-main().catch((error) => {
-  console.error(error);
-  process.exitCode = 1;
-});
+if (process.argv[1] === fileURLToPath(import.meta.url)) {
+  main().catch((error) => {
+    console.error(error);
+    process.exitCode = 1;
+  });
+}
