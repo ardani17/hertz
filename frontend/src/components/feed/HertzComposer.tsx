@@ -1,7 +1,7 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import type { MemberSessionUser, HertzPostCategory } from '@shared/types';
+import type { MarketContext, MemberSessionUser, HertzPostCategory } from '@shared/types';
 import { Button } from '@/components/ui/button';
 import { HertzAvatar } from './HertzAvatar';
 import { HertzTelegramLogin } from './HertzTelegramLogin';
@@ -25,8 +25,16 @@ export function HertzComposer({
   const category = resolveComposerCategory(activeCategory);
   const isTradingPost = category === 'trading_room';
   const [content, setContent] = useState('');
-  const [pair, setPair] = useState('');
-  const [risk, setRisk] = useState('');
+  const [market, setMarket] = useState({
+    pair: '',
+    timeframe: '',
+    direction: '',
+    riskPercent: '',
+    entryPrice: '',
+    stopLoss: '',
+    takeProfit: '',
+    confidencePercent: '',
+  });
   const [mediaIds, setMediaIds] = useState<string[]>([]);
   const [mediaNames, setMediaNames] = useState<string[]>([]);
   const [uploading, setUploading] = useState(false);
@@ -34,11 +42,43 @@ export function HertzComposer({
 
   useEffect(() => {
     if (isTradingPost) return;
-    setPair('');
-    setRisk('');
+    setMarket({
+      pair: '',
+      timeframe: '',
+      direction: '',
+      riskPercent: '',
+      entryPrice: '',
+      stopLoss: '',
+      takeProfit: '',
+      confidencePercent: '',
+    });
     setMediaIds([]);
     setMediaNames([]);
   }, [isTradingPost]);
+
+  function setMarketField(field: keyof typeof market, value: string) {
+    setMarket((current) => ({ ...current, [field]: value }));
+  }
+
+  function numberOrNull(value: string) {
+    const trimmed = value.trim();
+    if (!trimmed) return null;
+    const parsed = Number(trimmed);
+    return Number.isFinite(parsed) ? parsed : null;
+  }
+
+  function marketPayload(): MarketContext {
+    return {
+      pair: market.pair.trim() || null,
+      timeframe: market.timeframe.trim() || null,
+      direction: market.direction.trim() || null,
+      riskPercent: numberOrNull(market.riskPercent),
+      entryPrice: numberOrNull(market.entryPrice),
+      stopLoss: numberOrNull(market.stopLoss),
+      takeProfit: numberOrNull(market.takeProfit),
+      confidencePercent: numberOrNull(market.confidencePercent),
+    };
+  }
 
   async function uploadImages(files: FileList | null) {
     if (!currentUser || !isTradingPost || !files?.length) return;
@@ -83,7 +123,7 @@ export function HertzComposer({
       setStatus('Login Telegram member diperlukan.');
       return;
     }
-    if (isTradingPost && (!pair.trim() || !risk.trim())) {
+    if (isTradingPost && (!market.pair.trim() || !market.riskPercent.trim())) {
       setStatus('Pair dan risk wajib untuk Trading Room.');
       return;
     }
@@ -94,10 +134,7 @@ export function HertzComposer({
       body: JSON.stringify({
         category,
         content,
-        market: isTradingPost ? {
-          pair: pair || null,
-          riskPercent: risk ? Number(risk) : null,
-        } : null,
+        market: isTradingPost ? marketPayload() : null,
         mediaIds: isTradingPost ? mediaIds : [],
       }),
     });
@@ -107,8 +144,16 @@ export function HertzComposer({
       return;
     }
     setContent('');
-    setPair('');
-    setRisk('');
+    setMarket({
+      pair: '',
+      timeframe: '',
+      direction: '',
+      riskPercent: '',
+      entryPrice: '',
+      stopLoss: '',
+      takeProfit: '',
+      confidencePercent: '',
+    });
     setMediaIds([]);
     setMediaNames([]);
     setStatus('Published.');
@@ -160,12 +205,36 @@ export function HertzComposer({
                 />
               </label>
               <label className={styles.inlineField}>
-                <span>+</span>
-                <input value={pair} onChange={(event) => setPair(event.target.value)} placeholder="Pair" disabled={!currentUser} />
+                <span>Pair</span>
+                <input value={market.pair} onChange={(event) => setMarketField('pair', event.target.value)} placeholder="XAUUSD" disabled={!currentUser} />
               </label>
               <label className={styles.inlineField}>
-                <span>+</span>
-                <input value={risk} onChange={(event) => setRisk(event.target.value)} placeholder="Risk" inputMode="decimal" disabled={!currentUser} />
+                <span>TF</span>
+                <input value={market.timeframe} onChange={(event) => setMarketField('timeframe', event.target.value)} placeholder="H4" disabled={!currentUser} />
+              </label>
+              <label className={styles.inlineField}>
+                <span>Arah</span>
+                <input value={market.direction} onChange={(event) => setMarketField('direction', event.target.value)} placeholder="Buy" disabled={!currentUser} />
+              </label>
+              <label className={styles.inlineField}>
+                <span>Risk</span>
+                <input value={market.riskPercent} onChange={(event) => setMarketField('riskPercent', event.target.value)} placeholder="2" inputMode="decimal" disabled={!currentUser} />
+              </label>
+              <label className={styles.inlineField}>
+                <span>Entry</span>
+                <input value={market.entryPrice} onChange={(event) => setMarketField('entryPrice', event.target.value)} placeholder="0.00" inputMode="decimal" disabled={!currentUser} />
+              </label>
+              <label className={styles.inlineField}>
+                <span>SL</span>
+                <input value={market.stopLoss} onChange={(event) => setMarketField('stopLoss', event.target.value)} placeholder="0.00" inputMode="decimal" disabled={!currentUser} />
+              </label>
+              <label className={styles.inlineField}>
+                <span>TP</span>
+                <input value={market.takeProfit} onChange={(event) => setMarketField('takeProfit', event.target.value)} placeholder="0.00" inputMode="decimal" disabled={!currentUser} />
+              </label>
+              <label className={styles.inlineField}>
+                <span>Conf</span>
+                <input value={market.confidencePercent} onChange={(event) => setMarketField('confidencePercent', event.target.value)} placeholder="70" inputMode="decimal" disabled={!currentUser} />
               </label>
             </>
           ) : null}
@@ -180,6 +249,7 @@ export function HertzComposer({
             ))}
           </div>
         ) : null}
+        {isTradingPost ? <p className={styles.mediaPolicy}>Chart trading mendukung gambar saja, maksimal 4 file per postingan.</p> : null}
         {status ? <p className={styles.status}>{status}</p> : null}
       </div>
     </section>

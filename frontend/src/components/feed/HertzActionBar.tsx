@@ -3,7 +3,7 @@
 import { useState } from 'react';
 import type { MemberSessionUser, HertzPost } from '@shared/types';
 import { Button } from '@/components/ui/button';
-import { CommentIcon, LoveIcon } from './HertzIcons';
+import { BookmarkIcon, CommentIcon, LoveIcon, RepostIcon, ShareIcon } from './HertzIcons';
 import styles from './HertzActionBar.module.css';
 
 export function HertzActionBar({ post, currentUser }: { post: HertzPost; currentUser: MemberSessionUser | null }) {
@@ -11,6 +11,9 @@ export function HertzActionBar({ post, currentUser }: { post: HertzPost; current
   const [pendingAction, setPendingAction] = useState<string | null>(null);
   const [pulsed, setPulsed] = useState(post.viewer.hasPulsed);
   const [pulses, setPulses] = useState(post.counts.pulses);
+  const [bookmarked, setBookmarked] = useState(post.viewer.hasBookmarked);
+  const [reposted, setReposted] = useState(post.viewer.hasReposted);
+  const [reposts, setReposts] = useState(post.counts.reposts);
 
   function requireLogin() {
     if (!currentUser) {
@@ -22,6 +25,20 @@ export function HertzActionBar({ post, currentUser }: { post: HertzPost; current
 
   async function postAction(path: string) {
     const response = await fetch(path, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: '{}' });
+    if (!response.ok) {
+      const data = await response.json().catch(() => null);
+      setMessage(data?.error?.message ?? 'Aksi gagal.');
+      return null;
+    }
+    return response.json();
+  }
+
+  async function postTypedAction(path: string, body: object) {
+    const response = await fetch(path, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(body),
+    });
     if (!response.ok) {
       const data = await response.json().catch(() => null);
       setMessage(data?.error?.message ?? 'Aksi gagal.');
@@ -42,11 +59,44 @@ export function HertzActionBar({ post, currentUser }: { post: HertzPost; current
     }
   }
 
+  async function toggleBookmark() {
+    if (!requireLogin()) return;
+    setPendingAction('bookmark');
+    const result = await postAction(`/api/hertz/posts/${post.shortId}/bookmark`);
+    setPendingAction(null);
+    if (result) {
+      setBookmarked(Boolean(result.data.active));
+      setMessage(result.data.active ? 'Postingan disimpan.' : 'Bookmark dibatalkan.');
+    }
+  }
+
+  async function toggleRepost() {
+    if (!requireLogin()) return;
+    setPendingAction('repost');
+    const result = await postTypedAction(`/api/hertz/posts/${post.shortId}/repost`, { type: 'repost' });
+    setPendingAction(null);
+    if (result) {
+      const active = Boolean(result.data.active);
+      setReposted(active);
+      setReposts((count) => Math.max(0, count + (active ? 1 : -1)));
+      setMessage(active ? 'Postingan direpost.' : 'Repost dibatalkan.');
+    }
+  }
+
+  async function copyLink() {
+    const link = `${window.location.origin}/hertz/post/${post.shortId}`;
+    await navigator.clipboard?.writeText(link);
+    setMessage('Link disalin.');
+  }
+
   return (
     <div className={styles.wrap}>
       <div className={styles.actions}>
         <a href={`/hertz/post/${post.shortId}#comments`} aria-label="Komentar"><CommentIcon /> <span>Komentar</span> {post.counts.comments}</a>
         <Button type="button" variant="ghost" size="sm" onClick={togglePulse} className={pulsed ? styles.active : ''} disabled={pendingAction === 'pulse'} aria-label={pulsed ? 'Batal suka' : 'Suka'} aria-pressed={pulsed}><LoveIcon /> <span>Suka</span> {pulses}</Button>
+        <Button type="button" variant="ghost" size="sm" onClick={toggleRepost} className={reposted ? styles.active : ''} disabled={pendingAction === 'repost'} aria-label={reposted ? 'Batal repost' : 'Repost'} aria-pressed={reposted}><RepostIcon /> <span>Repost</span> {reposts}</Button>
+        <Button type="button" variant="ghost" size="sm" onClick={toggleBookmark} className={bookmarked ? styles.active : ''} disabled={pendingAction === 'bookmark'} aria-label={bookmarked ? 'Batal bookmark' : 'Bookmark'} aria-pressed={bookmarked}><BookmarkIcon /> <span>Simpan</span></Button>
+        <Button type="button" variant="ghost" size="sm" onClick={copyLink} aria-label="Salin link"><ShareIcon /> <span>Share</span></Button>
       </div>
       {message ? <p className={styles.message}>{message}</p> : null}
     </div>

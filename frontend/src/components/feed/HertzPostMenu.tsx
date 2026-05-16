@@ -14,10 +14,12 @@ export function HertzPostMenu({ post, currentUser }: { post: HertzPost; currentU
   const [reportOpen, setReportOpen] = useState(false);
   const [editOpen, setEditOpen] = useState(false);
   const [marketOpen, setMarketOpen] = useState(false);
+  const [quoteOpen, setQuoteOpen] = useState(false);
   const [message, setMessage] = useState<string | null>(null);
   const [reportReason, setReportReason] = useState('misleading');
   const [reportDetails, setReportDetails] = useState('');
   const [editContent, setEditContent] = useState(post.content.text);
+  const [quoteContent, setQuoteContent] = useState('');
   const [market, setMarket] = useState({
     pair: post.market?.pair ?? '',
     timeframe: post.market?.timeframe ?? '',
@@ -32,6 +34,7 @@ export function HertzPostMenu({ post, currentUser }: { post: HertzPost; currentU
   const effectiveUser = currentUser ?? menuUser;
   const isOwnerOrAdmin = Boolean(effectiveUser && (effectiveUser.id === post.author.id || effectiveUser.role === 'admin'));
   const canReport = Boolean(effectiveUser);
+  const canQuote = Boolean(effectiveUser);
   const canEdit = Boolean(post.viewer.canEdit || isOwnerOrAdmin);
   const canDelete = Boolean(post.viewer.canDelete || isOwnerOrAdmin);
   const isAdmin = effectiveUser?.role === 'admin';
@@ -68,6 +71,7 @@ export function HertzPostMenu({ post, currentUser }: { post: HertzPost; currentU
     setReportOpen(false);
     setEditOpen(false);
     setMarketOpen(false);
+    setQuoteOpen(false);
   }
 
   async function deleteOwnPost() {
@@ -128,6 +132,27 @@ export function HertzPostMenu({ post, currentUser }: { post: HertzPost; currentU
     setMessage('Report masuk ke review admin.');
   }
 
+  async function submitQuote(event: FormEvent<HTMLFormElement>) {
+    event.preventDefault();
+    const content = quoteContent.trim();
+    if (!content) {
+      setMessage('Konten quote tidak boleh kosong.');
+      return;
+    }
+    const response = await fetch(`/api/hertz/posts/${post.shortId}/repost`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ type: 'quote', content }),
+    });
+    if (!response.ok) {
+      const data = await response.json().catch(() => null);
+      setMessage(data?.error?.message ?? 'Quote gagal dibuat.');
+      return;
+    }
+    setQuoteContent('');
+    window.location.reload();
+  }
+
   async function submitMarket(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
     const numberOrNull = (value: string) => {
@@ -165,27 +190,28 @@ export function HertzPostMenu({ post, currentUser }: { post: HertzPost; currentU
   }
 
   return (
-    <div className={styles.wrap}>
-      <Button type="button" variant="ghost" size="icon-sm" className={styles.trigger} onClick={toggleMenu} aria-label="Post actions">
+    <div className={styles.wrap} data-menu-open={open ? "true" : undefined}>
+      <Button type="button" variant="ghost" size="icon-sm" className={styles.trigger} onClick={toggleMenu} aria-label="Aksi postingan">
         <MoreIcon />
       </Button>
       {open ? (
         <div className={styles.menu}>
-          <Button type="button" variant="ghost" size="sm" onClick={copyLink}>Copy link</Button>
+          <Button type="button" variant="ghost" size="sm" onClick={copyLink}>Salin link</Button>
           {checkingAuth ? <Button type="button" variant="ghost" size="sm" disabled>Cek login...</Button> : null}
-          {canReport ? <Button type="button" variant="ghost" size="sm" onClick={() => { closePanels(); setReportOpen(true); setOpen(false); }}>Report</Button> : null}
-          {canEdit ? <Button type="button" variant="ghost" size="sm" onClick={() => { closePanels(); setEditOpen(true); setOpen(false); }}>Edit post</Button> : null}
-          {isAdmin ? <Button type="button" variant="ghost" size="sm" onClick={() => { closePanels(); setMarketOpen(true); setOpen(false); }}>Edit market metadata</Button> : null}
-          {canDelete ? <Button type="button" variant="ghost" size="sm" onClick={deleteOwnPost}>Delete post</Button> : null}
-          {isAdmin ? <Button type="button" variant="ghost" size="sm" onClick={hidePost}>Hide post</Button> : null}
+          {canQuote ? <Button type="button" variant="ghost" size="sm" onClick={() => { closePanels(); setQuoteOpen(true); setOpen(false); }}>Quote postingan</Button> : null}
+          {canReport ? <Button type="button" variant="ghost" size="sm" onClick={() => { closePanels(); setReportOpen(true); setOpen(false); }}>Laporkan</Button> : null}
+          {canEdit ? <Button type="button" variant="ghost" size="sm" onClick={() => { closePanels(); setEditOpen(true); setOpen(false); }}>Edit postingan</Button> : null}
+          {isAdmin ? <Button type="button" variant="ghost" size="sm" onClick={() => { closePanels(); setMarketOpen(true); setOpen(false); }}>Edit metadata market</Button> : null}
+          {canDelete ? <Button type="button" variant="ghost" size="sm" onClick={deleteOwnPost}>Hapus postingan</Button> : null}
+          {isAdmin ? <Button type="button" variant="ghost" size="sm" onClick={hidePost}>Sembunyikan postingan</Button> : null}
         </div>
       ) : null}
       {reportOpen ? (
         <div className={styles.modalBackdrop} role="presentation" onClick={(event) => { event.stopPropagation(); closePanels(); }}>
           <form className={styles.panel} role="dialog" aria-modal="true" aria-labelledby={`report-title-${post.id}`} onSubmit={submitReport} onClick={(event) => event.stopPropagation()}>
             <div className={styles.panelHeader}>
-              <h2 id={`report-title-${post.id}`}>Report post</h2>
-              <Button type="button" variant="ghost" size="icon-sm" className={styles.closeButton} onClick={closePanels} aria-label="Close report">x</Button>
+              <h2 id={`report-title-${post.id}`}>Laporkan postingan</h2>
+              <Button type="button" variant="ghost" size="icon-sm" className={styles.closeButton} onClick={closePanels} aria-label="Tutup laporan">x</Button>
             </div>
             <label htmlFor={`report-reason-${post.id}`}>Alasan report</label>
             <select id={`report-reason-${post.id}`} value={reportReason} onChange={(event) => setReportReason(event.target.value)}>
@@ -197,8 +223,24 @@ export function HertzPostMenu({ post, currentUser }: { post: HertzPost; currentU
             </select>
             <textarea value={reportDetails} onChange={(event) => setReportDetails(event.target.value)} placeholder="Detail opsional" rows={3} />
             <div className={styles.panelActions}>
-              <Button type="button" variant="ghost" onClick={closePanels}>Cancel</Button>
-              <Button type="submit">Submit report</Button>
+              <Button type="button" variant="ghost" onClick={closePanels}>Batal</Button>
+              <Button type="submit">Kirim laporan</Button>
+            </div>
+          </form>
+        </div>
+      ) : null}
+      {quoteOpen ? (
+        <div className={styles.modalBackdrop} role="presentation" onClick={(event) => { event.stopPropagation(); closePanels(); }}>
+          <form className={styles.panel} role="dialog" aria-modal="true" aria-labelledby={`quote-title-${post.id}`} onSubmit={submitQuote} onClick={(event) => event.stopPropagation()}>
+            <div className={styles.panelHeader}>
+              <h2 id={`quote-title-${post.id}`}>Quote postingan</h2>
+              <Button type="button" variant="ghost" size="icon-sm" className={styles.closeButton} onClick={closePanels} aria-label="Tutup quote">x</Button>
+            </div>
+            <label htmlFor={`quote-post-${post.id}`}>Komentar quote</label>
+            <textarea id={`quote-post-${post.id}`} value={quoteContent} onChange={(event) => setQuoteContent(event.target.value)} rows={5} maxLength={4000} />
+            <div className={styles.panelActions}>
+              <Button type="button" variant="ghost" onClick={closePanels}>Batal</Button>
+              <Button type="submit">Publish quote</Button>
             </div>
           </form>
         </div>
@@ -207,14 +249,14 @@ export function HertzPostMenu({ post, currentUser }: { post: HertzPost; currentU
         <div className={styles.modalBackdrop} role="presentation" onClick={(event) => { event.stopPropagation(); closePanels(); }}>
           <form className={styles.panel} role="dialog" aria-modal="true" aria-labelledby={`edit-title-${post.id}`} onSubmit={submitEdit} onClick={(event) => event.stopPropagation()}>
             <div className={styles.panelHeader}>
-              <h2 id={`edit-title-${post.id}`}>Edit post</h2>
-              <Button type="button" variant="ghost" size="icon-sm" className={styles.closeButton} onClick={closePanels} aria-label="Close edit">x</Button>
+              <h2 id={`edit-title-${post.id}`}>Edit postingan</h2>
+              <Button type="button" variant="ghost" size="icon-sm" className={styles.closeButton} onClick={closePanels} aria-label="Tutup edit">x</Button>
             </div>
             <label htmlFor={`edit-post-${post.id}`}>Konten</label>
             <textarea id={`edit-post-${post.id}`} value={editContent} onChange={(event) => setEditContent(event.target.value)} rows={7} maxLength={12000} />
             <div className={styles.panelActions}>
-              <Button type="button" variant="ghost" onClick={closePanels}>Cancel</Button>
-              <Button type="submit">Save post</Button>
+              <Button type="button" variant="ghost" onClick={closePanels}>Batal</Button>
+              <Button type="submit">Simpan</Button>
             </div>
           </form>
         </div>
@@ -223,8 +265,8 @@ export function HertzPostMenu({ post, currentUser }: { post: HertzPost; currentU
         <div className={styles.modalBackdrop} role="presentation" onClick={(event) => { event.stopPropagation(); closePanels(); }}>
           <form className={`${styles.panel} ${styles.marketPanel}`} role="dialog" aria-modal="true" aria-labelledby={`market-title-${post.id}`} onSubmit={submitMarket} onClick={(event) => event.stopPropagation()}>
             <div className={styles.panelHeader}>
-              <h2 id={`market-title-${post.id}`}>Edit market metadata</h2>
-              <Button type="button" variant="ghost" size="icon-sm" className={styles.closeButton} onClick={closePanels} aria-label="Close market metadata">x</Button>
+              <h2 id={`market-title-${post.id}`}>Edit metadata market</h2>
+              <Button type="button" variant="ghost" size="icon-sm" className={styles.closeButton} onClick={closePanels} aria-label="Tutup metadata market">x</Button>
             </div>
             <label>Pair<input value={market.pair} onChange={(event) => setMarketField('pair', event.target.value)} placeholder="XAUUSD" /></label>
             <label>Timeframe<input value={market.timeframe} onChange={(event) => setMarketField('timeframe', event.target.value)} placeholder="H4" /></label>
@@ -236,8 +278,8 @@ export function HertzPostMenu({ post, currentUser }: { post: HertzPost; currentU
             <label>TP<input value={market.takeProfit} onChange={(event) => setMarketField('takeProfit', event.target.value)} inputMode="decimal" /></label>
             <label>Confidence %<input value={market.confidencePercent} onChange={(event) => setMarketField('confidencePercent', event.target.value)} inputMode="decimal" /></label>
             <div className={styles.panelActions}>
-              <Button type="button" variant="ghost" onClick={closePanels}>Cancel</Button>
-              <Button type="submit">Save market</Button>
+              <Button type="button" variant="ghost" onClick={closePanels}>Batal</Button>
+              <Button type="submit">Simpan market</Button>
             </div>
           </form>
         </div>
