@@ -15,6 +15,7 @@ const navItems = [
   { key: 'tools', href: '/tools', label: 'Tools', Icon: SlidersVertical },
   { key: 'messages', href: '/hertz/messages', label: 'Direct Message', Icon: MessageCircle },
 ] as const;
+// Gallery is intentionally dormant and stays out of navigation until re-enabled.
 
 export function HertzLeftRail({
   currentUser,
