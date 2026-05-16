@@ -15,7 +15,7 @@ Sumber: testing langsung user pada web live `https://horizon.cloudnexify.com`
 
 ### UTF-001: Delete HERTZ post menampilkan error server
 
-Status: Needs reproduction details  
+Status: Fixed  
 Severity: High  
 Area: HERTZ feed / post action menu / delete post  
 Reported at: 2026-05-16
@@ -57,14 +57,15 @@ Needed reproduction details:
 
 Next investigation:
 
-- Reproduce with authenticated member/admin session.
-- Capture API response status/body for `DELETE /api/hertz/posts/{shortId}`.
-- Check whether post is legacy `feed_posts` data, HERTZ `hertz_posts` data, plain repost item, or quoted post.
-- Add/adjust automated test once root cause is known.
+- Reproduced with an authenticated temporary admin session and temporary HERTZ post: `DELETE /api/hertz/posts/{shortId}` returned `500` and post stayed `published`.
+- Root cause: `HertzPostRepository.updateStatus` reused parameter `$2` as both `varchar` assignment and string comparison, causing PostgreSQL `inconsistent types deduced for parameter $2`.
+- Fixed by casting `$2::varchar` consistently in the update query.
+- Added regression coverage in `tests/unit/shared/hertzPostRepository.test.ts`.
+- Commit: `7a94efc Fix HERTZ post delete status update`.
 
 ### UTF-002: Right sidebar market sparkline terlihat seperti garis horizontal
 
-Status: Investigating  
+Status: Fixed  
 Severity: Medium  
 Area: HERTZ right sidebar / MarketSidebarWidget / Sparkline  
 Reported at: 2026-05-16
@@ -123,14 +124,14 @@ Likely affected files:
 
 Next investigation:
 
-- Confirm rendered SVG path/domain from Recharts in browser.
-- Decide whether to use `YAxis hide domain={['dataMin', 'dataMax']}` with padding, or normalize sparkline values to percent/indexed movement before rendering.
-- Prefer 24-point intraday data for main chart if the visual target needs more visible movement than daily 12-point series.
-- Add a unit test around sparkline data normalization/domain behavior before implementation.
+- Implemented `getSparklineDomain` with data min/max padding and attached hidden `YAxis` domain to the Recharts sparkline.
+- Data source remains GlobalData-backed; the fix addresses the rendering domain that made valid price movement look horizontal.
+- Added regression coverage in `tests/unit/frontend/sparkline.test.ts`.
+- Commit: `1f6358b Scale HERTZ market sparklines to data range`.
 
 ### UTF-003: Mobile HERTZ tidak menampilkan logo atom Horizon di kiri atas
 
-Status: Open  
+Status: Fixed  
 Severity: Medium  
 Area: HERTZ mobile shell / top header  
 Reported at: 2026-05-16
@@ -165,13 +166,14 @@ Likely affected files:
 
 Next investigation:
 
-- Tentukan apakah logo masuk sebagai mobile app bar global di `HertzAppShell` atau sebagai bagian feed header `HertzHeader`.
-- Cek semua route HERTZ mobile: `/hertz`, `/hertz/messages`, `/hertz/profile`, dan `/hertz/post/{shortId}` agar brand tidak muncul ganda.
-- Tambahkan test/render assertion atau DOM review marker untuk memastikan logo mobile hadir.
+- Implemented a mobile-only `mobileBrand` link in `HertzAppShell`, using the existing atom logo asset and `alt="Horizon"`.
+- Placement is shell-level so it applies across HERTZ routes without duplicating inside each page header.
+- Added regression coverage in `tests/unit/frontend/hertzMobileBrand.test.ts`.
+- Commit: `0c133a1 Show Horizon atom logo on HERTZ mobile`.
 
 ### UTF-004: Ikon kiri pada postingan HERTZ harus mengikuti kategori post
 
-Status: Open  
+Status: Fixed  
 Severity: Medium  
 Area: HERTZ feed / post card left spine icon  
 Reported at: 2026-05-16
@@ -213,7 +215,7 @@ Likely affected files:
 
 Next implementation:
 
-- Ubah `SpineIcon` agar kategori trading memakai `InsightIcon` atau ikon chart setara.
-- Tambahkan class visual untuk node trading jika perlu, misalnya warna aksen chart/trading.
-- Pastikan quote/repost tidak menghilangkan makna kategori utama pada ikon kiri, atau pindahkan indikator quote ke elemen lain.
-- Tambahkan assertion test/render untuk mapping life, trading, dan general.
+- Implemented category mapping via `getHertzPostSpineKind`: life uses coffee, trading uses chart, general uses the existing default message/send icon.
+- Removed quote image override from the left spine icon so category remains the primary meaning.
+- Added trading-specific spine styling and regression coverage in `tests/unit/frontend/hertzPostDisplay.test.ts`.
+- Commit: `edbd59c Map HERTZ post icons by category`.
