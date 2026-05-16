@@ -37,7 +37,7 @@ export default async function HertzPostDetailPage({ params }: PageProps) {
     <HertzAppShell
       active="home"
       title="HERTZ"
-      description="Detail postingan komunitas."
+      description="Detail postingan HERTZ."
       currentUser={viewer}
     >
       <div className={styles.container}>
