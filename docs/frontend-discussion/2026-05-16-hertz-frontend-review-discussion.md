@@ -396,6 +396,63 @@ Alasannya: layout dasar sudah cukup stabil, action bar sudah lebih lengkap, dan 
 - Desktop detail post bisa dibuka sebagai modal tanpa meninggalkan feed.
 - Mobile detail post tetap memakai halaman penuh dengan back affordance dan state komentar yang jelas.
 
+### Review Tambahan dari Codex
+
+Selain poin yang sudah dibahas, beberapa hal HERTZ yang menurut saya masih kurang:
+
+1. **Access role belum menjadi helper terpusat**
+   Kita sudah sepakat memakai access role `guest`, `member`, dan `admin` di frontend. Saat ini pengecekan masih tersebar lewat `currentUser` atau `currentUser.role`. Spec perlu membuat helper kecil agar menu/fitur bisa dikontrol konsisten, misalnya menyembunyikan Tools untuk guest jika itu keputusan produk.
+
+2. **Profile belum menjadi pusat aktivitas**
+   Profile saat ini baru menampilkan status akun dan credit. Seharusnya member center berkembang menjadi tempat:
+   - Post saya
+   - Disimpan
+   - Repost saya
+   - Komentar saya
+   - Credit/history
+   - Setting Telegram/session
+
+3. **Belum ada notifikasi HERTZ**
+   HERTZ belum punya notification center untuk komentar baru, repost, like/suka, DM unread, atau status report/moderation. Minimal badge unread untuk DM dan activity ring di profile akan membuat produk terasa lebih hidup.
+
+4. **Feed belum punya state yang matang**
+   Empty state, loading state, error state, dan skeleton belum konsisten. Contoh: ketika filter kosong, search kosong, guest belum login, atau API gagal, UI perlu pesan yang jelas dan actionable.
+
+5. **Composer belum punya preview media dan remove per file**
+   Setelah Life/General boleh upload gambar, composer perlu preview thumbnail, tombol hapus per file, validasi ukuran/format yang terlihat, dan progress upload yang tidak membuat user bingung.
+
+6. **Repost dan quote perlu pemisahan UX**
+   Sekarang `Repost` ada di action bar dan `Quote postingan` ada di menu. Setelah plain repost muncul di timeline, UX perlu jelas:
+   - Repost cepat dari action bar.
+   - Quote dari menu/share composer.
+   - Repost sendiri tidak boleh, dan errornya harus terlihat jelas.
+
+7. **Report/moderation feedback belum lengkap untuk member**
+   Member bisa melaporkan postingan, tetapi belum ada status apakah report diterima, sedang ditinjau, atau selesai. Untuk fase awal mungkin cukup feedback sukses, tetapi nanti perlu histori report atau notifikasi.
+
+8. **SEO dan social preview detail post masih tipis**
+   Detail post metadata saat ini masih memakai title berbasis shortId. Untuk share popup, post detail sebaiknya punya title, description, dan Open Graph/Twitter metadata dari konten post agar link terlihat bagus saat dibagikan ke Telegram, WhatsApp, atau X.
+
+9. **Accessibility modal harus dirancang dari awal**
+   Desktop post detail modal, share popup, delete confirm, edit dialog, dan DM menu perlu focus trap, Escape close, aria label, dan restore focus. Ini penting karena HERTZ akan punya banyak overlay.
+
+10. **Optimistic update belum konsisten**
+   Beberapa action update lokal, beberapa action reload halaman. Ini bisa diterima fase awal, tetapi spec perlu menentukan mana yang harus local update dan mana yang boleh reload supaya pengalaman tidak terasa patah.
+
+11. **Mobile navigation makin padat**
+   Bottom nav sudah berisi banyak item. Jika nanti akses role menyembunyikan/menampilkan menu berbeda untuk guest/member/admin, perlu aturan prioritas agar mobile tetap rapi.
+
+12. **Audit authenticated belum menjadi checklist rutin**
+   Banyak fitur HERTZ hanya bisa valid jika login member/admin. Spec implementasi harus punya checklist login sebagai member `ARDANI | vastara.id`, non-author member, guest, dan admin.
+
+Prioritas dari review tambahan:
+
+1. Access role helper untuk `guest/member/admin`.
+2. Profile tabs: Post saya, Disimpan, Repost saya.
+3. Repost timeline muncul benar.
+4. Share popup dan post detail modal dengan accessibility benar.
+5. SEO/social preview untuk detail post karena berkaitan langsung dengan share.
+
 ### Catatan Role Saat Ini
 
 Role database aplikasi saat ini hanya:
