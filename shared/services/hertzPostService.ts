@@ -278,10 +278,15 @@ export class HertzPostService {
   }
 
   async updateMarketContext(postId: string, user: MemberSessionUser, market: MarketContext | null): Promise<void> {
-    if (user.role !== 'admin') throw new HertzForbiddenError('Akses admin diperlukan');
-    const resolvedPostId = await this.posts.resolvePostId(postId);
-    if (!resolvedPostId) throw new HertzNotFoundError();
-    await this.posts.upsertMarketContext(resolvedPostId, market);
+    const post = await this.posts.findById(postId, user.id);
+    if (!post) throw new HertzNotFoundError();
+    const isOwner = post.author_id === user.id;
+    const isAdmin = user.role === 'admin';
+    if (!isOwner && !isAdmin) throw new HertzForbiddenError();
+    if (!isAdmin && normalizeHertzCategory(post.category) !== 'trading_room') {
+      throw new HertzForbiddenError('Metadata market hanya dapat diedit pada post Trading');
+    }
+    await this.posts.upsertMarketContext(post.id, market);
   }
 
   async deletePost(postId: string, user: MemberSessionUser): Promise<void> {

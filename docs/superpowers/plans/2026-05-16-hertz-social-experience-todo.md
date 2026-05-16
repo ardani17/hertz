@@ -472,7 +472,7 @@ Centang setelah media flow verified dan commit selesai.
 - Modify: `frontend/src/components/feed/HertzMarketMeta.tsx`
 - Test: `tests/unit/shared/hertzPostService.test.ts`
 
-- [ ] **Step 1: Tulis test permission edit metadata**
+- [x] **Step 1: Tulis test permission edit metadata**
 
 Coverage:
 
@@ -488,7 +488,7 @@ Run:
 npm run test -- tests/unit/shared/hertzPostService.test.ts
 ```
 
-- [ ] **Step 2: Implement API/service/repository update**
+- [x] **Step 2: Implement API/service/repository update**
 
 Implementation target:
 
@@ -497,7 +497,7 @@ Implementation target:
 - Repository upsert market context.
 - UI edit dialog memuat field metadata Trading.
 
-- [ ] **Step 3: Verifikasi auth roles**
+- [x] **Step 3: Verifikasi auth roles**
 
 Run:
 
@@ -514,7 +514,7 @@ Manual/live check:
 - Non-author member tidak melihat edit/delete post orang lain.
 - Admin melihat edit semua post.
 
-- [ ] **Step 4: Commit Task 5**
+- [x] **Step 4: Commit Task 5**
 
 Run:
 
@@ -523,7 +523,7 @@ git add shared/services/hertzPostService.ts shared/repositories/hertzPostReposit
 git commit -m "Allow HERTZ authors to edit market metadata"
 ```
 
-- [ ] **Ceklist selesai Task 5**
+- [x] **Ceklist selesai Task 5**
 
 Centang setelah permission verified dan commit selesai.
 

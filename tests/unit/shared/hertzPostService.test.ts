@@ -25,6 +25,16 @@ const otherMember: MemberSessionUser = {
   displayName: 'Other Member',
 };
 
+const admin: MemberSessionUser = {
+  ...owner,
+  id: '880e8400-e29b-41d4-a716-446655440003',
+  telegramId: 5963323430,
+  username: 'admin',
+  displayName: 'Admin App',
+  role: 'admin',
+  badge: 'admin',
+};
+
 function makePost(overrides: Partial<HertzPostRow> = {}): HertzPostRow {
   return {
     id: '770e8400-e29b-41d4-a716-446655440002',
@@ -78,6 +88,7 @@ function serviceWithPosts(posts: {
   findById: ReturnType<typeof vi.fn>;
   updateContent?: ReturnType<typeof vi.fn>;
   updateStatus?: ReturnType<typeof vi.fn>;
+  upsertMarketContext?: ReturnType<typeof vi.fn>;
 }) {
   const service = new HertzPostService();
   (service as unknown as { posts: typeof posts }).posts = posts;
@@ -126,5 +137,46 @@ describe('HertzPostService owner post permissions', () => {
       '770e8400-e29b-41d4-a716-446655440002',
       'deleted',
     );
+  });
+
+  it('allows a trading post owner to edit their own market metadata', async () => {
+    const upsertMarketContext = vi.fn().mockResolvedValue(undefined);
+    const service = serviceWithPosts({
+      findById: vi.fn().mockResolvedValue(makePost({ category: 'trading_room' })),
+      upsertMarketContext,
+    });
+
+    await service.updateMarketContext('hz_owner1', owner, { pair: 'XAUUSD', riskPercent: 2 });
+
+    expect(upsertMarketContext).toHaveBeenCalledWith(
+      '770e8400-e29b-41d4-a716-446655440002',
+      { pair: 'XAUUSD', riskPercent: 2 },
+    );
+  });
+
+  it('allows admin to edit market metadata on any post', async () => {
+    const upsertMarketContext = vi.fn().mockResolvedValue(undefined);
+    const service = serviceWithPosts({
+      findById: vi.fn().mockResolvedValue(makePost({ author_id: owner.id })),
+      upsertMarketContext,
+    });
+
+    await service.updateMarketContext('hz_owner1', admin, { pair: 'BTC/USDT' });
+
+    expect(upsertMarketContext).toHaveBeenCalledWith(
+      '770e8400-e29b-41d4-a716-446655440002',
+      { pair: 'BTC/USDT' },
+    );
+  });
+
+  it('rejects market metadata edits from a non-author member', async () => {
+    const upsertMarketContext = vi.fn().mockResolvedValue(undefined);
+    const service = serviceWithPosts({
+      findById: vi.fn().mockResolvedValue(makePost()),
+      upsertMarketContext,
+    });
+
+    await expect(service.updateMarketContext('hz_owner1', otherMember, { pair: 'XAUUSD' })).rejects.toThrow(HertzForbiddenError);
+    expect(upsertMarketContext).not.toHaveBeenCalled();
   });
 });

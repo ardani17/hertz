@@ -43,6 +43,7 @@ export function HertzPostMenu({ post, currentUser }: { post: HertzPost; currentU
   const canEdit = Boolean(post.viewer.canEdit || isOwnerOrAdmin);
   const canDelete = Boolean(post.viewer.canDelete || isOwnerOrAdmin);
   const isAdmin = effectiveUser?.role === 'admin';
+  const canEditMarket = Boolean(isAdmin || (canEdit && (post.category === 'trading_room' || post.category === 'trading')));
 
   async function refreshMenuUser() {
     if (currentUser || authChecked || checkingAuth) return;
@@ -206,7 +207,7 @@ export function HertzPostMenu({ post, currentUser }: { post: HertzPost; currentU
           {canQuote ? <Button type="button" variant="ghost" size="sm" onClick={() => { closePanels(); setQuoteOpen(true); setOpen(false); }}>Quote postingan</Button> : null}
           {canReport ? <Button type="button" variant="ghost" size="sm" onClick={() => { closePanels(); setReportOpen(true); setOpen(false); }}>Laporkan</Button> : null}
           {canEdit ? <Button type="button" variant="ghost" size="sm" onClick={() => { closePanels(); setEditOpen(true); setOpen(false); }}>Edit postingan</Button> : null}
-          {isAdmin ? <Button type="button" variant="ghost" size="sm" onClick={() => { closePanels(); setMarketOpen(true); setOpen(false); }}>Edit metadata market</Button> : null}
+          {canEditMarket ? <Button type="button" variant="ghost" size="sm" onClick={() => { closePanels(); setMarketOpen(true); setOpen(false); }}>Edit metadata market</Button> : null}
           {canDelete ? <Button type="button" variant="ghost" size="sm" onClick={deleteOwnPost}>Hapus postingan</Button> : null}
           {isAdmin ? <Button type="button" variant="ghost" size="sm" onClick={hidePost}>Sembunyikan postingan</Button> : null}
         </div>
