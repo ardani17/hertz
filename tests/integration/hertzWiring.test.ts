@@ -43,8 +43,6 @@ describe('HERTZ implementation wiring', () => {
       'frontend/src/app/api/hertz/posts/[shortId]/bookmark/route.ts',
       'frontend/src/app/api/hertz/posts/[shortId]/repost/route.ts',
       'frontend/src/app/api/hertz/posts/[shortId]/comments/route.ts',
-      'frontend/src/app/api/hertz/posts/[shortId]/community-notes/route.ts',
-      'frontend/src/app/api/hertz/posts/community-notes/[noteId]/rating/route.ts',
     ]) {
       expect(existsSync(join(root, path))).toBe(true);
     }
@@ -56,7 +54,6 @@ describe('HERTZ implementation wiring', () => {
       read('frontend/src/app/api/hertz/posts/[shortId]/bookmark/route.ts'),
       read('frontend/src/app/api/hertz/posts/[shortId]/repost/route.ts'),
       read('frontend/src/app/api/hertz/posts/[shortId]/comments/route.ts'),
-      read('frontend/src/app/api/hertz/posts/[shortId]/community-notes/route.ts'),
     ];
 
     for (const route of routes) {
@@ -79,7 +76,6 @@ describe('HERTZ implementation wiring', () => {
     const postsRoute = read('frontend/src/app/api/hertz/posts/route.ts');
     const postRepo = read('shared/repositories/hertzPostRepository.ts');
     const interactions = read('shared/repositories/hertzInteractionRepository.ts');
-    const notes = read('shared/repositories/hertzCommunityNoteRepository.ts');
 
     expect(postsRoute).toContain('HertzPostService');
     expect(postRepo).toContain('FROM hertz_posts');
@@ -89,9 +85,6 @@ describe('HERTZ implementation wiring', () => {
     expect(interactions).toContain('hertz_bookmarks');
     expect(interactions).toContain('hertz_reposts');
     expect(interactions).toContain('hertz_views');
-    expect(notes).toContain('hertz_community_notes');
-    expect(notes).toContain('hertz_community_note_sources');
-    expect(notes).toContain('hertz_community_note_ratings');
   });
 
   it('ships DM and Blog completion route surfaces', () => {

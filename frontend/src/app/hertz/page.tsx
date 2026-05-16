@@ -8,7 +8,7 @@ export const dynamic = 'force-dynamic';
 
 export const metadata: Metadata = {
   title: 'HERTZ | Horizon',
-  description: 'Social trading room Horizon untuk jurnal, chart setup, dan catatan komunitas.',
+  description: 'Social trading room Horizon untuk jurnal dan chart setup komunitas.',
   alternates: { canonical: '/hertz' },
 };
 

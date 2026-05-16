@@ -1,12 +1,9 @@
 import { createHash, randomBytes } from 'crypto';
 import { execute, query, withTransaction, type DbClient } from '../db';
-import type { CommunityNoteRow, CommunityNoteSourceRow } from '../repositories/communityNoteRepository';
 import { HertzCommentRepository, type HertzCommentRow } from '../repositories/hertzCommentRepository';
-import { HertzCommunityNoteRepository } from '../repositories/hertzCommunityNoteRepository';
 import { HertzPostRepository, type HertzPostRow } from '../repositories/hertzPostRepository';
 import { ActivityLogService } from './activityLog';
 import { textToHtml, stripHtml } from '../utils/textToHtml';
-import type { CommunityNote, CommunityNoteSource } from '../types/communityNote';
 import type { MemberSessionUser } from '../types/membership';
 import type {
   CursorFeedResult,
@@ -135,7 +132,6 @@ function authorFromRow(row: HertzPostRow): HertzAuthor {
 export class HertzPostService {
   private readonly posts = new HertzPostRepository();
   private readonly comments = new HertzCommentRepository();
-  private readonly notes = new HertzCommunityNoteRepository();
   private readonly logs = new ActivityLogService();
 
   async listFeed(params: {
@@ -173,7 +169,7 @@ export class HertzPostService {
     return {
       ...post,
       comments: await this.listComments(row.id, viewer ?? null),
-      communityNotes: await this.listCommunityNotes(row.id, viewer ?? null),
+      communityNotes: [],
     };
   }
 
@@ -298,11 +294,7 @@ export class HertzPostService {
 
   private async mapPosts(rows: HertzPostRow[], viewer: MemberSessionUser | null, truncate = true, includeQuotes = true): Promise<HertzPost[]> {
     const postIds = rows.map((row) => row.id);
-    const [mediaRows, primaryNotes] = await Promise.all([
-      this.posts.listMedia(postIds),
-      this.notes.listPrimaryForPosts(postIds, viewer?.id ?? null),
-    ]);
-    const sources = await this.notes.listSources(primaryNotes.map((note) => note.id));
+    const mediaRows = await this.posts.listMedia(postIds);
     const basePosts = rows.map((row) => {
       const html = row.content_html ? textToHtml(stripHtml(row.content_html)) : '';
       const text = stripHtml(html);
@@ -315,7 +307,6 @@ export class HertzPostService {
           type: mediaRow.media_type,
           alt: mediaRow.alt_text,
         }));
-      const note = primaryNotes.find((candidate) => candidate.post_id === row.id) ?? null;
       return {
         id: row.id,
         shortId: row.short_id,
@@ -346,7 +337,7 @@ export class HertzPostService {
           reposts: Number(row.repost_count ?? 0),
           views: Number(row.view_count ?? 0),
         },
-        primaryCommunityNote: note ? this.mapCommunityNote(note, sources) : null,
+        primaryCommunityNote: null,
         createdAt: dateToIso(row.created_at)!,
         updatedAt: dateToIso(row.updated_at)!,
         editedAt: dateToIso(row.edited_at),
@@ -369,12 +360,6 @@ export class HertzPostService {
         ? quotedPosts.find((quoted) => quoted.id === rows.find((row) => row.id === post.id)?.quoted_post_id) ?? null
         : null,
     }));
-  }
-
-  private async listCommunityNotes(postId: string, viewer: MemberSessionUser | null): Promise<CommunityNote[]> {
-    const notes = await this.notes.listByPost(postId, viewer?.id ?? null);
-    const sources = await this.notes.listSources(notes.map((note) => note.id));
-    return notes.map((note) => this.mapCommunityNote(note, sources));
   }
 
   private async listComments(postId: string, viewer: MemberSessionUser | null): Promise<HertzComment[]> {
@@ -401,33 +386,6 @@ export class HertzPostService {
       editedAt: dateToIso(row.edited_at),
       canEdit: Boolean(viewer && (viewer.id === row.user_id || viewer.role === 'admin')),
       canDelete: Boolean(viewer && (viewer.id === row.user_id || viewer.role === 'admin')),
-    };
-  }
-
-  private mapCommunityNote(note: CommunityNoteRow, sourceRows: CommunityNoteSourceRow[]): CommunityNote {
-    const noteSources: CommunityNoteSource[] = sourceRows
-      .filter((source) => source.note_id === note.id)
-      .map((source) => ({
-        id: source.id,
-        noteId: source.note_id,
-        url: source.source_url,
-        title: source.source_title,
-        createdAt: dateToIso(source.created_at)!,
-      }));
-    return {
-      id: note.id,
-      postId: note.post_id,
-      authorId: note.author_id,
-      authorName: note.display_name ?? note.username ?? 'Member Horizon',
-      content: note.content,
-      status: note.status,
-      helpfulCount: note.helpful_count,
-      notHelpfulCount: note.not_helpful_count,
-      viewerRating: note.rating,
-      sources: noteSources,
-      createdAt: dateToIso(note.created_at)!,
-      updatedAt: dateToIso(note.updated_at)!,
-      editedAt: dateToIso(note.edited_at),
     };
   }
 

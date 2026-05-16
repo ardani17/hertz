@@ -18,7 +18,6 @@ interface PendingResponse {
   posts: PendingHertzPost[];
   counts: {
     pendingPosts: number;
-    pendingNotes: number;
     reportedPosts: number;
   };
   reports: Array<{
@@ -105,10 +104,6 @@ export default function AdminHertzPage() {
           <p>Post Telegram pending</p>
         </div>
         <div>
-          <span>{data?.counts.pendingNotes ?? 0}</span>
-          <p>Note aktif</p>
-        </div>
-        <div>
           <span>{data?.counts.reportedPosts ?? 0}</span>
           <p>Report terbuka</p>
         </div>
@@ -119,7 +114,7 @@ export default function AdminHertzPage() {
       <section className={styles.panel}>
         <div className={styles.panelHeader}>
           <h2>Report Terbuka</h2>
-          <p>Post, komentar, note, Blog, dan DM yang perlu ditinjau admin.</p>
+          <p>Post, komentar, Blog, dan DM yang perlu ditinjau admin.</p>
         </div>
 
         {!loading && data?.reports.length === 0 ? (

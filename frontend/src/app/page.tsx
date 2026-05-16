@@ -60,7 +60,6 @@ function initials(name: string) {
 function categoryInitials(post: HertzPost) {
   if (post.category === 'trading_room') return 'TR';
   if (post.category === 'life_coffee') return 'LC';
-  if (post.category === 'community_note') return 'CN';
   return initials(post.author.name);
 }
 
@@ -114,12 +113,6 @@ export default async function HorizonLanding() {
                   <small>Comment {previewPost.counts.comments} Repost {previewPost.counts.reposts} Pulse {previewPost.counts.pulses}</small>
                 </div>
               </article>
-              {previewPost.primaryCommunityNote ? (
-                <div className={styles.previewNote}>
-                  <strong>Catatan komunitas</strong>
-                  <span>{previewPost.primaryCommunityNote.content}</span>
-                </div>
-              ) : null}
             </>
           ) : null}
           <div className={styles.previewMarket}>

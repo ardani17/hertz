@@ -10,7 +10,6 @@ export { HertzPostCard } from './HertzPost';
 export { HertzAuthorLine } from './HertzAuthorLine';
 export { HertzPostMedia } from './HertzPostMedia';
 export { HertzMarketMeta } from './HertzMarketMeta';
-export { CommunityNoteCard } from './CommunityNoteCard';
 export { QuotePostCard } from './QuotePostCard';
 export { HertzDetailInteractions } from './HertzDetailInteractions';
 export { HertzLeftRail } from './HertzLeftRail';
