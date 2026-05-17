@@ -1151,7 +1151,7 @@ Actual:
 - `REVIEW_BASE_URL=https://horizon.cloudnexify.com npm run review:a11y` passed: 35/35.
 - `REVIEW_BASE_URL=https://horizon.cloudnexify.com npm run review:visual` ran and failed: 11 passed, 24 failed due screenshot baseline drift across Hertz, Outlook, Blog, and Tools. Snapshots were not updated.
 
-- [ ] **Step 2: Check changed files**
+- [x] **Step 2: Check changed files**
 
 Run:
 
@@ -1164,6 +1164,11 @@ Expected:
 
 - Outlook task commits are visible.
 - Unrelated `.env.example`, `docker-compose.yml`, `.superpowers/`, and `docs/teswebimg/` remain unstaged unless explicitly requested.
+
+Actual:
+
+- Outlook task commits are visible through `e8a4b9a`.
+- Unrelated `.env.example`, `docker-compose.yml`, `.superpowers/`, and `docs/teswebimg/` remain unstaged.
 
 - [x] **Step 3: Deploy after verification**
 
