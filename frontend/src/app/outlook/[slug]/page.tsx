@@ -1,11 +1,8 @@
 import { notFound } from 'next/navigation';
 import Link from 'next/link';
 import { query, queryOne } from '@shared/db';
-import { OutlookContent, OutlookSnapshot } from '@/components/outlook';
+import { OutlookContent, OutlookEngagement, OutlookSnapshot } from '@/components/outlook';
 import { estimateReadTime, formatDate } from '@/components/article/ArticleMeta';
-import { ShareButtons } from '@/components/article/ShareButtons';
-import { CommentSection } from '@/components/article/CommentSection';
-import { LikeButton } from '@/components/article/LikeButton';
 import { HertzAppShell } from '@/components/hertz/HertzAppShell';
 import { getCurrentMember } from '@/lib/memberAuth';
 import { buildOutlookDetailModel } from '@/lib/outlookContent';
@@ -303,29 +300,16 @@ export default async function OutlookDetailPage({
               </div>
             </section>
           )}
-
-          <div className={styles.stats}>
-            <span className={styles.statItem}>{article.likeCount} suka</span>
-            <span className={styles.statItem}>{article.commentCount} komentar</span>
-          </div>
         </article>
 
-        <div className={styles.actionDock}>
-          <ShareButtons
-            title={displayTitle}
-            excerpt={excerpt}
-            url={outlookUrl}
-          />
-
-          <LikeButton
-            articleId={article.id}
-            initialLikeCount={article.likeCount}
-          />
-        </div>
-
-        <div className={styles.comments}>
-          <CommentSection articleId={article.id} />
-        </div>
+        <OutlookEngagement
+          articleId={article.id}
+          title={displayTitle}
+          excerpt={excerpt}
+          url={outlookUrl}
+          initialLikeCount={article.likeCount}
+          initialCommentCount={article.commentCount}
+        />
         </div>
       </HertzAppShell>
     </>
