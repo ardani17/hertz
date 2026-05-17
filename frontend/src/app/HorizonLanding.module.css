@@ -1,224 +1,293 @@
 .main {
   min-height: 100vh;
+  padding-bottom: 0;
   background:
-    linear-gradient(rgba(0, 255, 148, 0.045) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(0, 255, 148, 0.045) 1px, transparent 1px),
-    radial-gradient(circle at 53% 0%, rgba(0, 180, 105, 0.18), transparent 34%),
-    #000;
-  background-size: 78px 78px, 78px 78px, auto, auto;
+    linear-gradient(rgba(0, 255, 148, 0.04) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(0, 255, 148, 0.035) 1px, transparent 1px),
+    #020403;
+  background-size: 76px 76px;
   color: #f3fff8;
 }
 
 .navbar {
   align-items: center;
   box-sizing: border-box;
-  border-bottom: 1px solid rgba(0, 212, 124, 0.26);
+  border-bottom: 1px solid rgba(75, 118, 92, 0.34);
   display: grid;
+  gap: 1.2rem;
   grid-template-columns: 1fr auto 1fr;
   min-height: 74px;
-  padding: 0 6.4vw;
+  padding: 0 6vw;
 }
 
 .navBrand,
 .navbar nav,
 .actions,
-.featureGrid,
-.products {
+.signalGrid,
+.panelHeader,
+.activityMeta,
+.marketCard div,
+.mobileDock {
   align-items: center;
   display: flex;
 }
 
 .navBrand,
-.navbar a {
-  color: #dbeee4;
+.navbar a,
+.products a,
+.panelProducts a,
+.mobileDock a {
+  color: inherit;
   text-decoration: none;
 }
 
 .navBrand {
   gap: 0.8rem;
+  min-width: 0;
 }
 
 .navBrand strong {
   color: #fff;
-  font-size: 1.35rem;
-  letter-spacing: 0.02em;
+  font-size: 1.3rem;
+  font-weight: 900;
+  letter-spacing: 0;
 }
 
 .navbar nav {
-  gap: 2rem;
+  gap: 1.8rem;
+  justify-content: center;
 }
 
 .navbar nav a {
-  color: #91a79a;
-  font-weight: 750;
+  color: #9fb4a8;
+  font-weight: 800;
+}
+
+.navbar nav a:hover,
+.products a:hover strong,
+.panelProducts a:hover strong {
+  color: #00dc82;
 }
 
 .login {
-  border: 1px solid #00e68a;
+  border: 1px solid rgba(0, 220, 130, 0.78);
   border-radius: 999px;
-  color: #00e68a !important;
-  font-weight: 850;
+  color: #00dc82 !important;
+  font-weight: 900;
   justify-self: end;
-  padding: 0.85rem 1.4rem;
+  padding: 0.85rem 1.35rem;
 }
 
 .hero {
   box-sizing: border-box;
   display: grid;
-  gap: 5vw;
-  grid-template-columns: minmax(0, 1.1fr) minmax(460px, 0.85fr);
+  gap: clamp(2rem, 4vw, 4.5rem);
+  grid-template-columns: minmax(0, 1fr) minmax(420px, 0.78fr);
   margin: 0 auto;
-  max-width: 1360px;
-  min-height: 62vh;
-  padding: 4.5rem 6vw 2rem;
+  max-width: 1380px;
+  min-height: 620px;
+  padding: clamp(3rem, 6vw, 5.6rem) 6vw 2rem;
 }
 
 .copy {
+  align-self: center;
   min-width: 0;
 }
 
+.eyebrow {
+  color: #00dc82;
+  font-size: 0.84rem;
+  font-weight: 900;
+  letter-spacing: 0.08em;
+  margin: 0 0 1.2rem;
+  text-transform: uppercase;
+}
+
 .copy h1 {
-  font-size: clamp(4.6rem, 8vw, 7.4rem);
+  color: #fff;
+  font-size: clamp(4.2rem, 8.8vw, 8rem);
   line-height: 0.88;
   margin: 0;
   text-transform: uppercase;
 }
 
 .lead {
-  color: #f3fff8;
-  font-size: clamp(1.45rem, 2vw, 1.9rem);
-  margin: 1.5rem 0 0;
+  color: #f7fff9;
+  font-size: clamp(1.35rem, 2.2vw, 2rem);
+  line-height: 1.25;
+  margin: 1.4rem 0 0;
+  max-width: 720px;
 }
 
 .subcopy,
 .footer,
-.featureGrid span,
-.products span {
-  color: #90aa9a;
-  line-height: 1.65;
+.signalGrid span,
+.productCard p,
+.panelHeader span,
+.activityMeta span,
+.composerPreview,
+.emptyCard {
+  color: #91aa9b;
+  line-height: 1.6;
 }
 
 .subcopy {
-  font-size: 1.08rem;
+  font-size: 1.04rem;
   max-width: 680px;
 }
 
 .actions {
-  gap: 1rem;
+  flex-wrap: wrap;
+  gap: 0.9rem;
   margin-top: 2rem;
 }
 
 .primary,
 .secondary {
-  border: 1px solid rgba(0, 230, 138, 0.55);
+  border: 1px solid rgba(0, 220, 130, 0.65);
   border-radius: 8px;
-  font-weight: 850;
+  display: inline-flex;
+  font-weight: 900;
+  justify-content: center;
   min-width: 156px;
-  padding: 1rem 1.4rem;
+  padding: 1rem 1.3rem;
   text-align: center;
-  text-decoration: none;
 }
 
 .primary {
   background: #00dc82;
-  color: #00130a;
+  color: #00150b !important;
 }
 
 .secondary {
-  color: #e9fff2;
+  background: rgba(0, 16, 9, 0.62);
+  color: #eafff3 !important;
 }
 
-.featureGrid {
-  gap: 1.25rem;
-  margin-top: 2.8rem;
+.signalGrid {
+  align-items: stretch;
+  gap: 0.9rem;
+  margin-top: 2.3rem;
 }
 
-.featureGrid div,
-.preview,
-.marketCard,
-.products a {
-  border: 1px solid rgba(0, 214, 126, 0.38);
+.signalGrid div {
+  border: 1px solid rgba(75, 118, 92, 0.34);
   border-radius: 8px;
-  background: rgba(0, 8, 5, 0.86);
-}
-
-.featureGrid div {
-  min-height: 94px;
-  padding: 1rem 1.2rem;
-  width: 31%;
-}
-
-.featureGrid strong,
-.marketCard > strong,
-.products strong {
-  color: #00e68a;
-  display: block;
-}
-
-.preview {
-  align-self: center;
-  box-shadow: 0 0 0 1px rgba(0, 214, 126, 0.05), 0 24px 80px rgba(0, 0, 0, 0.55);
-  overflow: hidden;
-  padding: 0 2rem 1.7rem;
-}
-
-.previewTitle {
-  align-items: center;
-  border-bottom: 1px solid rgba(0, 214, 126, 0.26);
-  display: flex;
-  gap: 0.7rem;
-  margin: 0 -2rem 1.8rem;
-  min-height: 70px;
-  padding: 0 2rem;
-}
-
-.previewTitle strong {
-  font-size: 1.45rem;
-}
-
-.previewComposer,
-.previewPost,
-.previewNote,
-.previewMarket {
-  border: 1px solid rgba(0, 214, 126, 0.36);
-  border-radius: 8px;
-  background: rgba(0, 31, 18, 0.58);
-  margin-top: 1rem;
+  background: rgba(2, 12, 7, 0.82);
+  flex: 1 1 0;
+  min-width: 0;
   padding: 1rem;
 }
 
-.previewPost {
-  display: grid;
-  gap: 1rem;
-  grid-template-columns: 48px 1fr;
+.signalGrid strong {
+  color: #fff;
+  display: block;
+  font-size: 1rem;
+  margin-bottom: 0.35rem;
 }
 
-.previewPost > span {
-  border: 1px solid #00e68a;
+.commandPanel {
+  align-self: center;
+  border: 1px solid rgba(0, 220, 130, 0.34);
   border-radius: 8px;
-  color: #bdf9d7;
+  background: rgba(2, 8, 5, 0.9);
+  box-shadow: 0 28px 80px rgba(0, 0, 0, 0.55);
+  min-width: 0;
+  overflow: hidden;
+  padding: 0 1.35rem 1.35rem;
+}
+
+.panelHeader {
+  border-bottom: 1px solid rgba(75, 118, 92, 0.34);
+  gap: 0.8rem;
+  margin: 0 -1.35rem 1.2rem;
+  min-height: 72px;
+  padding: 0 1.35rem;
+}
+
+.panelHeader strong,
+.activityMeta strong,
+.marketPreview strong,
+.marketCard > strong,
+.productCard strong {
+  color: #fff;
+  display: block;
+}
+
+.panelHeader span {
+  display: block;
+  font-size: 0.82rem;
+}
+
+.composerPreview,
+.activityCard,
+.marketPreview,
+.panelProducts a,
+.marketCard,
+.productCard,
+.emptyCard {
+  border: 1px solid rgba(75, 118, 92, 0.34);
+  border-radius: 8px;
+  background: rgba(3, 18, 10, 0.82);
+}
+
+.composerPreview,
+.emptyCard {
+  padding: 0.95rem 1rem;
+}
+
+.activityCard {
+  display: grid;
+  gap: 0.9rem;
+  grid-template-columns: 48px 1fr;
+  margin-top: 0.85rem;
+  padding: 1rem;
+}
+
+.categoryBadge {
+  border: 1px solid #00dc82;
+  border-radius: 8px;
+  color: #bffbd8;
   display: grid;
   font-weight: 900;
   height: 48px;
   place-items: center;
 }
 
-.previewPost em {
-  border: 1px solid #00e68a;
-  border-radius: 5px;
-  color: #00e68a;
-  font-size: 0.7rem;
-  font-style: normal;
-  margin-left: 0.5rem;
-  padding: 0.1rem 0.35rem;
+.activityBody {
+  min-width: 0;
 }
 
-.preview svg,
+.activityMeta {
+  flex-wrap: wrap;
+  gap: 0.45rem;
+}
+
+.activityMeta em {
+  border: 1px solid rgba(247, 201, 72, 0.58);
+  border-radius: 999px;
+  color: #f7c948;
+  font-size: 0.72rem;
+  font-style: normal;
+  font-weight: 850;
+  padding: 0.12rem 0.45rem;
+}
+
+.activityBody p {
+  color: #f3fff8;
+  line-height: 1.5;
+  margin: 0.55rem 0 0;
+}
+
+.activityCard svg,
+.marketPreview svg,
 .marketCard svg {
+  display: block;
   width: 100%;
 }
 
-.preview path,
+.activityCard path,
+.marketPreview path,
 .marketCard path {
   fill: none;
   stroke: #00dc82;
@@ -227,24 +296,56 @@
   stroke-width: 3;
 }
 
-.previewNote,
-.previewMarket {
-  display: grid;
-  gap: 0.4rem;
+.activityCard small {
+  color: #b9cec0;
+  display: block;
+  margin-top: 0.3rem;
 }
 
-.previewMarket {
+.marketPreview {
   align-items: center;
+  display: grid;
+  gap: 1rem;
   grid-template-columns: 1fr 140px;
+  margin-top: 0.85rem;
+  padding: 0.95rem 1rem;
+}
+
+.marketPreview span,
+.panelProducts span,
+.productCard span {
+  color: #00dc82;
+  display: block;
+  font-size: 0.76rem;
+  font-weight: 900;
+  text-transform: uppercase;
+}
+
+.panelProducts {
+  display: grid;
+  gap: 0.65rem;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  margin-top: 0.85rem;
+}
+
+.panelProducts a {
+  min-width: 0;
+  padding: 0.85rem;
+}
+
+.panelProducts strong {
+  color: #eafff3;
+  font-size: 0.92rem;
+  margin-top: 0.25rem;
 }
 
 .marketStrip,
 .products {
   box-sizing: border-box;
   display: grid;
-  gap: 1.25rem;
+  gap: 1rem;
   margin: 0 auto;
-  max-width: 1360px;
+  max-width: 1380px;
   padding: 1rem 6vw;
 }
 
@@ -256,59 +357,73 @@
   padding: 1rem;
 }
 
+.marketCard > strong {
+  color: #00dc82;
+  margin-bottom: 0.9rem;
+}
+
 .marketCard div {
-  align-items: center;
   display: grid;
   gap: 1rem;
-  grid-template-columns: 100px 1fr 68px;
+  grid-template-columns: 100px 1fr 74px;
   min-height: 36px;
 }
 
+.marketCard span {
+  color: #f3fff8;
+}
+
 .marketCard em {
-  color: #00e68a;
+  color: #5fb4ff;
   font-style: normal;
-  font-weight: 800;
+  font-weight: 900;
   text-align: right;
 }
 
 .marketCard svg[data-down="true"] path {
-  stroke: #ff493d;
+  stroke: #ff5048;
 }
 
 .marketCard svg[data-down="true"] + em {
-  color: #ff493d;
+  color: #ff5048;
 }
 
 .products {
   grid-template-columns: repeat(4, minmax(0, 1fr));
-  padding-top: 1.6rem;
+  padding-top: 1.2rem;
 }
 
-.products a {
-  color: #f3fff8;
-  min-height: 105px;
-  padding: 1.15rem 1.4rem;
-  text-decoration: none;
+.productCard {
+  min-height: 176px;
+  padding: 1.15rem;
 }
 
-.products strong {
-  color: #f3fff8;
-  font-size: 1.4rem;
+.productCard strong {
+  font-size: 1.5rem;
+  margin-top: 0.35rem;
 }
 
-.products em {
-  color: #00e68a;
+.productCard p {
+  margin: 0.7rem 0 0;
+}
+
+.productCard em {
+  color: #91aa9b;
   display: block;
   font-style: normal;
   font-weight: 850;
-  margin-top: 0.7rem;
+  margin-top: 1rem;
 }
 
 .footer {
   box-sizing: border-box;
   margin: 0 auto;
-  max-width: 1360px;
-  padding: 1rem 6vw 3rem;
+  max-width: 1380px;
+  padding: 1.2rem 6vw 3rem;
+}
+
+.mobileDock {
+  display: none;
 }
 
 @media (max-width: 980px) {
@@ -316,111 +431,160 @@
   .hero,
   .marketStrip,
   .products {
-    grid-template-columns: 1fr;
+    grid-template-columns: minmax(0, 1fr);
   }
 
   .navbar {
-    gap: 1rem;
-    padding: 1rem;
+    align-items: start;
+    gap: 0.85rem;
+    padding: 1rem 1.1rem;
   }
 
-  .navbar nav,
+  .navbar nav {
+    flex-wrap: wrap;
+    gap: 1rem;
+    justify-content: start;
+  }
+
   .login {
     justify-self: start;
   }
 
-  .featureGrid,
-  .products {
-    display: grid;
-  }
-
-  .featureGrid div {
-    width: auto;
-  }
-}
-
-@media (max-width: 360px) {
-  .navbar {
-    padding: 0.85rem;
-  }
-
-  .navbar nav {
-    gap: 1rem;
-  }
-
   .hero {
-    gap: 1.4rem;
-    padding: 2.2rem 0.85rem 1.2rem;
+    gap: 1.6rem;
+    min-height: auto;
+    padding: 3rem 1.1rem 1rem;
   }
 
-  .copy,
-  .lead,
-  .subcopy,
-  .actions,
-  .featureGrid {
-    max-width: 100%;
-    min-width: 0;
-  }
-
-  .copy h1 {
-    font-size: clamp(3.05rem, 15vw, 3.45rem);
-    line-height: 0.92;
-    overflow-wrap: anywhere;
-  }
-
-  .lead {
-    font-size: 1.12rem;
-    line-height: 1.3;
-    margin-top: 1rem;
-  }
-
-  .subcopy {
-    font-size: 0.96rem;
-  }
-
-  .actions {
+  .signalGrid {
     display: grid;
-    gap: 0.65rem;
-  }
-
-  .primary,
-  .secondary {
-    min-width: 0;
-    padding: 0.85rem 1rem;
-    width: 100%;
-  }
-
-  .featureGrid {
-    gap: 0.75rem;
-    margin-top: 1.6rem;
-  }
-
-  .preview {
-    padding: 0 1rem 1rem;
-  }
-
-  .previewTitle {
-    margin: 0 -1rem 1rem;
-    padding: 0 1rem;
-  }
-
-  .previewPost {
-    grid-template-columns: 40px 1fr;
-  }
-
-  .previewPost > span {
-    height: 40px;
-  }
-
-  .previewMarket,
-  .marketCard div {
-    grid-template-columns: 1fr;
+    grid-template-columns: minmax(0, 1fr);
   }
 
   .marketStrip,
   .products,
   .footer {
-    padding-left: 0.85rem;
-    padding-right: 0.85rem;
+    padding-left: 1.1rem;
+    padding-right: 1.1rem;
+  }
+}
+
+@media (max-width: 760px) {
+  .main {
+    padding-bottom: 76px;
+  }
+
+  .navbar {
+    grid-template-columns: minmax(0, 1fr);
+    min-height: 0;
+  }
+
+  .navBrand strong {
+    font-size: 1.2rem;
+  }
+
+  .navbar nav,
+  .login {
+    display: none;
+  }
+
+  .hero {
+    grid-template-columns: minmax(0, 1fr);
+    padding-top: 2.4rem;
+  }
+
+  .eyebrow {
+    font-size: 0.74rem;
+    margin-bottom: 0.9rem;
+  }
+
+  .copy h1 {
+    font-size: clamp(3.4rem, 18vw, 4.8rem);
+    overflow-wrap: anywhere;
+  }
+
+  .lead {
+    font-size: 1.24rem;
+  }
+
+  .subcopy {
+    font-size: 0.98rem;
+  }
+
+  .actions {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .primary,
+  .secondary {
+    min-width: 0;
+    width: 100%;
+  }
+
+  .commandPanel {
+    padding: 0 1rem 1rem;
+  }
+
+  .panelHeader {
+    margin: 0 -1rem 1rem;
+    padding: 0 1rem;
+  }
+
+  .activityCard {
+    grid-template-columns: 42px 1fr;
+  }
+
+  .categoryBadge {
+    height: 42px;
+  }
+
+  .marketPreview,
+  .marketCard div,
+  .panelProducts {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .products {
+    padding-top: 0.75rem;
+  }
+
+  .productCard {
+    min-height: 0;
+  }
+
+  .mobileDock {
+    backdrop-filter: blur(18px);
+    background: rgba(1, 7, 4, 0.94);
+    border-top: 1px solid rgba(75, 118, 92, 0.42);
+    bottom: 0;
+    box-sizing: border-box;
+    display: grid;
+    gap: 0.35rem;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    left: 0;
+    padding: 0.6rem 0.65rem calc(0.6rem + env(safe-area-inset-bottom));
+    position: fixed;
+    right: 0;
+    z-index: 20;
+  }
+
+  .mobileDock a {
+    border-radius: 8px;
+    color: #b9cec0;
+    font-size: 0.76rem;
+    font-weight: 900;
+    min-width: 0;
+    padding: 0.72rem 0.3rem;
+    text-align: center;
+  }
+
+  .mobileDock a:first-child {
+    background: rgba(0, 220, 130, 0.12);
+    color: #00dc82;
+  }
+
+  .footer {
+    padding-bottom: 1.4rem;
   }
 }

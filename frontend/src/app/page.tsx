@@ -53,11 +53,50 @@ function categoryInitials(post: HertzPost) {
   return initials(post.author.name);
 }
 
+function categoryLabel(post: HertzPost) {
+  if (post.category === 'trading_room' || post.category === 'trading') return 'Trading';
+  if (post.category === 'life_coffee' || post.category === 'life_story') return 'Life';
+  return 'General';
+}
+
+function authorHandle(post: HertzPost) {
+  return post.author.username ? `@${post.author.username}` : '@hertzmember';
+}
+
 export default async function HorizonLanding() {
   const [previewPost, marketGroups] = await Promise.all([
     getLandingPreviewPost(),
     getLandingMarketGroups(),
   ]);
+
+  const productModules = [
+    {
+      title: 'HERTZ',
+      text: 'Social trading feed untuk setup, jurnal, DM, komentar, dan pulse member.',
+      href: '/hertz',
+      metric: 'Live social layer',
+    },
+    {
+      title: 'Outlook',
+      text: 'Arah market dalam format video, artikel, screenshot chart, dan caption singkat.',
+      href: '/outlook',
+      metric: 'Market direction',
+    },
+    {
+      title: 'Blog',
+      text: 'Artikel WordPress panjang tetap nyaman dibaca di tema Horizon.',
+      href: '/blog',
+      metric: 'Longform archive',
+    },
+    {
+      title: 'Tools',
+      text: 'Utility trading untuk riset cepat tanpa keluar dari ekosistem.',
+      href: '/tools',
+      metric: 'Research kit',
+    },
+  ];
+
+  const firstMarketGroup = marketGroups[0];
 
   return (
     <main className={styles.main}>
@@ -74,49 +113,93 @@ export default async function HorizonLanding() {
         </nav>
         <Link className={styles.login} href="/hertz">Masuk HERTZ</Link>
       </header>
-      <section className={styles.hero}>
+
+      <section className={styles.hero} aria-labelledby="horizon-command-center-title">
         <div className={styles.copy}>
-          <h1>Horizon</h1>
-          <p className={styles.lead}>Platform trading untuk komunitas yang hidup di market.</p>
-          <p className={styles.subcopy}>Horizon menyatukan social feed HERTZ, outlook market, blog import WordPress, dan tools riset dalam satu ekosistem yang cepat dan rapi.</p>
+          <p className={styles.eyebrow}>Horizon Command Center</p>
+          <h1 id="horizon-command-center-title">Horizon</h1>
+          <p className={styles.lead}>Market, social, insight dalam satu workspace trading.</p>
+          <p className={styles.subcopy}>
+            Horizon menyatukan feed sosial HERTZ, Outlook market, Blog longform, dan Tools riset
+            dalam satu pintu utama yang cepat dipindai sebelum masuk ke market.
+          </p>
           <div className={styles.actions}>
             <Link className={styles.primary} href="/hertz">Buka HERTZ</Link>
-            <Link className={styles.secondary} href="/tools">Lihat Tools</Link>
+            <Link className={styles.secondary} href="/outlook">Lihat Outlook</Link>
           </div>
-          <div className={styles.featureGrid}>
-            <div><strong>Verified social layer</strong><span>Member Telegram posting, pulse, repost, blog, dan DM.</span></div>
-            <div><strong>Market-first design</strong><span>Forex, crypto, dan stock rail selalu tersedia.</span></div>
-            <div><strong>Telegram native</strong><span>Alur publish Telegram tetap dipertahankan untuk admin.</span></div>
+          <div className={styles.signalGrid}>
+            <div>
+              <strong>Social</strong>
+              <span>Posting, pulse, komentar, repost, dan DM member.</span>
+            </div>
+            <div>
+              <strong>Insight</strong>
+              <span>Outlook, blog panjang, dan screenshot chart tetap rapi.</span>
+            </div>
+            <div>
+              <strong>Market</strong>
+              <span>Rail GlobalData dan tools riset selalu dekat dengan feed.</span>
+            </div>
           </div>
         </div>
-        <div className={styles.preview} aria-label="HERTZ preview">
-          <div className={styles.previewTitle}>
+
+        <aside className={styles.commandPanel} aria-label="Horizon command center preview">
+          <div className={styles.panelHeader}>
             <Image src="/images/logo/Logo-Horizon-Atom-Online-White_8.png" alt="" width={34} height={34} />
-            <strong>HERTZ</strong>
+            <div>
+              <strong>Live Workspace</strong>
+              <span>HERTZ activity, market rail, dan produk Horizon</span>
+            </div>
           </div>
-          <div className={styles.previewComposer}>Kirim jurnal dari Telegram atau tulis setup...</div>
+
+          <div className={styles.composerPreview}>Kirim jurnal, baca arah market, lalu cek tools dari satu workspace.</div>
+
           {previewPost ? (
-            <>
-              <article className={styles.previewPost}>
-                <span>{categoryInitials(previewPost)}</span>
-                <div>
-                  <strong>{previewPost.author.name}<em>{previewPost.author.badge === 'admin' ? 'Admin' : 'Verified'}</em></strong>
-                  <p>{previewPost.content.text}</p>
-                  <svg viewBox="0 0 260 48" aria-hidden="true"><path d="M2 37 24 25 44 30 68 18 92 22 118 12 144 16 170 9 198 22 226 14 258 8" /></svg>
-                  <small>Comment {previewPost.counts.comments} Repost {previewPost.counts.reposts} Pulse {previewPost.counts.pulses}</small>
+            <article className={styles.activityCard}>
+              <span className={styles.categoryBadge}>{categoryInitials(previewPost)}</span>
+              <div className={styles.activityBody}>
+                <div className={styles.activityMeta}>
+                  <strong>{previewPost.author.name}</strong>
+                  <span>{authorHandle(previewPost)}</span>
+                  <em>{categoryLabel(previewPost)}</em>
                 </div>
-              </article>
-            </>
-          ) : null}
-          <div className={styles.previewMarket}>
-            <strong>Market rail preview</strong>
-            <svg viewBox="0 0 140 34" aria-hidden="true"><path d="M2 27 22 18 42 21 64 11 86 16 110 9 138 5" /></svg>
+                <p>{previewPost.content.text}</p>
+                <svg viewBox="0 0 260 52" aria-hidden="true">
+                  <path d="M2 40 26 28 48 33 72 19 96 23 122 12 148 17 174 8 202 23 230 15 258 9" />
+                </svg>
+                <small>
+                  Comment {previewPost.counts.comments} Repost {previewPost.counts.reposts} Pulse {previewPost.counts.pulses}
+                </small>
+              </div>
+            </article>
+          ) : (
+            <div className={styles.emptyCard}>Aktivitas HERTZ terbaru akan muncul di sini.</div>
+          )}
+
+          <div className={styles.marketPreview}>
+            <div>
+              <span>Market rail</span>
+              <strong>{firstMarketGroup?.title ?? 'GlobalData'}</strong>
+            </div>
+            <svg viewBox="0 0 140 34" aria-hidden="true">
+              <path d="M2 27 22 18 42 21 64 11 86 16 110 9 138 5" />
+            </svg>
           </div>
-        </div>
+
+          <div className={styles.panelProducts}>
+            {productModules.slice(1).map((item) => (
+              <Link href={item.href} key={item.href}>
+                <span>{item.title}</span>
+                <strong>{item.metric}</strong>
+              </Link>
+            ))}
+          </div>
+        </aside>
       </section>
-      {marketGroups.length > 0 ? (
-        <section className={styles.marketStrip} aria-label="Market preview">
-          {marketGroups.map((group) => (
+
+      <section className={styles.marketStrip} aria-label="Market preview">
+        {marketGroups.length > 0 ? (
+          marketGroups.map((group) => (
             <div className={styles.marketCard} key={group.title}>
               <strong>{group.title}</strong>
               {group.rows.slice(0, 3).map((row) => (
@@ -129,24 +212,31 @@ export default async function HorizonLanding() {
                 </div>
               ))}
             </div>
-          ))}
-        </section>
-      ) : null}
-      <section className={styles.products}>
-        {[
-          ['HERTZ', 'Social trading feed', '/hertz'],
-          ['Outlook', 'WordPress market outlook', '/outlook'],
-          ['Blog', 'WordPress imported articles', '/blog'],
-          ['Tools', 'Trading research utilities', '/tools'],
-        ].map(([title, text, href]) => (
-          <Link href={href} key={href}>
-            <strong>{title}</strong>
-            <span>{text}</span>
-            <em>{href}</em>
+          ))
+        ) : (
+          <div className={styles.emptyCard}>Market rail sedang disiapkan.</div>
+        )}
+      </section>
+
+      <section className={styles.products} aria-label="Horizon ecosystem">
+        {productModules.map((item) => (
+          <Link className={styles.productCard} href={item.href} key={item.href}>
+            <span>{item.metric}</span>
+            <strong>{item.title}</strong>
+            <p>{item.text}</p>
+            <em>{item.href}</em>
           </Link>
         ))}
       </section>
-      <footer className={styles.footer}>Designed as the public face of Horizon. HERTZ is the social product inside it.</footer>
+
+      <nav className={styles.mobileDock} aria-label="Horizon mobile navigation">
+        <Link href="/hertz">HERTZ</Link>
+        <Link href="/outlook">Outlook</Link>
+        <Link href="/blog">Blog</Link>
+        <Link href="/tools">Tools</Link>
+      </nav>
+
+      <footer className={styles.footer}>Horizon adalah pintu utama untuk social trading HERTZ, market outlook, blog, dan tools riset.</footer>
     </main>
   );
 }
