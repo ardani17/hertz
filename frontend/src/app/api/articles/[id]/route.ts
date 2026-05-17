@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { query, queryOne, execute } from '@shared/db';
 import { validateSession } from '@/lib/auth';
+import { isArticleContentBodyAllowed, normalizeOutlookMetadata } from '@/lib/outlookContent';
 import type { Article, Media } from '@shared/types';
 
 interface RouteContext {
@@ -113,18 +114,7 @@ export async function PUT(request: NextRequest, context: RouteContext) {
       paramIndex++;
     }
 
-    if (content_html !== undefined) {
-      if (!content_html || typeof content_html !== 'string' || !content_html.trim()) {
-        return NextResponse.json(
-          { success: false, error: { error_code: 'VALIDATION_ERROR', message: 'Konten HTML tidak boleh kosong', details: null, timestamp: new Date().toISOString() } },
-          { status: 422 },
-        );
-      }
-      updates.push(`content_html = $${paramIndex}`);
-      values.push(content_html);
-      paramIndex++;
-    }
-
+    let nextCategory = existing.category;
     if (category !== undefined) {
       const validCategories = ['trading', 'life_story', 'general', 'outlook', 'blog'];
       if (!validCategories.includes(category)) {
@@ -133,8 +123,31 @@ export async function PUT(request: NextRequest, context: RouteContext) {
           { status: 422 },
         );
       }
+      nextCategory = category;
+    }
+
+    if (content_html !== undefined) {
+      const normalizedContentHtml = typeof content_html === 'string' ? content_html : '';
+      if (!isArticleContentBodyAllowed({ category: nextCategory, contentHtml: normalizedContentHtml })) {
+        return NextResponse.json(
+          { success: false, error: { error_code: 'VALIDATION_ERROR', message: 'Konten HTML tidak boleh kosong', details: null, timestamp: new Date().toISOString() } },
+          { status: 422 },
+        );
+      }
+      updates.push(`content_html = $${paramIndex}`);
+      values.push(normalizedContentHtml);
+      paramIndex++;
+    }
+
+    if (category !== undefined) {
       updates.push(`category = $${paramIndex}`);
       values.push(category);
+      paramIndex++;
+    }
+
+    if (nextCategory === 'outlook' && body.outlook_metadata !== undefined) {
+      updates.push(`outlook_metadata = $${paramIndex}`);
+      values.push(JSON.stringify(normalizeOutlookMetadata(body.outlook_metadata)));
       paramIndex++;
     }
 

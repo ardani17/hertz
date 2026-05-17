@@ -2,6 +2,7 @@ import { describe, it, expect } from 'vitest';
 import {
   buildOutlookSnapshot,
   inferOutlookContentKind,
+  isArticleContentBodyAllowed,
   normalizeOutlookMetadata,
   stripOutlookHtml,
 } from '../../../frontend/src/lib/outlookContent';
@@ -216,5 +217,31 @@ describe('Outlook metadata contract', () => {
   it('handles empty Outlook body as empty plain text', () => {
     expect(stripOutlookHtml('')).toBe('');
     expect(stripOutlookHtml('<p> </p>')).toBe('');
+  });
+
+  it('normalizes admin metadata payload while keeping all fields optional', () => {
+    expect(normalizeOutlookMetadata({
+      contentType: 'video',
+      videoUrl: ' https://example.com/outlook.mp4 ',
+      summary: ' US session prep ',
+      keyPoints: 'Liquidity above high\nInvalid below low',
+    })).toEqual({
+      contentType: 'video',
+      videoUrl: 'https://example.com/outlook.mp4',
+      summary: 'US session prep',
+      bias: null,
+      timeframe: null,
+      market: null,
+      sentiment: null,
+      risk: null,
+      keyPoints: ['Liquidity above high', 'Invalid below low'],
+    });
+  });
+
+  it('allows empty content body only for Outlook articles', () => {
+    expect(isArticleContentBodyAllowed({ category: 'outlook', contentHtml: '' })).toBe(true);
+    expect(isArticleContentBodyAllowed({ category: 'outlook', contentHtml: '<p> </p>' })).toBe(true);
+    expect(isArticleContentBodyAllowed({ category: 'general', contentHtml: '' })).toBe(false);
+    expect(isArticleContentBodyAllowed({ category: 'trading', contentHtml: '<p>Setup valid.</p>' })).toBe(true);
   });
 });

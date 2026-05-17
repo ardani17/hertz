@@ -104,3 +104,11 @@ export function getOutlookSummary(input: {
   if (preferred.length <= maxLength) return preferred;
   return `${preferred.slice(0, maxLength).trimEnd()}...`;
 }
+
+export function isArticleContentBodyAllowed(input: {
+  category: string | null | undefined;
+  contentHtml: string | null | undefined;
+}): boolean {
+  if (input.category === 'outlook') return true;
+  return stripOutlookHtml(input.contentHtml).length > 0;
+}

@@ -1,7 +1,8 @@
 'use client';
 
-import { useState, useRef, useCallback } from 'react';
+import { useState, useRef } from 'react';
 import { sanitizeHtml } from '@/lib/sanitize';
+import { normalizeOutlookMetadata, type OutlookMetadataInput } from '@/lib/outlookContent';
 import styles from './OutlookEditor.module.css';
 
 export interface OutlookFormData {
@@ -9,6 +10,7 @@ export interface OutlookFormData {
   content_html: string;
   category: 'outlook';
   status: string;
+  outlook_metadata: OutlookMetadataInput;
 }
 
 export interface InlineImageEntry {
@@ -20,6 +22,7 @@ export interface OutlookInitialData {
   title: string;
   content_html: string;
   status: string;
+  outlook_metadata?: OutlookMetadataInput | null;
 }
 
 interface InlineImage {
@@ -57,9 +60,21 @@ export function OutlookEditor({
   submitLabel = 'Publikasikan',
   submitting = false,
 }: OutlookEditorProps) {
+  const initialMetadata = normalizeOutlookMetadata(initialData?.outlook_metadata);
   const [title, setTitle] = useState(initialData?.title ?? '');
   const [contentHtml, setContentHtml] = useState(initialData?.content_html ?? '');
   const [status, setStatus] = useState(initialData?.status ?? 'published');
+  const [contentType, setContentType] = useState(initialMetadata.contentType ?? '');
+  const [videoUrl, setVideoUrl] = useState(initialMetadata.videoUrl ?? '');
+  const [summary, setSummary] = useState(initialMetadata.summary ?? '');
+  const [bias, setBias] = useState(initialMetadata.bias ?? '');
+  const [timeframe, setTimeframe] = useState(initialMetadata.timeframe ?? '');
+  const [market, setMarket] = useState(initialMetadata.market ?? '');
+  const [sentiment, setSentiment] = useState(initialMetadata.sentiment ?? '');
+  const [risk, setRisk] = useState(initialMetadata.risk ?? '');
+  const [keyPoints, setKeyPoints] = useState(
+    Array.isArray(initialMetadata.keyPoints) ? initialMetadata.keyPoints.join('\n') : '',
+  );
   const [activeTab, setActiveTab] = useState<'write' | 'preview'>('write');
   const [inlineImages, setInlineImages] = useState<InlineImage[]>([]);
   const [error, setError] = useState('');
@@ -68,7 +83,7 @@ export function OutlookEditor({
   const imageInputRef = useRef<HTMLInputElement>(null);
 
   /** Insert HTML tag around selected text in the textarea */
-  const insertTag = useCallback((openTag: string, closeTag: string) => {
+  function insertTag(openTag: string, closeTag: string) {
     const textarea = textareaRef.current;
     if (!textarea) return;
 
@@ -85,10 +100,10 @@ export function OutlookEditor({
       const cursorPos = start + openTag.length + selected.length;
       textarea.setSelectionRange(cursorPos, cursorPos);
     });
-  }, [contentHtml]);
+  }
 
   /** Insert text at cursor position */
-  const insertAtCursor = useCallback((text: string) => {
+  function insertAtCursor(text: string) {
     const textarea = textareaRef.current;
     if (!textarea) return;
 
@@ -101,10 +116,10 @@ export function OutlookEditor({
       const cursorPos = start + text.length;
       textarea.setSelectionRange(cursorPos, cursorPos);
     });
-  }, [contentHtml]);
+  }
 
   /** Handle inline image selection — inserts an img tag placeholder */
-  const handleImageSelect = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
+  function handleImageSelect(e: React.ChangeEvent<HTMLInputElement>) {
     const files = e.target.files;
     if (!files) return;
 
@@ -132,10 +147,10 @@ export function OutlookEditor({
     if (imageInputRef.current) {
       imageInputRef.current.value = '';
     }
-  }, [insertAtCursor]);
+  }
 
   /** Remove an inline image */
-  const removeImage = useCallback((id: string) => {
+  function removeImage(id: string) {
     setInlineImages((prev) => {
       const img = prev.find((i) => i.id === id);
       if (img) {
@@ -147,7 +162,7 @@ export function OutlookEditor({
       }
       return prev.filter((i) => i.id !== id);
     });
-  }, []);
+  }
 
   /** Handle form submission */
   const handleSubmit = async (e: React.FormEvent) => {
@@ -156,11 +171,6 @@ export function OutlookEditor({
 
     if (!title.trim()) {
       setError('Judul artikel Outlook wajib diisi.');
-      return;
-    }
-
-    if (!contentHtml.trim()) {
-      setError('Konten HTML tidak boleh kosong.');
       return;
     }
 
@@ -175,6 +185,17 @@ export function OutlookEditor({
           content_html: contentHtml,
           category: 'outlook',
           status,
+          outlook_metadata: normalizeOutlookMetadata({
+            contentType,
+            videoUrl,
+            summary,
+            bias,
+            timeframe,
+            market,
+            sentiment,
+            risk,
+            keyPoints,
+          }),
         },
         images,
       );
@@ -189,7 +210,7 @@ export function OutlookEditor({
       <div className={styles.infoBanner}>
         <span className={styles.infoBadge}>📈 Outlook</span>
         <span className={styles.infoText}>
-          Kategori: <strong>Outlook</strong> · Tipe: <strong>Long-form</strong> · Sumber: <strong>Dashboard</strong>
+          Kategori: <strong>Outlook</strong> · Format dan snapshot bersifat <strong>optional</strong>
         </span>
       </div>
 
@@ -222,6 +243,135 @@ export function OutlookEditor({
           <option value="draft">Draft</option>
         </select>
       </div>
+
+      <section className={styles.optionalSection} aria-labelledby="outlook-optional-title">
+        <div className={styles.optionalHeader}>
+          <h3 id="outlook-optional-title">Snapshot optional</h3>
+          <p>Isi bila membantu pembaca. Semua field ini boleh dikosongkan.</p>
+        </div>
+
+        <div className={styles.metadataGrid}>
+          <div className={styles.formGroup}>
+            <label className={styles.formLabel} htmlFor="outlook-content-type">
+              Tipe konten
+            </label>
+            <select
+              id="outlook-content-type"
+              value={contentType}
+              onChange={(e) => setContentType(e.target.value)}
+            >
+              <option value="">Auto detect</option>
+              <option value="video">Video Outlook</option>
+              <option value="article">Long Read</option>
+              <option value="chart">Chart Note</option>
+            </select>
+          </div>
+
+          <div className={styles.formGroup}>
+            <label className={styles.formLabel} htmlFor="outlook-video-url">
+              Video URL
+            </label>
+            <input
+              id="outlook-video-url"
+              type="url"
+              value={videoUrl}
+              onChange={(e) => setVideoUrl(e.target.value)}
+              placeholder="https://..."
+            />
+          </div>
+
+          <div className={styles.formGroup}>
+            <label className={styles.formLabel} htmlFor="outlook-bias">
+              Bias
+            </label>
+            <input
+              id="outlook-bias"
+              type="text"
+              value={bias}
+              onChange={(e) => setBias(e.target.value)}
+              placeholder="Neutral Bullish"
+            />
+          </div>
+
+          <div className={styles.formGroup}>
+            <label className={styles.formLabel} htmlFor="outlook-timeframe">
+              Timeframe
+            </label>
+            <input
+              id="outlook-timeframe"
+              type="text"
+              value={timeframe}
+              onChange={(e) => setTimeframe(e.target.value)}
+              placeholder="Intraday / H4 / Weekly"
+            />
+          </div>
+
+          <div className={styles.formGroup}>
+            <label className={styles.formLabel} htmlFor="outlook-market">
+              Market
+            </label>
+            <input
+              id="outlook-market"
+              type="text"
+              value={market}
+              onChange={(e) => setMarket(e.target.value)}
+              placeholder="XAUUSD / NASDAQ / DXY"
+            />
+          </div>
+
+          <div className={styles.formGroup}>
+            <label className={styles.formLabel} htmlFor="outlook-sentiment">
+              Sentiment
+            </label>
+            <input
+              id="outlook-sentiment"
+              type="text"
+              value={sentiment}
+              onChange={(e) => setSentiment(e.target.value)}
+              placeholder="Mixed / Watch / Positive"
+            />
+          </div>
+        </div>
+
+        <div className={styles.formGroup}>
+          <label className={styles.formLabel} htmlFor="outlook-risk">
+            Risk
+          </label>
+          <input
+            id="outlook-risk"
+            type="text"
+            value={risk}
+            onChange={(e) => setRisk(e.target.value)}
+            placeholder="False breakout, invalidation area, atau risiko utama"
+          />
+        </div>
+
+        <div className={styles.formGroup}>
+          <label className={styles.formLabel} htmlFor="outlook-summary">
+            Summary / caption
+          </label>
+          <textarea
+            id="outlook-summary"
+            className={styles.smallTextarea}
+            value={summary}
+            onChange={(e) => setSummary(e.target.value)}
+            placeholder="Caption singkat untuk video, chart, atau ringkasan artikel."
+          />
+        </div>
+
+        <div className={styles.formGroup}>
+          <label className={styles.formLabel} htmlFor="outlook-key-points">
+            Key points
+          </label>
+          <textarea
+            id="outlook-key-points"
+            className={styles.smallTextarea}
+            value={keyPoints}
+            onChange={(e) => setKeyPoints(e.target.value)}
+            placeholder="Satu poin per baris."
+          />
+        </div>
+      </section>
 
       {/* HTML Editor */}
       <div className={styles.formGroup}>

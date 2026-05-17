@@ -5,6 +5,7 @@ import { useRouter, useParams } from 'next/navigation';
 import Link from 'next/link';
 import dynamic from 'next/dynamic';
 import type { OutlookFormData, InlineImageEntry } from '@/components/admin/OutlookEditor';
+import type { OutlookMetadataInput } from '@/lib/outlookContent';
 
 /** Dynamic import for OutlookEditor — heavy rich text editor loaded on demand */
 const OutlookEditor = dynamic(
@@ -22,6 +23,7 @@ interface OutlookArticleData {
   source: string;
   author_username: string | null;
   created_at: string;
+  outlook_metadata?: OutlookMetadataInput | null;
 }
 
 /**
@@ -96,6 +98,7 @@ export default function AdminEditOutlookPage() {
           content_html: finalContent,
           category: 'outlook',
           status: data.status,
+          outlook_metadata: data.outlook_metadata,
         }),
       });
 
@@ -158,6 +161,7 @@ export default function AdminEditOutlookPage() {
             title: article.title || '',
             content_html: article.content_html,
             status: article.status,
+            outlook_metadata: article.outlook_metadata ?? {},
           }}
           onSubmit={handleSubmit}
           onCancel={() => router.push('/admin/outlook')}

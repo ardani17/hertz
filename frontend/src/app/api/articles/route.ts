@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { query, queryOne, execute } from '@shared/db';
 import { validateSession } from '@/lib/auth';
+import { isArticleContentBodyAllowed, normalizeOutlookMetadata } from '@/lib/outlookContent';
 import { slugify, extractFirstWords } from '@shared/utils/slugify';
 import type { Article } from '@shared/types';
 
@@ -130,13 +131,6 @@ export async function POST(request: NextRequest) {
     const body = await request.json();
     const { title, content_html, category, status } = body;
 
-    if (!content_html || typeof content_html !== 'string' || !content_html.trim()) {
-      return NextResponse.json(
-        { success: false, error: { error_code: 'VALIDATION_ERROR', message: 'Konten HTML tidak boleh kosong', details: null, timestamp: new Date().toISOString() } },
-        { status: 422 },
-      );
-    }
-
     const validCategories = ['trading', 'life_story', 'general', 'outlook', 'blog'];
     if (!validCategories.includes(category)) {
       return NextResponse.json(
@@ -145,15 +139,25 @@ export async function POST(request: NextRequest) {
       );
     }
 
+    const normalizedContentHtml = typeof content_html === 'string' ? content_html : '';
+    if (!isArticleContentBodyAllowed({ category, contentHtml: normalizedContentHtml })) {
+      return NextResponse.json(
+        { success: false, error: { error_code: 'VALIDATION_ERROR', message: 'Konten HTML tidak boleh kosong', details: null, timestamp: new Date().toISOString() } },
+        { status: 422 },
+      );
+    }
+
+    const outlookMetadata = category === 'outlook' ? normalizeOutlookMetadata(body.outlook_metadata) : {};
+
     // Generate slug from title or content
-    const slugInput = title?.trim() || extractFirstWords(content_html.replace(/<[^>]*>/g, ''), 8);
+    const slugInput = title?.trim() || extractFirstWords(normalizedContentHtml.replace(/<[^>]*>/g, ''), 8);
     const slug = slugify(slugInput);
 
     const article = await queryOne<Article>(
-      `INSERT INTO articles (author_id, content_html, title, category, source, status, slug)
-       VALUES ($1, $2, $3, $4, 'dashboard', $5, $6)
+      `INSERT INTO articles (author_id, content_html, title, category, source, status, slug, outlook_metadata)
+       VALUES ($1, $2, $3, $4, 'dashboard', $5, $6, $7)
        RETURNING *`,
-      [admin.id, content_html, title?.trim() || null, category, status || 'published', slug],
+      [admin.id, normalizedContentHtml, title?.trim() || null, category, status || 'published', slug, JSON.stringify(outlookMetadata)],
     );
 
     if (!article) {

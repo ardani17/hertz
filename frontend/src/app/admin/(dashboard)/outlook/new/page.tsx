@@ -57,6 +57,7 @@ export default function AdminNewOutlookPage() {
           content_html: finalContent,
           category: 'outlook',
           status: data.status,
+          outlook_metadata: data.outlook_metadata,
         }),
       });
 

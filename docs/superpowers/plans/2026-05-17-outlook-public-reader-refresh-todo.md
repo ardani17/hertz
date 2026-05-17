@@ -400,7 +400,7 @@ Centang setelah tests pass dan commit dibuat.
 - Modify: `frontend/src/app/admin/(dashboard)/outlook/[id]/edit/page.tsx`
 - Test: `tests/unit/frontend/outlook.test.ts`
 
-- [ ] **Step 1: Add failing tests for form metadata normalization**
+- [x] **Step 1: Add failing tests for form metadata normalization**
 
 Add test cases to `tests/unit/frontend/outlook.test.ts`:
 
@@ -433,7 +433,7 @@ Expected:
 
 - FAIL until helper behavior matches the admin payload contract.
 
-- [ ] **Step 2: Extend article create API**
+- [x] **Step 2: Extend article create API**
 
 Modify `frontend/src/app/api/articles/route.ts`:
 
@@ -461,7 +461,7 @@ Expected:
 - Outlook can save video/chart entries with empty long body.
 - Existing category validation remains unchanged.
 
-- [ ] **Step 3: Extend article detail/update API**
+- [x] **Step 3: Extend article detail/update API**
 
 Modify `frontend/src/app/api/articles/[id]/route.ts`:
 
@@ -499,7 +499,7 @@ Expected:
 - Editing old Outlook rows with no metadata keeps working.
 - Optional fields never block save.
 
-- [ ] **Step 4: Add optional fields to OutlookEditor**
+- [x] **Step 4: Add optional fields to OutlookEditor**
 
 Modify `frontend/src/components/admin/OutlookEditor.tsx`:
 
@@ -545,7 +545,7 @@ Expected:
 - Publisher can ignore every new metadata field.
 - Publisher can publish a video/chart note without writing a long article body.
 
-- [ ] **Step 5: Style optional metadata editor**
+- [x] **Step 5: Style optional metadata editor**
 
 Modify `frontend/src/components/admin/OutlookEditor.module.css`:
 
@@ -559,7 +559,7 @@ Expected:
 - Editor remains practical, not heavy.
 - Optional section is visually secondary.
 
-- [ ] **Step 6: Submit metadata from new/edit pages**
+- [x] **Step 6: Submit metadata from new/edit pages**
 
 Modify:
 
@@ -594,7 +594,7 @@ Expected:
 - New article saves optional metadata.
 - Edit article loads and preserves optional metadata.
 
-- [ ] **Step 7: Verify Task 2**
+- [x] **Step 7: Verify Task 2**
 
 Run:
 
@@ -610,7 +610,7 @@ Expected:
 - Lint pass.
 - Frontend build pass.
 
-- [ ] **Step 8: Commit Task 2**
+- [x] **Step 8: Commit Task 2**
 
 Run:
 
@@ -619,7 +619,7 @@ git add frontend/src/app/api/articles/route.ts frontend/src/app/api/articles/[id
 git commit -m "Add optional Outlook publisher metadata"
 ```
 
-- [ ] **Checklist selesai Task 2**
+- [x] **Checklist selesai Task 2**
 
 Centang setelah build pass dan commit dibuat.
 
