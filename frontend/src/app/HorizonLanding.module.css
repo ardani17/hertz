@@ -2,31 +2,30 @@
   min-height: 100vh;
   padding-bottom: 0;
   background:
-    linear-gradient(rgba(0, 255, 148, 0.04) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(0, 255, 148, 0.035) 1px, transparent 1px),
-    #020403;
-  background-size: 76px 76px;
+    linear-gradient(rgba(255, 255, 255, 0.025) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255, 255, 255, 0.02) 1px, transparent 1px),
+    linear-gradient(180deg, #030504 0%, #050b08 42%, #020403 100%);
+  background-size: 96px 96px, 96px 96px, auto;
   color: #f3fff8;
 }
 
 .navbar {
   align-items: center;
   box-sizing: border-box;
-  border-bottom: 1px solid rgba(75, 118, 92, 0.34);
+  border-bottom: 1px solid rgba(152, 176, 160, 0.16);
   display: grid;
-  gap: 1.2rem;
+  gap: 1rem;
   grid-template-columns: 1fr auto 1fr;
-  min-height: 74px;
+  min-height: 76px;
   padding: 0 6vw;
 }
 
 .navBrand,
 .navbar nav,
 .actions,
-.signalGrid,
-.panelHeader,
-.activityMeta,
-.marketCard div,
+.trustRow,
+.heroAssetTop,
+.marketCardHeader,
 .mobileDock {
   align-items: center;
   display: flex;
@@ -35,58 +34,56 @@
 .navBrand,
 .navbar a,
 .products a,
-.panelProducts a,
 .mobileDock a {
   color: inherit;
   text-decoration: none;
 }
 
 .navBrand {
-  gap: 0.8rem;
+  gap: 0.78rem;
   min-width: 0;
 }
 
 .navBrand strong {
   color: #fff;
-  font-size: 1.3rem;
+  font-size: 1.28rem;
   font-weight: 900;
   letter-spacing: 0;
 }
 
 .navbar nav {
-  gap: 1.8rem;
+  gap: 1.9rem;
   justify-content: center;
 }
 
 .navbar nav a {
-  color: #9fb4a8;
+  color: #a9b9ae;
   font-weight: 800;
 }
 
 .navbar nav a:hover,
-.products a:hover strong,
-.panelProducts a:hover strong {
+.productCard:hover strong {
   color: #00dc82;
 }
 
 .login {
-  border: 1px solid rgba(0, 220, 130, 0.78);
+  border: 1px solid rgba(0, 220, 130, 0.68);
   border-radius: 999px;
   color: #00dc82 !important;
   font-weight: 900;
   justify-self: end;
-  padding: 0.85rem 1.35rem;
+  padding: 0.82rem 1.35rem;
 }
 
 .hero {
   box-sizing: border-box;
   display: grid;
-  gap: clamp(2rem, 4vw, 4.5rem);
-  grid-template-columns: minmax(0, 1fr) minmax(420px, 0.78fr);
+  gap: clamp(2rem, 4.8vw, 5rem);
+  grid-template-columns: minmax(0, 0.86fr) minmax(520px, 1fr);
   margin: 0 auto;
-  max-width: 1380px;
-  min-height: 620px;
-  padding: clamp(3rem, 6vw, 5.6rem) 6vw 2rem;
+  max-width: 1440px;
+  min-height: 680px;
+  padding: clamp(3.4rem, 6vw, 6rem) 6vw 2.4rem;
 }
 
 .copy {
@@ -96,61 +93,61 @@
 
 .eyebrow {
   color: #00dc82;
-  font-size: 0.84rem;
+  font-size: 0.78rem;
   font-weight: 900;
-  letter-spacing: 0.08em;
-  margin: 0 0 1.2rem;
+  letter-spacing: 0.1em;
+  margin: 0 0 1rem;
   text-transform: uppercase;
 }
 
 .copy h1 {
   color: #fff;
-  font-size: clamp(4.2rem, 8.8vw, 8rem);
-  line-height: 0.88;
+  font-size: 5rem;
+  line-height: 0.98;
   margin: 0;
+  max-width: 640px;
   text-transform: uppercase;
 }
 
 .lead {
-  color: #f7fff9;
-  font-size: clamp(1.35rem, 2.2vw, 2rem);
-  line-height: 1.25;
-  margin: 1.4rem 0 0;
+  color: #f4fff8;
+  font-size: clamp(1.25rem, 1.9vw, 1.78rem);
+  line-height: 1.32;
+  margin: 1.25rem 0 0;
   max-width: 720px;
 }
 
 .subcopy,
 .footer,
-.signalGrid span,
+.trustRow,
+.marketLabel,
+.heroAssetTop p,
 .productCard p,
-.panelHeader span,
-.activityMeta span,
-.composerPreview,
-.emptyCard {
-  color: #91aa9b;
-  line-height: 1.6;
+.socialProof p,
+.emptyMarket {
+  color: #9aafa3;
+  line-height: 1.62;
 }
 
 .subcopy {
-  font-size: 1.04rem;
+  font-size: 1.02rem;
   max-width: 680px;
 }
 
 .actions {
   flex-wrap: wrap;
-  gap: 0.9rem;
+  gap: 0.85rem;
   margin-top: 2rem;
 }
 
 .primary,
 .secondary {
-  border: 1px solid rgba(0, 220, 130, 0.65);
   border-radius: 8px;
   display: inline-flex;
   font-weight: 900;
   justify-content: center;
-  min-width: 156px;
-  padding: 1rem 1.3rem;
+  min-width: 158px;
+  padding: 1rem 1.35rem;
   text-align: center;
 }
 
@@ -160,160 +157,48 @@
 }
 
 .secondary {
-  background: rgba(0, 16, 9, 0.62);
-  color: #eafff3 !important;
+  border: 1px solid rgba(152, 176, 160, 0.28);
+  background: rgba(255, 255, 255, 0.03);
+  color: #f0fff5 !important;
 }
 
-.signalGrid {
-  align-items: stretch;
-  gap: 0.9rem;
-  margin-top: 2.3rem;
+.trustRow {
+  flex-wrap: wrap;
+  gap: 0.55rem;
+  margin-top: 1.65rem;
 }
 
-.signalGrid div {
-  border: 1px solid rgba(75, 118, 92, 0.34);
-  border-radius: 8px;
-  background: rgba(2, 12, 7, 0.82);
-  flex: 1 1 0;
-  min-width: 0;
-  padding: 1rem;
+.trustRow span {
+  border: 1px solid rgba(152, 176, 160, 0.16);
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.03);
+  font-size: 0.82rem;
+  font-weight: 800;
+  padding: 0.48rem 0.7rem;
 }
 
-.signalGrid strong {
-  color: #fff;
-  display: block;
-  font-size: 1rem;
-  margin-bottom: 0.35rem;
-}
-
-.commandPanel {
+.forexHero {
   align-self: center;
-  border: 1px solid rgba(0, 220, 130, 0.34);
+  border: 1px solid rgba(152, 176, 160, 0.18);
   border-radius: 8px;
-  background: rgba(2, 8, 5, 0.9);
-  box-shadow: 0 28px 80px rgba(0, 0, 0, 0.55);
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.055), rgba(255, 255, 255, 0.015)),
+    rgba(5, 12, 8, 0.92);
+  box-shadow: 0 32px 90px rgba(0, 0, 0, 0.48);
   min-width: 0;
   overflow: hidden;
-  padding: 0 1.35rem 1.35rem;
+  padding: clamp(1rem, 2vw, 1.4rem);
 }
 
-.panelHeader {
-  border-bottom: 1px solid rgba(75, 118, 92, 0.34);
-  gap: 0.8rem;
-  margin: 0 -1.35rem 1.2rem;
-  min-height: 72px;
-  padding: 0 1.35rem;
-}
-
-.panelHeader strong,
-.activityMeta strong,
-.marketPreview strong,
-.marketCard > strong,
-.productCard strong {
-  color: #fff;
-  display: block;
-}
-
-.panelHeader span {
-  display: block;
-  font-size: 0.82rem;
-}
-
-.composerPreview,
-.activityCard,
-.marketPreview,
-.panelProducts a,
-.marketCard,
-.productCard,
-.emptyCard {
-  border: 1px solid rgba(75, 118, 92, 0.34);
-  border-radius: 8px;
-  background: rgba(3, 18, 10, 0.82);
-}
-
-.composerPreview,
-.emptyCard {
-  padding: 0.95rem 1rem;
-}
-
-.activityCard {
-  display: grid;
-  gap: 0.9rem;
-  grid-template-columns: 48px 1fr;
-  margin-top: 0.85rem;
-  padding: 1rem;
-}
-
-.categoryBadge {
-  border: 1px solid #00dc82;
-  border-radius: 8px;
-  color: #bffbd8;
-  display: grid;
-  font-weight: 900;
-  height: 48px;
-  place-items: center;
-}
-
-.activityBody {
-  min-width: 0;
-}
-
-.activityMeta {
-  flex-wrap: wrap;
-  gap: 0.45rem;
-}
-
-.activityMeta em {
-  border: 1px solid rgba(247, 201, 72, 0.58);
-  border-radius: 999px;
-  color: #f7c948;
-  font-size: 0.72rem;
-  font-style: normal;
-  font-weight: 850;
-  padding: 0.12rem 0.45rem;
-}
-
-.activityBody p {
-  color: #f3fff8;
-  line-height: 1.5;
-  margin: 0.55rem 0 0;
-}
-
-.activityCard svg,
-.marketPreview svg,
-.marketCard svg {
-  display: block;
-  width: 100%;
-}
-
-.activityCard path,
-.marketPreview path,
-.marketCard path {
-  fill: none;
-  stroke: #00dc82;
-  stroke-linecap: round;
-  stroke-linejoin: round;
-  stroke-width: 3;
-}
-
-.activityCard small {
-  color: #b9cec0;
-  display: block;
-  margin-top: 0.3rem;
-}
-
-.marketPreview {
-  align-items: center;
-  display: grid;
+.heroAssetTop {
   gap: 1rem;
-  grid-template-columns: 1fr 140px;
-  margin-top: 0.85rem;
-  padding: 0.95rem 1rem;
+  justify-content: space-between;
 }
 
-.marketPreview span,
-.panelProducts span,
-.productCard span {
+.marketLabel,
+.productCard span,
+.socialProof span,
+.marketCardHeader span {
   color: #00dc82;
   display: block;
   font-size: 0.76rem;
@@ -321,85 +206,217 @@
   text-transform: uppercase;
 }
 
-.panelProducts {
-  display: grid;
-  gap: 0.65rem;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
-  margin-top: 0.85rem;
+.heroAssetTop strong {
+  color: #fff;
+  display: block;
+  font-size: clamp(2rem, 4vw, 3.5rem);
+  line-height: 1;
+  margin-top: 0.35rem;
 }
 
-.panelProducts a {
+.heroAssetTop p {
+  margin: 0.45rem 0 0;
+}
+
+.heroPrice {
+  text-align: right;
+}
+
+.heroPrice strong {
+  color: #fff;
+  display: block;
+  font-size: clamp(1.8rem, 3vw, 3rem);
+  line-height: 1;
+}
+
+.heroPrice em,
+.forexTile em,
+.marketRow em {
+  color: #26e78a;
+  font-style: normal;
+  font-weight: 900;
+}
+
+.heroPrice em[data-down="true"],
+.forexTile em[data-down="true"],
+.marketRow em[data-down="true"] {
+  color: #ff5b55;
+}
+
+.chartFrame {
+  border-bottom: 1px solid rgba(152, 176, 160, 0.14);
+  border-top: 1px solid rgba(152, 176, 160, 0.14);
+  margin: 1.35rem -1.4rem 0;
+  padding: 1.15rem 1.4rem;
+}
+
+.heroChart {
+  display: block;
+  min-height: 220px;
+  width: 100%;
+}
+
+.chartArea {
+  fill: rgba(0, 220, 130, 0.12);
+}
+
+.chartArea[data-down="true"] {
+  fill: rgba(255, 91, 85, 0.1);
+}
+
+.chartLine {
+  fill: none;
+  stroke: #00dc82;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  stroke-width: 5;
+}
+
+.chartLine[data-down="true"] {
+  stroke: #ff5b55;
+}
+
+.forexStrip {
+  display: grid;
+  gap: 0.7rem;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  margin-top: 1rem;
+}
+
+.forexTile {
+  border: 1px solid rgba(152, 176, 160, 0.16);
+  border-radius: 8px;
+  background: rgba(0, 0, 0, 0.18);
   min-width: 0;
   padding: 0.85rem;
 }
 
-.panelProducts strong {
-  color: #eafff3;
-  font-size: 0.92rem;
-  margin-top: 0.25rem;
+.forexTile span {
+  color: #dfeee5;
+  display: block;
+  font-weight: 900;
 }
 
-.marketStrip,
+.forexTile strong {
+  color: #fff;
+  display: block;
+  font-size: 1.18rem;
+  margin-top: 0.24rem;
+}
+
+.forexTile svg,
+.marketRow svg {
+  display: block;
+  margin-top: 0.55rem;
+  width: 100%;
+}
+
+.forexTile path,
+.marketRow path {
+  fill: none;
+  stroke: #00dc82;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  stroke-width: 2.4;
+}
+
+.forexTile path[data-down="true"],
+.marketRow path[data-down="true"] {
+  stroke: #ff5b55;
+}
+
+.emptyMarket {
+  border: 1px solid rgba(152, 176, 160, 0.18);
+  border-radius: 8px;
+  padding: 1rem;
+}
+
+.marketShowcase,
 .products {
   box-sizing: border-box;
   display: grid;
   gap: 1rem;
   margin: 0 auto;
-  max-width: 1380px;
+  max-width: 1440px;
   padding: 1rem 6vw;
 }
 
-.marketStrip {
-  grid-template-columns: repeat(2, minmax(0, 1fr));
+.marketShowcase {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+.marketCard,
+.productCard,
+.socialProof {
+  border: 1px solid rgba(152, 176, 160, 0.16);
+  border-radius: 8px;
+  background: rgba(4, 12, 8, 0.78);
 }
 
 .marketCard {
+  min-width: 0;
   padding: 1rem;
 }
 
-.marketCard > strong {
-  color: #00dc82;
+.marketCardHeader {
+  justify-content: space-between;
+  gap: 1rem;
   margin-bottom: 0.9rem;
 }
 
-.marketCard div {
-  display: grid;
-  gap: 1rem;
-  grid-template-columns: 100px 1fr 74px;
-  min-height: 36px;
+.marketCardHeader strong {
+  color: #fff;
+  font-size: 1.1rem;
 }
 
-.marketCard span {
+.marketRow {
+  align-items: center;
+  border-top: 1px solid rgba(152, 176, 160, 0.11);
+  display: grid;
+  gap: 0.8rem;
+  grid-template-columns: 82px 1fr 82px minmax(86px, 0.75fr);
+  min-height: 58px;
+}
+
+.marketRow span,
+.marketRow strong {
   color: #f3fff8;
 }
 
-.marketCard em {
-  color: #5fb4ff;
-  font-style: normal;
-  font-weight: 900;
-  text-align: right;
-}
-
-.marketCard svg[data-down="true"] path {
-  stroke: #ff5048;
-}
-
-.marketCard svg[data-down="true"] + em {
-  color: #ff5048;
+.marketRow small {
+  color: #798a80;
+  display: block;
+  font-size: 0.68rem;
+  font-weight: 800;
+  margin-top: 0.1rem;
 }
 
 .products {
-  grid-template-columns: repeat(4, minmax(0, 1fr));
-  padding-top: 1.2rem;
+  grid-template-columns: minmax(280px, 1.25fr) repeat(4, minmax(0, 1fr));
+  padding-top: 1.15rem;
+}
+
+.socialProof {
+  padding: 1.15rem;
+}
+
+.socialProof p {
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 3;
+  margin: 0.45rem 0 0;
+  overflow: hidden;
 }
 
 .productCard {
-  min-height: 176px;
+  min-height: 168px;
   padding: 1.15rem;
 }
 
 .productCard strong {
-  font-size: 1.5rem;
+  color: #fff;
+  display: block;
+  font-size: 1.35rem;
   margin-top: 0.35rem;
 }
 
@@ -407,42 +424,32 @@
   margin: 0.7rem 0 0;
 }
 
-.productCard em {
-  color: #91aa9b;
-  display: block;
-  font-style: normal;
-  font-weight: 850;
-  margin-top: 1rem;
-}
-
 .footer {
   box-sizing: border-box;
   margin: 0 auto;
-  max-width: 1380px;
-  padding: 1.2rem 6vw 3rem;
+  max-width: 1440px;
+  padding: 1.25rem 6vw 3rem;
 }
 
 .mobileDock {
   display: none;
 }
 
-@media (max-width: 980px) {
+@media (max-width: 1120px) {
   .navbar,
   .hero,
-  .marketStrip,
+  .marketShowcase,
   .products {
     grid-template-columns: minmax(0, 1fr);
   }
 
   .navbar {
     align-items: start;
-    gap: 0.85rem;
-    padding: 1rem 1.1rem;
+    padding: 1rem 1.2rem;
   }
 
   .navbar nav {
     flex-wrap: wrap;
-    gap: 1rem;
     justify-content: start;
   }
 
@@ -451,21 +458,21 @@
   }
 
   .hero {
-    gap: 1.6rem;
+    gap: 1.5rem;
     min-height: auto;
-    padding: 3rem 1.1rem 1rem;
+    padding: 3rem 1.2rem 1rem;
   }
 
-  .signalGrid {
-    display: grid;
-    grid-template-columns: minmax(0, 1fr);
+  .copy h1 {
+    font-size: 4.25rem;
+    max-width: 620px;
   }
 
-  .marketStrip,
+  .marketShowcase,
   .products,
   .footer {
-    padding-left: 1.1rem;
-    padding-right: 1.1rem;
+    padding-left: 1.2rem;
+    padding-right: 1.2rem;
   }
 }
 
@@ -479,41 +486,46 @@
     min-height: 0;
   }
 
-  .navBrand strong {
-    font-size: 1.2rem;
-  }
-
   .navbar nav,
   .login {
     display: none;
   }
 
-  .hero {
-    grid-template-columns: minmax(0, 1fr);
-    padding-top: 2.4rem;
+  .navBrand strong {
+    font-size: 1.18rem;
   }
 
-  .eyebrow {
-    font-size: 0.74rem;
-    margin-bottom: 0.9rem;
+  .hero {
+    grid-template-columns: minmax(0, 1fr);
+    padding-top: 2.3rem;
   }
 
   .copy h1 {
-    font-size: clamp(3.4rem, 18vw, 4.8rem);
-    overflow-wrap: anywhere;
+    font-size: 2.75rem;
+    line-height: 1.02;
+    overflow-wrap: normal;
   }
 
   .lead {
-    font-size: 1.24rem;
+    font-size: 1.16rem;
   }
 
   .subcopy {
-    font-size: 0.98rem;
+    font-size: 0.96rem;
   }
 
   .actions {
     display: grid;
     grid-template-columns: minmax(0, 1fr);
+  }
+
+  .trustRow {
+    gap: 0.45rem;
+  }
+
+  .trustRow span {
+    font-size: 0.78rem;
+    padding: 0.42rem 0.62rem;
   }
 
   .primary,
@@ -522,41 +534,54 @@
     width: 100%;
   }
 
-  .commandPanel {
-    padding: 0 1rem 1rem;
+  .forexHero {
+    padding: 1rem;
   }
 
-  .panelHeader {
-    margin: 0 -1rem 1rem;
-    padding: 0 1rem;
-  }
-
-  .activityCard {
-    grid-template-columns: 42px 1fr;
-  }
-
-  .categoryBadge {
-    height: 42px;
-  }
-
-  .marketPreview,
-  .marketCard div,
-  .panelProducts {
+  .heroAssetTop {
+    align-items: start;
+    display: grid;
+    gap: 1rem;
     grid-template-columns: minmax(0, 1fr);
   }
 
-  .products {
-    padding-top: 0.75rem;
+  .heroPrice {
+    text-align: left;
   }
 
-  .productCard {
+  .chartFrame {
+    margin-left: -1rem;
+    margin-right: -1rem;
+    padding: 0.85rem 1rem;
+  }
+
+  .heroChart {
+    min-height: 150px;
+  }
+
+  .forexStrip {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .marketRow {
+    grid-template-columns: 78px 1fr 74px;
+    padding: 0.75rem 0;
+  }
+
+  .marketRow svg {
+    grid-column: 1 / -1;
+    margin-top: 0;
+  }
+
+  .productCard,
+  .socialProof {
     min-height: 0;
   }
 
   .mobileDock {
     backdrop-filter: blur(18px);
     background: rgba(1, 7, 4, 0.94);
-    border-top: 1px solid rgba(75, 118, 92, 0.42);
+    border-top: 1px solid rgba(152, 176, 160, 0.22);
     bottom: 0;
     box-sizing: border-box;
     display: grid;
