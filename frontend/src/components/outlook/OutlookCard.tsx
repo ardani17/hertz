@@ -2,6 +2,8 @@ import Link from 'next/link';
 import styles from './OutlookCard.module.css';
 import { estimateReadTime, formatDate } from '@/components/article/ArticleMeta';
 import { ClickableArticle } from '@/components/article/ClickableArticle';
+import { buildOutlookCardModel, type OutlookMediaInput } from '@/lib/outlookContent';
+import { OutlookSnapshot } from './OutlookSnapshot';
 
 export interface OutlookCardData {
   id: string;
@@ -11,63 +13,76 @@ export interface OutlookCardData {
   created_at: string;
   author_name: string | null;
   cover_image: string | null;
+  outlook_metadata?: unknown;
+  media: OutlookMediaInput[];
 }
 
 interface OutlookCardProps {
   article: OutlookCardData;
 }
 
-function getExcerpt(html: string, maxLength = 200): string {
-  const text = html.replace(/<[^>]*>/g, '').trim();
-  if (text.length <= maxLength) return text;
-  return text.slice(0, maxLength).trimEnd() + '…';
-}
+const kindLabels = {
+  video: 'Video Outlook',
+  article: 'Long Read',
+  chart: 'Chart Note',
+} as const;
 
-/** Card component for Outlook articles with badge and cover image thumbnail */
+/** Card component for mixed Outlook content: video, long read, and chart notes. */
 export function OutlookCard({ article }: OutlookCardProps) {
-  const excerpt = getExcerpt(article.content_html);
-  const displayTitle = article.title || excerpt.slice(0, 80);
+  const model = buildOutlookCardModel(article);
   const readTime = estimateReadTime(article.content_html);
+  const href = `/outlook/${article.slug}`;
+  const cardClassName = [
+    styles.card,
+    model.mediaPreview ? styles.withMedia : styles.textOnly,
+    styles[model.kind],
+  ].join(' ');
 
   return (
-    <ClickableArticle className={styles.card} href={`/outlook/${article.slug}`}>
-      <div className={styles.thumbnail}>
-        {article.cover_image ? (
-
-          <img
-            src={article.cover_image}
-            alt={displayTitle}
-            className={styles.thumbnailImage}
-            loading="lazy"
-          />
-        ) : (
-          <div className={styles.thumbnailPlaceholder} aria-hidden="true">
-            📊
-          </div>
-        )}
-      </div>
+    <ClickableArticle className={cardClassName} href={href}>
+      {model.mediaPreview ? (
+        <div className={styles.mediaPreview}>
+          {model.mediaPreview.type === 'image' ? (
+            <img
+              src={model.mediaPreview.url}
+              alt={model.title}
+              className={styles.previewImage}
+              loading="lazy"
+            />
+          ) : model.mediaPreview.type === 'video' ? (
+            <video className={styles.previewVideo} preload="metadata" muted playsInline>
+              <source src={model.mediaPreview.url} />
+            </video>
+          ) : (
+            <div className={styles.externalVideo} aria-hidden="true" />
+          )}
+          {model.kind === 'video' ? <span className={styles.playIndicator}>Play</span> : null}
+        </div>
+      ) : null}
 
       <div className={styles.body}>
         <div className={styles.meta}>
-          <span className={styles.badge}>Outlook</span>
+          <span className={styles.badge}>{kindLabels[model.kind]}</span>
           <time className={styles.date} dateTime={article.created_at}>
             {formatDate(article.created_at)}
           </time>
         </div>
 
         <h3 className={styles.title}>
-          <Link href={`/outlook/${article.slug}`} className={styles.titleLink}>
-            {displayTitle}
+          <Link href={href} className={styles.titleLink}>
+            {model.title}
           </Link>
         </h3>
 
-        <p className={styles.excerpt}>{excerpt}</p>
+        {model.summary ? <p className={styles.excerpt}>{model.summary}</p> : null}
+
+        <OutlookSnapshot items={model.snapshot} />
 
         <div className={styles.footer}>
-          <span className={styles.author}>
-            oleh <strong>{article.author_name || 'Anonim'}</strong>
+          <span className={styles.author}>{model.authorHandle}</span>
+          <span className={styles.readTime}>
+            {model.kind === 'article' ? `${readTime} menit baca` : kindLabels[model.kind]}
           </span>
-          <span className={styles.readTime}>{readTime} menit baca</span>
         </div>
       </div>
     </ClickableArticle>

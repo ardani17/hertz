@@ -1,5 +1,6 @@
 import { describe, it, expect } from 'vitest';
 import {
+  buildOutlookCardModel,
   buildOutlookSnapshot,
   inferOutlookContentKind,
   isArticleContentBodyAllowed,
@@ -243,5 +244,30 @@ describe('Outlook metadata contract', () => {
     expect(isArticleContentBodyAllowed({ category: 'outlook', contentHtml: '<p> </p>' })).toBe(true);
     expect(isArticleContentBodyAllowed({ category: 'general', contentHtml: '' })).toBe(false);
     expect(isArticleContentBodyAllowed({ category: 'trading', contentHtml: '<p>Setup valid.</p>' })).toBe(true);
+  });
+});
+
+describe('Outlook card model', () => {
+  it('builds chart card model with image preview, summary, snapshot, and handle', () => {
+    const card = buildOutlookCardModel({
+      id: '1',
+      title: 'XAUUSD retest demand',
+      content_html: '<p>Wait candle confirmation.</p>',
+      slug: 'xauusd-retest-demand',
+      created_at: '2026-05-17T09:00:00.000Z',
+      author_name: 'trader',
+      outlook_metadata: { contentType: 'chart', bias: 'Watch', market: 'XAUUSD' },
+      media: [{ id: 'm1', file_url: '/chart.png', media_type: 'image' }],
+    });
+
+    expect(card.kind).toBe('chart');
+    expect(card.mediaPreview?.type).toBe('image');
+    expect(card.mediaPreview?.url).toBe('/chart.png');
+    expect(card.summary).toBe('Wait candle confirmation.');
+    expect(card.authorHandle).toBe('@trader');
+    expect(card.snapshot).toEqual([
+      { label: 'Bias', value: 'Watch' },
+      { label: 'Market', value: 'XAUUSD' },
+    ]);
   });
 });

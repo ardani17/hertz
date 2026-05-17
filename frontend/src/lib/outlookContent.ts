@@ -23,6 +23,26 @@ export interface OutlookSnapshotItem {
   value: string;
 }
 
+export interface OutlookCardModel {
+  kind: OutlookContentKind;
+  title: string;
+  summary: string;
+  authorHandle: string;
+  snapshot: OutlookSnapshotItem[];
+  mediaPreview: null | { type: 'image' | 'video' | 'external-video'; url: string };
+}
+
+export interface OutlookCardModelInput {
+  id: string;
+  title: string | null;
+  content_html: string;
+  slug: string;
+  created_at: string;
+  author_name: string | null;
+  outlook_metadata?: unknown;
+  media: OutlookMediaInput[];
+}
+
 function cleanString(value: unknown): string | null {
   return typeof value === 'string' ? value.trim() || null : null;
 }
@@ -111,4 +131,48 @@ export function isArticleContentBodyAllowed(input: {
 }): boolean {
   if (input.category === 'outlook') return true;
   return stripOutlookHtml(input.contentHtml).length > 0;
+}
+
+function buildAuthorHandle(authorName: string | null | undefined): string {
+  const clean = authorName?.trim();
+  if (!clean) return '@horizon';
+  return clean.startsWith('@') ? clean : `@${clean}`;
+}
+
+function pickMediaPreview(
+  kind: OutlookContentKind,
+  metadata: OutlookMetadataInput,
+  media: OutlookMediaInput[],
+): OutlookCardModel['mediaPreview'] {
+  if (metadata.videoUrl) return { type: 'external-video', url: metadata.videoUrl };
+
+  const video = media.find((item) => item.media_type === 'video');
+  if (video) return { type: 'video', url: video.file_url };
+
+  const image = media.find((item) => item.media_type === 'image');
+  if (image && (kind === 'chart' || kind === 'video')) {
+    return { type: 'image', url: image.file_url };
+  }
+
+  return null;
+}
+
+export function buildOutlookCardModel(input: OutlookCardModelInput): OutlookCardModel {
+  const metadata = normalizeOutlookMetadata(input.outlook_metadata);
+  const kind = inferOutlookContentKind({
+    metadata,
+    media: input.media,
+    contentHtml: input.content_html,
+  });
+  const summary = getOutlookSummary({ metadata, contentHtml: input.content_html });
+  const title = input.title?.trim() || summary || 'Outlook';
+
+  return {
+    kind,
+    title,
+    summary,
+    authorHandle: buildAuthorHandle(input.author_name),
+    snapshot: buildOutlookSnapshot(metadata),
+    mediaPreview: pickMediaPreview(kind, metadata, input.media),
+  };
 }

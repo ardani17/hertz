@@ -1,0 +1,54 @@
+.chips,
+.panel {
+  display: flex;
+  gap: 0.45rem;
+  margin: 0;
+}
+
+.chips {
+  flex-wrap: wrap;
+}
+
+.panel {
+  background: rgba(4, 19, 12, 0.72);
+  border: 1px solid rgba(19, 210, 123, 0.24);
+  border-radius: 8px;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(128px, 1fr));
+  padding: 0.75rem;
+}
+
+.item {
+  min-width: 0;
+}
+
+.chips .item {
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 999px;
+  display: inline-flex;
+  gap: 0.35rem;
+  padding: 0.32rem 0.55rem;
+}
+
+.panel .item {
+  display: grid;
+  gap: 0.22rem;
+}
+
+.item dt {
+  color: #8ea897;
+  font-size: 0.68rem;
+  font-weight: 800;
+  letter-spacing: 0;
+  text-transform: uppercase;
+}
+
+.item dd {
+  color: #effff5;
+  font-size: 0.76rem;
+  font-weight: 800;
+  margin: 0;
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
