@@ -28,6 +28,7 @@ interface OutlookEngagementProps {
   initialLikeCount: number;
   initialCommentCount: number;
   currentUser: MemberSessionUser | null;
+  contentLabel?: string;
 }
 
 function formatCommentDate(dateStr: string): string {
@@ -59,6 +60,7 @@ export function OutlookEngagement({
   initialLikeCount,
   initialCommentCount,
   currentUser,
+  contentLabel = 'Outlook',
 }: OutlookEngagementProps) {
   const [comments, setComments] = useState<CommentData[]>([]);
   const [commentsLoading, setCommentsLoading] = useState(true);
@@ -111,7 +113,7 @@ export function OutlookEngagement({
 
   async function toggleLike() {
     if (!currentUser) {
-      setMessage('Login Telegram member untuk menyukai Outlook.');
+      setMessage(`Login Telegram member untuk menyukai ${contentLabel}.`);
       return;
     }
     if (likePending) return;
@@ -141,7 +143,7 @@ export function OutlookEngagement({
     event.preventDefault();
     const content = comment.trim();
     if (!currentUser) {
-      setMessage('Login Telegram member untuk ikut berdiskusi.');
+      setMessage(`Login Telegram member untuk ikut berdiskusi di ${contentLabel}.`);
       return;
     }
     if (!content) {
@@ -191,7 +193,7 @@ export function OutlookEngagement({
     if (typeof navigator.share !== 'function') return;
     try {
       await navigator.share({ title, text: excerpt || title, url });
-      setMessage('Outlook siap dibagikan.');
+      setMessage(`${contentLabel} siap dibagikan.`);
       setShareOpen(false);
     } catch (error) {
       if (error instanceof DOMException && error.name === 'AbortError') return;
@@ -201,7 +203,7 @@ export function OutlookEngagement({
 
   return (
     <div className={styles.wrap}>
-      <div className={styles.actions} aria-label="Aksi Outlook">
+      <div className={styles.actions} aria-label={`Aksi ${contentLabel}`}>
         <a href="#comments" aria-label="Lihat komentar">
           <CommentIcon />
           <span>Komentar</span>
@@ -212,7 +214,7 @@ export function OutlookEngagement({
           className={liked ? styles.active : ''}
           onClick={toggleLike}
           disabled={likePending}
-          aria-label={liked ? 'Batal suka Outlook' : 'Suka Outlook'}
+          aria-label={liked ? `Batal suka ${contentLabel}` : `Suka ${contentLabel}`}
           aria-pressed={liked}
         >
           <LoveIcon />
@@ -222,7 +224,7 @@ export function OutlookEngagement({
         <button
           type="button"
           onClick={() => setShareOpen((open) => !open)}
-          aria-label="Bagikan Outlook"
+          aria-label={`Bagikan ${contentLabel}`}
           aria-expanded={shareOpen}
         >
           <ShareIcon />
@@ -235,7 +237,7 @@ export function OutlookEngagement({
       {shareOpen ? (
         <div className={styles.sharePanel}>
           <div className={styles.shareHeader}>
-            <strong>Bagikan Outlook</strong>
+            <strong>Bagikan {contentLabel}</strong>
             <button type="button" onClick={() => setShareOpen(false)} aria-label="Tutup share panel">
               Tutup
             </button>

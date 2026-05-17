@@ -3,9 +3,7 @@ import Link from 'next/link';
 import { query, queryOne } from '@shared/db';
 import { ArticleMeta } from '@/components/article/ArticleMeta';
 import { ArticleContent } from '@/components/article/ArticleContent';
-import { ShareButtons } from '@/components/article/ShareButtons';
-import { CommentSection } from '@/components/article/CommentSection';
-import { LikeButton } from '@/components/article/LikeButton';
+import { OutlookEngagement } from '@/components/outlook';
 import { HertzAppShell } from '@/components/hertz/HertzAppShell';
 import { getCurrentMember } from '@/lib/memberAuth';
 import styles from './page.module.css';
@@ -194,7 +192,7 @@ export default async function BlogDetailPage({
     <>
       <script
         type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd).replace(/</g, '\\u003c') }}
       />
       <HertzAppShell
         active="blog"
@@ -227,29 +225,17 @@ export default async function BlogDetailPage({
             )}
 
             <ArticleContent html={article.content_html} />
-
-            <div className={styles.stats}>
-              <span className={styles.statItem}>
-                ❤️ {article.likeCount} suka
-              </span>
-              <span className={styles.statItem}>
-                💬 {article.commentCount} komentar
-              </span>
-            </div>
           </article>
 
-          <ShareButtons
+          <OutlookEngagement
+            articleId={article.id}
             title={displayTitle}
             excerpt={excerpt}
             url={blogUrl}
-          />
-
-          <CommentSection articleId={article.id} currentUser={currentUser} />
-
-          <LikeButton
-            articleId={article.id}
             initialLikeCount={article.likeCount}
+            initialCommentCount={article.commentCount}
             currentUser={currentUser}
+            contentLabel="Blog"
           />
         </div>
       </HertzAppShell>
