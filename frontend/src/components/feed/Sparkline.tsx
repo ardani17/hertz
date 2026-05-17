@@ -36,7 +36,11 @@ export function Sparkline({
 }) {
   return (
     <ResponsiveContainer width="100%" height={height}>
-      <AreaChart data={toSparklineData(points)} margin={{ top: 4, right: 0, bottom: 2, left: 0 }}>
+      <AreaChart
+        accessibilityLayer={false}
+        data={toSparklineData(points)}
+        margin={{ top: 4, right: 0, bottom: 2, left: 0 }}
+      >
         <defs>
           <linearGradient id={gradientId} x1="0" y1="0" x2="0" y2="1">
             <stop offset="0%" stopColor={color} stopOpacity={0.36} />

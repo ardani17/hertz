@@ -7,6 +7,8 @@ interface OutlookContentProps {
 
 /** Renders Outlook article HTML with XSS sanitization */
 export function OutlookContent({ html }: OutlookContentProps) {
+  if (!html.replace(/<[^>]*>/g, '').trim()) return null;
+
   return (
     <div
       className={styles.content}

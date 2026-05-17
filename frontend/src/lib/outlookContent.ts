@@ -43,6 +43,25 @@ export interface OutlookCardModelInput {
   media: OutlookMediaInput[];
 }
 
+export interface OutlookDetailModel {
+  kind: OutlookContentKind;
+  title: string;
+  summary: string;
+  snapshot: OutlookSnapshotItem[];
+  keyPoints: string[];
+  primaryMedia: null | { type: 'image' | 'video' | 'external-video'; url: string };
+  galleryMedia: OutlookMediaInput[];
+  hasBody: boolean;
+}
+
+export interface OutlookDetailModelInput {
+  title: string | null;
+  content_html: string;
+  author_name: string | null;
+  outlook_metadata?: unknown;
+  media: OutlookMediaInput[];
+}
+
 function cleanString(value: unknown): string | null {
   return typeof value === 'string' ? value.trim() || null : null;
 }
@@ -174,5 +193,33 @@ export function buildOutlookCardModel(input: OutlookCardModelInput): OutlookCard
     authorHandle: buildAuthorHandle(input.author_name),
     snapshot: buildOutlookSnapshot(metadata),
     mediaPreview: pickMediaPreview(kind, metadata, input.media),
+  };
+}
+
+export function buildOutlookDetailModel(input: OutlookDetailModelInput): OutlookDetailModel {
+  const metadata = normalizeOutlookMetadata(input.outlook_metadata);
+  const kind = inferOutlookContentKind({
+    metadata,
+    media: input.media,
+    contentHtml: input.content_html,
+  });
+  const summary = getOutlookSummary({ metadata, contentHtml: input.content_html, maxLength: 260 });
+  const primaryMedia = pickMediaPreview(kind, metadata, input.media);
+  const title = input.title?.trim() || summary || 'Outlook';
+  const keyPoints = Array.isArray(metadata.keyPoints) ? metadata.keyPoints : [];
+
+  const galleryMedia = primaryMedia?.type === 'image' || primaryMedia?.type === 'video'
+    ? input.media.filter((item) => item.file_url !== primaryMedia.url)
+    : input.media;
+
+  return {
+    kind,
+    title,
+    summary,
+    snapshot: buildOutlookSnapshot(metadata),
+    keyPoints,
+    primaryMedia,
+    galleryMedia,
+    hasBody: stripOutlookHtml(input.content_html).length > 0,
   };
 }

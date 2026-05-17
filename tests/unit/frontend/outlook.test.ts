@@ -1,6 +1,7 @@
 import { describe, it, expect } from 'vitest';
 import {
   buildOutlookCardModel,
+  buildOutlookDetailModel,
   buildOutlookSnapshot,
   inferOutlookContentKind,
   isArticleContentBodyAllowed,
@@ -269,5 +270,28 @@ describe('Outlook card model', () => {
       { label: 'Bias', value: 'Watch' },
       { label: 'Market', value: 'XAUUSD' },
     ]);
+  });
+});
+
+describe('Outlook detail model', () => {
+  it('builds video detail model with external primary media and optional body', () => {
+    const detail = buildOutlookDetailModel({
+      title: 'NASDAQ session prep',
+      content_html: '',
+      author_name: 'horizon',
+      outlook_metadata: {
+        contentType: 'video',
+        videoUrl: 'https://example.com/session.mp4',
+        summary: 'Watch liquidity above previous high.',
+        bias: 'Neutral Bullish',
+      },
+      media: [],
+    });
+
+    expect(detail.kind).toBe('video');
+    expect(detail.primaryMedia).toEqual({ type: 'external-video', url: 'https://example.com/session.mp4' });
+    expect(detail.hasBody).toBe(false);
+    expect(detail.summary).toBe('Watch liquidity above previous high.');
+    expect(detail.snapshot).toEqual([{ label: 'Bias', value: 'Neutral Bullish' }]);
   });
 });

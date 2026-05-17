@@ -1,13 +1,14 @@
 import { notFound } from 'next/navigation';
 import Link from 'next/link';
 import { query, queryOne } from '@shared/db';
-import { OutlookContent } from '@/components/outlook';
+import { OutlookContent, OutlookSnapshot } from '@/components/outlook';
 import { ArticleMeta } from '@/components/article/ArticleMeta';
 import { ShareButtons } from '@/components/article/ShareButtons';
 import { CommentSection } from '@/components/article/CommentSection';
 import { LikeButton } from '@/components/article/LikeButton';
 import { HertzAppShell } from '@/components/hertz/HertzAppShell';
 import { getCurrentMember } from '@/lib/memberAuth';
+import { buildOutlookDetailModel } from '@/lib/outlookContent';
 import styles from './page.module.css';
 
 export const dynamic = 'force-dynamic';
@@ -21,6 +22,7 @@ interface ArticleRow {
   status: string;
   created_at: Date;
   author_name: string | null;
+  outlook_metadata: unknown;
 }
 
 interface MediaRow {
@@ -41,15 +43,20 @@ interface OutlookDetail {
   slug: string;
   created_at: string;
   author_name: string | null;
+  outlook_metadata: unknown;
   media: Array<{ id: string; file_url: string; media_type: string }>;
   commentCount: number;
   likeCount: number;
 }
 
+function isDirectVideoUrl(url: string): boolean {
+  return /\.(mp4|webm|ogg)(\?.*)?$/i.test(url);
+}
+
 async function getOutlookBySlug(slug: string): Promise<OutlookDetail | null> {
   try {
     const article = await queryOne<ArticleRow>(
-      `SELECT a.id, a.title, a.content_html, a.category,
+      `SELECT a.id, a.title, a.content_html, a.category, a.outlook_metadata,
               a.slug, a.status, a.created_at, u.username AS author_name
        FROM articles a
        LEFT JOIN users u ON a.author_id = u.id
@@ -85,6 +92,7 @@ async function getOutlookBySlug(slug: string): Promise<OutlookDetail | null> {
           ? article.created_at.toISOString()
           : String(article.created_at),
       author_name: article.author_name,
+      outlook_metadata: article.outlook_metadata,
       media: mediaResult.rows,
       commentCount: parseInt(commentCountResult?.count || '0', 10),
       likeCount: parseInt(likeCountResult?.count || '0', 10),
@@ -108,14 +116,13 @@ export async function generateMetadata({
 
   const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || 'http://localhost:3000';
   const outlookUrl = `${baseUrl}/outlook/${article.slug}`;
+  const detail = buildOutlookDetailModel(article);
 
-  const plainText = article.content_html.replace(/<[^>]*>/g, '').trim();
-  const description =
-    plainText.length > 160
-      ? plainText.slice(0, 160).trimEnd() + '…'
-      : plainText;
+  const description = detail.summary.length > 160
+    ? detail.summary.slice(0, 160).trimEnd() + '…'
+    : detail.summary;
 
-  const title = article.title || 'Outlook';
+  const title = detail.title;
 
   // Use first image media as og:image, fallback to platform default
   const firstImage = article.media.find((m) => m.media_type === 'image');
@@ -155,24 +162,12 @@ export default async function OutlookDetailPage({
     notFound();
   }
 
-  const displayTitle =
-    article.title ||
-    article.content_html.replace(/<[^>]*>/g, '').trim().slice(0, 80);
-
-  const plainText = article.content_html.replace(/<[^>]*>/g, '').trim();
-  const excerpt = plainText.length > 120
-    ? plainText.slice(0, 120).trimEnd() + '…'
-    : plainText;
-
   const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || 'http://localhost:3000';
   const outlookUrl = `${baseUrl}/outlook/${article.slug}`;
-
-  // Find cover image (first image media)
-  const coverImage = article.media.find((m) => m.media_type === 'image');
-  // Additional media (excluding cover)
-  const additionalMedia = coverImage
-    ? article.media.filter((m) => m.id !== coverImage.id)
-    : article.media;
+  const detail = buildOutlookDetailModel(article);
+  const excerpt = detail.summary;
+  const displayTitle = detail.title;
+  const primaryMedia = detail.primaryMedia;
 
   // JSON-LD structured data (Article schema)
   const jsonLd = {
@@ -180,7 +175,7 @@ export default async function OutlookDetailPage({
     '@type': 'Article',
     headline: displayTitle,
     description: excerpt,
-    image: coverImage?.file_url || `${baseUrl}/images/og-default.svg`,
+    image: article.media.find((m) => m.media_type === 'image')?.file_url || `${baseUrl}/images/og-default.svg`,
     datePublished: article.created_at,
     author: {
       '@type': 'Person',
@@ -206,35 +201,66 @@ export default async function OutlookDetailPage({
         currentUser={currentUser}
       >
         <div className={styles.content}>
-        <Link href="/outlook" className={styles.backLink}>
-          ← Kembali ke Outlook
-        </Link>
+          <Link href="/outlook" className={styles.backLink}>
+            ← Kembali ke Outlook
+          </Link>
 
         <article className={styles.article}>
           <h1 className={styles.title}>{displayTitle}</h1>
 
-          <ArticleMeta
-            authorName={article.author_name}
-            createdAt={article.created_at}
-            contentHtml={article.content_html}
-            category={article.category}
-          />
-
-          {coverImage && (
-
-            <img
-              src={coverImage.file_url}
-              alt={displayTitle}
-              className={styles.coverImage}
+          <div className={styles.metaBlock}>
+            <ArticleMeta
+              authorName={article.author_name}
+              createdAt={article.created_at}
+              contentHtml={article.content_html}
+              category={article.category}
             />
-          )}
+          </div>
 
-          <OutlookContent html={article.content_html} />
+          {primaryMedia ? (
+            <div className={styles.primaryMedia}>
+              {primaryMedia.type === 'image' ? (
+                <img
+                  src={primaryMedia.url}
+                  alt={displayTitle}
+                  className={styles.primaryImage}
+                />
+              ) : primaryMedia.type === 'video' || isDirectVideoUrl(primaryMedia.url) ? (
+                <video className={styles.primaryVideo} controls preload="metadata">
+                  <source src={primaryMedia.url} />
+                  Browser Anda tidak mendukung video.
+                </video>
+              ) : (
+                <iframe
+                  className={styles.primaryEmbed}
+                  src={primaryMedia.url}
+                  title={displayTitle}
+                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                  allowFullScreen
+                />
+              )}
+            </div>
+          ) : null}
 
-          {additionalMedia.length > 0 && (
+          {detail.summary ? <p className={styles.summary}>{detail.summary}</p> : null}
+
+          <OutlookSnapshot items={detail.snapshot} variant="panel" />
+
+          {detail.keyPoints.length > 0 ? (
+            <section className={styles.keyPoints} aria-label="Key points">
+              <h2>Key Points</h2>
+              <ul>
+                {detail.keyPoints.map((point) => <li key={point}>{point}</li>)}
+              </ul>
+            </section>
+          ) : null}
+
+          {detail.hasBody ? <OutlookContent html={article.content_html} /> : null}
+
+          {detail.galleryMedia.length > 0 && (
             <section className={styles.mediaSection} aria-label="Media artikel">
               <div className={styles.mediaGrid}>
-                {additionalMedia.map((m) => (
+                {detail.galleryMedia.map((m) => (
                   <div key={m.id} className={styles.mediaItem}>
                     {m.media_type === 'video' ? (
                       <video controls preload="metadata">
@@ -242,7 +268,6 @@ export default async function OutlookDetailPage({
                         Browser Anda tidak mendukung video.
                       </video>
                     ) : (
-
                       <img
                         src={m.file_url}
                         alt={displayTitle}
