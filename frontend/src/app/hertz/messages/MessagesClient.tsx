@@ -1,6 +1,7 @@
 'use client';
 
 import { useCallback, useEffect, useState } from 'react';
+import { ImagePlus, SendHorizontal } from 'lucide-react';
 import { HertzAppShell } from '@/components/hertz/HertzAppShell';
 import { HertzTelegramLogin } from '@/components/feed/HertzTelegramLogin';
 import { MoreIcon } from '@/components/feed/HertzIcons';
@@ -9,15 +10,20 @@ import styles from './page.module.css';
 
 interface Conversation {
   id: string;
+  archivedAt?: string | null;
+  lastReadAt?: string | null;
+  lastMessageAt?: string | null;
   unreadCount: number;
   lastMessageBody: string | null;
-  peer: { id: string; displayName: string; username: string | null; role?: string | null } | null;
+  peer: { id: string; displayName: string; username: string | null; avatarUrl?: string | null; role?: string | null } | null;
 }
 
 interface Message {
   id: string;
+  senderId: string;
   body: string | null;
-  sender: { displayName: string };
+  createdAt: string;
+  sender: { id?: string; displayName: string; username?: string | null; avatarUrl?: string | null };
   attachments: Array<{ id: string; url: string; mimeType: string }>;
   canDelete?: boolean;
 }
@@ -38,6 +44,15 @@ interface PendingAttachment {
 
 export const HERTZ_DM_POLL_INTERVAL_MS = 7000;
 
+const filterLabels = {
+  inbox: 'All',
+  unread: 'Unread',
+  admin: 'Admin',
+  archived: 'Archived',
+} as const;
+
+export type DmMessageSide = 'incoming' | 'outgoing';
+
 export function getDmAccessState(user: Pick<MemberSessionUser, 'id'> | null) {
   if (!user) {
     return {
@@ -56,6 +71,31 @@ export function getDmAccessState(user: Pick<MemberSessionUser, 'id'> | null) {
 
 export function canAddDmImages(currentCount: number, incomingCount: number) {
   return currentCount < 4 && currentCount + incomingCount <= 4;
+}
+
+export function getDmInitial(displayName: string | null | undefined, username: string | null | undefined) {
+  return (displayName?.trim().charAt(0) || username?.trim().charAt(0) || 'H').toUpperCase();
+}
+
+export function getDmMessageSide(senderId: string, currentUserId: string | null | undefined): DmMessageSide {
+  return senderId === currentUserId ? 'outgoing' : 'incoming';
+}
+
+export function getDmPreviewText(body: string | null | undefined, maxLength = 70): string {
+  const text = body?.trim() || 'Gambar';
+  if (text.length <= maxLength) return text;
+  return `${text.slice(0, maxLength).trimEnd()}...`;
+}
+
+export function formatDmTimestamp(value: string | null | undefined): string {
+  if (!value) return '';
+  return new Date(value).toLocaleString('id-ID', {
+    day: '2-digit',
+    month: 'short',
+    year: 'numeric',
+    hour: '2-digit',
+    minute: '2-digit',
+  });
 }
 
 export function getDmThreadMenuActions({ active, archived }: { active: boolean; archived: boolean }) {
@@ -277,20 +317,34 @@ export function HertzMessagesClient() {
       ) : (
       <div className={`${styles.dmLayout} ${mobileThreadOpen ? styles.threadOpen : ''}`}>
       <aside className={styles.sidebar}>
-        {status ? <p>{status}</p> : null}
+        <div className={styles.sidebarHeader}>
+          <div>
+            <h2>Messages</h2>
+            <span>{conversations.length} conversations</span>
+          </div>
+        </div>
+        {status ? <p className={styles.status}>{status}</p> : null}
         <div className={styles.filters}>
           {(['inbox', 'unread', 'admin', 'archived'] as const).map((item) => (
             <button className={filter === item ? styles.activeFilter : ''} type="button" key={item} onClick={() => setFilter(item)}>
-              {item}
+              {filterLabels[item]}
             </button>
           ))}
         </div>
-        <input className={styles.search} value={query} onChange={(event) => void searchMembers(event.target.value)} placeholder="Cari member..." />
+        <input className={styles.search} value={query} onChange={(event) => void searchMembers(event.target.value)} placeholder="Search Direct Messages" />
         {members.length ? (
-          <div className={styles.list}>
+          <div className={styles.searchResults}>
             {members.map((member) => (
               <button className={styles.item} type="button" key={member.id} onClick={() => void startConversation(member.id)}>
-                {member.display_name ?? member.username ?? 'Member Horizon'}
+                <span className={styles.itemAvatar} aria-hidden="true">
+                  {getDmInitial(member.display_name, member.username)}
+                </span>
+                <span className={styles.itemMain}>
+                  <span className={styles.itemTop}>
+                    <strong>{member.display_name ?? member.username ?? 'Member Horizon'}</strong>
+                  </span>
+                  <span className={styles.itemMeta}>{member.username ? `@${member.username}` : 'HERTZ member'}</span>
+                </span>
               </button>
             ))}
           </div>
@@ -310,8 +364,19 @@ export function HertzMessagesClient() {
                 setMobileThreadOpen(true);
               }}
             >
-              <strong>{item.peer?.displayName ?? `Conversation ${item.id.slice(0, 8)}`}</strong>
-              <span>{item.lastMessageBody ?? 'Belum ada pesan'}</span>
+              <span className={styles.itemAvatar} aria-hidden="true">
+                {getDmInitial(item.peer?.displayName, item.peer?.username)}
+              </span>
+              <span className={styles.itemMain}>
+                <span className={styles.itemTop}>
+                  <strong>{item.peer?.displayName ?? `Conversation ${item.id.slice(0, 8)}`}</strong>
+                  <time>{formatDmTimestamp(item.lastMessageAt)}</time>
+                </span>
+                <span className={styles.itemMeta}>
+                  {item.peer?.username ? `@${item.peer.username}` : 'HERTZ member'}
+                </span>
+                <span className={styles.itemPreview}>{getDmPreviewText(item.lastMessageBody)}</span>
+              </span>
               {item.unreadCount > 0 ? <em>{item.unreadCount}</em> : null}
             </button>
           ))}
@@ -322,6 +387,9 @@ export function HertzMessagesClient() {
           <button type="button" className={styles.backButton} onClick={() => setMobileThreadOpen(false)}>
             Inbox
           </button>
+          <div className={styles.threadPeerAvatar} aria-hidden="true">
+            {getDmInitial(activeConversation?.peer?.displayName, activeConversation?.peer?.username)}
+          </div>
           <div>
             <strong>{activeConversation?.peer?.displayName ?? 'Pilih conversation'}</strong>
             <span>{activeConversation?.peer?.username ? `@${activeConversation.peer.username}` : 'HERTZ DM'}</span>
@@ -357,23 +425,48 @@ export function HertzMessagesClient() {
           </div>
         </div>
         <div className={styles.messages}>
-          {messages.map((item) => (
-            <div className={styles.bubble} key={item.id}>
-              <strong>{item.sender.displayName}</strong>
-              <span>{item.body ?? 'Pesan dihapus'}</span>
-              {item.attachments.length ? (
-                <div className={styles.attachments}>
-                  {item.attachments.map((attachment) => (
-                    <img key={attachment.id} src={attachment.url} alt="DM attachment" />
-                  ))}
-                </div>
-              ) : null}
-              <div className={styles.messageActions}>
-                {item.canDelete ? <button type="button" onClick={() => deleteMessage(item.id)}>Delete</button> : null}
-                <button type="button" onClick={() => reportMessage(item.id)}>Report</button>
-              </div>
+          {!activeId ? (
+            <div className={styles.emptyThread}>
+              <h2>Select a message</h2>
+              <p>Pilih conversation atau cari member untuk mulai Direct Message.</p>
             </div>
-          ))}
+          ) : messages.length === 0 ? (
+            <div className={styles.emptyThread}>
+              <h2>Belum ada pesan</h2>
+              <p>Kirim pesan pertama ke conversation ini.</p>
+            </div>
+          ) : (
+            messages.map((item) => {
+              const side = getDmMessageSide(item.senderId, currentUser?.id);
+              return (
+                <div className={`${styles.bubbleRow} ${side === 'outgoing' ? styles.outgoing : styles.incoming}`} key={item.id}>
+                  {side === 'incoming' ? (
+                    <span className={styles.messageAvatar} aria-hidden="true">
+                      {getDmInitial(item.sender.displayName, item.sender.username)}
+                    </span>
+                  ) : null}
+                  <div className={styles.bubble}>
+                    <div className={styles.bubbleMeta}>
+                      <strong>{side === 'outgoing' ? 'Anda' : item.sender.displayName}</strong>
+                      <time>{formatDmTimestamp(item.createdAt)}</time>
+                    </div>
+                    <span>{item.body ?? 'Pesan dihapus'}</span>
+                    {item.attachments.length ? (
+                      <div className={styles.attachments}>
+                        {item.attachments.map((attachment) => (
+                          <img key={attachment.id} src={attachment.url} alt="DM attachment" />
+                        ))}
+                      </div>
+                    ) : null}
+                    <div className={styles.messageActions}>
+                      {item.canDelete ? <button type="button" onClick={() => deleteMessage(item.id)}>Delete</button> : null}
+                      <button type="button" onClick={() => reportMessage(item.id)}>Report</button>
+                    </div>
+                  </div>
+                </div>
+              );
+            })
+          )}
         </div>
         {attachments.length ? (
           <div className={styles.pendingAttachments}>
@@ -382,15 +475,18 @@ export function HertzMessagesClient() {
                 type="button"
                 key={attachment.fileUrl}
                 onClick={() => setAttachments((items) => items.filter((item) => item.fileUrl !== attachment.fileUrl))}
+                aria-label={`Hapus attachment ${attachment.name}`}
               >
-                {attachment.name}
+                <img src={attachment.fileUrl} alt="" />
+                <span>{attachment.name}</span>
               </button>
             ))}
           </div>
         ) : null}
         <div className={styles.composer}>
           <label className={styles.attachButton}>
-            Gambar
+            <ImagePlus aria-hidden="true" />
+            <span>Gambar</span>
             <input
               type="file"
               accept="image/jpeg,image/png,image/webp"
@@ -402,8 +498,11 @@ export function HertzMessagesClient() {
               }}
             />
           </label>
-          <input value={body} onChange={(event) => setBody(event.target.value)} placeholder="Tulis pesan..." />
-          <button type="button" onClick={send} disabled={!activeId || uploading}>Kirim</button>
+          <input value={body} onChange={(event) => setBody(event.target.value)} placeholder={activeId ? 'Start a new message' : 'Pilih conversation dulu'} />
+          <button type="button" onClick={send} disabled={!activeId || uploading} aria-label="Kirim pesan">
+            <SendHorizontal aria-hidden="true" />
+            <span>Kirim</span>
+          </button>
         </div>
       </section>
       </div>
