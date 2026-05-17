@@ -2,7 +2,7 @@ import { notFound } from 'next/navigation';
 import Link from 'next/link';
 import { query, queryOne } from '@shared/db';
 import { OutlookContent, OutlookSnapshot } from '@/components/outlook';
-import { ArticleMeta } from '@/components/article/ArticleMeta';
+import { estimateReadTime, formatDate } from '@/components/article/ArticleMeta';
 import { ShareButtons } from '@/components/article/ShareButtons';
 import { CommentSection } from '@/components/article/CommentSection';
 import { LikeButton } from '@/components/article/LikeButton';
@@ -35,6 +35,12 @@ interface CountRow {
   count: string;
 }
 
+const kindLabels = {
+  video: 'Video Outlook',
+  article: 'Long Read',
+  chart: 'Chart Note',
+} as const;
+
 interface OutlookDetail {
   id: string;
   title: string | null;
@@ -51,6 +57,12 @@ interface OutlookDetail {
 
 function isDirectVideoUrl(url: string): boolean {
   return /\.(mp4|webm|ogg)(\?.*)?$/i.test(url);
+}
+
+function buildAuthorHandle(authorName: string | null): string {
+  const clean = authorName?.trim();
+  if (!clean) return '@horizon';
+  return clean.startsWith('@') ? clean : `@${clean}`;
 }
 
 async function getOutlookBySlug(slug: string): Promise<OutlookDetail | null> {
@@ -168,6 +180,9 @@ export default async function OutlookDetailPage({
   const excerpt = detail.summary;
   const displayTitle = detail.title;
   const primaryMedia = detail.primaryMedia;
+  const authorHandle = buildAuthorHandle(article.author_name);
+  const authorInitial = (article.author_name?.trim().charAt(0) || 'H').toUpperCase();
+  const readTime = estimateReadTime(article.content_html);
 
   // JSON-LD structured data (Article schema)
   const jsonLd = {
@@ -202,20 +217,29 @@ export default async function OutlookDetailPage({
       >
         <div className={styles.content}>
           <Link href="/outlook" className={styles.backLink}>
-            ← Kembali ke Outlook
+            Kembali ke Outlook
           </Link>
 
-        <article className={styles.article}>
-          <h1 className={styles.title}>{displayTitle}</h1>
+          <article className={styles.article}>
+            <header className={styles.postHeader}>
+              <div className={styles.spineNode} aria-hidden="true">
+                <span>{detail.kind === 'video' ? 'V' : detail.kind === 'chart' ? 'C' : 'A'}</span>
+              </div>
+              <div className={styles.avatar} aria-hidden="true">{authorInitial}</div>
+              <div className={styles.headerBody}>
+                <div className={styles.authorLine}>
+                  <strong>{article.author_name || 'Horizon'}</strong>
+                  <span>{authorHandle}</span>
+                  <span>{formatDate(article.created_at)}</span>
+                </div>
+                <div className={styles.metaLine}>
+                  <span className={styles.kindBadge}>{kindLabels[detail.kind]}</span>
+                  <span>{detail.kind === 'article' ? `${readTime} menit baca` : 'Market direction'}</span>
+                </div>
+              </div>
+            </header>
 
-          <div className={styles.metaBlock}>
-            <ArticleMeta
-              authorName={article.author_name}
-              createdAt={article.created_at}
-              contentHtml={article.content_html}
-              category={article.category}
-            />
-          </div>
+            <h1 className={styles.title}>{displayTitle}</h1>
 
           {primaryMedia ? (
             <div className={styles.primaryMedia}>
@@ -281,16 +305,12 @@ export default async function OutlookDetailPage({
           )}
 
           <div className={styles.stats}>
-            <span className={styles.statItem}>
-              ❤️ {article.likeCount} suka
-            </span>
-            <span className={styles.statItem}>
-              💬 {article.commentCount} komentar
-            </span>
+            <span className={styles.statItem}>{article.likeCount} suka</span>
+            <span className={styles.statItem}>{article.commentCount} komentar</span>
           </div>
         </article>
 
-        <div className={styles.interactions}>
+        <div className={styles.actionDock}>
           <ShareButtons
             title={displayTitle}
             excerpt={excerpt}
@@ -303,7 +323,9 @@ export default async function OutlookDetailPage({
           />
         </div>
 
-        <CommentSection articleId={article.id} />
+        <div className={styles.comments}>
+          <CommentSection articleId={article.id} />
+        </div>
         </div>
       </HertzAppShell>
     </>
