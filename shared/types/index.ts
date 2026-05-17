@@ -133,6 +133,18 @@ export interface User {
   created_at: Date;
 }
 
+export interface OutlookMetadata {
+  contentType?: 'video' | 'article' | 'chart' | null;
+  videoUrl?: string | null;
+  summary?: string | null;
+  bias?: string | null;
+  timeframe?: string | null;
+  market?: string | null;
+  sentiment?: string | null;
+  risk?: string | null;
+  keyPoints?: string[] | null;
+}
+
 /** Articles table entity */
 export interface Article {
   id: string;
@@ -147,6 +159,7 @@ export interface Article {
   telegram_message_id: number | null;
   bot_reply_message_id: number | null;
   telegram_chat_id: number | null;
+  outlook_metadata?: OutlookMetadata | null;
 }
 
 /** Media table entity */

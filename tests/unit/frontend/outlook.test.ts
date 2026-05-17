@@ -1,4 +1,10 @@
 import { describe, it, expect } from 'vitest';
+import {
+  buildOutlookSnapshot,
+  inferOutlookContentKind,
+  normalizeOutlookMetadata,
+  stripOutlookHtml,
+} from '../../../frontend/src/lib/outlookContent';
 
 // ---- Pure logic extracted from Outlook components for testing ----
 
@@ -147,5 +153,68 @@ describe('Outlook listing sort order', () => {
     expect(sorted[0].id).toBe('2');
     expect(sorted[1].id).toBe('3');
     expect(sorted[2].id).toBe('1');
+  });
+});
+
+describe('Outlook metadata contract', () => {
+  it('infers article when metadata and media are missing', () => {
+    expect(inferOutlookContentKind({
+      metadata: normalizeOutlookMetadata(null),
+      media: [],
+      contentHtml: '<p>Market masih menunggu breakout.</p>',
+    })).toBe('article');
+  });
+
+  it('infers video from external video URL', () => {
+    expect(inferOutlookContentKind({
+      metadata: { videoUrl: 'https://example.com/recording.mp4' },
+      media: [],
+      contentHtml: '',
+    })).toBe('video');
+  });
+
+  it('infers video from uploaded video media', () => {
+    expect(inferOutlookContentKind({
+      metadata: {},
+      media: [{ id: 'm1', file_url: '/recording.mp4', media_type: 'video' }],
+      contentHtml: '<p>US session prep.</p>',
+    })).toBe('video');
+  });
+
+  it('infers chart from image media with short body', () => {
+    expect(inferOutlookContentKind({
+      metadata: {},
+      media: [{ id: 'm1', file_url: '/chart.png', media_type: 'image' }],
+      contentHtml: '<p>XAUUSD retest demand.</p>',
+    })).toBe('chart');
+  });
+
+  it('keeps long body with image as article', () => {
+    const longBody = `<p>${'market context '.repeat(40)}</p>`;
+    expect(inferOutlookContentKind({
+      metadata: {},
+      media: [{ id: 'm1', file_url: '/chart.png', media_type: 'image' }],
+      contentHtml: longBody,
+    })).toBe('article');
+  });
+
+  it('builds snapshot chips without empty fields', () => {
+    expect(buildOutlookSnapshot({
+      bias: 'Watch',
+      timeframe: '',
+      market: 'XAUUSD',
+      sentiment: null,
+      risk: 'Break demand',
+      keyPoints: ['Wait confirmation', 'Invalid below demand'],
+    })).toEqual([
+      { label: 'Bias', value: 'Watch' },
+      { label: 'Market', value: 'XAUUSD' },
+      { label: 'Risk', value: 'Break demand' },
+    ]);
+  });
+
+  it('handles empty Outlook body as empty plain text', () => {
+    expect(stripOutlookHtml('')).toBe('');
+    expect(stripOutlookHtml('<p> </p>')).toBe('');
   });
 });

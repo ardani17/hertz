@@ -72,7 +72,7 @@
 - Read: `node_modules/next/dist/docs/01-app/index.md`
 - Read: `node_modules/next/dist/docs/01-app/01-getting-started/15-route-handlers.md`
 
-- [ ] **Step 1: Read approved spec**
+- [x] **Step 1: Read approved spec**
 
 Run:
 
@@ -86,7 +86,7 @@ Expected:
 - Confirm optional metadata rule.
 - Confirm mobile bottom nav consistency requirement.
 
-- [ ] **Step 2: Read Next.js app/router docs before edits**
+- [x] **Step 2: Read Next.js app/router docs before edits**
 
 Run:
 
@@ -99,7 +99,7 @@ Expected:
 
 - Route handler and app router behavior is checked against this installed Next.js version before code changes.
 
-- [ ] **Step 3: Capture current git status**
+- [x] **Step 3: Capture current git status**
 
 Run:
 
@@ -112,7 +112,7 @@ Expected:
 - Existing unrelated dirty files are visible.
 - Do not stage `.env.example`, `docker-compose.yml`, `.superpowers/`, or `docs/teswebimg/`.
 
-- [ ] **Checklist selesai Baseline Review**
+- [x] **Checklist selesai Baseline Review**
 
 Centang setelah semua context read selesai.
 
@@ -126,7 +126,7 @@ Centang setelah semua context read selesai.
 - Create: `frontend/src/lib/outlookContent.ts`
 - Test: `tests/unit/frontend/outlook.test.ts`
 
-- [ ] **Step 1: Add failing tests for metadata normalization and type inference**
+- [x] **Step 1: Add failing tests for metadata normalization and type inference**
 
 Add tests to `tests/unit/frontend/outlook.test.ts` covering:
 
@@ -197,7 +197,7 @@ Expected:
 
 - FAIL because `frontend/src/lib/outlookContent.ts` does not exist yet.
 
-- [ ] **Step 2: Add migration for optional JSONB metadata**
+- [x] **Step 2: Add migration for optional JSONB metadata**
 
 Create `db/migrations/012_add_outlook_metadata.sql`:
 
@@ -220,7 +220,7 @@ Expected:
 - Existing articles remain valid.
 - Missing metadata reads as `{}`.
 
-- [ ] **Step 3: Update shared article types**
+- [x] **Step 3: Update shared article types**
 
 Modify `shared/types/index.ts`:
 
@@ -259,7 +259,7 @@ Expected:
 - Existing imports of `Article` still compile.
 - Outlook metadata remains optional for non-Outlook rows.
 
-- [ ] **Step 4: Implement pure Outlook mapping helper**
+- [x] **Step 4: Implement pure Outlook mapping helper**
 
 Create `frontend/src/lib/outlookContent.ts` with exported functions:
 
@@ -360,7 +360,7 @@ Expected:
 - Helper contains no React code and is unit-testable.
 - Empty fields normalize to omitted display state.
 
-- [ ] **Step 5: Verify Task 1**
+- [x] **Step 5: Verify Task 1**
 
 Run:
 
@@ -374,7 +374,7 @@ Expected:
 - Outlook unit tests pass.
 - Lint pass.
 
-- [ ] **Step 6: Commit Task 1**
+- [x] **Step 6: Commit Task 1**
 
 Run:
 
@@ -383,7 +383,7 @@ git add db/migrations/012_add_outlook_metadata.sql shared/types/index.ts fronten
 git commit -m "Add Outlook metadata mapping contract"
 ```
 
-- [ ] **Checklist selesai Task 1**
+- [x] **Checklist selesai Task 1**
 
 Centang setelah tests pass dan commit dibuat.
 
