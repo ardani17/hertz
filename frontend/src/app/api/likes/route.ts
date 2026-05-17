@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { query, queryOne } from '@shared/db';
 import { checkRateLimit } from '@/lib/rateLimit';
 import { RATE_LIMITS } from '@shared/constants';
+import { getCurrentMember } from '@/lib/memberAuth';
 
 interface LikeRow {
   id: string;
@@ -9,6 +10,10 @@ interface LikeRow {
 
 interface CountRow {
   count: string;
+}
+
+function memberLikeFingerprint(userId: string): string {
+  return `member:${userId}`;
 }
 
 /**
@@ -22,7 +27,6 @@ export async function GET(request: NextRequest) {
   try {
     const params = request.nextUrl.searchParams;
     const article_id = params.get('article_id');
-    const fingerprint = params.get('fingerprint');
 
     if (!article_id) {
       return NextResponse.json(
@@ -47,10 +51,11 @@ export async function GET(request: NextRequest) {
     const likeCount = parseInt(countResult?.count || '0', 10);
 
     let liked = false;
-    if (fingerprint) {
+    const member = await getCurrentMember();
+    if (member) {
       const existing = await queryOne<LikeRow>(
         `SELECT id FROM likes WHERE article_id = $1 AND fingerprint = $2`,
-        [article_id, fingerprint]
+        [article_id, memberLikeFingerprint(member.id)]
       );
       liked = !!existing;
     }
@@ -97,15 +102,31 @@ export async function POST(request: NextRequest) {
 
   try {
     const body = await request.json();
-    const { article_id, fingerprint } = body;
+    const { article_id } = body;
+    const member = await getCurrentMember();
 
-    if (!article_id || !fingerprint) {
+    if (!member) {
+      return NextResponse.json(
+        {
+          success: false,
+          error: {
+            error_code: 'AUTH_REQUIRED',
+            message: 'Login member diperlukan',
+            details: null,
+            timestamp: new Date().toISOString(),
+          },
+        },
+        { status: 401 }
+      );
+    }
+
+    if (!article_id) {
       return NextResponse.json(
         {
           success: false,
           error: {
             error_code: 'VALIDATION_ERROR',
-            message: 'article_id dan fingerprint diperlukan',
+            message: 'article_id diperlukan',
             details: null,
             timestamp: new Date().toISOString(),
           },
@@ -113,6 +134,8 @@ export async function POST(request: NextRequest) {
         { status: 422 }
       );
     }
+
+    const fingerprint = memberLikeFingerprint(member.id);
 
     // Check if like already exists
     const existing = await queryOne<LikeRow>(

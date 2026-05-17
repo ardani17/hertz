@@ -309,6 +309,7 @@ export default async function OutlookDetailPage({
           url={outlookUrl}
           initialLikeCount={article.likeCount}
           initialCommentCount={article.commentCount}
+          currentUser={currentUser}
         />
         </div>
       </HertzAppShell>

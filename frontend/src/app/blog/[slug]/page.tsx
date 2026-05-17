@@ -244,11 +244,12 @@ export default async function BlogDetailPage({
             url={blogUrl}
           />
 
-          <CommentSection articleId={article.id} />
+          <CommentSection articleId={article.id} currentUser={currentUser} />
 
           <LikeButton
             articleId={article.id}
             initialLikeCount={article.likeCount}
+            currentUser={currentUser}
           />
         </div>
       </HertzAppShell>

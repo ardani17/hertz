@@ -1,7 +1,9 @@
 'use client';
 
 import { useCallback, useEffect, useMemo, useState, type FormEvent } from 'react';
+import type { MemberSessionUser } from '@shared/types';
 import { CommentIcon, LoveIcon, ShareIcon } from '@/components/feed/HertzIcons';
+import { HertzTelegramLogin } from '@/components/feed/HertzTelegramLogin';
 import styles from './OutlookEngagement.module.css';
 
 interface CommentData {
@@ -25,20 +27,7 @@ interface OutlookEngagementProps {
   url: string;
   initialLikeCount: number;
   initialCommentCount: number;
-}
-
-function generateFingerprint(): string {
-  const raw = [
-    navigator.userAgent,
-    `${screen.width}x${screen.height}`,
-    Intl.DateTimeFormat().resolvedOptions().timeZone,
-  ].join('|');
-
-  let hash = 5381;
-  for (let i = 0; i < raw.length; i++) {
-    hash = ((hash << 5) + hash + raw.charCodeAt(i)) & 0xffffffff;
-  }
-  return hash.toString(36);
+  currentUser: MemberSessionUser | null;
 }
 
 function formatCommentDate(dateStr: string): string {
@@ -69,15 +58,14 @@ export function OutlookEngagement({
   url,
   initialLikeCount,
   initialCommentCount,
+  currentUser,
 }: OutlookEngagementProps) {
   const [comments, setComments] = useState<CommentData[]>([]);
   const [commentsLoading, setCommentsLoading] = useState(true);
   const [commentCount, setCommentCount] = useState(initialCommentCount);
   const [comment, setComment] = useState('');
-  const [displayName, setDisplayName] = useState('');
   const [submitting, setSubmitting] = useState(false);
   const [message, setMessage] = useState<string | null>(null);
-  const [fingerprint, setFingerprint] = useState<string | null>(null);
   const [liked, setLiked] = useState(false);
   const [likeCount, setLikeCount] = useState(initialLikeCount);
   const [likePending, setLikePending] = useState(false);
@@ -103,23 +91,18 @@ export function OutlookEngagement({
   }, [articleId]);
 
   useEffect(() => {
-    const fp = generateFingerprint();
-    setFingerprint(fp);
     setNativeShareAvailable(typeof navigator.share === 'function');
 
     async function fetchLikeStatus() {
       try {
-        const response = await fetch(`/api/likes?article_id=${articleId}&fingerprint=${fp}`);
+        const response = await fetch(`/api/likes?article_id=${articleId}`);
         if (!response.ok) return;
         const data = await response.json();
         if (data.success) {
           setLiked(Boolean(data.data.liked));
           setLikeCount(Number(data.data.like_count) || 0);
         }
-      } catch {
-        const likedArticles: string[] = JSON.parse(localStorage.getItem('horizon_likes') || '[]');
-        setLiked(likedArticles.includes(articleId));
-      }
+      } catch {}
     }
 
     fetchLikeStatus();
@@ -127,14 +110,18 @@ export function OutlookEngagement({
   }, [articleId, fetchComments]);
 
   async function toggleLike() {
-    if (!fingerprint || likePending) return;
+    if (!currentUser) {
+      setMessage('Login Telegram member untuk menyukai Outlook.');
+      return;
+    }
+    if (likePending) return;
     setLikePending(true);
     setMessage(null);
     try {
       const response = await fetch('/api/likes', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ article_id: articleId, fingerprint }),
+        body: JSON.stringify({ article_id: articleId }),
       });
       const data = await response.json();
       if (!response.ok || !data.success) {
@@ -153,6 +140,10 @@ export function OutlookEngagement({
   async function submitComment(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
     const content = comment.trim();
+    if (!currentUser) {
+      setMessage('Login Telegram member untuk ikut berdiskusi.');
+      return;
+    }
     if (!content) {
       setMessage('Komentar tidak boleh kosong.');
       return;
@@ -167,8 +158,6 @@ export function OutlookEngagement({
         body: JSON.stringify({
           article_id: articleId,
           content,
-          is_anonymous: true,
-          display_name: displayName.trim() || 'Anonim',
         }),
       });
       const data = await response.json();
@@ -180,7 +169,6 @@ export function OutlookEngagement({
       setComments((items) => [...items, data.data]);
       setCommentCount((count) => count + 1);
       setComment('');
-      setDisplayName('');
       setMessage('Komentar terkirim.');
     } catch {
       setMessage('Komentar gagal dikirim.');
@@ -223,7 +211,7 @@ export function OutlookEngagement({
           type="button"
           className={liked ? styles.active : ''}
           onClick={toggleLike}
-          disabled={likePending || !fingerprint}
+          disabled={likePending}
           aria-label={liked ? 'Batal suka Outlook' : 'Suka Outlook'}
           aria-pressed={liked}
         >
@@ -272,15 +260,14 @@ export function OutlookEngagement({
           <span>{commentsLoading ? '...' : commentCount}</span>
         </div>
 
-        <form className={styles.form} onSubmit={submitComment}>
-          <label htmlFor="outlook-comment-name">Nama tampilan</label>
-          <input
-            id="outlook-comment-name"
-            value={displayName}
-            onChange={(event) => setDisplayName(event.target.value)}
-            placeholder="Anonim"
-            maxLength={100}
-          />
+        {!currentUser ? (
+          <div className={styles.guestCta}>
+            <strong>Login Telegram untuk ikut diskusi</strong>
+            <p>Komentar dan suka hanya tersedia untuk member yang sudah login.</p>
+            <HertzTelegramLogin compact />
+          </div>
+        ) : (
+          <form className={styles.form} onSubmit={submitComment}>
           <label htmlFor="outlook-comment-body">Tulis komentar</label>
           <textarea
             id="outlook-comment-body"
@@ -294,7 +281,8 @@ export function OutlookEngagement({
             <span>{comment.trim().length}/2000</span>
             <button type="submit" disabled={submitting}>{submitting ? 'Mengirim...' : 'Balas'}</button>
           </div>
-        </form>
+          </form>
+        )}
 
         <div className={styles.list}>
           {commentsLoading ? (

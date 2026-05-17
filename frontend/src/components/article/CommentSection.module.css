@@ -103,72 +103,28 @@
   letter-spacing: 0.02em;
 }
 
-.authOptions {
-  display: flex;
-  gap: var(--space-3);
-  margin-bottom: var(--space-4);
-  flex-wrap: wrap;
-}
-
-.authOption {
-  font-size: var(--text-sm);
-  font-weight: 600;
-  padding: var(--space-2) var(--space-4);
-  border: var(--border-width) solid var(--color-border);
-  border-radius: var(--border-radius);
-  background-color: var(--color-surface);
-  color: var(--color-text);
-  cursor: pointer;
-  min-height: 44px;
-  transition: border-color 0.15s ease, background-color 0.15s ease;
-}
-
-.authOption:hover {
-  border-color: var(--color-text-muted);
-}
-
-.authOptionActive {
-  border-color: var(--color-accent);
-  background-color: rgba(16, 185, 129, 0.1);
-  color: var(--color-accent);
-}
-
-.telegramAuth {
-  display: flex;
-  flex-direction: column;
-  gap: var(--space-3);
-  margin-bottom: var(--space-4);
-}
-
-.telegramUser {
-  display: flex;
-  align-items: center;
-  gap: var(--space-2);
-  font-size: var(--text-sm);
-  color: var(--color-accent);
-  font-weight: 600;
-}
-
-.telegramLogout {
-  font-size: var(--text-xs);
-  color: var(--color-text-muted);
-  background: none;
-  border: none;
-  cursor: pointer;
-  text-decoration: underline;
-  padding: 0;
-  min-height: auto;
-  min-width: auto;
-}
-
-.telegramLogout:hover {
-  color: var(--color-danger);
-}
-
 .form {
   display: flex;
   flex-direction: column;
   gap: var(--space-3);
+}
+
+.memberOnly {
+  background-color: rgba(16, 185, 129, 0.08);
+  border: 1px solid rgba(16, 185, 129, 0.24);
+  border-radius: var(--border-radius);
+  display: grid;
+  gap: var(--space-2);
+  padding: var(--space-4);
+}
+
+.memberOnly strong {
+  color: var(--color-text);
+}
+
+.memberOnly p {
+  color: var(--color-text-muted);
+  margin: 0;
 }
 
 .fieldGroup {
@@ -243,7 +199,4 @@
     margin-top: var(--space-1);
   }
 
-  .authOptions {
-    flex-direction: column;
-  }
 }

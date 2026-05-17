@@ -1,7 +1,8 @@
 'use client';
 
 import { useState, useEffect, useCallback, FormEvent } from 'react';
-import { TelegramLoginWidget, type TelegramUser } from '@/components/auth/TelegramLoginWidget';
+import type { MemberSessionUser } from '@shared/types';
+import { HertzTelegramLogin } from '@/components/feed/HertzTelegramLogin';
 import styles from './CommentSection.module.css';
 
 interface CommentData {
@@ -15,7 +16,7 @@ interface CommentData {
 
 interface CommentSectionProps {
   articleId: string;
-  telegramBotName?: string;
+  currentUser?: MemberSessionUser | null;
 }
 
 /** Format a date string to a human-readable format */
@@ -32,25 +33,35 @@ function formatCommentDate(dateStr: string): string {
 
 /**
  * CommentSection — displays chronological comments (oldest first)
- * and provides a form to submit new comments, either anonymously
- * or authenticated via Telegram Login Widget.
+ * and provides a form to submit new comments for logged-in members only.
  */
-export function CommentSection({ articleId, telegramBotName }: CommentSectionProps) {
+export function CommentSection({ articleId, currentUser }: CommentSectionProps) {
   const [comments, setComments] = useState<CommentData[]>([]);
   const [loading, setLoading] = useState(true);
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState<string | null>(null);
+  const [member, setMember] = useState<MemberSessionUser | null>(currentUser ?? null);
 
   // Form state
-  const [authMode, setAuthMode] = useState<'anonymous' | 'telegram'>('anonymous');
-  const [displayName, setDisplayName] = useState('');
   const [content, setContent] = useState('');
 
-  // Telegram auth state
-  const [telegramUser, setTelegramUser] = useState<TelegramUser | null>(null);
+  useEffect(() => {
+    setMember(currentUser ?? null);
+  }, [currentUser]);
 
-  const botName = telegramBotName || process.env.NEXT_PUBLIC_TELEGRAM_BOT_NAME || '';
+  useEffect(() => {
+    if (currentUser !== undefined) return;
+    async function fetchMember() {
+      try {
+        const response = await fetch('/api/auth/me');
+        if (!response.ok) return;
+        const data = await response.json();
+        setMember(data.success ? data.data.user ?? null : null);
+      } catch {}
+    }
+    fetchMember();
+  }, [currentUser]);
 
   // Fetch comments
   const fetchComments = useCallback(async () => {
@@ -72,36 +83,15 @@ export function CommentSection({ articleId, telegramBotName }: CommentSectionPro
     fetchComments();
   }, [fetchComments]);
 
-  // Restore Telegram session from localStorage
-  useEffect(() => {
-    try {
-      const stored = localStorage.getItem('horizon_telegram_user');
-      if (stored) {
-        const user = JSON.parse(stored) as TelegramUser;
-        setTelegramUser(user);
-        setAuthMode('telegram');
-      }
-    } catch {
-      // Ignore parse errors
-    }
-  }, []);
-
-  const handleTelegramAuth = useCallback((user: TelegramUser) => {
-    setTelegramUser(user);
-    setAuthMode('telegram');
-    localStorage.setItem('horizon_telegram_user', JSON.stringify(user));
-  }, []);
-
-  const handleTelegramLogout = useCallback(() => {
-    setTelegramUser(null);
-    setAuthMode('anonymous');
-    localStorage.removeItem('horizon_telegram_user');
-  }, []);
-
   const handleSubmit = useCallback(async (e: FormEvent) => {
     e.preventDefault();
     setError(null);
     setSuccess(null);
+
+    if (!member) {
+      setError('Login member diperlukan untuk komentar.');
+      return;
+    }
 
     const trimmedContent = content.trim();
     if (!trimmedContent) {
@@ -122,22 +112,6 @@ export function CommentSection({ articleId, telegramBotName }: CommentSectionPro
         content: trimmedContent,
       };
 
-      if (authMode === 'anonymous') {
-        body.is_anonymous = true;
-        body.display_name = displayName.trim() || 'Anonim';
-      } else if (telegramUser) {
-        body.is_anonymous = false;
-        body.telegram_auth = {
-          id: telegramUser.id,
-          first_name: telegramUser.first_name,
-          last_name: telegramUser.last_name,
-          username: telegramUser.username,
-          photo_url: telegramUser.photo_url,
-          auth_date: telegramUser.auth_date,
-          hash: telegramUser.hash,
-        };
-      }
-
       const res = await fetch('/api/comments', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -154,7 +128,6 @@ export function CommentSection({ articleId, telegramBotName }: CommentSectionPro
       // Add new comment to list
       setComments((prev) => [...prev, data.data]);
       setContent('');
-      setDisplayName('');
       setSuccess('Komentar berhasil dikirim!');
 
       // Clear success message after 3 seconds
@@ -164,7 +137,7 @@ export function CommentSection({ articleId, telegramBotName }: CommentSectionPro
     } finally {
       setSubmitting(false);
     }
-  }, [articleId, authMode, content, displayName, telegramUser]);
+  }, [articleId, content, member]);
 
   return (
     <section className={styles.section} aria-label="Komentar">
@@ -209,79 +182,14 @@ export function CommentSection({ articleId, telegramBotName }: CommentSectionPro
       <div className={styles.formSection}>
         <h3 className={styles.formTitle}>Tulis Komentar</h3>
 
-        {/* Auth mode selection */}
-        <div className={styles.authOptions}>
-          <button
-            type="button"
-            className={`${styles.authOption} ${authMode === 'anonymous' ? styles.authOptionActive : ''}`}
-            onClick={() => setAuthMode('anonymous')}
-          >
-            ✏️ Komentar Anonim
-          </button>
-          <button
-            type="button"
-            className={`${styles.authOption} ${authMode === 'telegram' ? styles.authOptionActive : ''}`}
-            onClick={() => setAuthMode('telegram')}
-          >
-            📱 Login via Telegram
-          </button>
-        </div>
-
-        {/* Telegram auth section */}
-        {authMode === 'telegram' && (
-          <div className={styles.telegramAuth}>
-            {telegramUser ? (
-              <div className={styles.telegramUser}>
-                <span>
-                  Logged in sebagai{' '}
-                  <strong>
-                    {telegramUser.username
-                      ? `@${telegramUser.username}`
-                      : telegramUser.first_name}
-                  </strong>
-                </span>
-                <button
-                  type="button"
-                  className={styles.telegramLogout}
-                  onClick={handleTelegramLogout}
-                >
-                  Logout
-                </button>
-              </div>
-            ) : botName ? (
-              <TelegramLoginWidget
-                botName={botName}
-                onAuth={handleTelegramAuth}
-                buttonSize="medium"
-              />
-            ) : (
-              <p className={styles.errorMessage}>
-                Telegram Login belum dikonfigurasi.
-              </p>
-            )}
+        {!member ? (
+          <div className={styles.memberOnly}>
+            <strong>Login Telegram untuk ikut diskusi</strong>
+            <p>Komentar hanya tersedia untuk member yang sudah login.</p>
+            <HertzTelegramLogin compact />
           </div>
-        )}
-
-        {/* Comment form */}
-        <form className={styles.form} onSubmit={handleSubmit}>
-          {/* Display name field (only for anonymous mode) */}
-          {authMode === 'anonymous' && (
-            <div className={styles.fieldGroup}>
-              <label htmlFor="comment-name" className={styles.label}>
-                Nama Tampilan (opsional)
-              </label>
-              <input
-                id="comment-name"
-                type="text"
-                className={styles.input}
-                placeholder="Anonim"
-                value={displayName}
-                onChange={(e) => setDisplayName(e.target.value)}
-                maxLength={100}
-              />
-            </div>
-          )}
-
+        ) : (
+          <form className={styles.form} onSubmit={handleSubmit}>
           <div className={styles.fieldGroup}>
             <label htmlFor="comment-content" className={styles.label}>
               Komentar
@@ -303,11 +211,12 @@ export function CommentSection({ articleId, telegramBotName }: CommentSectionPro
           <button
             type="submit"
             className={styles.submitButton}
-            disabled={submitting || (authMode === 'telegram' && !telegramUser)}
+            disabled={submitting}
           >
             {submitting ? 'Mengirim…' : 'Kirim Komentar'}
           </button>
-        </form>
+          </form>
+        )}
       </div>
     </section>
   );

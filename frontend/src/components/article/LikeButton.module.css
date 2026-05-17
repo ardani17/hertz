@@ -2,6 +2,12 @@
    LikeButton — Theme-Aware Style
    ============================================ */
 
+.wrap {
+  display: inline-flex;
+  flex-direction: column;
+  gap: var(--space-1);
+}
+
 .likeButton {
   display: inline-flex;
   align-items: center;
@@ -52,4 +58,9 @@
 
 .count {
   font-variant-numeric: tabular-nums;
+}
+
+.message {
+  color: var(--color-text-muted);
+  font-size: var(--text-xs);
 }

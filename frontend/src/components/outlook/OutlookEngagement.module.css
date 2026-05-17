@@ -176,6 +176,26 @@
   padding: 0.75rem;
 }
 
+.guestCta {
+  background: rgba(5, 18, 11, 0.72);
+  border: 1px solid rgba(19, 210, 123, 0.28);
+  border-radius: 8px;
+  display: grid;
+  gap: 0.55rem;
+  margin-bottom: 1rem;
+  padding: 0.85rem;
+}
+
+.guestCta strong {
+  color: #f3fff7;
+  font-size: 0.95rem;
+}
+
+.guestCta p {
+  color: #9eb8a9;
+  margin: 0;
+}
+
 .form label {
   color: #9eb8a9;
   font-size: 0.78rem;

@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { createHash, createHmac } from 'crypto';
-import { query, queryOne } from '@shared/db';
+import { query } from '@shared/db';
 import { validateSession } from '@/lib/auth';
+import { getCurrentMember } from '@/lib/memberAuth';
 import { checkRateLimit } from '@/lib/rateLimit';
 import { RATE_LIMITS } from '@shared/constants';
 
@@ -12,50 +12,6 @@ interface CommentRow {
   is_anonymous: boolean;
   created_at: Date;
   user_id: string | null;
-}
-
-interface UserRow {
-  id: string;
-  username: string | null;
-}
-
-interface TelegramAuthData {
-  id: number;
-  first_name: string;
-  last_name?: string;
-  username?: string;
-  photo_url?: string;
-  auth_date: number;
-  hash: string;
-}
-
-/**
- * Verify Telegram Login Widget data using HMAC-SHA256.
- */
-function verifyTelegramAuth(authData: TelegramAuthData): boolean {
-  const botToken = process.env.TELEGRAM_BOT_TOKEN;
-  if (!botToken) return false;
-
-  const { hash, ...data } = authData;
-
-  const checkString = Object.entries(data)
-    .filter(([, value]) => value !== undefined && value !== null)
-    .sort(([a], [b]) => a.localeCompare(b))
-    .map(([key, value]) => `${key}=${value}`)
-    .join('\n');
-
-  const secretKey = createHash('sha256').update(botToken).digest();
-  const hmac = createHmac('sha256', secretKey)
-    .update(checkString)
-    .digest('hex');
-
-  return hmac === hash;
-}
-
-function isTelegramAuthFresh(authDate: number): boolean {
-  const now = Math.floor(Date.now() / 1000);
-  const maxAge = 86400;
-  return now - authDate < maxAge;
 }
 
 function errorResponse(code: string, message: string, status: number) {
@@ -220,7 +176,12 @@ export async function POST(request: NextRequest) {
 
   try {
     const body = await request.json();
-    const { article_id, content, is_anonymous, display_name, telegram_auth } = body;
+    const { article_id, content } = body;
+    const member = await getCurrentMember();
+
+    if (!member) {
+      return errorResponse('AUTH_REQUIRED', 'Login member diperlukan', 401);
+    }
 
     if (!article_id) {
       return errorResponse('VALIDATION_ERROR', 'article_id diperlukan', 422);
@@ -235,57 +196,15 @@ export async function POST(request: NextRequest) {
       return errorResponse('VALIDATION_ERROR', 'Komentar maksimal 2000 karakter', 422);
     }
 
-    let userId: string | null = null;
-    let commentDisplayName = 'Anonim';
-    let commentIsAnonymous = true;
-
-    if (!is_anonymous && telegram_auth) {
-      const authData = telegram_auth as TelegramAuthData;
-
-      if (!verifyTelegramAuth(authData)) {
-        return errorResponse('AUTH_INVALID', 'Verifikasi Telegram gagal', 401);
-      }
-
-      if (!isTelegramAuthFresh(authData.auth_date)) {
-        return errorResponse('AUTH_INVALID', 'Sesi Telegram telah kedaluwarsa. Silakan login ulang.', 401);
-      }
-
-      let user = await queryOne<UserRow>(
-        `SELECT id, username FROM users WHERE telegram_id = $1`,
-        [authData.id],
-      );
-
-      if (!user) {
-        const username = authData.username || authData.first_name;
-        const result = await query<UserRow>(
-          `INSERT INTO users (telegram_id, username, role)
-           VALUES ($1, $2, $3)
-           RETURNING id, username`,
-          [authData.id, username, 'member'],
-        );
-        user = result.rows[0] || null;
-      }
-
-      if (user) {
-        userId = user.id;
-        commentDisplayName = authData.username
-          ? `@${authData.username}`
-          : authData.first_name;
-        commentIsAnonymous = false;
-      }
-    } else {
-      commentDisplayName =
-        typeof display_name === 'string' && display_name.trim()
-          ? display_name.trim().slice(0, 100)
-          : 'Anonim';
-      commentIsAnonymous = true;
-    }
+    const commentDisplayName = member.username
+      ? `@${member.username}`
+      : member.displayName || 'Member Horizon';
 
     const result = await query<CommentRow>(
       `INSERT INTO comments (article_id, user_id, display_name, content, is_anonymous, status)
        VALUES ($1, $2, $3, $4, $5, $6)
        RETURNING id, display_name, content, is_anonymous, created_at, user_id`,
-      [article_id, userId, commentDisplayName, trimmedContent, commentIsAnonymous, 'visible'],
+      [article_id, member.id, commentDisplayName, trimmedContent, false, 'visible'],
     );
 
     const comment = result.rows[0];
