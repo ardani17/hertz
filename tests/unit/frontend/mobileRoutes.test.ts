@@ -139,4 +139,54 @@ describe('mobile route contracts', () => {
       },
     });
   });
+
+  it('GET /api/mobile/v1/outlook includes optional Outlook metadata in the article payload', async () => {
+    vi.resetModules();
+    const queryMock = vi.fn(async () => ({
+      rows: [{
+        id: 'outlook-1',
+        title: 'NASDAQ session prep',
+        content_html: '',
+        slug: 'nasdaq-session-prep',
+        source: 'dashboard',
+        category: 'outlook',
+        created_at: new Date('2026-05-17T09:00:00.000Z'),
+        updated_at: new Date('2026-05-17T09:00:00.000Z'),
+        author_id: 'admin-1',
+        author_username: 'horizon',
+        author_display_name: 'Horizon',
+        author_avatar_url: null,
+        cover_image: null,
+        outlook_metadata: {
+          contentType: 'video',
+          videoUrl: 'https://example.com/session.mp4',
+          summary: 'Watch liquidity above previous high.',
+          bias: 'Neutral Bullish',
+          keyPoints: ['Wait confirmation'],
+        },
+        comment_count: '0',
+        like_count: '0',
+      }],
+    }));
+    vi.doMock('@shared/db', () => ({
+      query: queryMock,
+      queryOne: vi.fn(),
+    }));
+
+    const { GET } = await import('../../../frontend/src/app/api/mobile/v1/outlook/route');
+    const response = await GET(request('/api/mobile/v1/outlook'));
+    const body = await response.json();
+
+    expect(response.status).toBe(200);
+    expect(body.data.items[0]).toMatchObject({
+      id: 'outlook-1',
+      category: 'outlook',
+      outlook: {
+        kind: 'video',
+        summary: 'Watch liquidity above previous high.',
+        snapshot: [{ label: 'Bias', value: 'Neutral Bullish' }],
+        keyPoints: ['Wait confirmation'],
+      },
+    });
+  });
 });

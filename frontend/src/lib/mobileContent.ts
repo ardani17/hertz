@@ -1,5 +1,12 @@
 import { query, queryOne } from '@shared/db';
 import { stripHtml } from '@shared/utils/textToHtml';
+import {
+  buildOutlookSnapshot,
+  getOutlookSummary,
+  inferOutlookContentKind,
+  normalizeOutlookMetadata,
+  type OutlookMediaInput,
+} from './outlookContent';
 
 interface ArticleRow {
   id: string;
@@ -15,6 +22,7 @@ interface ArticleRow {
   author_display_name: string | null;
   author_avatar_url: string | null;
   cover_image: string | null;
+  outlook_metadata: unknown;
   comment_count: string;
   like_count: string;
 }
@@ -44,9 +52,30 @@ function clampOffset(value: string | null | undefined): number {
   return Math.max(Math.trunc(offset), 0);
 }
 
-function mapArticle(row: ArticleRow, includeContent = false) {
-  const text = stripHtml(row.content_html);
+function toOutlookMedia(media: OutlookMediaInput[], coverImage: string | null): OutlookMediaInput[] {
+  if (media.length > 0) return media;
+  return coverImage ? [{ id: 'cover', file_url: coverImage, media_type: 'image' }] : [];
+}
+
+function buildMobileOutlook(row: ArticleRow, media: OutlookMediaInput[]) {
+  if (row.category !== 'outlook') return undefined;
+  const metadata = normalizeOutlookMetadata(row.outlook_metadata);
+  const outlookMedia = toOutlookMedia(media, row.cover_image);
   return {
+    kind: inferOutlookContentKind({
+      metadata,
+      media: outlookMedia,
+      contentHtml: row.content_html,
+    }),
+    summary: getOutlookSummary({ metadata, contentHtml: row.content_html }),
+    snapshot: buildOutlookSnapshot(metadata),
+    keyPoints: Array.isArray(metadata.keyPoints) ? metadata.keyPoints : [],
+  };
+}
+
+function mapArticle(row: ArticleRow, includeContent = false, media: OutlookMediaInput[] = []) {
+  const text = stripHtml(row.content_html);
+  const article = {
     id: row.id,
     title: row.title,
     slug: row.slug,
@@ -71,6 +100,8 @@ function mapArticle(row: ArticleRow, includeContent = false) {
     createdAt: toIso(row.created_at),
     updatedAt: toIso(row.updated_at),
   };
+  const outlook = buildMobileOutlook(row, media);
+  return outlook ? { ...article, outlook } : article;
 }
 
 export async function listMobileArticles(params: {
@@ -95,6 +126,7 @@ export async function listMobileArticles(params: {
 
   const result = await query<ArticleRow>(
     `SELECT a.id, a.title, a.content_html, a.slug, a.source, a.category, a.created_at, a.created_at AS updated_at,
+            a.outlook_metadata,
             a.author_id,
             u.username AS author_username,
             u.display_name AS author_display_name,
@@ -130,6 +162,7 @@ export async function getMobileArticle(params: {
   }
   const row = await queryOne<ArticleRow>(
     `SELECT a.id, a.title, a.content_html, a.slug, a.source, a.category, a.created_at, a.created_at AS updated_at,
+            a.outlook_metadata,
             a.author_id,
             u.username AS author_username,
             u.display_name AS author_display_name,
@@ -151,7 +184,11 @@ export async function getMobileArticle(params: {
     [row.id],
   );
   return {
-    article: mapArticle(row, true),
+    article: mapArticle(row, true, media.rows.map((item) => ({
+      id: item.id,
+      file_url: item.file_url,
+      media_type: item.media_type,
+    }))),
     media: media.rows.map(mapMedia),
   };
 }
