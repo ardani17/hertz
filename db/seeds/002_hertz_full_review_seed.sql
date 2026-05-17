@@ -107,25 +107,113 @@ ON CONFLICT (telegram_id, group_id) DO UPDATE SET
 
 INSERT INTO articles (id, author_id, content_html, title, category, source, status, slug, created_at)
 VALUES
-  ('51000000-0000-0000-0000-000000000001', '11000000-0000-0000-0000-000000000003', '<p>Outlook London: XAUUSD masih bertahan di atas area 2332. Selama buyer mempertahankan area ini, struktur intraday tetap condong mencari continuation menuju 2346.</p>', 'London Outlook: XAUUSD menunggu reclaim 2340', 'outlook', 'web', 'published', 'outlook-xauusd-reclaim-2340', NOW() - INTERVAL '2 hours'),
-  ('51000000-0000-0000-0000-000000000002', '11000000-0000-0000-0000-000000000007', '<p>Crypto watchlist hari ini fokus pada BTC/USDT. Area 66.400 menjadi batas penting; reclaim bersih dapat membuka ruang ke 67.200.</p>', 'Crypto Outlook: BTC butuh reclaim sebelum agresif', 'outlook', 'web', 'published', 'outlook-btc-reclaim-67200', NOW() - INTERVAL '4 hours'),
-  ('51000000-0000-0000-0000-000000000003', '11000000-0000-0000-0000-000000000009', '<p>US index masih ditopang saham teknologi besar, tetapi breadth mulai menyempit. Untuk NASDAQ, perhatikan reaksi di resistance intraday sebelum follow trend.</p>', 'Stock Outlook: NASDAQ kuat tapi breadth melemah', 'outlook', 'web', 'published', 'outlook-nasdaq-breadth-melemah', NOW() - INTERVAL '6 hours'),
+  ('51000000-0000-0000-0000-000000000001', '11000000-0000-0000-0000-000000000003', '', 'Video Outlook: XAUUSD London liquidity sweep', 'outlook', 'web', 'published', 'outlook-xauusd-london-liquidity-sweep', NOW() - INTERVAL '35 minutes'),
+  ('51000000-0000-0000-0000-000000000002', '11000000-0000-0000-0000-000000000007', '<p>Crypto watchlist 17 Mei fokus pada BTC/USDT setelah market gagal memperpanjang momentum di atas area 66.800. Struktur H1 masih menyisakan higher low, tetapi buyer perlu reclaim bersih di atas 67.200 agar continuation menjadi valid.</p><p>Selama harga bergerak di bawah resistance itu, saya lebih memilih menunggu sweep ke area 66.100-66.300 daripada mengejar candle tengah range. Jika sweep menghasilkan rejection dan volume kembali masuk, area 67.200 menjadi target pertama, lalu 67.850 sebagai area evaluasi berikutnya.</p><p>Risiko utama untuk skenario ini adalah candle H1 close di bawah 65.780. Kondisi itu mengubah setup dari continuation menjadi distribusi pendek, sehingga plan long sebaiknya dibatalkan dan trader menunggu range baru terbentuk.</p>', 'Long Read: BTC butuh reclaim 67.2K sebelum agresif', 'outlook', 'web', 'published', 'outlook-btc-reclaim-67200', NOW() - INTERVAL '2 hours'),
+  ('51000000-0000-0000-0000-000000000003', '11000000-0000-0000-0000-000000000009', '<p>NASDAQ masih kuat di permukaan, tetapi breadth intraday mulai menyempit. Untuk sesi US, saya ingin melihat apakah buyer mampu mempertahankan demand kecil sebelum follow trend.</p>', 'Chart Note: NASDAQ breadth melemah di resistance', 'outlook', 'web', 'published', 'outlook-nasdaq-breadth-melemah', NOW() - INTERVAL '3 hours'),
   ('51000000-0000-0000-0000-000000000007', '11000000-0000-0000-0000-000000000010', '<p>Tools workspace: Profitability, CFTC Viewer, dan Market Pulse disiapkan sebagai ruang kerja trader. Data ini adalah activity seed untuk membuat admin dashboard terasa terisi.</p>', 'Tools workspace review activity', 'tools', 'admin', 'published', 'tools-workspace-review-activity', NOW() - INTERVAL '20 hours'),
   ('51000000-0000-0000-0000-000000000008', '11000000-0000-0000-0000-000000000004', '<p>Gold reject 2338. Tunggu retest, jangan kejar candle. Setup baru valid kalau M15 close tetap di atas 2331.</p>', 'Gold reject 2338', 'trading', 'telegram', 'published', 'hertz-gold-reject-2338', NOW() - INTERVAL '9 minutes'),
   ('51000000-0000-0000-0000-000000000009', '11000000-0000-0000-0000-000000000002', '<p>Struktur EURUSD masih compression. Saya ingin lihat sweep bawah dulu sebelum cari long kecil.</p>', 'EURUSD compression London setup', 'trading', 'web', 'published', 'hertz-eurusd-compression-london', NOW() - INTERVAL '18 minutes'),
   ('51000000-0000-0000-0000-000000000010', '11000000-0000-0000-0000-000000000005', '<p>Hari ini saya hanya ambil satu posisi kecil. Fokusnya bukan jumlah trade, tapi kualitas keputusan setelah market bergerak cepat.</p>', 'Satu posisi kecil lebih baik dari lima entry panik', 'life_story', 'web', 'published', 'hertz-satu-posisi-kecil', NOW() - INTERVAL '31 minutes'),
   ('51000000-0000-0000-0000-000000000011', '11000000-0000-0000-0000-000000000007', '<p>Liquidity snapshot: data menunjukkan buy limit menumpuk di area 2332-2335. Saya simpan konteks ini untuk diskusi sesi New York.</p>', 'Liquidity snapshot untuk sesi New York', 'general', 'web', 'published', 'hertz-liquidity-snapshot-new-york', NOW() - INTERVAL '45 minutes'),
   ('51000000-0000-0000-0000-000000000012', '11000000-0000-0000-0000-000000000010', '<p>Telegram draft: setup GBPUSD masih menunggu approval admin sebelum tampil ke publik.</p>', 'Draft telegram menunggu publish', 'trading', 'telegram', 'pending_review', 'hertz-draft-telegram-gbpusd', NOW() - INTERVAL '52 minutes'),
-  ('51000000-0000-0000-0000-000000000013', '11000000-0000-0000-0000-000000000003', '<p>DXY membuka sesi Asia dengan range sempit. Jika index gagal bertahan di atas 104.20, pair mayor bisa punya ruang koreksi pendek.</p>', 'Forex Outlook: DXY menjaga range Asia', 'outlook', 'web', 'published', 'outlook-dxy-range-asia', NOW() - INTERVAL '10 hours'),
-  ('51000000-0000-0000-0000-000000000014', '11000000-0000-0000-0000-000000000007', '<p>ETH/USDT masih mengikuti ritme BTC, tetapi relative strength mulai membaik. Break 3.120 dapat membuat altcoin beta ikut bergerak.</p>', 'Crypto Outlook: ETH mulai mengejar BTC', 'outlook', 'web', 'published', 'outlook-eth-relative-strength', NOW() - INTERVAL '14 hours'),
-  ('51000000-0000-0000-0000-000000000015', '11000000-0000-0000-0000-000000000009', '<p>Dow Jones cenderung defensif setelah pembukaan US. Sektor energi membantu menahan koreksi, tetapi momentum belum cukup bersih.</p>', 'Stock Outlook: Dow defensif, energi menopang', 'outlook', 'web', 'published', 'outlook-dow-defensive-energy', NOW() - INTERVAL '22 hours'),
+  ('51000000-0000-0000-0000-000000000013', '11000000-0000-0000-0000-000000000003', '<p>DXY membuka minggu dengan range Asia yang masih rapat. Selama index bertahan di bawah 104.20, pair mayor punya ruang koreksi pendek, tetapi saya tidak ingin terlalu cepat melawan dollar sebelum ada candle close yang bersih.</p>', 'Chart Note: DXY menjaga range Asia', 'outlook', 'web', 'published', 'outlook-dxy-range-asia', NOW() - INTERVAL '5 hours'),
+  ('51000000-0000-0000-0000-000000000014', '11000000-0000-0000-0000-000000000007', '', 'Video Outlook: ETH mulai mengejar BTC', 'outlook', 'web', 'published', 'outlook-eth-relative-strength', NOW() - INTERVAL '7 hours'),
+  ('51000000-0000-0000-0000-000000000015', '11000000-0000-0000-0000-000000000009', '<p>Dow Jones cenderung defensif setelah pembukaan US, tetapi sektor energi masih membantu menahan koreksi. Momentum belum cukup bersih untuk mengejar breakout, jadi area pullback lebih masuk akal untuk diamati.</p><p>Jika breadth membaik dan sektor industri ikut menguat, Dow bisa kembali menguji high intraday. Namun jika rotasi hanya bertahan di energi, setup ini lebih cocok dibaca sebagai defensive bounce, bukan trend continuation penuh.</p>', 'Long Read: Dow defensif, energi menopang', 'outlook', 'web', 'published', 'outlook-dow-defensive-energy', NOW() - INTERVAL '12 hours'),
   ('51000000-0000-0000-0000-000000000019', '11000000-0000-0000-0000-000000000004', '<p>BTC retest 66.4K berjalan rapi. Saya tidak entry kalau candle H1 masih menutup di bawah resistance.</p>', 'BTC retest 66.4K', 'trading', 'telegram', 'published', 'hertz-btc-retest-66400', NOW() - INTERVAL '1 hour'),
   ('51000000-0000-0000-0000-000000000020', '11000000-0000-0000-0000-000000000006', '<p>Ngopi dulu sebelum New York. Kalau market belum memberi setup, saya lebih baik baca ulang jurnal kemarin.</p>', 'Ngopi sebelum sesi New York', 'life_story', 'web', 'published', 'hertz-ngopi-sebelum-new-york', NOW() - INTERVAL '1 hour 20 minutes');
+
+UPDATE articles
+SET outlook_metadata = metadata.value
+FROM (
+  VALUES
+    (
+      '51000000-0000-0000-0000-000000000001'::uuid,
+      jsonb_build_object(
+        'contentType', 'video',
+        'videoUrl', 'https://interactive-examples.mdn.mozilla.net/media/cc0-videos/flower.mp4',
+        'summary', 'Rekaman singkat arah XAUUSD untuk sesi London: tunggu sweep 2330-2326, validasi dari rejection M15, dan hindari entry di tengah range.',
+        'bias', 'Bullish wait confirmation',
+        'timeframe', 'M15-H1',
+        'market', 'XAUUSD',
+        'sentiment', 'Buyer masih bertahan',
+        'risk', 'Invalid jika M15 close di bawah 2318',
+        'keyPoints', jsonb_build_array('Tunggu sweep 2330-2326 sebelum entry', 'Konfirmasi utama dari rejection M15', 'Jangan kejar candle jika harga sudah mendekati 2345')
+      )
+    ),
+    (
+      '51000000-0000-0000-0000-000000000002'::uuid,
+      jsonb_build_object(
+        'contentType', 'article',
+        'summary', 'BTC masih perlu reclaim 67.2K sebelum setup continuation layak dibuat agresif. Selama belum reclaim, fokus ke reaksi area 66.1K-66.3K.',
+        'bias', 'Neutral bullish',
+        'timeframe', 'H1',
+        'market', 'BTC/USDT',
+        'sentiment', 'Menunggu reclaim',
+        'risk', 'Close H1 di bawah 65.780',
+        'keyPoints', jsonb_build_array('Reclaim 67.2K menjadi trigger agresif', 'Sweep 66.1K-66.3K lebih sehat daripada FOMO', 'Batalkan long plan jika H1 close di bawah 65.780')
+      )
+    ),
+    (
+      '51000000-0000-0000-0000-000000000003'::uuid,
+      jsonb_build_object(
+        'contentType', 'chart',
+        'summary', 'Screenshot NASDAQ menunjukkan trend masih naik, tetapi breadth mulai menipis di area resistance. Tunggu demand bertahan sebelum follow trend.',
+        'bias', 'Watch pullback',
+        'timeframe', 'M30-H1',
+        'market', 'NASDAQ',
+        'sentiment', 'Momentum selektif',
+        'risk', 'Break demand intraday',
+        'keyPoints', jsonb_build_array('Breadth melemah saat harga mendekati resistance', 'Demand kecil harus bertahan untuk continuation', 'Jangan treat chart ini sebagai breakout confirmed')
+      )
+    ),
+    (
+      '51000000-0000-0000-0000-000000000013'::uuid,
+      jsonb_build_object(
+        'contentType', 'chart',
+        'summary', 'DXY masih menjaga range Asia. Pair mayor baru menarik jika index gagal bertahan di atas 104.20 dan candle close memberi konfirmasi.',
+        'bias', 'Range watch',
+        'timeframe', 'H1',
+        'market', 'DXY',
+        'sentiment', 'Dollar mixed',
+        'risk', 'Reclaim 104.20',
+        'keyPoints', jsonb_build_array('Range Asia masih sempit', '104.20 menjadi level konfirmasi', 'Tunggu candle close sebelum melawan dollar')
+      )
+    ),
+    (
+      '51000000-0000-0000-0000-000000000014'::uuid,
+      jsonb_build_object(
+        'contentType', 'video',
+        'videoUrl', 'https://interactive-examples.mdn.mozilla.net/media/cc0-videos/flower.mp4',
+        'summary', 'Rekaman cepat ETH/USDT: relative strength membaik, tetapi entry agresif baru masuk akal setelah 3.120 ditembus dan bertahan.',
+        'bias', 'Bullish above trigger',
+        'timeframe', 'H4',
+        'market', 'ETH/USDT',
+        'sentiment', 'Altcoin beta membaik',
+        'risk', 'Gagal bertahan di atas 3.040',
+        'keyPoints', jsonb_build_array('3.120 adalah trigger utama', 'ETH mulai mengejar BTC dari sisi relative strength', 'Hindari entry jika BTC kembali melemah')
+      )
+    ),
+    (
+      '51000000-0000-0000-0000-000000000015'::uuid,
+      jsonb_build_object(
+        'contentType', 'article',
+        'summary', 'Dow masih defensif, dengan sektor energi menjadi penahan koreksi. Setup lebih cocok dibaca sebagai defensive bounce sampai breadth membaik.',
+        'bias', 'Defensive bounce',
+        'timeframe', 'Daily-H1',
+        'market', 'Dow Jones',
+        'sentiment', 'Risk selective',
+        'risk', 'Breadth tidak membaik setelah open US',
+        'keyPoints', jsonb_build_array('Energi menahan koreksi index', 'Breadth belum cukup untuk trend continuation', 'Pullback lebih menarik daripada mengejar breakout')
+      )
+    )
+) AS metadata(id, value)
+WHERE articles.id = metadata.id;
 
 INSERT INTO media (id, article_id, file_url, media_type, file_key, file_size, created_at)
 VALUES
   ('54000000-0000-0000-0000-000000000001', '51000000-0000-0000-0000-000000000001', '/images/hertz-seed/chart-xauusd.svg', 'image', 'seed/v2/outlook-xauusd.svg', 220000, NOW() - INTERVAL '2 hours'),
   ('54000000-0000-0000-0000-000000000002', '51000000-0000-0000-0000-000000000002', '/images/hertz-seed/chart-mini.svg', 'image', 'seed/v2/outlook-btc.svg', 186000, NOW() - INTERVAL '4 hours'),
+  ('54000000-0000-0000-0000-000000000003', '51000000-0000-0000-0000-000000000003', '/images/hertz-seed/chart-depth.svg', 'image', 'seed/v2/outlook-nasdaq-depth.svg', 198000, NOW() - INTERVAL '3 hours'),
   ('54000000-0000-0000-0000-000000000004', '51000000-0000-0000-0000-000000000008', '/images/hertz-seed/chart-xauusd.svg', 'image', 'seed/v2/feed-gold.svg', 220000, NOW() - INTERVAL '9 minutes'),
   ('54000000-0000-0000-0000-000000000005', '51000000-0000-0000-0000-000000000009', '/images/hertz-seed/chart-mini.svg', 'image', 'seed/v2/feed-eurusd.svg', 186000, NOW() - INTERVAL '18 minutes'),
   ('54000000-0000-0000-0000-000000000006', '51000000-0000-0000-0000-000000000013', '/images/hertz-seed/chart-mini.svg', 'image', 'seed/v2/outlook-dxy.svg', 176000, NOW() - INTERVAL '10 hours'),
