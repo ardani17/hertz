@@ -9,11 +9,16 @@ const pageCopy = {
   id: {
     eyebrow: 'Simulator',
     title: 'Profitability Simulator',
-    description: 'Uji kombinasi risk, win rate, reward-risk, dan jumlah trade dalam ribuan skenario acak.',
+    description: 'Uji risk, win rate, reward-risk, preset strategi, dan danger zone dalam ribuan skenario acak.',
     helpTitle: 'Penjelasan input simulator',
     helpIntro:
-      'Buka bagian ini jika ingin memahami maksud setiap kolom sebelum menjalankan simulasi. Nilai yang Anda isi akan digunakan untuk membuat ribuan skenario acak, lalu tool menampilkan rata-rata, drawdown, dan rincian contoh trade.',
+      'Buka bagian ini jika ingin memahami maksud setiap kolom sebelum menjalankan simulasi. Nilai yang Anda isi akan digunakan untuk membuat ribuan skenario acak, lalu tool menampilkan insight strategi, rekomendasi risk, danger zone, chart, dan rincian contoh trade.',
     items: [
+      {
+        title: 'Tujuan simulasi dan preset',
+        body:
+          'Tujuan simulasi membantu tool menilai hasil sesuai konteks: growth, drawdown rendah, prop firm safe, atau testing strategi. Preset cepat mengisi risk, win rate, reward-risk, jumlah trade, dan simulasi sebagai titik awal; Anda tetap bisa mengubah angkanya sebelum menjalankan ulang.',
+      },
       {
         title: 'Balance awal',
         body:
@@ -54,11 +59,16 @@ const pageCopy = {
   en: {
     eyebrow: 'Simulator',
     title: 'Profitability Simulator',
-    description: 'Test risk, win rate, reward-risk, and trade count across thousands of random scenarios.',
+    description: 'Test risk, win rate, reward-risk, strategy presets, and danger zones across thousands of random scenarios.',
     helpTitle: 'Simulator input guide',
     helpIntro:
-      'Open this section when you want to understand each field before running the simulation. Your inputs are used to generate thousands of random scenarios, then the tool shows averages, drawdown, and one sample trade path.',
+      'Open this section when you want to understand each field before running the simulation. Your inputs generate thousands of random scenarios, then the tool shows strategy insight, risk recommendation, danger zones, charts, and one sample trade path.',
     items: [
+      {
+        title: 'Simulation goal and presets',
+        body:
+          'The simulation goal helps the tool judge results by context: growth, low drawdown, prop firm safe, or strategy testing. Quick presets fill risk, win rate, reward-risk, trade count, and simulations as a starting point; you can still edit the numbers before rerunning.',
+      },
       {
         title: 'Starting balance',
         body:

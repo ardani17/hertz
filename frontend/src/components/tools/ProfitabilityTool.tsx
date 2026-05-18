@@ -1,53 +1,26 @@
 'use client';
 
-import { useState } from 'react';
+import { useMemo, useState } from 'react';
 import styles from './ToolShell.module.css';
 import { useToolsLanguage } from './useToolsLanguage';
-
-type Inputs = {
-  balance: number;
-  riskPercent: number | '';
-  winRate: number | '';
-  rewardRisk: number | '';
-  trades: number | '';
-  simulations: number | '';
-};
-
-type NormalizedInputs = {
-  balance: number;
-  riskPercent: number;
-  winRate: number;
-  rewardRisk: number;
-  trades: number;
-  simulations: number;
-};
-
-type TradeDetail = {
-  trade: number;
-  outcome: 'Win' | 'Loss';
-  balanceBefore: number;
-  riskAmount: number;
-  pnl: number;
-  balanceAfter: number;
-  drawdown: number;
-};
-
-type SimulationResult = {
-  average: number;
-  best: number;
-  worst: number;
-  median: number;
-  profitablePct: number;
-  avgDrawdown: number;
-  roi: number;
-  simulations: number;
-  trades: number;
-  tradeDetails: TradeDetail[];
-};
-
-type CurrencyCode = 'IDR' | 'USD_USC';
-
-type LanguageCode = 'id' | 'en';
+import {
+  analyzeSimulation,
+  buildInputsFromPreset,
+  currencyConfigs,
+  formatCurrency,
+  formatNumberInput,
+  getLocale,
+  normalizeInputs,
+  parseBalanceInput,
+  parseEditableNumber,
+  presets,
+  runSimulation,
+  type CurrencyCode,
+  type GoalMode,
+  type Inputs,
+  type PresetId,
+  type SimulationResult,
+} from './profitabilityModel';
 
 const toolCopy = {
   id: {
@@ -59,14 +32,73 @@ const toolCopy = {
       rewardRisk: 'Reward risk',
       trades: 'Jumlah trade',
       simulations: 'Simulasi',
+      goal: 'Tujuan simulasi',
     },
     currencyOptions: {
       IDR: 'IDR - Rupiah',
       USD_USC: 'USD / USC - Dollar atau akun cent',
     },
+    goals: {
+      balanced: 'Balanced',
+      growth: 'Growth cepat',
+      low_drawdown: 'Drawdown rendah',
+      prop_firm_safe: 'Prop firm safe',
+      strategy_test: 'Testing strategi',
+    },
+    presetsTitle: 'Preset cepat',
+    presets: {
+      conservative: 'Conservative',
+      balanced: 'Balanced',
+      aggressive: 'Aggressive',
+      high_rr: 'High RR',
+      scalping: 'Scalping',
+      swing: 'Swing',
+      prop_firm_safe: 'Prop Firm Safe',
+    },
     run: 'Jalankan simulasi',
     validation:
       'Beberapa nilai disesuaikan ke batas aman sesuai mata uang akun: balance, risk 0.1-25%, win rate 0-100%, trade 1-1000, simulasi 100-5000.',
+    insight: {
+      title: 'Insight strategi',
+      subtitle: 'Ringkasan otomatis dari hasil simulasi terakhir.',
+      verdicts: {
+        healthy: 'Setup sehat: ekspektasi positif dengan tekanan drawdown masih terkendali.',
+        usable_with_control: 'Setup bisa digunakan, tetapi perlu kontrol risiko dan disiplin eksekusi.',
+        reduce_risk: 'Setup agresif: turunkan risk atau perbaiki win rate/RR sebelum dipakai serius.',
+        dangerous: 'Setup berbahaya: probabilitas rugi/drawdown terlalu besar untuk dipakai apa adanya.',
+      },
+      riskLevels: {
+        safe: 'Aman',
+        moderate: 'Sedang',
+        aggressive: 'Agresif',
+        danger: 'Bahaya',
+      },
+      recommendation: 'Rekomendasi risk',
+      expectancy: 'Expectancy per 1R',
+      profile: 'Profil',
+      warningTitle: 'Peringatan',
+      strengthTitle: 'Kekuatan',
+      emptyWarnings: 'Tidak ada peringatan besar dari simulasi ini.',
+      labels: {
+        conservative: 'Conservative',
+        balanced: 'Balanced',
+        aggressive: 'Aggressive',
+      },
+      warnings: {
+        negative_expectancy: 'Expectancy negatif: kombinasi win rate dan reward-risk belum cukup mengimbangi loss.',
+        low_profitability: 'Probabilitas profitable masih rendah pada simulasi ini.',
+        severe_drawdown: 'Risiko drawdown ekstrem muncul di cukup banyak skenario.',
+        high_drawdown: 'Drawdown cukup tinggi; pertimbangkan risk lebih kecil.',
+        oversized_risk: 'Risk per trade besar, rawan merusak modal saat losing streak.',
+        goal_risk_mismatch: 'Risk terlalu besar untuk tujuan drawdown rendah / prop firm safe.',
+        weak_worst_case: 'Worst 10% menunjukkan skenario buruk yang perlu diantisipasi.',
+      },
+      strengths: {
+        positive_expectancy: 'Expectancy strategi positif.',
+        strong_profitability: 'Mayoritas skenario berakhir profitable.',
+        controlled_drawdown: 'Drawdown rata-rata relatif terkendali.',
+      },
+    },
     metrics: {
       expected: 'Expected balance',
       median: 'Median',
@@ -75,6 +107,21 @@ const toolCopy = {
       profitable: 'Profitable',
       roi: 'Average ROI',
       drawdown: 'Avg drawdown',
+    },
+    danger: {
+      title: 'Danger zone',
+      dd10: 'Peluang DD ≥ 10%',
+      dd20: 'Peluang DD ≥ 20%',
+      dd30: 'Peluang DD ≥ 30%',
+      p90: 'Worst drawdown P90',
+    },
+    charts: {
+      title: 'Visual simulasi',
+      equity: 'Equity curve contoh',
+      distribution: 'Distribusi hasil akhir',
+      drawdown: 'Drawdown curve contoh',
+      low: 'Low',
+      high: 'High',
     },
     note: (simulations: string, trades: string) =>
       `Hasil terakhir berdasarkan ${simulations} simulasi dan ${trades} trade per simulasi. Fungsi tool ini membantu membaca ekspektasi dan drawdown, bukan prediksi profit.`,
@@ -102,14 +149,73 @@ const toolCopy = {
       rewardRisk: 'Reward-risk',
       trades: 'Trade count',
       simulations: 'Simulations',
+      goal: 'Simulation goal',
     },
     currencyOptions: {
       IDR: 'IDR - Rupiah',
       USD_USC: 'USD / USC - Dollar or cent account',
     },
+    goals: {
+      balanced: 'Balanced',
+      growth: 'Fast growth',
+      low_drawdown: 'Low drawdown',
+      prop_firm_safe: 'Prop firm safe',
+      strategy_test: 'Strategy test',
+    },
+    presetsTitle: 'Quick presets',
+    presets: {
+      conservative: 'Conservative',
+      balanced: 'Balanced',
+      aggressive: 'Aggressive',
+      high_rr: 'High RR',
+      scalping: 'Scalping',
+      swing: 'Swing',
+      prop_firm_safe: 'Prop Firm Safe',
+    },
     run: 'Run simulation',
     validation:
       'Some values were adjusted to safe limits for the selected account currency: balance, risk 0.1-25%, win rate 0-100%, trades 1-1000, simulations 100-5000.',
+    insight: {
+      title: 'Strategy insight',
+      subtitle: 'Automatic summary from the latest simulation result.',
+      verdicts: {
+        healthy: 'Healthy setup: positive expectancy with controlled drawdown pressure.',
+        usable_with_control: 'Usable setup, but it needs strict risk control and execution discipline.',
+        reduce_risk: 'Aggressive setup: reduce risk or improve win rate/RR before serious use.',
+        dangerous: 'Dangerous setup: loss/drawdown probability is too high as-is.',
+      },
+      riskLevels: {
+        safe: 'Safe',
+        moderate: 'Moderate',
+        aggressive: 'Aggressive',
+        danger: 'Danger',
+      },
+      recommendation: 'Risk recommendation',
+      expectancy: 'Expectancy per 1R',
+      profile: 'Profile',
+      warningTitle: 'Warnings',
+      strengthTitle: 'Strengths',
+      emptyWarnings: 'No major warnings from this simulation.',
+      labels: {
+        conservative: 'Conservative',
+        balanced: 'Balanced',
+        aggressive: 'Aggressive',
+      },
+      warnings: {
+        negative_expectancy: 'Negative expectancy: win rate and reward-risk do not offset losses yet.',
+        low_profitability: 'Profitability probability is still low in this simulation.',
+        severe_drawdown: 'Extreme drawdown risk appears in many scenarios.',
+        high_drawdown: 'Drawdown is elevated; consider smaller risk.',
+        oversized_risk: 'Risk per trade is large and vulnerable to losing streaks.',
+        goal_risk_mismatch: 'Risk is too large for low-drawdown / prop firm safe goals.',
+        weak_worst_case: 'Worst 10% shows a bad scenario that needs planning.',
+      },
+      strengths: {
+        positive_expectancy: 'Strategy expectancy is positive.',
+        strong_profitability: 'Most scenarios end profitable.',
+        controlled_drawdown: 'Average drawdown is relatively controlled.',
+      },
+    },
     metrics: {
       expected: 'Expected balance',
       median: 'Median',
@@ -118,6 +224,21 @@ const toolCopy = {
       profitable: 'Profitable',
       roi: 'Average ROI',
       drawdown: 'Avg drawdown',
+    },
+    danger: {
+      title: 'Danger zone',
+      dd10: 'Chance DD ≥ 10%',
+      dd20: 'Chance DD ≥ 20%',
+      dd30: 'Chance DD ≥ 30%',
+      p90: 'Worst drawdown P90',
+    },
+    charts: {
+      title: 'Simulation visuals',
+      equity: 'Sample equity curve',
+      distribution: 'Final result distribution',
+      drawdown: 'Sample drawdown curve',
+      low: 'Low',
+      high: 'High',
     },
     note: (simulations: string, trades: string) =>
       `Last result uses ${simulations} simulations and ${trades} trades per simulation. This tool helps read expectancy and drawdown, not predict profit.`,
@@ -138,216 +259,51 @@ const toolCopy = {
   },
 };
 
-const currencyConfigs: Record<
-  CurrencyCode,
-  {
-    defaultBalance: number;
-    minBalance: number;
-    maxBalance: number;
-    inputFractionDigits: number;
-    outputFractionDigits: number;
-  }
-> = {
-  IDR: {
-    defaultBalance: 10000000,
-    minBalance: 100000,
-    maxBalance: 100000000000,
-    inputFractionDigits: 0,
-    outputFractionDigits: 0,
-  },
-  USD_USC: {
-    defaultBalance: 1000,
-    minBalance: 1,
-    maxBalance: 100000000,
-    inputFractionDigits: 2,
-    outputFractionDigits: 2,
-  },
-};
-
-function percentile(values: number[], pct: number) {
-  const index = Math.min(values.length - 1, Math.max(0, Math.floor(values.length * pct)));
-  return values[index] ?? 0;
-}
-
-function getLocale(language: LanguageCode) {
-  return language === 'id' ? 'id-ID' : 'en-US';
-}
+const goalModes: GoalMode[] = ['balanced', 'growth', 'low_drawdown', 'prop_firm_safe', 'strategy_test'];
 
 function isCurrencyCode(value: string): value is CurrencyCode {
   return value === 'IDR' || value === 'USD_USC';
 }
 
-function parseIdrInput(value: string) {
-  const normalized = value.replace(/\./g, '').replace(',', '.').replace(/[^\d.]/g, '');
-  return Math.round(Number(normalized) || 0);
+function buildLinePath(values: number[], width = 100, height = 36) {
+  if (values.length < 2) return '';
+  const min = Math.min(...values);
+  const max = Math.max(...values);
+  const range = max - min || 1;
+
+  return values
+    .map((value, index) => {
+      const x = (index / (values.length - 1)) * width;
+      const y = height - ((value - min) / range) * height;
+      return `${x.toFixed(2)},${y.toFixed(2)}`;
+    })
+    .join(' ');
 }
 
-function parseSingleSeparatorDecimal(cleaned: string, separator: '.' | ',') {
-  const parts = cleaned.split(separator);
+function buildDistribution(values: number[], buckets = 8) {
+  if (!values.length) return [];
+  const min = values[0] ?? 0;
+  const max = values[values.length - 1] ?? min;
+  const range = max - min || 1;
+  const counts = Array.from({ length: buckets }, () => 0);
 
-  if (parts.length === 1) {
-    return Number(cleaned.replace(/[^\d]/g, '')) || 0;
-  }
+  values.forEach((value) => {
+    const index = Math.min(buckets - 1, Math.max(0, Math.floor(((value - min) / range) * buckets)));
+    counts[index] += 1;
+  });
 
-  const lastPart = parts[parts.length - 1] ?? '';
-  const thousandsLike =
-    lastPart.length === 3 &&
-    parts.slice(0, -1).every((part, index) => (index === 0 ? part.length >= 1 && part.length <= 3 : part.length === 3));
-
-  if (thousandsLike) {
-    return Number(parts.join('').replace(/[^\d]/g, '')) || 0;
-  }
-
-  const integer = parts.slice(0, -1).join('').replace(/[^\d]/g, '');
-  const decimal = lastPart.replace(/[^\d]/g, '');
-  return Number(`${integer || '0'}.${decimal}`) || 0;
+  const peak = Math.max(...counts, 1);
+  return counts.map((count) => ({ count, pct: (count / peak) * 100 }));
 }
 
-function parseDecimalCurrencyInput(value: string) {
-  const cleaned = value.replace(/[^\d.,]/g, '');
-
-  if (!cleaned) return 0;
-
-  const lastComma = cleaned.lastIndexOf(',');
-  const lastDot = cleaned.lastIndexOf('.');
-
-  if (lastComma >= 0 && lastDot >= 0) {
-    const decimalSeparator = lastComma > lastDot ? ',' : '.';
-    const thousandsSeparator = decimalSeparator === ',' ? '.' : ',';
-    const decimalIndex = cleaned.lastIndexOf(decimalSeparator);
-    const integer = cleaned.slice(0, decimalIndex).split(thousandsSeparator).join('').replace(/[^\d]/g, '');
-    const decimal = cleaned.slice(decimalIndex + 1).replace(/[^\d]/g, '');
-
-    return Number(`${integer || '0'}.${decimal}`) || 0;
-  }
-
-  if (lastComma >= 0) return parseSingleSeparatorDecimal(cleaned, ',');
-  if (lastDot >= 0) return parseSingleSeparatorDecimal(cleaned, '.');
-
-  return Number(cleaned.replace(/[^\d]/g, '')) || 0;
-}
-
-function parseBalanceInput(value: string, currency: CurrencyCode) {
-  if (currency === 'IDR') return parseIdrInput(value);
-  return parseDecimalCurrencyInput(value);
-}
-
-function formatNumberInput(value: number, currency: CurrencyCode, language: LanguageCode) {
-  if (!value) return '';
-  const config = currencyConfigs[currency];
-
-  return new Intl.NumberFormat(getLocale(language), {
-    maximumFractionDigits: config.inputFractionDigits,
-    minimumFractionDigits: 0,
-  }).format(value);
-}
-
-function formatCurrency(value: number, currency: CurrencyCode, language: LanguageCode) {
-  const config = currencyConfigs[currency];
-  const locale = getLocale(language);
-
-  if (currency === 'USD_USC') {
-    return `USD/USC ${new Intl.NumberFormat(locale, {
-      minimumFractionDigits: config.outputFractionDigits,
-      maximumFractionDigits: config.outputFractionDigits,
-    }).format(value)}`;
-  }
-
-  return new Intl.NumberFormat(locale, {
-    style: 'currency',
-    currency,
-    minimumFractionDigits: config.outputFractionDigits,
-    maximumFractionDigits: config.outputFractionDigits,
-  }).format(value);
-}
-
-function createSeededRandom(seed: number) {
-  let state = seed >>> 0;
-
-  return () => {
-    state = (state * 1664525 + 1013904223) >>> 0;
-    return state / 4294967296;
-  };
-}
-
-function readNumber(value: number | '') {
-  return value === '' ? 0 : value;
-}
-
-function parseEditableNumber(value: string) {
-  if (value === '') return '';
-  const numeric = Number(value);
-  return Number.isFinite(numeric) ? numeric : '';
-}
-
-function normalizeInputs(inputs: Inputs, currency: CurrencyCode): NormalizedInputs {
-  const config = currencyConfigs[currency];
+function getChartData(result: SimulationResult, startingBalance: number) {
+  const equityValues = [startingBalance, ...result.tradeDetails.map((trade) => trade.balanceAfter)];
+  const drawdownValues = result.tradeDetails.map((trade) => -trade.drawdown);
 
   return {
-    balance: Math.min(Math.max(inputs.balance, config.minBalance), config.maxBalance),
-    riskPercent: Math.min(Math.max(readNumber(inputs.riskPercent), 0.1), 25),
-    winRate: Math.min(Math.max(readNumber(inputs.winRate), 0), 100),
-    rewardRisk: Math.min(Math.max(readNumber(inputs.rewardRisk), 0.1), 20),
-    trades: Math.min(Math.max(Math.round(readNumber(inputs.trades)), 1), 1000),
-    simulations: Math.min(Math.max(Math.round(readNumber(inputs.simulations)), 100), 5000),
-  };
-}
-
-function runSimulation(inputs: Inputs, seed = 1729, currency: CurrencyCode = 'IDR'): SimulationResult {
-  const normalized = normalizeInputs(inputs, currency);
-  const outcomes: number[] = [];
-  const drawdowns: number[] = [];
-  const tradeDetails: TradeDetail[] = [];
-  const random = createSeededRandom(seed);
-
-  for (let sim = 0; sim < normalized.simulations; sim++) {
-    let balance = normalized.balance;
-    let peak = balance;
-    let maxDrawdown = 0;
-
-    for (let trade = 0; trade < normalized.trades; trade++) {
-      const balanceBefore = balance;
-      const risk = balance * (normalized.riskPercent / 100);
-      const win = random() < normalized.winRate / 100;
-      const pnl = win ? risk * normalized.rewardRisk : -risk;
-      balance += pnl;
-      peak = Math.max(peak, balance);
-      const currentDrawdown = ((peak - balance) / peak) * 100;
-      maxDrawdown = Math.max(maxDrawdown, currentDrawdown);
-
-      if (sim === 0) {
-        tradeDetails.push({
-          trade: trade + 1,
-          outcome: win ? 'Win' : 'Loss',
-          balanceBefore,
-          riskAmount: risk,
-          pnl,
-          balanceAfter: balance,
-          drawdown: currentDrawdown,
-        });
-      }
-    }
-
-    outcomes.push(balance);
-    drawdowns.push(maxDrawdown);
-  }
-
-  outcomes.sort((a, b) => a - b);
-  const average = outcomes.reduce((sum, value) => sum + value, 0) / outcomes.length;
-  const profitable = outcomes.filter((value) => value > normalized.balance).length;
-  const avgDrawdown = drawdowns.reduce((sum, value) => sum + value, 0) / drawdowns.length;
-
-  return {
-    average,
-    best: percentile(outcomes, 0.9),
-    worst: percentile(outcomes, 0.1),
-    median: percentile(outcomes, 0.5),
-    profitablePct: (profitable / outcomes.length) * 100,
-    avgDrawdown,
-    roi: ((average - normalized.balance) / normalized.balance) * 100,
-    simulations: normalized.simulations,
-    trades: normalized.trades,
-    tradeDetails,
+    equityPath: buildLinePath(equityValues),
+    drawdownPath: buildLinePath(drawdownValues.length ? drawdownValues : [0, 0]),
+    distribution: buildDistribution(result.finalBalances),
   };
 }
 
@@ -356,6 +312,8 @@ export function ProfitabilityTool() {
   const copy = toolCopy[language];
   const numberLocale = getLocale(language);
   const [currency, setCurrency] = useState<CurrencyCode>('IDR');
+  const [goalMode, setGoalMode] = useState<GoalMode>('balanced');
+  const [activePreset, setActivePreset] = useState<PresetId | null>(null);
   const [inputs, setInputs] = useState<Inputs>({
     balance: currencyConfigs.IDR.defaultBalance,
     riskPercent: 2,
@@ -364,10 +322,15 @@ export function ProfitabilityTool() {
     trades: 100,
     simulations: 1000,
   });
+  const [lastInputs, setLastInputs] = useState(() => normalizeInputs(inputs, currency));
   const [result, setResult] = useState<SimulationResult>(() => runSimulation(inputs, 1729, currency));
   const [validationNote, setValidationNote] = useState<string | null>(null);
 
+  const analysis = useMemo(() => analyzeSimulation(lastInputs, result, goalMode), [lastInputs, result, goalMode]);
+  const chartData = useMemo(() => getChartData(result, lastInputs.balance), [result, lastInputs.balance]);
+
   const update = (field: Exclude<keyof Inputs, 'balance'>, value: string) => {
+    setActivePreset(null);
     setInputs((prev) => ({
       ...prev,
       [field]: parseEditableNumber(value),
@@ -375,10 +338,20 @@ export function ProfitabilityTool() {
   };
 
   const updateBalance = (value: string) => {
+    setActivePreset(null);
     setInputs((prev) => ({
       ...prev,
       balance: parseBalanceInput(value, currency),
     }));
+  };
+
+  const runWithInputs = (nextInputs: Inputs, nextCurrency = currency, seed = Date.now()) => {
+    const normalized = normalizeInputs(nextInputs, nextCurrency);
+    const nextResult = runSimulation(normalized, seed, nextCurrency);
+
+    setLastInputs(normalized);
+    setResult(nextResult);
+    return normalized;
   };
 
   const handleCurrencyChange = (value: string) => {
@@ -390,12 +363,21 @@ export function ProfitabilityTool() {
 
     setCurrency(nextCurrency);
     setInputs(nextInputs);
+    setActivePreset(null);
     setValidationNote(null);
-    setResult(runSimulation(nextInputs, 1729, nextCurrency));
+    runWithInputs(nextInputs, nextCurrency, 1729);
+  };
+
+  const handlePreset = (presetId: PresetId) => {
+    const nextInputs = buildInputsFromPreset(inputs, presetId);
+    setInputs(nextInputs);
+    setActivePreset(presetId);
+    setValidationNote(null);
+    runWithInputs(nextInputs, currency, 1729);
   };
 
   const handleRun = () => {
-    const normalized = normalizeInputs(inputs, currency);
+    const normalized = runWithInputs(inputs, currency);
     const changed = Object.entries(normalized).some(([key, value]) => {
       const current = inputs[key as keyof Inputs];
       return (current === '' ? 0 : current) !== value;
@@ -403,7 +385,6 @@ export function ProfitabilityTool() {
 
     setInputs(normalized);
     setValidationNote(changed ? copy.validation : null);
-    setResult(runSimulation(normalized, Date.now(), currency));
   };
 
   return (
@@ -414,6 +395,16 @@ export function ProfitabilityTool() {
           <select id="currency" value={currency} onChange={(e) => handleCurrencyChange(e.target.value)}>
             <option value="IDR">{copy.currencyOptions.IDR}</option>
             <option value="USD_USC">{copy.currencyOptions.USD_USC}</option>
+          </select>
+        </div>
+        <div className={styles.field}>
+          <label htmlFor="goalMode">{copy.fields.goal}</label>
+          <select id="goalMode" value={goalMode} onChange={(e) => setGoalMode(e.target.value as GoalMode)}>
+            {goalModes.map((mode) => (
+              <option key={mode} value={mode}>
+                {copy.goals[mode]}
+              </option>
+            ))}
           </select>
         </div>
         <div className={styles.field}>
@@ -447,6 +438,25 @@ export function ProfitabilityTool() {
         </div>
       </div>
 
+      <section className={styles.controlSection} aria-labelledby="profitability-presets">
+        <h2 id="profitability-presets">{copy.presetsTitle}</h2>
+        <div className={styles.presetGrid}>
+          {presets.map((preset) => (
+            <button
+              className={`${styles.presetButton} ${activePreset === preset.id ? styles.presetActive : ''}`}
+              key={preset.id}
+              onClick={() => handlePreset(preset.id)}
+              type="button"
+            >
+              <strong>{copy.presets[preset.id]}</strong>
+              <span>
+                {preset.riskPercent}% risk · {preset.winRate}% WR · {preset.rewardRisk}R
+              </span>
+            </button>
+          ))}
+        </div>
+      </section>
+
       <div className={styles.actions}>
         <button className="btn btn-primary" onClick={handleRun} type="button">
           {copy.run}
@@ -454,6 +464,54 @@ export function ProfitabilityTool() {
       </div>
 
       {validationNote ? <p className={styles.note}>{validationNote}</p> : null}
+
+      <section className={`${styles.insightPanel} ${styles[`risk-${analysis.riskLevel}`]}`} aria-labelledby="strategy-insight">
+        <div className={styles.insightHeader}>
+          <div>
+            <p className={styles.eyebrow}>{copy.insight.subtitle}</p>
+            <h2 id="strategy-insight">{copy.insight.title}</h2>
+          </div>
+          <span className={styles.gradeBadge}>Grade {analysis.grade}</span>
+        </div>
+        <p className={styles.insightVerdict}>{copy.insight.verdicts[analysis.verdictId as keyof typeof copy.insight.verdicts]}</p>
+        <div className={styles.insightGrid}>
+          <div>
+            <span>{copy.insight.profile}</span>
+            <strong>{copy.insight.riskLevels[analysis.riskLevel]}</strong>
+          </div>
+          <div>
+            <span>{copy.insight.recommendation}</span>
+            <strong>{analysis.riskRecommendation.toFixed(2)}%</strong>
+            <small>{copy.insight.labels[analysis.recommendedRiskLabel]}</small>
+          </div>
+          <div>
+            <span>{copy.insight.expectancy}</span>
+            <strong>{analysis.expectancyPerRisk.toFixed(2)}R</strong>
+          </div>
+        </div>
+        <div className={styles.insightLists}>
+          <div>
+            <h3>{copy.insight.warningTitle}</h3>
+            {analysis.warnings.length ? (
+              <ul>
+                {analysis.warnings.map((warning) => (
+                  <li key={warning}>{copy.insight.warnings[warning as keyof typeof copy.insight.warnings]}</li>
+                ))}
+              </ul>
+            ) : (
+              <p>{copy.insight.emptyWarnings}</p>
+            )}
+          </div>
+          <div>
+            <h3>{copy.insight.strengthTitle}</h3>
+            <ul>
+              {analysis.strengths.map((strength) => (
+                <li key={strength}>{copy.insight.strengths[strength as keyof typeof copy.insight.strengths]}</li>
+              ))}
+            </ul>
+          </div>
+        </div>
+      </section>
 
       <div className={styles.resultGrid}>
         <div className={`${styles.metric} ${styles.metricPrimary}`}>
@@ -486,6 +544,58 @@ export function ProfitabilityTool() {
         </div>
       </div>
 
+      <section className={styles.dangerSection} aria-labelledby="danger-zone">
+        <h2 id="danger-zone">{copy.danger.title}</h2>
+        <div className={styles.dangerGrid}>
+          <div className={styles.metric}>
+            <span>{copy.danger.dd10}</span>
+            <strong>{result.drawdownBreach10Pct.toFixed(1)}%</strong>
+          </div>
+          <div className={styles.metric}>
+            <span>{copy.danger.dd20}</span>
+            <strong>{result.drawdownBreach20Pct.toFixed(1)}%</strong>
+          </div>
+          <div className={styles.metric}>
+            <span>{copy.danger.dd30}</span>
+            <strong>{result.drawdownBreach30Pct.toFixed(1)}%</strong>
+          </div>
+          <div className={styles.metric}>
+            <span>{copy.danger.p90}</span>
+            <strong>{result.maxDrawdownP90.toFixed(1)}%</strong>
+          </div>
+        </div>
+      </section>
+
+      <section className={styles.chartSection} aria-labelledby="simulation-visuals">
+        <h2 id="simulation-visuals">{copy.charts.title}</h2>
+        <div className={styles.chartGrid}>
+          <article className={styles.chartCard}>
+            <h3>{copy.charts.equity}</h3>
+            <svg className={styles.miniChart} viewBox="0 0 100 36" role="img" aria-label={copy.charts.equity} preserveAspectRatio="none">
+              <polyline points={chartData.equityPath} fill="none" stroke="currentColor" strokeWidth="2" vectorEffect="non-scaling-stroke" />
+            </svg>
+          </article>
+          <article className={styles.chartCard}>
+            <h3>{copy.charts.distribution}</h3>
+            <div className={styles.distributionBars} aria-hidden="true">
+              {chartData.distribution.map((bucket, index) => (
+                <span key={index} style={{ height: `${Math.max(bucket.pct, 4)}%` }} title={`${bucket.count}`} />
+              ))}
+            </div>
+            <div className={styles.chartScale}>
+              <span>{copy.charts.low}</span>
+              <span>{copy.charts.high}</span>
+            </div>
+          </article>
+          <article className={styles.chartCard}>
+            <h3>{copy.charts.drawdown}</h3>
+            <svg className={`${styles.miniChart} ${styles.drawdownChart}`} viewBox="0 0 100 36" role="img" aria-label={copy.charts.drawdown} preserveAspectRatio="none">
+              <polyline points={chartData.drawdownPath} fill="none" stroke="currentColor" strokeWidth="2" vectorEffect="non-scaling-stroke" />
+            </svg>
+          </article>
+        </div>
+      </section>
+
       <p className={styles.note}>
         {copy.note(result.simulations.toLocaleString(numberLocale), result.trades.toLocaleString(numberLocale))}
       </p>
@@ -496,9 +606,7 @@ export function ProfitabilityTool() {
             <h2>{copy.detailTitle}</h2>
             <p>{copy.detailDescription}</p>
           </div>
-          <span className={styles.badgeMuted}>
-            {copy.detailCount(result.tradeDetails.length.toLocaleString(numberLocale))}
-          </span>
+          <span className={styles.badgeMuted}>{copy.detailCount(result.tradeDetails.length.toLocaleString(numberLocale))}</span>
         </div>
 
         <div className={styles.tableWrap} data-mobile-cards="true">
