@@ -33,6 +33,8 @@ export function HertzDetailInteractions({
   currentUser: MemberSessionUser | null;
 }) {
   const [comment, setComment] = useState('');
+  const [replyDraft, setReplyDraft] = useState('');
+  const [replyTargetId, setReplyTargetId] = useState<string | null>(null);
   const [message, setMessage] = useState<string | null>(null);
   const [pending, setPending] = useState<string | null>(null);
   const composerState = getHertzCommentComposerState(currentUser, pending === 'comment');
@@ -69,6 +71,34 @@ export function HertzDetailInteractions({
       window.location.reload();
     } catch {
       setMessage('Komentar gagal dikirim.');
+    } finally {
+      setPending(null);
+    }
+  }
+
+  async function submitReply(parentCommentId: string) {
+    if (!requireLogin()) return;
+    const content = replyDraft.trim();
+    if (!content) {
+      setMessage('Balasan tidak boleh kosong.');
+      return;
+    }
+    try {
+      setPending(`reply-${parentCommentId}`);
+      const response = await fetch(`/api/hertz/posts/${post.shortId}/comments`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ content, parentCommentId }),
+      });
+      if (!response.ok) {
+        const data = await response.json().catch(() => null);
+        setMessage(data?.error?.message ?? 'Balasan gagal dikirim.');
+        return;
+      }
+      setMessage('Balasan terkirim.');
+      window.location.reload();
+    } catch {
+      setMessage('Balasan gagal dikirim.');
     } finally {
       setPending(null);
     }
@@ -139,7 +169,7 @@ export function HertzDetailInteractions({
         <div className={styles.list}>
           {post.comments.length > 0
             ? post.comments.map((item) => (
-              <CommentItem key={item.id} comment={item} onDelete={() => deleteComment(item.id)} onEdit={(content) => editComment(item.id, content)} />
+              <CommentItem key={item.id} comment={item} currentUser={currentUser} replyDraft={replyTargetId === item.id ? replyDraft : ''} replyOpen={replyTargetId === item.id} replyPending={pending === `reply-${item.id}`} onToggleReply={() => { setReplyTargetId((value) => value === item.id ? null : item.id); setReplyDraft(''); }} onReplyDraftChange={setReplyDraft} onSubmitReply={() => submitReply(item.id)} onDeleteComment={deleteComment} onEditComment={editComment} />
             ))
             : <p className={styles.empty}>Belum ada komentar.</p>}
         </div>
@@ -149,7 +179,7 @@ export function HertzDetailInteractions({
   );
 }
 
-function CommentItem({ comment, onDelete, onEdit }: { comment: HertzComment; onDelete: () => void; onEdit: (content: string) => void }) {
+function CommentItem({ comment, currentUser, replyDraft, replyOpen, replyPending, onToggleReply, onReplyDraftChange, onSubmitReply, onDeleteComment, onEditComment }: { comment: HertzComment; currentUser: MemberSessionUser | null; replyDraft: string; replyOpen: boolean; replyPending: boolean; onToggleReply: () => void; onReplyDraftChange: (value: string) => void; onSubmitReply: () => void; onDeleteComment: (commentId: string) => void; onEditComment: (commentId: string, content: string) => void }) {
   const [editing, setEditing] = useState(false);
   const [draft, setDraft] = useState(comment.content);
 
@@ -168,7 +198,7 @@ function CommentItem({ comment, onDelete, onEdit }: { comment: HertzComment; onD
           {comment.editedAt ? <span>Diedit</span> : null}
         </div>
         {editing ? (
-          <form className={styles.inlineEdit} onSubmit={(event) => { event.preventDefault(); onEdit(draft); }}>
+          <form className={styles.inlineEdit} onSubmit={(event) => { event.preventDefault(); onEditComment(comment.id, draft); }}>
             <textarea value={draft} onChange={(event) => setDraft(event.target.value)} rows={3} maxLength={2000} />
             <div>
               <button type="button" onClick={() => { setDraft(comment.content); setEditing(false); }}>Batal</button>
@@ -177,9 +207,41 @@ function CommentItem({ comment, onDelete, onEdit }: { comment: HertzComment; onD
           </form>
         ) : <p>{comment.content}</p>}
         <div className={styles.inlineActions}>
+          {currentUser ? <button type="button" className={styles.textButton} onClick={onToggleReply}>Balas</button> : null}
           {comment.canEdit ? <button type="button" className={styles.textButton} onClick={() => setEditing((value) => !value)}>Edit</button> : null}
-          {comment.canDelete ? <button type="button" className={styles.textButton} onClick={onDelete}>Hapus</button> : null}
+          {comment.canDelete ? <button type="button" className={styles.textButton} onClick={() => onDeleteComment(comment.id)}>Hapus</button> : null}
         </div>
+        {replyOpen ? (
+          <form className={styles.replyForm} onSubmit={(event) => { event.preventDefault(); onSubmitReply(); }}>
+            <textarea value={replyDraft} onChange={(event) => onReplyDraftChange(event.target.value)} rows={2} maxLength={2000} placeholder={`Balas ${comment.author.name}`} />
+            <div><span>{replyDraft.trim().length}/2000</span><button type="submit" disabled={replyPending}>{replyPending ? 'Mengirim...' : 'Kirim balasan'}</button></div>
+          </form>
+        ) : null}
+        {comment.replies.length > 0 ? (
+          <div className={styles.replies}>
+            {comment.replies.map((reply) => <ReplyItem key={reply.id} comment={reply} onDeleteComment={onDeleteComment} onEditComment={onEditComment} />)}
+          </div>
+        ) : null}
+      </div>
+    </article>
+  );
+}
+
+function ReplyItem({ comment, onDeleteComment, onEditComment }: { comment: HertzComment; onDeleteComment: (commentId: string) => void; onEditComment: (commentId: string, content: string) => void }) {
+  const [editing, setEditing] = useState(false);
+  const [draft, setDraft] = useState(comment.content);
+  return (
+    <article className={styles.replyItem}>
+      <HertzAvatar className={styles.avatar} src={comment.author.avatarUrl} name={comment.author.name} username={comment.author.username} />
+      <div>
+        <div className={styles.itemTop}><strong>{comment.author.name}</strong><span>{new Date(comment.createdAt).toLocaleString('id-ID', { dateStyle: 'medium', timeStyle: 'short' })}</span>{comment.editedAt ? <span>Diedit</span> : null}</div>
+        {editing ? (
+          <form className={styles.inlineEdit} onSubmit={(event) => { event.preventDefault(); onEditComment(comment.id, draft); }}>
+            <textarea value={draft} onChange={(event) => setDraft(event.target.value)} rows={3} maxLength={2000} />
+            <div><button type="button" onClick={() => { setDraft(comment.content); setEditing(false); }}>Batal</button><button type="submit">Simpan</button></div>
+          </form>
+        ) : <p>{comment.content}</p>}
+        <div className={styles.inlineActions}>{comment.canEdit ? <button type="button" className={styles.textButton} onClick={() => setEditing((value) => !value)}>Edit</button> : null}{comment.canDelete ? <button type="button" className={styles.textButton} onClick={() => onDeleteComment(comment.id)}>Hapus</button> : null}</div>
       </div>
     </article>
   );

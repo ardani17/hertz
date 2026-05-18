@@ -443,7 +443,7 @@ export class HertzPostService {
 
   private async listComments(postId: string, viewer: MemberSessionUser | null): Promise<HertzComment[]> {
     const rows = await this.comments.listByPost(postId);
-    return rows.map((row) => this.mapComment(row, viewer));
+    return buildHertzCommentTree(rows.map((row) => this.mapComment(row, viewer)));
   }
 
   private mapComment(row: HertzCommentRow, viewer: MemberSessionUser | null): HertzComment {
@@ -451,6 +451,8 @@ export class HertzPostService {
       id: row.id,
       postId: row.post_id,
       userId: row.user_id,
+      parentCommentId: row.parent_comment_id,
+      replies: [],
       author: {
         id: row.user_id,
         name: row.display_name ?? row.username ?? 'Member Horizon',
@@ -521,4 +523,30 @@ async function awardHertzCredit(userId: string, eventType: string, entityId: str
   if (amount > 0) {
     await execute('UPDATE users SET credit_balance = credit_balance + $1 WHERE id = $2', [amount, userId], client);
   }
+}
+
+export function buildHertzCommentTree(comments: HertzComment[]): HertzComment[] {
+  const byId = new Map(comments.map((comment) => [comment.id, { ...comment, replies: [] as HertzComment[] }]));
+  const roots: HertzComment[] = [];
+
+  for (const comment of byId.values()) {
+    if (!comment.parentCommentId) {
+      roots.push(comment);
+      continue;
+    }
+
+    let parent = byId.get(comment.parentCommentId);
+    if (!parent) {
+      roots.push(comment);
+      continue;
+    }
+
+    while (parent.parentCommentId && byId.has(parent.parentCommentId)) {
+      parent = byId.get(parent.parentCommentId)!;
+    }
+
+    parent.replies.push(comment);
+  }
+
+  return roots;
 }

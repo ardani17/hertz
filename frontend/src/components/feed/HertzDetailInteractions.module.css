@@ -303,3 +303,71 @@
     margin-inline: 0.8rem;
   }
 }
+
+.replyForm {
+  background: rgba(19, 210, 123, 0.06);
+  border: 1px solid rgba(19, 210, 123, 0.22);
+  border-radius: 8px;
+  display: grid;
+  gap: 0.5rem;
+  margin-top: 0.7rem;
+  padding: 0.65rem;
+}
+
+.replyForm textarea {
+  background: #020604;
+  border: 1px solid rgba(76, 118, 94, 0.42);
+  border-radius: 7px;
+  color: #eef8f1;
+  font: inherit;
+  line-height: 1.45;
+  padding: 0.6rem 0.7rem;
+  resize: vertical;
+}
+
+.replyForm div {
+  align-items: center;
+  display: flex;
+  justify-content: space-between;
+}
+
+.replyForm span {
+  color: #8fa899;
+  font-size: 0.78rem;
+}
+
+.replyForm button {
+  background: #13d27b;
+  border: 0;
+  border-radius: 7px;
+  color: #031008;
+  cursor: pointer;
+  font: inherit;
+  font-size: 0.8rem;
+  font-weight: 900;
+  min-height: 32px;
+  padding: 0 0.75rem;
+}
+
+.replies {
+  border-left: 2px solid rgba(19, 210, 123, 0.24);
+  display: grid;
+  gap: 0.55rem;
+  margin-top: 0.75rem;
+  padding-left: 0.75rem;
+}
+
+.replyItem {
+  background: rgba(5, 18, 11, 0.62);
+  border: 1px solid rgba(76, 118, 94, 0.22);
+  border-radius: 8px;
+  display: grid;
+  gap: 0.6rem;
+  grid-template-columns: 30px minmax(0, 1fr);
+  padding: 0.65rem;
+}
+
+.replyItem .avatar {
+  height: 30px;
+  width: 30px;
+}

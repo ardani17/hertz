@@ -31,7 +31,7 @@ export async function POST(request: NextRequest, context: RouteContext) {
     const user = await getCurrentMember();
     if (!user) return apiError('AUTH_REQUIRED', 'Login member diperlukan', 401);
     const body = await request.json();
-    const comment = await comments.create(shortId, user, body.content);
+    const comment = await comments.create(shortId, user, body.content, body.parentCommentId);
     return apiSuccess({ comment }, 201);
   } catch (error) {
     return apiErrorFromUnknown(error);

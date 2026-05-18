@@ -88,6 +88,8 @@ export interface HertzComment {
   id: string;
   postId: string;
   userId: string;
+  parentCommentId: string | null;
+  replies: HertzComment[];
   author: HertzAuthor;
   content: string;
   status: 'visible' | 'hidden' | 'deleted';

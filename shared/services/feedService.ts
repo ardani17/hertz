@@ -429,6 +429,8 @@ export class FeedService {
       id: row.id,
       postId: row.post_id,
       userId: row.user_id,
+      parentCommentId: row.parent_comment_id,
+      replies: [],
       author: authorFromRow(row),
       content: row.content,
       status: row.status,

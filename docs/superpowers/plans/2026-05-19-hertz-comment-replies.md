@@ -20,13 +20,13 @@
 - Modify: `frontend/src/app/api/hertz/posts/[shortId]/comments/route.ts`
 - Test: `tests/unit/shared/hertzCommentReplies.test.ts`
 
-- [ ] Write failing unit tests for one-level comment tree behavior.
-- [ ] Extend `HertzComment` with `parentCommentId` and `replies`.
-- [ ] Let repository create comments with optional `parentCommentId`.
-- [ ] Validate parent comment belongs to same post and is visible.
-- [ ] Map comments into top-level comments with replies.
-- [ ] API accepts optional `parentCommentId`.
-- [ ] Run focused backend tests.
+- [x] Write failing unit tests for one-level comment tree behavior.
+- [x] Extend `HertzComment` with `parentCommentId` and `replies`.
+- [x] Let repository create comments with optional `parentCommentId`.
+- [x] Validate parent comment belongs to same post and is visible.
+- [x] Map comments into top-level comments with replies.
+- [x] API accepts optional `parentCommentId`.
+- [x] Run focused backend tests.
 
 ### Task 2: UI reply form and nested display
 
@@ -35,18 +35,18 @@
 - Modify: `frontend/src/components/feed/HertzDetailInteractions.module.css`
 - Test: `tests/unit/frontend/hertzMessages.test.ts` or `tests/unit/frontend/hertzPostDetail.test.ts`
 
-- [ ] Add reply state and submit handler using `parentCommentId`.
-- [ ] Add `Balas` action for logged-in users.
-- [ ] Render reply form under active parent comment.
-- [ ] Render replies indented under parent comment.
-- [ ] Run focused frontend tests.
+- [x] Add reply state and submit handler using `parentCommentId`.
+- [x] Add `Balas` action for logged-in users.
+- [x] Render reply form under active parent comment.
+- [x] Render replies indented under parent comment.
+- [x] Run focused frontend tests.
 
 ### Task 3: Verification and commit
 
 **Files:**
 - All related files above.
 
-- [ ] Run focused tests.
-- [ ] Run `npm run build:frontend`.
-- [ ] Stage only reply-comment related files.
-- [ ] Commit implementation.
+- [x] Run focused tests.
+- [x] Run `npm run build:frontend`.
+- [x] Stage only reply-comment related files.
+- [x] Commit implementation.

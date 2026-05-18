@@ -31,13 +31,13 @@ export class HertzCommentRepository {
     return result.rows;
   }
 
-  async create(postId: string, userId: string, content: string, client?: DbClient): Promise<HertzCommentRow> {
+  async create(postId: string, userId: string, content: string, parentCommentId: string | null = null, client?: DbClient): Promise<HertzCommentRow> {
     const row = await queryOne<HertzCommentRow>(
-      `INSERT INTO hertz_comments (post_id, user_id, content)
-       VALUES ($1, $2, $3)
+      `INSERT INTO hertz_comments (post_id, user_id, content, parent_comment_id)
+       VALUES ($1, $2, $3, $4)
        RETURNING *, NULL::text AS username, NULL::text AS display_name,
                  NULL::text AS avatar_url, 'member'::text AS role`,
-      [postId, userId, content],
+      [postId, userId, content, parentCommentId],
       client,
     );
     if (!row) throw new Error('Failed to create HERTZ comment');

@@ -23,12 +23,13 @@ export class HertzCommentService {
   private readonly push = new PushNotificationService();
   private readonly inAppNotifications = new HertzInAppNotificationService();
 
-  async create(postId: string, user: MemberSessionUser | null, content: unknown): Promise<HertzCommentRow> {
+  async create(postId: string, user: MemberSessionUser | null, content: unknown, parentCommentId: unknown = null): Promise<HertzCommentRow> {
     if (!user) throw new HertzForbiddenError('Login member diperlukan');
     const resolvedPostId = await this.posts.resolvePostId(postId);
     if (!resolvedPostId) throw new HertzNotFoundError('Post tidak ditemukan');
+    const resolvedParentCommentId = await this.resolveParentCommentId(resolvedPostId, parentCommentId);
     const comment = await withTransaction(async (client) => {
-      const comment = await this.comments.create(resolvedPostId, user.id, cleanComment(content), client);
+      const comment = await this.comments.create(resolvedPostId, user.id, cleanComment(content), resolvedParentCommentId, client);
       await this.logs.log({
         actor_id: user.id,
         actor_type: user.role === 'admin' ? 'admin' : 'member',
@@ -42,6 +43,17 @@ export class HertzCommentService {
     void this.push.notifyHertzCommentCreated({ postId: resolvedPostId, commentId: comment.id, commenterId: user.id });
     void this.inAppNotifications.notifyComment({ postId: resolvedPostId, commentId: comment.id, actorUserId: user.id }).catch(() => undefined);
     return comment;
+  }
+
+
+  private async resolveParentCommentId(postId: string, value: unknown): Promise<string | null> {
+    if (value == null || value === '') return null;
+    if (typeof value !== 'string') throw new HertzValidationError('Komentar induk tidak valid');
+    const parent = await this.comments.findById(value);
+    if (!parent || parent.post_id !== postId || parent.status !== 'visible' || parent.deleted_at) {
+      throw new HertzValidationError('Komentar induk tidak valid');
+    }
+    return parent.parent_comment_id ?? parent.id;
   }
 
   async edit(commentId: string, user: MemberSessionUser | null, content: unknown): Promise<void> {
