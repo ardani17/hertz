@@ -2,11 +2,13 @@ import { query, withTransaction } from '../db';
 import { HertzDmRepository } from '../repositories/hertzDmRepository';
 import { HertzForbiddenError, HertzValidationError } from './hertzPostService';
 import { PushNotificationService } from './pushNotificationService';
+import { HertzInAppNotificationService } from './hertzInAppNotificationService';
 import type { MemberSessionUser } from '../types/membership';
 
 export class HertzDmService {
   private readonly repo = new HertzDmRepository();
   private readonly push = new PushNotificationService();
+  private readonly inAppNotifications = new HertzInAppNotificationService();
 
   async inbox(user: MemberSessionUser, includeArchived = false) {
     const rows = await this.repo.listInbox(user.id, includeArchived);
@@ -75,6 +77,7 @@ export class HertzDmService {
       return message;
     });
     void this.push.notifyDmMessageCreated({ conversationId, messageId: message.id, senderId: user.id });
+    void this.inAppNotifications.notifyDm({ conversationId, messageId: message.id, actorUserId: user.id }).catch(() => undefined);
     return message;
   }
 

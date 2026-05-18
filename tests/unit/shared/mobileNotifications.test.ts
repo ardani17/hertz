@@ -35,6 +35,8 @@ describe('mobile notification persistence wiring', () => {
 describe('HERTZ minimal notification summary', () => {
   it('builds an unread DM badge only for real unread messages', () => {
     expect(buildHertzNotificationSummary({ unreadDmCount: 3 })).toEqual({
+      unreadCount: 0,
+      hasUnread: false,
       unreadDmCount: 3,
       hasUnreadDm: true,
     });
@@ -42,6 +44,8 @@ describe('HERTZ minimal notification summary', () => {
 
   it('does not create a fake badge for guests or zero unread state', () => {
     expect(buildHertzNotificationSummary({ unreadDmCount: 0 })).toEqual({
+      unreadCount: 0,
+      hasUnread: false,
       unreadDmCount: 0,
       hasUnreadDm: false,
     });

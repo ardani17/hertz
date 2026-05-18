@@ -9,7 +9,7 @@ import { HertzRightRail } from '@/components/feed/HertzRightRail';
 import { MobileBottomNav } from './MobileBottomNav';
 import styles from './HertzAppShell.module.css';
 
-type ActiveNav = 'home' | 'outlook' | 'blog' | 'gallery' | 'tools' | 'messages' | 'profile';
+type ActiveNav = 'home' | 'outlook' | 'blog' | 'gallery' | 'tools' | 'notifications' | 'messages' | 'profile';
 
 export function HertzAppShell({
   active,

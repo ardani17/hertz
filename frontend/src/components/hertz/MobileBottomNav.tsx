@@ -1,18 +1,19 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import { Compass, FileText, Home, MessageCircle, SlidersVertical, UserCircle } from 'lucide-react';
+import { Bell, Compass, FileText, Home, MessageCircle, SlidersVertical, UserCircle } from 'lucide-react';
 import type { MemberSessionUser } from '@shared/types';
 import { canShowNavItem, getAccessRole } from '@/lib/accessRole';
 import styles from './MobileBottomNav.module.css';
 
-type ActiveNav = 'home' | 'outlook' | 'blog' | 'gallery' | 'tools' | 'messages' | 'profile';
+type ActiveNav = 'home' | 'outlook' | 'blog' | 'gallery' | 'tools' | 'notifications' | 'messages' | 'profile';
 
 const navItems = [
   { key: 'home', href: '/hertz', label: 'Home', Icon: Home },
   { key: 'outlook', href: '/outlook', label: 'Outlook', Icon: Compass },
   { key: 'blog', href: '/blog', label: 'Blog', Icon: FileText },
   { key: 'tools', href: '/tools', label: 'Tools', Icon: SlidersVertical },
+  { key: 'notifications', href: '/hertz/notifications', label: 'Notif', ariaLabel: 'Notifikasi', Icon: Bell },
   { key: 'messages', href: '/hertz/messages', label: 'DM', ariaLabel: 'Direct Message', Icon: MessageCircle },
   { key: 'profile', href: '/hertz/profile', label: 'Akun', Icon: UserCircle },
 ] as const;
@@ -33,10 +34,12 @@ export function MobileBottomNav({
   const accessRole = getAccessRole(currentUser);
   const visibleItems = navItems.filter(({ key }) => canShowNavItem(accessRole, key));
   const [unreadDmCount, setUnreadDmCount] = useState(0);
+  const [unreadNotificationCount, setUnreadNotificationCount] = useState(0);
 
   useEffect(() => {
     if (!currentUser) {
       setUnreadDmCount(0);
+      setUnreadNotificationCount(0);
       return;
     }
 
@@ -46,12 +49,15 @@ export function MobileBottomNav({
       const payload = await response.json().catch(() => null);
       if (!cancelled && response.ok && payload?.success) {
         setUnreadDmCount(Number(payload.data.notifications?.unreadDmCount ?? 0));
+        setUnreadNotificationCount(Number(payload.data.notifications?.unreadCount ?? 0));
       }
     }
 
     void loadNotifications();
+    const timer = window.setInterval(() => void loadNotifications(), 25000);
     return () => {
       cancelled = true;
+      window.clearInterval(timer);
     };
   }, [currentUser]);
 
@@ -67,6 +73,11 @@ export function MobileBottomNav({
         >
           <Icon />
           <span>{label}</span>
+          {key === 'notifications' && getDmBadgeLabel(unreadNotificationCount) ? (
+            <em className={styles.badge} aria-label={`${unreadNotificationCount} notifikasi belum dibaca`}>
+              {getDmBadgeLabel(unreadNotificationCount)}
+            </em>
+          ) : null}
           {key === 'messages' && getDmBadgeLabel(unreadDmCount) ? (
             <em className={styles.badge} aria-label={`${unreadDmCount} DM belum dibaca`}>
               {getDmBadgeLabel(unreadDmCount)}

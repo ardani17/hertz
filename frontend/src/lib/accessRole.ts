@@ -8,6 +8,7 @@ export type HertzNavItem =
   | 'blog'
   | 'gallery'
   | 'tools'
+  | 'notifications'
   | 'messages'
   | 'profile';
 

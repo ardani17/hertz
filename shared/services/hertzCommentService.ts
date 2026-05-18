@@ -4,6 +4,7 @@ import { HertzPostRepository } from '../repositories/hertzPostRepository';
 import { ActivityLogService } from './activityLog';
 import { HertzForbiddenError, HertzNotFoundError, HertzValidationError } from './hertzPostService';
 import { PushNotificationService } from './pushNotificationService';
+import { HertzInAppNotificationService } from './hertzInAppNotificationService';
 import type { MemberSessionUser } from '../types/membership';
 
 const COMMENT_MAX = 2000;
@@ -20,6 +21,7 @@ export class HertzCommentService {
   private readonly posts = new HertzPostRepository();
   private readonly logs = new ActivityLogService();
   private readonly push = new PushNotificationService();
+  private readonly inAppNotifications = new HertzInAppNotificationService();
 
   async create(postId: string, user: MemberSessionUser | null, content: unknown): Promise<HertzCommentRow> {
     if (!user) throw new HertzForbiddenError('Login member diperlukan');
@@ -38,6 +40,7 @@ export class HertzCommentService {
       return comment;
     });
     void this.push.notifyHertzCommentCreated({ postId: resolvedPostId, commentId: comment.id, commenterId: user.id });
+    void this.inAppNotifications.notifyComment({ postId: resolvedPostId, commentId: comment.id, actorUserId: user.id }).catch(() => undefined);
     return comment;
   }
 
