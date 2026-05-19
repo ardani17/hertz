@@ -8,6 +8,7 @@ import type { ChallengeTradeDto } from '@shared/types/challengeTracker';
 interface RouteContext { params: Promise<{ accountId: string }> }
 export const dynamic = 'force-dynamic';
 const service = new ChallengeTrackerService();
+const configuredProvider = process.env.CHALLENGE_AI_PROVIDER || process.env.AI_REVIEW_PROVIDER || 'mock';
 
 function filterTrades(scope: string, trades: ChallengeTradeDto[]) {
   const today = new Date().toISOString().slice(0, 10);
@@ -70,7 +71,7 @@ export async function POST(request: NextRequest, context: RouteContext) {
     const assistantResponse = 'AI Review belum terhubung ke provider. Context sudah berhasil dibuat dan siap dikirim ke adapter AI pilihan Anda.';
     const review = await service.createAIReview(user.id, accountId, {
       personaId: typeof body?.personaId === 'string' ? body.personaId : null,
-      provider: typeof body?.provider === 'string' ? body.provider : 'mock',
+      provider: configuredProvider,
       reviewScope,
       reviewStyle,
       userMessage,
