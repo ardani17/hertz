@@ -25,7 +25,7 @@ const copy = {
     sections: { overview: 'Dashboard challenge', progress: 'Progress rules', rules: 'Rules challenge', presets: 'Preset cepat', journalInput: 'Journal Input', journalDash: 'Journal Dashboard', journalTable: 'Journal Table', filters: 'Filter journal', analytics: 'Analytics jurnal', charts: 'Chart sederhana', risk: 'Peringatan risiko', aiSettings: 'Persona & Review Settings', aiChat: 'Chat review', context: 'Preview context' },
     fields: { name: 'Nama challenge', currency: 'Mata uang', initial: 'Saldo awal', currentBalance: 'Saldo saat ini', currentEquity: 'Equity saat ini', targetPct: 'Target profit %', targetAmount: 'Target nominal', dailyPct: 'Max daily loss %', dailyAmount: 'Daily loss nominal', ddPct: 'Max drawdown %', ddAmount: 'Drawdown nominal', minDays: 'Minimum trading days', start: 'Tanggal mulai', end: 'Tanggal berakhir', accountType: 'Tipe akun', drawdownMode: 'Mode drawdown', news: 'News trading boleh', overnight: 'Hold overnight', weekend: 'Hold weekend', consistency: 'Consistency %', maxLot: 'Max lot', maxRisk: 'Max risk/trade %' },
     trade: { date: 'Tanggal', symbol: 'Pair / symbol', session: 'Session', direction: 'Buy/Sell', entry: 'Entry price', sl: 'Stop loss', tp: 'Take profit', exit: 'Exit price', lot: 'Lot size', riskAmount: 'Risk nominal', riskPercent: 'Risk %', result: 'Result', pnl: 'P/L nominal', pnlPercent: 'P/L %', rrPlanned: 'RR planned', rrRealized: 'RR realized', setup: 'Setup name', entryReason: 'Alasan entry', exitReason: 'Alasan exit', emotion: 'Emosi', mistake: 'Kesalahan', confidence: 'Confidence 1-5', disciplineInput: 'Discipline 1-5', quality: 'Quality', followedPlan: 'Followed plan', screenshot: 'Screenshot URL', notes: 'Catatan evaluasi', add: 'Tambah trade', clear: 'Reset form', delete: 'Delete' },
-    ai: { scope: 'Mode review', style: 'Gaya review', message: 'Tulis pesan', reviewJournal: 'Kirim', reviewLast: 'Review trade terakhir', reviewRisk: 'Review risiko', actionPlan: 'Buat action plan', clear: 'Clear Chat', mock: 'AI Review belum terhubung ke provider. Context sudah berhasil dibuat.' },
+    ai: { scope: 'Mode review', style: 'Gaya review', message: 'Tulis pesan', reviewJournal: 'Kirim', sending: 'Mengirim...', reviewLast: 'Review trade terakhir', reviewRisk: 'Review risiko', actionPlan: 'Buat action plan', clear: 'Clear Chat', mock: 'AI Review belum terhubung ke provider. Context sudah berhasil dibuat.' },
     insights: { rr: 'Win rate rendah tetapi RR tinggi. Strategi masih bisa profit jika risk reward dijaga.', loss: 'Win rate tinggi namun akun masih loss. Evaluasi average loss dan disiplin cut loss.', overtrade: 'Jumlah trade hari ini melebihi batas. Pertimbangkan berhenti trading.', lossStreak: 'Loss streak mencapai 3 atau lebih. Istirahat dan evaluasi setup sebelum entry berikutnya.', noWarnings: 'Belum ada warning besar dari data jurnal.' },
   },
   en: {
@@ -37,7 +37,7 @@ const copy = {
     sections: { overview: 'Challenge dashboard', progress: 'Rules progress', rules: 'Challenge rules', presets: 'Quick presets', journalInput: 'Journal Input', journalDash: 'Journal Dashboard', journalTable: 'Journal Table', filters: 'Journal filters', analytics: 'Journal analytics', charts: 'Simple charts', risk: 'Risk warnings', aiSettings: 'Persona & Review Settings', aiChat: 'Review chat', context: 'Context preview' },
     fields: { name: 'Challenge name', currency: 'Currency', initial: 'Starting balance', currentBalance: 'Current balance', currentEquity: 'Current equity', targetPct: 'Profit target %', targetAmount: 'Target amount', dailyPct: 'Max daily loss %', dailyAmount: 'Daily loss amount', ddPct: 'Max drawdown %', ddAmount: 'Drawdown amount', minDays: 'Minimum trading days', start: 'Start date', end: 'End date', accountType: 'Account type', drawdownMode: 'Drawdown mode', news: 'News trading allowed', overnight: 'Hold overnight', weekend: 'Hold weekend', consistency: 'Consistency %', maxLot: 'Max lot', maxRisk: 'Max risk/trade %' },
     trade: { date: 'Date', symbol: 'Pair / symbol', session: 'Session', direction: 'Buy/Sell', entry: 'Entry price', sl: 'Stop loss', tp: 'Take profit', exit: 'Exit price', lot: 'Lot size', riskAmount: 'Risk amount', riskPercent: 'Risk %', result: 'Result', pnl: 'P/L amount', pnlPercent: 'P/L %', rrPlanned: 'RR planned', rrRealized: 'RR realized', setup: 'Setup name', entryReason: 'Entry reason', exitReason: 'Exit reason', emotion: 'Emotion', mistake: 'Mistake', confidence: 'Confidence 1-5', disciplineInput: 'Discipline 1-5', quality: 'Quality', followedPlan: 'Followed plan', screenshot: 'Screenshot URL', notes: 'Evaluation notes', add: 'Add trade', clear: 'Reset form', delete: 'Delete' },
-    ai: { scope: 'Review mode', style: 'Review style', message: 'Write a message', reviewJournal: 'Send', reviewLast: 'Review Last Trade', reviewRisk: 'Review Risk', actionPlan: 'Create Action Plan', clear: 'Clear Chat', mock: 'AI Review is not connected to a provider yet. Context was built successfully.' },
+    ai: { scope: 'Review mode', style: 'Review style', message: 'Write a message', reviewJournal: 'Send', sending: 'Sending...', reviewLast: 'Review Last Trade', reviewRisk: 'Review Risk', actionPlan: 'Create Action Plan', clear: 'Clear Chat', mock: 'AI Review is not connected to a provider yet. Context was built successfully.' },
     insights: { rr: 'Win rate is low but RR is high. The strategy can still work if reward-risk is maintained.', loss: 'Win rate is high but the account is losing. Review average loss and cutting discipline.', overtrade: 'Trades today exceed the rule. Consider stopping for the day.', lossStreak: 'Loss streak is 3 or more. Rest and review setup quality before the next entry.', noWarnings: 'No major journal warning yet.' },
   },
 };
@@ -102,6 +102,7 @@ export function ChallengeTrackerTool() {
   const [filters, setFilters] = useState(filtersDefault);
   const [message, setMessage] = useState('');
   const [loading, setLoading] = useState(true);
+  const [aiLoading, setAiLoading] = useState(false);
   const [aiState, setAiState] = useState({ selectedPersona: 'Strict Prop Firm Coach', customPersonaText: '', personaName: 'Prop Firm Evaluator', personaDescription: '', reviewScope: 'all', reviewStyle: 'Action plan', userMessage: '', contextPreview: '', assistant: '' });
 
   const selected = accounts.find((account) => account.id === selectedId) ?? null;
@@ -194,14 +195,28 @@ export function ChallengeTrackerTool() {
     await loadAll(selectedId);
   }
   async function runReview(mode?: 'last_trade' | 'risk' | 'action') {
-    if (!selectedId || !effectiveAccount) return;
+    if (!selectedId || !effectiveAccount) {
+      setMessage('Pilih atau buat challenge dulu sebelum chat AI Review.');
+      return;
+    }
     const reviewScope = mode === 'last_trade' ? 'last_trade' : mode === 'risk' ? 'risk' : aiState.reviewScope;
     const reviewStyle = mode === 'action' ? 'Action plan' : aiState.reviewStyle;
-    const localContext = buildAIReviewContext({ challengeConfig: effectiveAccount, trades: trades as unknown as Array<Record<string, unknown>>, analytics, riskStatus: riskStatus ?? calculateRiskStatus(effectiveAccount, trades), selectedPersona: aiState.selectedPersona, customPersonaText: aiState.customPersonaText, reviewScope, reviewStyle, userMessage: aiState.userMessage });
-    setAiState((state) => ({ ...state, contextPreview: [localContext.systemPrompt, localContext.contextPrompt, localContext.userPrompt].join('\n\n---\n\n') }));
-    const data = await apiFetch<{ review: ChallengeAIReviewDto; prompts: { systemPrompt: string; contextPrompt: string; userPrompt: string } }>(`/api/tools/challenge-tracker/accounts/${selectedId}/ai-reviews`, { method: 'POST', body: JSON.stringify({ ...aiState, reviewScope, reviewStyle }) });
-    setReviews((items) => [data.review, ...items]);
-    setAiState((state) => ({ ...state, assistant: data.review.assistantResponse, contextPreview: [data.prompts.systemPrompt, data.prompts.contextPrompt, data.prompts.userPrompt].join('\n\n---\n\n') }));
+    try {
+      setMessage('');
+      setAiLoading(true);
+      setAiState((state) => ({ ...state, assistant: 'AI sedang membaca jurnal dan membuat review...' }));
+      const localContext = buildAIReviewContext({ challengeConfig: effectiveAccount, trades: trades as unknown as Array<Record<string, unknown>>, analytics, riskStatus: riskStatus ?? calculateRiskStatus(effectiveAccount, trades), selectedPersona: aiState.selectedPersona, customPersonaText: aiState.customPersonaText, reviewScope, reviewStyle, userMessage: aiState.userMessage });
+      setAiState((state) => ({ ...state, contextPreview: [localContext.systemPrompt, localContext.contextPrompt, localContext.userPrompt].join('\n\n---\n\n') }));
+      const data = await apiFetch<{ review: ChallengeAIReviewDto; prompts: { systemPrompt: string; contextPrompt: string; userPrompt: string } }>(`/api/tools/challenge-tracker/accounts/${selectedId}/ai-reviews`, { method: 'POST', body: JSON.stringify({ ...aiState, reviewScope, reviewStyle }) });
+      setReviews((items) => [data.review, ...items]);
+      setAiState((state) => ({ ...state, assistant: data.review.assistantResponse, contextPreview: [data.prompts.systemPrompt, data.prompts.contextPrompt, data.prompts.userPrompt].join('\n\n---\n\n') }));
+    } catch (error) {
+      const errorMessage = error instanceof Error ? error.message : t.error;
+      setMessage(errorMessage);
+      setAiState((state) => ({ ...state, assistant: `AI Review gagal: ${errorMessage}` }));
+    } finally {
+      setAiLoading(false);
+    }
   }
 
   if (loading) return <section className={styles.panel}><p>{t.loading}</p></section>;
@@ -229,7 +244,7 @@ export function ChallengeTrackerTool() {
       {tab === 'journal' && selected ? <Journal t={t} form={tradeForm} setForm={setTradeForm} onSubmit={addTrade} filters={filters} setFilters={setFilters} trades={filteredTrades} analytics={analytics} insights={journalInsights} onDelete={deleteTrade} currency={selected.accountCurrency} /> : null}
       {tab === 'analytics' && selected ? <Analytics t={t} analytics={analytics} trades={trades} currency={selected.accountCurrency} /> : null}
       {tab === 'risk' && selected && effectiveAccount && riskStatus ? <RiskMonitor t={t} account={effectiveAccount} analytics={analytics} riskStatus={riskStatus} insights={journalInsights} /> : null}
-      {tab === 'ai' && selected ? <AIReview t={t} aiState={aiState} setAiState={setAiState} reviews={reviews} runReview={runReview} /> : null}
+      {tab === 'ai' && selected ? <AIReview t={t} aiState={aiState} setAiState={setAiState} reviews={reviews} runReview={runReview} aiLoading={aiLoading} /> : null}
     </section>
   );
 }
@@ -258,7 +273,7 @@ function RiskMonitor({ t, account, analytics, riskStatus, insights }: { t: Copy;
   const warnings = [...riskStatus.warnings, ...insights.filter((item) => item !== t.insights.noWarnings)];
   return <section className={styles.panel}><div className={styles.sectionHeader}><div><h2>{t.sections.risk}</h2><p>{account.name}</p></div><StatusBadge status={riskStatus.status} labels={t.status} /></div><div className={styles.progressGrid}><Progress label={t.metrics.dailyLoss} value={riskStatus.dailyLossUsagePct} /><Progress label={t.metrics.drawdown} value={riskStatus.overallDrawdownUsagePct} /><Progress label={t.metrics.avgRisk} value={account.maxRiskPerTradePercent ? (analytics.averageRiskPercent / account.maxRiskPerTradePercent) * 100 : 0} /></div><div className={styles.insightLists}><div><h3>Warnings</h3><ul>{(warnings.length ? warnings : [t.insights.noWarnings]).map((item) => <li key={item}>{item}</li>)}</ul></div></div></section>;
 }
-function AIReview({ t, aiState, setAiState, reviews, runReview }: { t: Copy; aiState: { selectedPersona: string; customPersonaText: string; personaName: string; personaDescription: string; reviewScope: string; reviewStyle: string; userMessage: string; contextPreview: string; assistant: string }; setAiState: React.Dispatch<React.SetStateAction<{ selectedPersona: string; customPersonaText: string; personaName: string; personaDescription: string; reviewScope: string; reviewStyle: string; userMessage: string; contextPreview: string; assistant: string }>>; reviews: ChallengeAIReviewDto[]; runReview: (mode?: 'last_trade' | 'risk' | 'action') => void }) {
+function AIReview({ t, aiState, setAiState, reviews, runReview, aiLoading }: { t: Copy; aiState: { selectedPersona: string; customPersonaText: string; personaName: string; personaDescription: string; reviewScope: string; reviewStyle: string; userMessage: string; contextPreview: string; assistant: string }; setAiState: React.Dispatch<React.SetStateAction<{ selectedPersona: string; customPersonaText: string; personaName: string; personaDescription: string; reviewScope: string; reviewStyle: string; userMessage: string; contextPreview: string; assistant: string }>>; reviews: ChallengeAIReviewDto[]; aiLoading: boolean; runReview: (mode?: 'last_trade' | 'risk' | 'action') => void }) {
   const set = (k: string, v: string) => setAiState((state) => ({ ...state, [k]: v }));
   const latest = aiState.assistant || reviews[0]?.assistantResponse || t.ai.mock;
   return (
@@ -301,12 +316,12 @@ function AIReview({ t, aiState, setAiState, reviews, runReview }: { t: Copy; aiS
       </div>
       <div className={styles.chatInputRow}>
         <textarea value={aiState.userMessage} onChange={(event) => set('userMessage', event.target.value)} placeholder="Tanya AI untuk review jurnal, risiko, disiplin, atau action plan berikutnya." />
-        <button type="button" onClick={() => void runReview()}>{t.ai.reviewJournal}</button>
+        <button type="button" disabled={aiLoading} onClick={() => void runReview()}>{aiLoading ? t.ai.sending : t.ai.reviewJournal}</button>
       </div>
       <div className={styles.actions}>
-        <button type="button" className="btn-secondary" onClick={() => void runReview('last_trade')}>{t.ai.reviewLast}</button>
-        <button type="button" className="btn-secondary" onClick={() => void runReview('risk')}>{t.ai.reviewRisk}</button>
-        <button type="button" className="btn-secondary" onClick={() => void runReview('action')}>{t.ai.actionPlan}</button>
+        <button type="button" className="btn-secondary" disabled={aiLoading} onClick={() => void runReview('last_trade')}>{t.ai.reviewLast}</button>
+        <button type="button" className="btn-secondary" disabled={aiLoading} onClick={() => void runReview('risk')}>{t.ai.reviewRisk}</button>
+        <button type="button" className="btn-secondary" disabled={aiLoading} onClick={() => void runReview('action')}>{t.ai.actionPlan}</button>
         <button type="button" className="btn-secondary" onClick={() => setAiState((state) => ({ ...state, assistant: '', contextPreview: '', userMessage: '' }))}>{t.ai.clear}</button>
       </div>
     </section>
