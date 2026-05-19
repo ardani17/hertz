@@ -46,6 +46,13 @@ const copy = {
         points: ['Monte Carlo', 'Drawdown', 'ROI'],
       },
       {
+        name: 'Challenge Tracker',
+        href: '/tools/challenge-tracker',
+        label: 'Tracker',
+        summary: 'Pantau challenge trading nyata: target profit, drawdown, rules, jurnal manual, risk monitor, dan AI review context.',
+        points: ['Member database', 'Journal & analytics', 'Risk monitor'],
+      },
+      {
         name: 'Elliott Wave Calculator',
         href: '/tools/elliott-wave',
         label: 'Calculator',
@@ -114,6 +121,13 @@ const copy = {
         label: 'Simulator',
         summary: 'Runs a Monte Carlo simulation to estimate trading outcomes from risk, win rate, and reward-risk.',
         points: ['Monte Carlo', 'Drawdown', 'ROI'],
+      },
+      {
+        name: 'Challenge Tracker',
+        href: '/tools/challenge-tracker',
+        label: 'Tracker',
+        summary: 'Track real trading challenges: profit target, drawdown, rules, manual journal, risk monitor, and AI review context.',
+        points: ['Member database', 'Journal & analytics', 'Risk monitor'],
       },
       {
         name: 'Elliott Wave Calculator',

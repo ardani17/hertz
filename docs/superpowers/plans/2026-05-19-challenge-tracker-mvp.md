@@ -1,6 +1,6 @@
 # Challenge Tracker MVP Implementation Plan
 
-> **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking.
+> **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [x]`) syntax for tracking.
 
 **Goal:** Build `/tools/challenge-tracker` as a database-backed, member-owned tracker with multiple challenges per Telegram member, manual journal input, analytics, risk monitoring, and mock AI review context.
 
@@ -87,7 +87,7 @@
 **Files:**
 - Create: `db/migrations/014_create_challenge_tracker.sql`
 
-- [ ] **Step 1: Create migration file**
+- [x] **Step 1: Create migration file**
 
 Use this SQL:
 
@@ -203,7 +203,7 @@ CREATE INDEX IF NOT EXISTS idx_challenge_ai_reviews_account_created ON challenge
 CREATE INDEX IF NOT EXISTS idx_challenge_ai_reviews_user_created ON challenge_ai_reviews(user_id, created_at DESC);
 ```
 
-- [ ] **Step 2: Verify migration syntax through frontend build-compatible SQL only**
+- [x] **Step 2: Verify migration syntax through frontend build-compatible SQL only**
 
 Run:
 
@@ -213,7 +213,7 @@ npm run build:frontend
 
 Expected: build succeeds. This does not execute the migration, but confirms no accidental TypeScript changes were introduced in this task.
 
-- [ ] **Step 3: Commit**
+- [x] **Step 3: Commit**
 
 ```bash
 git add db/migrations/014_create_challenge_tracker.sql
@@ -229,7 +229,7 @@ git commit -m "Add Challenge Tracker database schema"
 - Create: `frontend/src/components/tools/challengeTrackerModel.ts`
 - Create: `tests/unit/frontend/challengeTrackerModel.test.ts`
 
-- [ ] **Step 1: Create shared type definitions**
+- [x] **Step 1: Create shared type definitions**
 
 Add enums/unions and DTOs for currencies, account types, drawdown modes, trade result, session, direction, emotional state, mistake category, trade quality, account DTO, trade DTO, persona DTO, review DTO, analytics summary, and risk status.
 
@@ -248,7 +248,7 @@ export type ChallengeTradeQuality = 'a_plus' | 'a' | 'b' | 'c' | 'd';
 export type ChallengeStatus = 'safe' | 'warning' | 'danger' | 'failed';
 ```
 
-- [ ] **Step 2: Write failing tests for model helpers**
+- [x] **Step 2: Write failing tests for model helpers**
 
 Create `tests/unit/frontend/challengeTrackerModel.test.ts` with tests for:
 
@@ -323,7 +323,7 @@ describe('challengeTrackerModel', () => {
 });
 ```
 
-- [ ] **Step 3: Run failing test**
+- [x] **Step 3: Run failing test**
 
 ```bash
 npm test -- tests/unit/frontend/challengeTrackerModel.test.ts
@@ -331,11 +331,11 @@ npm test -- tests/unit/frontend/challengeTrackerModel.test.ts
 
 Expected: FAIL because `challengeTrackerModel.ts` does not exist or helper exports are missing.
 
-- [ ] **Step 4: Implement pure model helpers**
+- [x] **Step 4: Implement pure model helpers**
 
 In `frontend/src/components/tools/challengeTrackerModel.ts`, implement the exported helpers used by the test. Keep function inputs permissive enough for DTOs and tests, but typed.
 
-- [ ] **Step 5: Run model tests**
+- [x] **Step 5: Run model tests**
 
 ```bash
 npm test -- tests/unit/frontend/challengeTrackerModel.test.ts
@@ -343,7 +343,7 @@ npm test -- tests/unit/frontend/challengeTrackerModel.test.ts
 
 Expected: PASS.
 
-- [ ] **Step 6: Commit**
+- [x] **Step 6: Commit**
 
 ```bash
 git add shared/types/challengeTracker.ts frontend/src/components/tools/challengeTrackerModel.ts tests/unit/frontend/challengeTrackerModel.test.ts
@@ -359,7 +359,7 @@ git commit -m "Add Challenge Tracker domain model"
 - Create: `shared/services/challengeTrackerService.ts`
 - Create: `tests/unit/shared/challengeTrackerService.test.ts`
 
-- [ ] **Step 1: Write service tests**
+- [x] **Step 1: Write service tests**
 
 Test that account input defaults and trade input discipline score are normalized without database access by exporting pure normalization functions from the service file:
 
@@ -396,7 +396,7 @@ describe('challengeTrackerService normalization', () => {
 });
 ```
 
-- [ ] **Step 2: Run failing service tests**
+- [x] **Step 2: Run failing service tests**
 
 ```bash
 npm test -- tests/unit/shared/challengeTrackerService.test.ts
@@ -404,7 +404,7 @@ npm test -- tests/unit/shared/challengeTrackerService.test.ts
 
 Expected: FAIL because the service file does not exist.
 
-- [ ] **Step 3: Implement repository class**
+- [x] **Step 3: Implement repository class**
 
 Repository methods:
 
@@ -440,11 +440,11 @@ JOIN challenge_accounts a ON a.id = t.challenge_account_id
 WHERE t.id = $1 AND a.user_id = $2
 ```
 
-- [ ] **Step 4: Implement service class and normalization exports**
+- [x] **Step 4: Implement service class and normalization exports**
 
 Service methods wrap repository calls and use normalizers from Step 1.
 
-- [ ] **Step 5: Run service tests**
+- [x] **Step 5: Run service tests**
 
 ```bash
 npm test -- tests/unit/shared/challengeTrackerService.test.ts
@@ -452,7 +452,7 @@ npm test -- tests/unit/shared/challengeTrackerService.test.ts
 
 Expected: PASS.
 
-- [ ] **Step 6: Commit**
+- [x] **Step 6: Commit**
 
 ```bash
 git add shared/repositories/challengeTrackerRepository.ts shared/services/challengeTrackerService.ts tests/unit/shared/challengeTrackerService.test.ts
@@ -466,7 +466,7 @@ git commit -m "Add Challenge Tracker service layer"
 **Files:**
 - Create API route files listed in the API routes section.
 
-- [ ] **Step 1: Implement account routes**
+- [x] **Step 1: Implement account routes**
 
 Use existing response/auth pattern:
 
@@ -494,15 +494,15 @@ export async function GET() {
 
 Implement the same auth guard in all Challenge Tracker API routes.
 
-- [ ] **Step 2: Implement trade routes**
+- [x] **Step 2: Implement trade routes**
 
 All trade routes must pass `user.id` and account/trade IDs to service methods. Do not accept `userId` from request body.
 
-- [ ] **Step 3: Implement persona routes**
+- [x] **Step 3: Implement persona routes**
 
 Personas are per member. Do not require a challenge ID.
 
-- [ ] **Step 4: Implement AI review routes**
+- [x] **Step 4: Implement AI review routes**
 
 `POST /accounts/[accountId]/ai-reviews` builds AI review context through `buildAIReviewContext`, stores mock response, and returns `{ review, contextPreview }`.
 
@@ -512,7 +512,7 @@ Mock response:
 AI Review belum terhubung ke provider. Context sudah berhasil dibuat.
 ```
 
-- [ ] **Step 5: Verify build**
+- [x] **Step 5: Verify build**
 
 ```bash
 npm run build:frontend
@@ -520,7 +520,7 @@ npm run build:frontend
 
 Expected: PASS.
 
-- [ ] **Step 6: Commit**
+- [x] **Step 6: Commit**
 
 ```bash
 git add frontend/src/app/api/tools/challenge-tracker
@@ -537,7 +537,7 @@ git commit -m "Add Challenge Tracker API routes"
 - Modify: `frontend/src/components/tools/ToolNav.tsx`
 - Modify: `frontend/src/components/tools/ToolsHub.tsx`
 
-- [ ] **Step 1: Add route page**
+- [x] **Step 1: Add route page**
 
 Use the Profitability route pattern:
 
@@ -563,15 +563,15 @@ export default async function ChallengeTrackerPage() {
 }
 ```
 
-- [ ] **Step 2: Add ToolNav item**
+- [x] **Step 2: Add ToolNav item**
 
 Insert Challenge Tracker after Profitability in both nav copy sets.
 
-- [ ] **Step 3: Add ToolsHub card**
+- [x] **Step 3: Add ToolsHub card**
 
 Add Challenge Tracker card with localized ID/EN text and `href: '/tools/challenge-tracker'`.
 
-- [ ] **Step 4: Create page shell component**
+- [x] **Step 4: Create page shell component**
 
 `ChallengeTrackerToolPage.tsx` renders:
 
@@ -581,7 +581,7 @@ Add Challenge Tracker card with localized ID/EN text and `href: '/tools/challeng
 - auth required panel if `currentUser` is null
 - `ChallengeTrackerTool` if logged in
 
-- [ ] **Step 5: Verify build**
+- [x] **Step 5: Verify build**
 
 ```bash
 npm run build:frontend
@@ -589,7 +589,7 @@ npm run build:frontend
 
 Expected: PASS and route list includes `/tools/challenge-tracker`.
 
-- [ ] **Step 6: Commit**
+- [x] **Step 6: Commit**
 
 ```bash
 git add frontend/src/app/tools/challenge-tracker/page.tsx frontend/src/components/tools/ChallengeTrackerToolPage.tsx frontend/src/components/tools/ToolNav.tsx frontend/src/components/tools/ToolsHub.tsx
@@ -605,7 +605,7 @@ git commit -m "Add Challenge Tracker route"
 - Create: `frontend/src/components/tools/ChallengeTrackerTabs.tsx`
 - Modify: `frontend/src/components/tools/ToolShell.module.css`
 
-- [ ] **Step 1: Implement tab component**
+- [x] **Step 1: Implement tab component**
 
 Tabs: `overview`, `rules`, `journal`, `analytics`, `risk`, `ai_review`.
 
@@ -617,7 +617,7 @@ Overview | Rules | Journal | Analytics | Risk Monitor | AI Review
 
 Use same labels in EN for MVP except translatable surrounding text.
 
-- [ ] **Step 2: Implement ChallengeTrackerTool state**
+- [x] **Step 2: Implement ChallengeTrackerTool state**
 
 State:
 
@@ -636,7 +636,7 @@ Initial load:
 - select first non-archived account
 - if account selected, fetch trades, personas, and reviews
 
-- [ ] **Step 3: Implement challenge switcher skeleton**
+- [x] **Step 3: Implement challenge switcher skeleton**
 
 Top controls:
 
@@ -646,7 +646,7 @@ Top controls:
 
 If no accounts, show preset cards and create form entry point.
 
-- [ ] **Step 4: Add CSS utility classes**
+- [x] **Step 4: Add CSS utility classes**
 
 Add focused classes to `ToolShell.module.css` for:
 
@@ -657,7 +657,7 @@ Add focused classes to `ToolShell.module.css` for:
 - `.progressTrack`, `.progressFill`
 - `.chartPlaceholder`
 
-- [ ] **Step 5: Verify build**
+- [x] **Step 5: Verify build**
 
 ```bash
 npm run build:frontend
@@ -665,7 +665,7 @@ npm run build:frontend
 
 Expected: PASS.
 
-- [ ] **Step 6: Commit**
+- [x] **Step 6: Commit**
 
 ```bash
 git add frontend/src/components/tools/ChallengeTrackerTool.tsx frontend/src/components/tools/ChallengeTrackerTabs.tsx frontend/src/components/tools/ToolShell.module.css
@@ -680,7 +680,7 @@ git commit -m "Add Challenge Tracker shell"
 - Create: `frontend/src/components/tools/ChallengeTrackerRules.tsx`
 - Modify: `frontend/src/components/tools/ChallengeTrackerTool.tsx`
 
-- [ ] **Step 1: Implement preset picker**
+- [x] **Step 1: Implement preset picker**
 
 Use `challengePresets` from `challengeTrackerModel.ts`.
 
@@ -692,15 +692,15 @@ Preset cards:
 - Personal Account
 - Custom Manual
 
-- [ ] **Step 2: Implement create/edit form**
+- [x] **Step 2: Implement create/edit form**
 
 Fields from spec. Use dark input styles inherited from global/tool CSS.
 
-- [ ] **Step 3: Implement percent/amount reciprocal calculation**
+- [x] **Step 3: Implement percent/amount reciprocal calculation**
 
 On percent change, calculate amount. On amount change, calculate percent. Keep values in controlled state.
 
-- [ ] **Step 4: Wire API calls**
+- [x] **Step 4: Wire API calls**
 
 - create: `POST /api/tools/challenge-tracker/accounts`
 - update: `PATCH /api/tools/challenge-tracker/accounts/[accountId]`
@@ -709,7 +709,7 @@ On percent change, calculate amount. On amount change, calculate percent. Keep v
 
 After mutate, reload accounts and selected account.
 
-- [ ] **Step 5: Verify build**
+- [x] **Step 5: Verify build**
 
 ```bash
 npm run build:frontend
@@ -717,7 +717,7 @@ npm run build:frontend
 
 Expected: PASS.
 
-- [ ] **Step 6: Commit**
+- [x] **Step 6: Commit**
 
 ```bash
 git add frontend/src/components/tools/ChallengeTrackerRules.tsx frontend/src/components/tools/ChallengeTrackerTool.tsx
@@ -733,21 +733,21 @@ git commit -m "Add Challenge Tracker rules workflow"
 - Create: `frontend/src/components/tools/ChallengeTrackerRiskMonitor.tsx`
 - Modify: `frontend/src/components/tools/ChallengeTrackerTool.tsx`
 
-- [ ] **Step 1: Implement overview cards**
+- [x] **Step 1: Implement overview cards**
 
 Use `calculateChallengeOverview` and `calculateRiskStatus`.
 
 Cards include balances, progress, remaining target, daily loss, drawdown, trades, win rate, profit factor, average RR, account status.
 
-- [ ] **Step 2: Implement progress bars**
+- [x] **Step 2: Implement progress bars**
 
 Progress bars for target, daily loss usage, drawdown usage, and minimum trading days.
 
-- [ ] **Step 3: Implement Risk Monitor warnings**
+- [x] **Step 3: Implement Risk Monitor warnings**
 
 Render warnings from `calculateRiskStatus`. Group by severity.
 
-- [ ] **Step 4: Verify model tests and build**
+- [x] **Step 4: Verify model tests and build**
 
 ```bash
 npm test -- tests/unit/frontend/challengeTrackerModel.test.ts
@@ -756,7 +756,7 @@ npm run build:frontend
 
 Expected: both PASS.
 
-- [ ] **Step 5: Commit**
+- [x] **Step 5: Commit**
 
 ```bash
 git add frontend/src/components/tools/ChallengeTrackerOverview.tsx frontend/src/components/tools/ChallengeTrackerRiskMonitor.tsx frontend/src/components/tools/ChallengeTrackerTool.tsx
@@ -771,7 +771,7 @@ git commit -m "Add Challenge Tracker overview and risk monitor"
 - Create: `frontend/src/components/tools/ChallengeTrackerJournal.tsx`
 - Modify: `frontend/src/components/tools/ChallengeTrackerTool.tsx`
 
-- [ ] **Step 1: Implement manual trade form**
+- [x] **Step 1: Implement manual trade form**
 
 Fields from spec, grouped into:
 
@@ -780,11 +780,11 @@ Fields from spec, grouped into:
 - Setup notes
 - Psychology and discipline
 
-- [ ] **Step 2: Compute discipline score preview**
+- [x] **Step 2: Compute discipline score preview**
 
 As user changes psychology/risk fields, show computed discipline score using `calculateDisciplineScore`.
 
-- [ ] **Step 3: Wire create/update/delete trade API calls**
+- [x] **Step 3: Wire create/update/delete trade API calls**
 
 - create: `POST /accounts/[accountId]/trades`
 - update: `PATCH /trades/[tradeId]`
@@ -792,7 +792,7 @@ As user changes psychology/risk fields, show computed discipline score using `ca
 
 Reload trades after mutation.
 
-- [ ] **Step 4: Implement Journal Dashboard**
+- [x] **Step 4: Implement Journal Dashboard**
 
 Cards from analytics:
 
@@ -811,7 +811,7 @@ Cards from analytics:
 - average risk
 - discipline score today/average
 
-- [ ] **Step 5: Implement Journal Table and filters**
+- [x] **Step 5: Implement Journal Table and filters**
 
 Filters:
 
@@ -823,7 +823,7 @@ Filters:
 
 Table columns from spec.
 
-- [ ] **Step 6: Verify tests and build**
+- [x] **Step 6: Verify tests and build**
 
 ```bash
 npm test -- tests/unit/frontend/challengeTrackerModel.test.ts
@@ -832,7 +832,7 @@ npm run build:frontend
 
 Expected: both PASS.
 
-- [ ] **Step 7: Commit**
+- [x] **Step 7: Commit**
 
 ```bash
 git add frontend/src/components/tools/ChallengeTrackerJournal.tsx frontend/src/components/tools/ChallengeTrackerTool.tsx
@@ -847,11 +847,11 @@ git commit -m "Add Challenge Tracker journal"
 - Create: `frontend/src/components/tools/ChallengeTrackerAnalytics.tsx`
 - Modify: `frontend/src/components/tools/ChallengeTrackerTool.tsx`
 
-- [ ] **Step 1: Implement analytics stat grid**
+- [x] **Step 1: Implement analytics stat grid**
 
 Use `calculateChallengeAnalytics`.
 
-- [ ] **Step 2: Implement simple chart cards**
+- [x] **Step 2: Implement simple chart cards**
 
 Use prepared data from model helpers. Render simple SVG/bars similar to Profitability Simulator for:
 
@@ -866,7 +866,7 @@ Use prepared data from model helpers. Render simple SVG/bars similar to Profitab
 - Emotion distribution
 - RR distribution
 
-- [ ] **Step 3: Verify build**
+- [x] **Step 3: Verify build**
 
 ```bash
 npm run build:frontend
@@ -874,7 +874,7 @@ npm run build:frontend
 
 Expected: PASS.
 
-- [ ] **Step 4: Commit**
+- [x] **Step 4: Commit**
 
 ```bash
 git add frontend/src/components/tools/ChallengeTrackerAnalytics.tsx frontend/src/components/tools/ChallengeTrackerTool.tsx
@@ -889,7 +889,7 @@ git commit -m "Add Challenge Tracker analytics"
 - Create: `frontend/src/components/tools/ChallengeTrackerAIReview.tsx`
 - Modify: `frontend/src/components/tools/ChallengeTrackerTool.tsx`
 
-- [ ] **Step 1: Implement persona sidebar**
+- [x] **Step 1: Implement persona sidebar**
 
 Persona options:
 
@@ -903,7 +903,7 @@ Persona options:
 
 Custom persona manager uses database persona API routes.
 
-- [ ] **Step 2: Implement review settings**
+- [x] **Step 2: Implement review settings**
 
 Fields:
 
@@ -911,7 +911,7 @@ Fields:
 - review style
 - provider dropdown
 
-- [ ] **Step 3: Implement mock chat actions**
+- [x] **Step 3: Implement mock chat actions**
 
 Buttons:
 
@@ -923,11 +923,11 @@ Buttons:
 
 POST to `/api/tools/challenge-tracker/accounts/[accountId]/ai-reviews`.
 
-- [ ] **Step 4: Render context preview**
+- [x] **Step 4: Render context preview**
 
 Show system prompt, context prompt, and user prompt in collapsed/scrollable cards.
 
-- [ ] **Step 5: Verify build**
+- [x] **Step 5: Verify build**
 
 ```bash
 npm run build:frontend
@@ -935,7 +935,7 @@ npm run build:frontend
 
 Expected: PASS.
 
-- [ ] **Step 6: Commit**
+- [x] **Step 6: Commit**
 
 ```bash
 git add frontend/src/components/tools/ChallengeTrackerAIReview.tsx frontend/src/components/tools/ChallengeTrackerTool.tsx
@@ -949,7 +949,7 @@ git commit -m "Add Challenge Tracker AI review"
 **Files:**
 - No new files expected.
 
-- [ ] **Step 1: Run focused tests**
+- [x] **Step 1: Run focused tests**
 
 ```bash
 npm test -- tests/unit/frontend/challengeTrackerModel.test.ts tests/unit/shared/challengeTrackerService.test.ts
@@ -957,7 +957,7 @@ npm test -- tests/unit/frontend/challengeTrackerModel.test.ts tests/unit/shared/
 
 Expected: PASS.
 
-- [ ] **Step 2: Run frontend build**
+- [x] **Step 2: Run frontend build**
 
 ```bash
 npm run build:frontend
@@ -965,7 +965,7 @@ npm run build:frontend
 
 Expected: PASS and route list includes `/tools/challenge-tracker`.
 
-- [ ] **Step 3: Rebuild Docker frontend**
+- [x] **Step 3: Rebuild Docker frontend**
 
 ```bash
 docker compose build frontend && docker compose up -d frontend
@@ -973,7 +973,7 @@ docker compose build frontend && docker compose up -d frontend
 
 Expected: image builds, `horizon-frontend` is recreated and starts healthy.
 
-- [ ] **Step 4: Check live route**
+- [x] **Step 4: Check live route**
 
 ```bash
 curl -I --max-time 10 http://127.0.0.1:3888/tools/challenge-tracker
@@ -981,7 +981,7 @@ curl -I --max-time 10 http://127.0.0.1:3888/tools/challenge-tracker
 
 Expected: `HTTP/1.1 200 OK`.
 
-- [ ] **Step 5: Browser smoke check without dev server**
+- [x] **Step 5: Browser smoke check without dev server**
 
 Use Playwright against `http://127.0.0.1:3888/tools/challenge-tracker`:
 
@@ -989,7 +989,7 @@ Use Playwright against `http://127.0.0.1:3888/tools/challenge-tracker`:
 - route has no horizontal overflow at 1440, 768, and 390 widths
 - Tools nav contains Challenge Tracker
 
-- [ ] **Step 6: Commit any final fixes**
+- [x] **Step 6: Commit any final fixes**
 
 If verification requires fixes, commit only files changed by this feature:
 
@@ -999,7 +999,7 @@ git add <feature-files>
 git commit -m "Finalize Challenge Tracker MVP"
 ```
 
-- [ ] **Step 7: Push main if requested**
+- [x] **Step 7: Push main if requested**
 
 ```bash
 git push origin main

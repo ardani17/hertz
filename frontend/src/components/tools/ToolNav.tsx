@@ -12,6 +12,7 @@ const navCopy = {
     links: {
       pivotPoint: 'Pivot Point',
       profitability: 'Profitability',
+      challengeTracker: 'Challenge Tracker',
       elliottWave: 'Elliott Wave',
       economicCalendar: 'Kalender Ekonomi',
       orderBook: 'Order Book',
@@ -25,6 +26,7 @@ const navCopy = {
     links: {
       pivotPoint: 'Pivot Point',
       profitability: 'Profitability',
+      challengeTracker: 'Challenge Tracker',
       elliottWave: 'Elliott Wave',
       economicCalendar: 'Economic Calendar',
       orderBook: 'Order Book',
@@ -37,6 +39,7 @@ const navCopy = {
 const links = [
   { href: '/tools/pivot-point', key: 'pivotPoint' },
   { href: '/tools/profitability', key: 'profitability' },
+  { href: '/tools/challenge-tracker', key: 'challengeTracker' },
   { href: '/tools/elliott-wave', key: 'elliottWave' },
   { href: '/tools/economic-calendar', key: 'economicCalendar' },
   { href: '/tools/order-book', key: 'orderBook' },

@@ -37,6 +37,10 @@ const tradeColumns = `id, challenge_account_id, user_id, trade_date, symbol, ses
   trade_quality, followed_plan, discipline_score, screenshot_url, evaluation_notes, created_at, updated_at`;
 const personaColumns = `id, user_id, name, description, content, is_default, created_at, updated_at`;
 const reviewColumns = `id, challenge_account_id, user_id, persona_id, provider, review_scope, review_style, user_message, system_prompt, context_prompt, user_prompt, assistant_response, created_at`;
+const tradeReturningColumns = tradeColumns
+  .split(',')
+  .map((column) => `t.${column.trim()}`)
+  .join(', ');
 
 export class ChallengeTrackerRepository {
   async listAccounts(userId: string, client?: DbClient) {
@@ -104,7 +108,7 @@ export class ChallengeTrackerRepository {
   async updateTrade(userId: string, tradeId: string, input: TradeWrite, client?: DbClient) {
     return queryOne<ChallengeTradeRow>(
       `UPDATE challenge_trades t SET trade_date=$3, symbol=$4, session=$5, direction=$6, entry_price=$7, stop_loss=$8, take_profit=$9, exit_price=$10, lot_size=$11, risk_amount=$12, risk_percent=$13, result=$14, pnl_amount=$15, pnl_percent=$16, rr_planned=$17, rr_realized=$18, setup_name=$19, entry_reason=$20, exit_reason=$21, emotional_state=$22, mistake_category=$23, confidence_level=$24, discipline_input_score=$25, trade_quality=$26, followed_plan=$27, discipline_score=$28, screenshot_url=$29, evaluation_notes=$30, updated_at=NOW()
-       FROM challenge_accounts a WHERE t.id=$1 AND t.challenge_account_id=a.id AND a.user_id=$2 RETURNING t.${tradeColumns.replaceAll(', ', ', t.')}`,
+       FROM challenge_accounts a WHERE t.id=$1 AND t.challenge_account_id=a.id AND a.user_id=$2 RETURNING ${tradeReturningColumns}`,
       [tradeId, userId, input.tradeDate, input.symbol, input.session, input.direction, input.entryPrice, input.stopLoss, input.takeProfit, input.exitPrice, input.lotSize, input.riskAmount, input.riskPercent, input.result, input.pnlAmount, input.pnlPercent, input.rrPlanned, input.rrRealized, input.setupName, input.entryReason, input.exitReason, input.emotionalState, input.mistakeCategory, input.confidenceLevel, input.disciplineInputScore, input.tradeQuality, input.followedPlan, input.disciplineScore, input.screenshotUrl, input.evaluationNotes],
       client,
     );
