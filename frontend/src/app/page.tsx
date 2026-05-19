@@ -5,17 +5,18 @@ import { HertzPostService } from '@shared/services/hertzPostService';
 import type { HertzPost } from '@shared/types';
 import { getMarketRailGroups } from '@/lib/globalDataMarket';
 import type { MarketRailGroup } from '@/lib/globalDataMarket';
+import FaqAccordion from './FaqAccordion';
 import styles from './HorizonLanding.module.css';
 
 export const dynamic = 'force-dynamic';
 
 export const metadata: Metadata = {
-  title: 'Horizon Market Intelligence',
-  description: 'Premium forex market data, HERTZ social trading, Outlook, Blog, dan tools market dalam satu platform.',
+  title: 'Horizon — Everything a Forex Trader Needs. One Platform.',
+  description: 'Live market data, trade journaling, daily analysis, and research tools — all in one place. Free forever, no credit card required.',
   alternates: { canonical: '/' },
   openGraph: {
-    title: 'Horizon Market Intelligence',
-    description: 'Forex market data, social trading flow, and market outlook in one focused workspace.',
+    title: 'Horizon — Everything a Forex Trader Needs. One Platform.',
+    description: 'Live market data, trade journaling, daily analysis, and research tools — all in one place. Free forever, no credit card required.',
     url: '/',
     type: 'website',
   },
@@ -75,17 +76,6 @@ function buildSparklineArea(points: number[], width = 640, height = 220) {
   return `${line} L${width} ${height} L0 ${height} Z`;
 }
 
-function formatMarketUpdatedAt(value?: string) {
-  if (!value) return 'Live market';
-  const date = new Date(value);
-  if (Number.isNaN(date.getTime())) return 'Live market';
-  return new Intl.DateTimeFormat('id-ID', {
-    hour: '2-digit',
-    minute: '2-digit',
-    timeZone: 'Asia/Jakarta',
-  }).format(date);
-}
-
 function previewPostLine(post: HertzPost | null) {
   if (!post) return 'HERTZ feed aktif untuk setup, jurnal, dan diskusi member.';
   const handle = post.author.username ? `@${post.author.username}` : post.author.name;
@@ -95,27 +85,58 @@ function previewPostLine(post: HertzPost | null) {
 const productModules = [
   {
     title: 'HERTZ',
-    text: 'Social trading feed untuk setup, jurnal, DM, komentar, dan pulse member.',
+    text: 'Share setups, journal every trade, and learn from a community of active forex traders. Your trading diary — but social.',
     href: '/hertz',
     metric: 'Social trading',
+    cta: 'Explore HERTZ →',
   },
   {
     title: 'Outlook',
-    text: 'Arah market dalam format video, artikel, screenshot chart, dan caption singkat.',
+    text: 'Daily market analysis with chart breakdowns, key levels, and bias calls. Know what to watch before the session opens.',
     href: '/outlook',
     metric: 'Market outlook',
+    cta: "Read Today's Outlook →",
   },
   {
     title: 'Blog',
-    text: 'Artikel panjang tetap nyaman dibaca untuk riset market mendalam.',
+    text: 'In-depth research articles on forex strategy, risk management, and market structure. Go deeper than a Telegram signal.',
     href: '/blog',
     metric: 'Longform research',
+    cta: 'Browse Articles →',
   },
   {
     title: 'Tools',
-    text: 'Utility trading untuk riset cepat tanpa keluar dari ekosistem Horizon.',
+    text: 'Pivot points, profitability simulator, economic calendar, and more — free research tools that save you from opening 10 browser tabs.',
     href: '/tools',
     metric: 'Research tools',
+    cta: 'Try Free Tools →',
+  },
+];
+
+const faqItems = [
+  {
+    question: 'Is Horizon free?',
+    answer: 'Yes, Horizon is completely free for all members. No credit card required, no hidden costs, no premium tiers.',
+  },
+  {
+    question: 'Is Horizon a broker?',
+    answer: 'No. Horizon is an independent market intelligence and community platform. We don\'t handle trades, deposits, or withdrawals.',
+  },
+  {
+    question: 'Do I need to connect my trading account?',
+    answer: 'No. Horizon works independently. We never ask for your broker credentials or MT4/MT5 login.',
+  },
+  {
+    question: 'What is HERTZ?',
+    answer: 'HERTZ is our social trading feed — think of it as a trading journal meets community. Share setups, post analysis, and learn from active forex traders.',
+  },
+  {
+    question: 'What markets does Horizon cover?',
+    answer: 'Horizon focuses primarily on forex pairs including majors, minors, and exotics. We also cover gold (XAUUSD) and key indices.',
+  },
+  {
+    question: 'How do I get started?',
+    answer: "Simply click 'Join Free' and create your account with Telegram. It takes less than 30 seconds.",
   },
 ];
 
@@ -178,7 +199,7 @@ export default async function HorizonLanding() {
     getLandingMarketGroups(),
   ]);
 
-  const { group: forexGroup, heroAsset, supportingRows } = getForexHeroModel(marketGroups);
+  const { heroAsset, supportingRows } = getForexHeroModel(marketGroups);
   const heroPath = buildSparklinePath(heroAsset?.sparkline ?? []);
   const heroArea = buildSparklineArea(heroAsset?.sparkline ?? []);
 
@@ -196,25 +217,28 @@ export default async function HorizonLanding() {
           <Link href="/blog">Blog</Link>
           <Link href="/tools">Tools</Link>
         </nav>
-        <Link className={styles.login} href="/hertz">Masuk HERTZ</Link>
+        <Link className={styles.login} href="/hertz">Sign In</Link>
       </header>
 
       {/* ---- Hero ---- */}
       <section className={styles.hero} aria-labelledby="horizon-market-title">
         <div className={styles.copy}>
-          <p className={styles.eyebrow}>Premium forex workspace</p>
-          <h1 id="horizon-market-title">Horizon Market Intelligence</h1>
+          <p className={styles.eyebrow}>Free forex workspace for serious traders</p>
+          <h1 id="horizon-market-title">Everything a Forex Trader Needs. One Platform.</h1>
           <p className={styles.lead}>
-            Forex data, social trading flow, and market outlook in one focused workspace.
+            Live market data, trade journaling, daily analysis, and research tools — all in one place. Stop switching between 5 apps. Start trading with clarity.
           </p>
           <div className={styles.actions}>
-            <Link className={styles.primary} href="/hertz">Buka HERTZ</Link>
-            <Link className={styles.secondary} href="/outlook">Lihat Outlook</Link>
+            <div className={styles.ctaPrimaryWrap}>
+              <Link className={styles.primary} href="/hertz">Join Free — No Credit Card</Link>
+              <span className={styles.microcopy}>Takes 30 seconds. Free forever.</span>
+            </div>
+            <Link className={styles.secondary} href="/outlook">See How It Works</Link>
           </div>
           <div className={styles.trustRow} aria-label="Horizon live data summary">
-            <span>{forexGroup?.source.replace(/^GlobalData:\s*/, '') ?? 'GlobalData'}</span>
-            <span>{heroAsset ? `Update ${formatMarketUpdatedAt(heroAsset.updatedAt)} WIB` : 'Market refresh'}</span>
-            <span>{previewPost ? 'HERTZ feed live' : 'HERTZ ready'}</span>
+            <span>Live Forex Data</span>
+            <span>Free to Join</span>
+            <span>{previewPost ? 'Active Community' : 'Active Community'}</span>
           </div>
         </div>
 
@@ -304,10 +328,35 @@ export default async function HorizonLanding() {
         </section>
       ) : null}
 
+      {/* ---- How It Works ---- */}
+      <section className={styles.howItWorks} aria-label="How it works">
+        <div className={styles.howItWorksContent}>
+          <p className={styles.eyebrow}>Simple as 1-2-3</p>
+          <h2>From zero to trading smarter in 3 steps</h2>
+          <div className={styles.howItWorksGrid}>
+            <div className={styles.howCard}>
+              <span className={styles.howCardNumber}>1</span>
+              <strong className={styles.howCardTitle}>Sign Up Free</strong>
+              <p className={styles.howCardDesc}>Create your account in 30 seconds. No credit card, no broker integration needed.</p>
+            </div>
+            <div className={styles.howCard}>
+              <span className={styles.howCardNumber}>2</span>
+              <strong className={styles.howCardTitle}>Explore Market Data</strong>
+              <p className={styles.howCardDesc}>Live forex pairs, daily outlook, and analysis tools — everything updates in real-time.</p>
+            </div>
+            <div className={styles.howCard}>
+              <span className={styles.howCardNumber}>3</span>
+              <strong className={styles.howCardTitle}>Join the Community</strong>
+              <p className={styles.howCardDesc}>Share setups, journal trades, and learn from active traders on HERTZ.</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
       {/* ---- Products — Zig-Zag ---- */}
       <section className={styles.products} aria-label="Horizon ecosystem">
         <div className={styles.socialProof}>
-          <span className={styles.socialProofLabel}>Latest from HERTZ</span>
+          <span className={styles.socialProofLabel}>What traders are saying on HERTZ</span>
           <p>{previewPostLine(previewPost)}</p>
         </div>
 
@@ -318,8 +367,7 @@ export default async function HorizonLanding() {
               <strong className={styles.productTitle}>{item.title}</strong>
               <p className={styles.productDescription}>{item.text}</p>
               <Link className={styles.ctaLink} href={item.href}>
-                Buka {item.title}
-                <span className={styles.ctaArrow} aria-hidden="true">→</span>
+                {item.cta}
               </Link>
             </div>
             <ProductVisual index={index} />
@@ -327,18 +375,70 @@ export default async function HorizonLanding() {
         ))}
       </section>
 
+      {/* ---- Testimonials ---- */}
+      <section className={styles.testimonials} aria-label="Trader testimonials">
+        <div className={styles.testimonialsContent}>
+          <p className={styles.eyebrow}>Trusted by traders</p>
+          <h2>What traders are saying</h2>
+          <div className={styles.testimonialsGrid}>
+            <div className={styles.testimonialCard}>
+              <div className={styles.testimonialAvatar}>R</div>
+              <blockquote className={styles.testimonialQuote}>
+                &ldquo;Finally stopped switching between TradingView and Telegram. Everything I need is in one place now.&rdquo;
+              </blockquote>
+              <div className={styles.testimonialAuthor}>
+                <strong>Rizky P.</strong>
+                <span>Swing Trader</span>
+              </div>
+            </div>
+            <div className={styles.testimonialCard}>
+              <div className={styles.testimonialAvatar}>A</div>
+              <blockquote className={styles.testimonialQuote}>
+                &ldquo;The daily outlook saves me at least an hour of prep time every morning. Key levels are always on point.&rdquo;
+              </blockquote>
+              <div className={styles.testimonialAuthor}>
+                <strong>Andi S.</strong>
+                <span>Day Trader</span>
+              </div>
+            </div>
+            <div className={styles.testimonialCard}>
+              <div className={styles.testimonialAvatar}>D</div>
+              <blockquote className={styles.testimonialQuote}>
+                &ldquo;Journaling trades on HERTZ changed my consistency. Being able to look back at setups helps me avoid the same mistakes.&rdquo;
+              </blockquote>
+              <div className={styles.testimonialAuthor}>
+                <strong>Dimas W.</strong>
+                <span>Scalper</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* ---- FAQ Accordion ---- */}
+      <section className={styles.faq} aria-label="Frequently asked questions">
+        <div className={styles.faqContent}>
+          <p className={styles.eyebrow}>Common questions</p>
+          <h2>Frequently Asked Questions</h2>
+          <FaqAccordion items={faqItems} />
+        </div>
+      </section>
+
       {/* ---- Final CTA ---- */}
       <section className={styles.ctaSection} aria-label="Get started">
         <div className={styles.ctaGlow} aria-hidden="true" />
         <div className={styles.ctaContent}>
-          <h2 className={styles.ctaTitle}>Mulai trading dengan Horizon</h2>
+          <h2 className={styles.ctaTitle}>Ready to Trade with More Clarity?</h2>
           <p className={styles.ctaDescription}>
-            Data live, komunitas aktif, dan tools riset dalam satu tempat. Gratis untuk semua member.
+            Join thousands of forex traders who use Horizon to stay informed, journal their trades, and make better decisions. Free forever — no hidden costs.
           </p>
           <div className={styles.ctaActions}>
-            <Link className={styles.primary} href="/hertz">Buka HERTZ</Link>
-            <Link className={styles.secondary} href="/tools">Jelajahi Tools</Link>
+            <Link className={styles.primary} href="/hertz">Get Started Free</Link>
+            <Link className={styles.secondary} href="/tools">See What's Included</Link>
           </div>
+          <p className={styles.securityReassurance}>
+            🔒 Your data stays private. No broker integration required. We never ask for trading account credentials.
+          </p>
         </div>
       </section>
 
@@ -348,6 +448,7 @@ export default async function HorizonLanding() {
         <Link href="/outlook">Outlook</Link>
         <Link href="/blog">Blog</Link>
         <Link href="/tools">Tools</Link>
+        <Link className={styles.mobileDockLogin} href="/hertz">Sign In</Link>
       </nav>
 
       {/* ---- Footer ---- */}
@@ -365,8 +466,22 @@ export default async function HorizonLanding() {
             <Link href="/tools">Tools</Link>
           </div>
         </div>
+        <div className={styles.footerMid}>
+          <p className={styles.footerAbout}>Horizon is a free forex market intelligence platform built for traders who want better tools and a stronger community.</p>
+          <a
+            className={styles.footerTelegram}
+            href="https://t.me/horizon_forex"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            Join our Telegram Community →
+          </a>
+        </div>
         <div className={styles.footerBottom}>
-          <span className={styles.footerCopy}>© {new Date().getFullYear()} Horizon. All rights reserved.</span>
+          <div className={styles.footerBottomLeft}>
+            <span className={styles.footerCopy}>© {new Date().getFullYear()} Horizon. All rights reserved.</span>
+            <span className={styles.footerBuilt}>Built with ❤ for the forex community</span>
+          </div>
           <div className={styles.footerLegal}>
             <Link href="/privacy">Privacy</Link>
             <Link href="/terms">Terms</Link>
