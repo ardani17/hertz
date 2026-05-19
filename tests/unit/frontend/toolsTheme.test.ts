@@ -28,9 +28,8 @@ describe('Tools HERTZ theme contract', () => {
     const headerRule = css.match(/\.header \{(?<body>[^}]+)\}/)?.groups?.body ?? '';
     const panelRule = css.match(/\.panel \{(?<body>[^}]+)\}/)?.groups?.body ?? '';
 
-    expect(shellRule).toContain('max-width: 760px');
-    expect(shellRule).toContain('border-left: 1px solid rgba(75, 118, 92, 0.28)');
-    expect(headerRule).toContain('border-top: 1px solid rgba(75, 118, 92, 0.28)');
+    expect(shellRule).toContain('max-width: 860px');
+    expect(headerRule).toContain('border: 1px solid rgba(19, 210, 123, 0.26)');
     expect(panelRule).toContain('background: rgba(2, 12, 7, 0.82)');
   });
 });

@@ -2,7 +2,8 @@
 
 import { ToolNav } from './ToolNav';
 import { ChallengeTrackerTool } from './ChallengeTrackerTool';
-import styles from './ToolShell.module.css';
+import styles from './toolShellChallengeStyles';
+import { HertzTelegramLogin } from '@/components/feed/HertzTelegramLogin';
 import { useToolsLanguage } from './useToolsLanguage';
 
 const pageCopy = {
@@ -68,7 +69,15 @@ export function ChallengeTrackerToolPage({ isAuthenticated }: { isAuthenticated:
           </div>
         </details>
       </section>
-      {isAuthenticated ? <ChallengeTrackerTool /> : <section className={styles.emptyState}><h2>{copy.loginTitle}</h2><p>{copy.loginBody}</p></section>}
+      {isAuthenticated ? (
+        <ChallengeTrackerTool />
+      ) : (
+        <section className={`${styles.emptyState} ${styles.loginPanel}`}>
+          <h2>{copy.loginTitle}</h2>
+          <p>{copy.loginBody}</p>
+          <HertzTelegramLogin compact />
+        </section>
+      )}
     </section>
   );
 }

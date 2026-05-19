@@ -2,7 +2,7 @@
 
 import { ToolNav } from './ToolNav';
 import { ProfitabilityTool } from './ProfitabilityTool';
-import styles from './ToolShell.module.css';
+import styles from './toolShellProfitabilityStyles';
 import { useToolsLanguage } from './useToolsLanguage';
 
 const pageCopy = {

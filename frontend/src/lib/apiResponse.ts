@@ -10,6 +10,7 @@ import {
   HertzValidationError,
 } from '@shared/services/hertzPostService';
 import {
+  DevTelegramLoginDisabledError,
   MembershipCheckUnavailableError,
   NotGroupMemberError,
   TelegramAuthInvalidError,
@@ -55,6 +56,9 @@ export function apiErrorFromUnknown(error: unknown) {
   }
   if (error instanceof TelegramAuthInvalidError) {
     return apiError('AUTH_INVALID', error.message, 401);
+  }
+  if (error instanceof DevTelegramLoginDisabledError) {
+    return apiError('FORBIDDEN', error.message, 403);
   }
   if (error instanceof NotGroupMemberError) {
     return apiError('NOT_GROUP_MEMBER', error.message, 403);

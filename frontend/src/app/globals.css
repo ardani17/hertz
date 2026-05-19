@@ -122,6 +122,9 @@
   /* Core Colors */
   --color-bg: #0a0a0a;
   --color-surface: #141414;
+  --hertz-shell-bg: #0f0f14;
+  --hertz-accent-bright: #13d27b;
+  --hertz-muted-text: #8fa899;
   --color-text: #f1f1f1;
   --color-text-muted: #a1a1a1;
   --color-border: #1f1f1f;

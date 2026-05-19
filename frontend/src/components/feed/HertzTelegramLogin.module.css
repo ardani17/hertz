@@ -78,6 +78,69 @@
   margin: 0;
 }
 
+.hint {
+  color: #94b4a3;
+  font-size: 0.78rem;
+  line-height: 1.4;
+  margin: 0;
+}
+
+.devDetails {
+  border: 1px dashed rgba(76, 118, 94, 0.35);
+  border-radius: 8px;
+  padding: 0.55rem 0.65rem;
+}
+
+.devDetails summary {
+  color: #b8d4c4;
+  cursor: pointer;
+  font-size: 0.82rem;
+  font-weight: 700;
+}
+
+.devForm {
+  display: grid;
+  gap: 0.45rem;
+  margin-top: 0.55rem;
+}
+
+.devLabel {
+  color: #b8d4c4;
+  font-size: 0.78rem;
+  font-weight: 700;
+}
+
+.devHelp {
+  color: #7f9d8d;
+  font-size: 0.76rem;
+  line-height: 1.4;
+  margin: 0;
+}
+
+.devRow {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.45rem;
+}
+
+.devInput {
+  background: rgba(3, 11, 8, 0.9);
+  border: 1px solid rgba(76, 118, 94, 0.45);
+  border-radius: 8px;
+  color: #f3fff8;
+  flex: 1 1 140px;
+  min-height: 40px;
+  padding: 0 0.65rem;
+}
+
+.devButton {
+  background: #1d4d38;
+  border: 0;
+  color: #f3fff8;
+  font-weight: 800;
+  min-height: 40px;
+}
+
 .compact {
   gap: 0.35rem;
 }

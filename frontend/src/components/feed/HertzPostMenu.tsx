@@ -1,15 +1,23 @@
 'use client';
 
-import { useState, type FormEvent } from 'react';
+import { useRef, useState, type FormEvent } from 'react';
+import { useRouter } from 'next/navigation';
 import type { MarketContext, MemberSessionUser, HertzPost } from '@shared/types';
 import { Button } from '@/components/ui/button';
+import { useToast } from '@/components/ui/Toast';
 import { trapFocusWithin } from '@/lib/focusTrap';
+import { refreshPreserveScroll } from '@/lib/hertzRefresh';
+import { useDismissMenu } from '@/lib/useDismissMenu';
+import { ReportDialog } from '@/features/hertz/post-menu/ReportDialog';
 import { HertzDeletePostDialog } from './HertzDeletePostDialog';
 import { MoreIcon } from './HertzIcons';
 import { buildCanonicalPostUrl } from './HertzShareSheet';
 import styles from './HertzPostMenu.module.css';
 
 export function HertzPostMenu({ post, currentUser }: { post: HertzPost; currentUser: MemberSessionUser | null }) {
+  const router = useRouter();
+  const { showToast } = useToast();
+  const wrapRef = useRef<HTMLDivElement>(null);
   const [open, setOpen] = useState(false);
   const [menuUser, setMenuUser] = useState<MemberSessionUser | null>(currentUser);
   const [authChecked, setAuthChecked] = useState(Boolean(currentUser));
@@ -19,7 +27,6 @@ export function HertzPostMenu({ post, currentUser }: { post: HertzPost; currentU
   const [marketOpen, setMarketOpen] = useState(false);
   const [quoteOpen, setQuoteOpen] = useState(false);
   const [deleteOpen, setDeleteOpen] = useState(false);
-  const [message, setMessage] = useState<string | null>(null);
   const [reportReason, setReportReason] = useState('misleading');
   const [reportDetails, setReportDetails] = useState('');
   const [editContent, setEditContent] = useState(post.content.text);
@@ -63,6 +70,12 @@ export function HertzPostMenu({ post, currentUser }: { post: HertzPost; currentU
     }
   }
 
+  function closeMenu() {
+    setOpen(false);
+  }
+
+  useDismissMenu(open, closeMenu, wrapRef);
+
   function toggleMenu() {
     setOpen((value) => {
       const next = !value;
@@ -73,8 +86,8 @@ export function HertzPostMenu({ post, currentUser }: { post: HertzPost; currentU
 
   async function copyLink() {
     await navigator.clipboard?.writeText(buildCanonicalPostUrl(post.shortId, window.location.origin));
-    setMessage('Link disalin.');
-    setOpen(false);
+    showToast('Link disalin.', 'success');
+    closeMenu();
   }
 
   function closePanels() {
@@ -89,27 +102,31 @@ export function HertzPostMenu({ post, currentUser }: { post: HertzPost; currentU
     const response = await fetch(`/api/hertz/posts/${post.shortId}`, { method: 'DELETE' });
     if (!response.ok) {
       const data = await response.json().catch(() => null);
-      setMessage(data?.error?.message ?? 'Gagal menghapus post.');
+      showToast(data?.error?.message ?? 'Gagal menghapus post.', 'error');
       return;
     }
-    window.location.reload();
+    showToast('Postingan dihapus.', 'success');
+    closePanels();
+    refreshPreserveScroll(router);
   }
 
   async function hidePost() {
     const response = await fetch(`/api/admin/hertz/posts/${post.id}/hide`, { method: 'POST' });
     if (!response.ok) {
       const data = await response.json().catch(() => null);
-      setMessage(data?.error?.message ?? 'Gagal menyembunyikan post.');
+      showToast(data?.error?.message ?? 'Gagal menyembunyikan post.', 'error');
       return;
     }
-    window.location.reload();
+    showToast('Postingan disembunyikan.', 'success');
+    closePanels();
+    refreshPreserveScroll(router);
   }
 
   async function submitEdit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
     const content = editContent.trim();
     if (!content) {
-      setMessage('Konten tidak boleh kosong.');
+      showToast('Konten tidak boleh kosong.', 'warning');
       return;
     }
     const response = await fetch(`/api/hertz/posts/${post.shortId}`, {
@@ -119,10 +136,12 @@ export function HertzPostMenu({ post, currentUser }: { post: HertzPost; currentU
     });
     if (!response.ok) {
       const data = await response.json().catch(() => null);
-      setMessage(data?.error?.message ?? 'Post gagal diedit.');
+      showToast(data?.error?.message ?? 'Post gagal diedit.', 'error');
       return;
     }
-    window.location.reload();
+    showToast('Postingan diperbarui.', 'success');
+    closePanels();
+    refreshPreserveScroll(router);
   }
 
   async function submitReport(event: FormEvent<HTMLFormElement>) {
@@ -134,20 +153,20 @@ export function HertzPostMenu({ post, currentUser }: { post: HertzPost; currentU
     });
     if (!response.ok) {
       const data = await response.json().catch(() => null);
-      setMessage(data?.error?.message ?? 'Report gagal dikirim.');
+      showToast(data?.error?.message ?? 'Laporan gagal dikirim.', 'error');
       return;
     }
     closePanels();
     setReportDetails('');
-    setOpen(false);
-    setMessage('Report masuk ke review admin.');
+    closeMenu();
+    showToast('Laporan masuk ke review admin.', 'success');
   }
 
   async function submitQuote(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
     const content = quoteContent.trim();
     if (!content) {
-      setMessage('Konten quote tidak boleh kosong.');
+      showToast('Konten quote tidak boleh kosong.', 'warning');
       return;
     }
     const response = await fetch(`/api/hertz/posts/${post.shortId}/repost`, {
@@ -157,11 +176,13 @@ export function HertzPostMenu({ post, currentUser }: { post: HertzPost; currentU
     });
     if (!response.ok) {
       const data = await response.json().catch(() => null);
-      setMessage(data?.error?.message ?? 'Quote gagal dibuat.');
+      showToast(data?.error?.message ?? 'Quote gagal dibuat.', 'error');
       return;
     }
     setQuoteContent('');
-    window.location.reload();
+    showToast('Quote diposting.', 'success');
+    closePanels();
+    refreshPreserveScroll(router);
   }
 
   async function submitMarket(event: FormEvent<HTMLFormElement>) {
@@ -190,10 +211,12 @@ export function HertzPostMenu({ post, currentUser }: { post: HertzPost; currentU
     });
     if (!response.ok) {
       const data = await response.json().catch(() => null);
-      setMessage(data?.error?.message ?? 'Metadata market gagal disimpan.');
+      showToast(data?.error?.message ?? 'Metadata market gagal disimpan.', 'error');
       return;
     }
-    window.location.reload();
+    showToast('Metadata market disimpan.', 'success');
+    closePanels();
+    refreshPreserveScroll(router);
   }
 
   function setMarketField(field: keyof typeof market, value: string) {
@@ -201,7 +224,7 @@ export function HertzPostMenu({ post, currentUser }: { post: HertzPost; currentU
   }
 
   return (
-    <div className={styles.wrap} data-menu-open={open ? "true" : undefined}>
+    <div ref={wrapRef} className={styles.wrap} data-menu-open={open ? 'true' : undefined}>
       <Button
         type="button"
         variant="ghost"
@@ -226,29 +249,16 @@ export function HertzPostMenu({ post, currentUser }: { post: HertzPost; currentU
           {isAdmin ? <Button type="button" variant="ghost" size="sm" onClick={hidePost}>Sembunyikan postingan</Button> : null}
         </div>
       ) : null}
-      {reportOpen ? (
-        <div className={styles.modalBackdrop} role="presentation" onClick={(event) => { event.stopPropagation(); closePanels(); }}>
-          <form className={styles.panel} role="dialog" aria-modal="true" aria-labelledby={`report-title-${post.id}`} onSubmit={submitReport} onKeyDown={(event) => trapFocusWithin(event.currentTarget, event)} onClick={(event) => event.stopPropagation()}>
-            <div className={styles.panelHeader}>
-              <h2 id={`report-title-${post.id}`}>Laporkan postingan</h2>
-              <Button type="button" variant="ghost" size="icon-sm" className={styles.closeButton} onClick={closePanels} aria-label="Tutup laporan">×</Button>
-            </div>
-            <label htmlFor={`report-reason-${post.id}`}>Alasan report</label>
-            <select id={`report-reason-${post.id}`} value={reportReason} onChange={(event) => setReportReason(event.target.value)}>
-              <option value="misleading">Misleading</option>
-              <option value="spam">Spam</option>
-              <option value="abusive">Abusive</option>
-              <option value="off_topic">Off topic</option>
-              <option value="other">Other</option>
-            </select>
-            <textarea value={reportDetails} onChange={(event) => setReportDetails(event.target.value)} placeholder="Detail opsional" rows={3} />
-            <div className={styles.panelActions}>
-              <Button type="button" variant="ghost" onClick={closePanels}>Batal</Button>
-              <Button type="submit">Kirim laporan</Button>
-            </div>
-          </form>
-        </div>
-      ) : null}
+      <ReportDialog
+        postId={post.id}
+        open={reportOpen}
+        reason={reportReason}
+        details={reportDetails}
+        onReasonChange={setReportReason}
+        onDetailsChange={setReportDetails}
+        onClose={closePanels}
+        onSubmit={submitReport}
+      />
       {quoteOpen ? (
         <div className={styles.modalBackdrop} role="presentation" onClick={(event) => { event.stopPropagation(); closePanels(); }}>
           <form className={styles.panel} role="dialog" aria-modal="true" aria-labelledby={`quote-title-${post.id}`} onSubmit={submitQuote} onKeyDown={(event) => trapFocusWithin(event.currentTarget, event)} onClick={(event) => event.stopPropagation()}>
@@ -311,7 +321,6 @@ export function HertzPostMenu({ post, currentUser }: { post: HertzPost; currentU
           onConfirm={deleteOwnPost}
         />
       ) : null}
-      {message ? <p className={styles.message}>{message}</p> : null}
     </div>
   );
 }

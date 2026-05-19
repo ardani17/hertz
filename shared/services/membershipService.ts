@@ -24,6 +24,19 @@ export class TelegramAuthInvalidError extends Error {
   }
 }
 
+export class DevTelegramLoginDisabledError extends Error {
+  constructor(message = 'Login dev Telegram tidak diaktifkan') {
+    super(message);
+    this.name = 'DevTelegramLoginDisabledError';
+  }
+}
+
+/** Hanya untuk dev lokal — tidak aktif saat NODE_ENV=production. */
+export function isDevTelegramLoginEnabled(): boolean {
+  if (process.env.NODE_ENV === 'production') return false;
+  return process.env.ALLOW_DEV_TELEGRAM_LOGIN === 'true';
+}
+
 const MEMBERSHIP_CACHE_MS = 24 * 60 * 60 * 1000;
 
 export function verifyTelegramAuthData(authData: TelegramAuthData, botToken = process.env.TELEGRAM_BOT_TOKEN): boolean {
@@ -93,12 +106,51 @@ export class MembershipService {
       throw new NotGroupMemberError();
     }
 
+    return this.completeVerifiedLogin(authData.id, authData, groupId);
+  }
+
+  /**
+   * Local development login: upsert user by Telegram ID without widget HMAC.
+   * Requires ALLOW_DEV_TELEGRAM_LOGIN=true. Never enable in production.
+   */
+  async verifyDevLogin(telegramId: number): Promise<MemberSessionUser> {
+    if (!isDevTelegramLoginEnabled()) {
+      throw new DevTelegramLoginDisabledError();
+    }
+    if (!Number.isFinite(telegramId) || telegramId <= 0) {
+      throw new TelegramAuthInvalidError('Telegram ID tidak valid');
+    }
+
+    const groupId = Number(process.env.HORIZON_TELEGRAM_GROUP_ID || '-1001916607651');
+    const skipMembership = process.env.DEV_SKIP_MEMBERSHIP_CHECK === 'true';
+    let isMember = skipMembership;
+    if (!skipMembership) {
+      isMember = await this.checkGroupMembership(telegramId, groupId);
+    }
+    if (!isMember) {
+      throw new NotGroupMemberError();
+    }
+
+    const authData: TelegramAuthData = {
+      id: telegramId,
+      first_name: 'Dev',
+      auth_date: Math.floor(Date.now() / 1000),
+      hash: 'dev-bypass',
+    };
+    return this.completeVerifiedLogin(telegramId, authData, groupId);
+  }
+
+  private async completeVerifiedLogin(
+    telegramId: number,
+    authData: TelegramAuthData,
+    groupId: number,
+  ): Promise<MemberSessionUser> {
     return withTransaction(async (client) => {
       const user = await this.repo.upsertTelegramUser(authData, client);
       await this.repo.upsertMembership(
         {
           userId: user.id,
-          telegramId: authData.id,
+          telegramId,
           groupId,
           isMember: true,
           rawResponse: { isMember: true },
@@ -142,13 +194,19 @@ export class MembershipService {
     endpoint.searchParams.set('groupId', String(groupId));
     endpoint.searchParams.set('userId', String(telegramId));
 
+    const controller = new AbortController();
+    const timeout = setTimeout(() => controller.abort(), 15_000);
+
     let response: Response;
     try {
       response = await fetch(endpoint, {
         headers: { Authorization: `Bearer ${token}` },
+        signal: controller.signal,
       });
     } catch {
       throw new MembershipCheckUnavailableError();
+    } finally {
+      clearTimeout(timeout);
     }
 
     if (!response.ok) {

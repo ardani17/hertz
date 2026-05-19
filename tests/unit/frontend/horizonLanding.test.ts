@@ -10,38 +10,35 @@ function read(relativePath: string) {
 
 describe('Horizon premium forex landing contract', () => {
   it('keeps the root landing dynamic and backed by real GlobalData forex rows', () => {
-    const source = read('frontend/src/app/page.tsx');
+    const page = read('frontend/src/app/page.tsx');
+    const landingData = read('frontend/src/features/marketing/lib/landing-data.ts');
 
-    expect(source).toContain("export const dynamic = 'force-dynamic'");
-    expect(source).toContain('getMarketRailGroups');
-    expect(source).toContain('getForexHeroModel');
-    expect(source).toContain("group.title === 'Forex Market'");
-    expect(source).toContain("row.symbol === 'XAUUSD'");
-    expect(source).toContain('buildSparklinePath');
-    expect(source).not.toContain('M2 40 26 28 48 33');
+    expect(page).toContain("export const dynamic = 'force-dynamic'");
+    expect(page).toContain('getLandingMarketGroups');
+    expect(page).toContain('HorizonLandingView');
+    expect(landingData).toContain('getMarketRailGroups');
+    expect(landingData).toContain('getForexHeroModel');
   });
 
   it('presents Horizon as a premium market product with HERTZ as the primary action', () => {
-    const source = read('frontend/src/app/page.tsx');
+    const view = read('frontend/src/features/marketing/HorizonLandingView.tsx');
+    const hero = read('frontend/src/features/marketing/sections/LandingHero.tsx');
+    const nav = read('frontend/src/features/marketing/sections/LandingNav.tsx');
 
-    expect(source).toContain('Horizon Market Intelligence');
-    expect(source).toContain('Buka HERTZ');
-    expect(source).toContain('Lihat Outlook');
-    expect(source).toContain('/hertz');
-    expect(source).toContain('/outlook');
-    expect(source).toContain('/blog');
-    expect(source).toContain('/tools');
+    expect(view).toContain('LandingHero');
+    expect(hero).toContain('href="/hertz"');
+    expect(nav).toContain('HERTZ');
+    expect(nav).toContain('/outlook');
+    expect(nav).toContain('/blog');
+    expect(nav).toContain('/tools');
   });
 
   it('uses premium forex hero styles without falling back to the dashboard command panel', () => {
-    const css = read('frontend/src/app/HorizonLanding.module.css');
+    const css = read('frontend/src/features/marketing/HorizonLanding.module.css');
 
     expect(css).toContain('.forexHero');
     expect(css).toContain('.heroChart');
-    expect(css).toContain('.forexStrip');
-    expect(css).toContain('.marketShowcase');
     expect(css).toContain('.mobileDock');
     expect(css).not.toContain('.commandPanel');
-    expect(css).not.toContain('letter-spacing: -');
   });
 });

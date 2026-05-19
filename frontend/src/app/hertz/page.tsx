@@ -1,5 +1,5 @@
 import type { Metadata } from 'next';
-import { HertzPage as HertzFeedPage } from '@/components/feed';
+import { HertzFeedView } from '@/components/feed/HertzFeedView';
 import { HertzPostService, normalizeHertzCategory } from '@shared/services/hertzPostService';
 import { getCurrentMember } from '@/lib/memberAuth';
 import type { HertzPost } from '@shared/types';
@@ -12,7 +12,7 @@ export const metadata: Metadata = {
   alternates: { canonical: '/hertz' },
 };
 
-interface HertzPageProps {
+interface HertzFeedRouteProps {
   searchParams?: Promise<{ category?: string; q?: string; sort?: string }>;
 }
 
@@ -25,7 +25,7 @@ function selectedCategory(value?: string) {
   }
 }
 
-export default async function HertzPage({ searchParams }: HertzPageProps) {
+export default async function HertzFeedRoute({ searchParams }: HertzFeedRouteProps) {
   const currentUser = await getCurrentMember();
   const params = await searchParams;
   const category = selectedCategory(params?.category);
@@ -43,5 +43,14 @@ export default async function HertzPage({ searchParams }: HertzPageProps) {
     errorMessage = 'Timeline sedang tidak tersedia. Coba muat ulang beberapa saat lagi.';
   }
 
-  return <HertzFeedPage posts={items} currentUser={currentUser} activeCategory={category} activeSearch={search} activeSort={sort} errorMessage={errorMessage} />;
+  return (
+    <HertzFeedView
+      posts={items}
+      currentUser={currentUser}
+      activeCategory={category}
+      activeSearch={search}
+      activeSort={sort}
+      errorMessage={errorMessage}
+    />
+  );
 }

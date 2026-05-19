@@ -28,8 +28,12 @@ npm-debug.log*
 
 # Testing
 coverage/
+tests/review/visual.spec.ts-snapshots/*-chromium-desktop-linux.png
+tests/review/visual.spec.ts-snapshots/*-chromium-mobile-linux.png
+storybook-static/
 playwright-report/
 test-results/
+.percy/
 docs/review-artifacts/
 docs/review-replays/
 docs/review-snapshots/latest/

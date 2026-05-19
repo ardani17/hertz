@@ -5,6 +5,7 @@ export { ArticleLongCard } from './ArticleLongCard';
 export { CategoryTabs } from './CategoryTabs';
 export type { CategoryFilter } from './CategoryTabs';
 export { HertzPage } from './HertzPage';
+export { HertzFeedView } from './HertzFeedView';
 export { HertzComposer } from './HertzComposer';
 export { HertzPostCard } from './HertzPost';
 export { HertzAuthorLine } from './HertzAuthorLine';

@@ -1,5 +1,26 @@
+import { config as loadEnv } from 'dotenv';
+import { resolve, dirname } from 'path';
+import { fileURLToPath } from 'url';
+
+const configDir = dirname(fileURLToPath(import.meta.url));
+// Muat .env repo root agar `npm run dev:frontend` tanpa `source .env` tetap punya TELEGRAM_BOT_NAME, dll.
+loadEnv({ path: resolve(configDir, '../.env') });
+loadEnv({ path: resolve(configDir, '.env.local'), override: true });
+
+const telegramBotName =
+  process.env.NEXT_PUBLIC_TELEGRAM_BOT_NAME || process.env.TELEGRAM_BOT_NAME || '';
+
+// Login dev hanya saat `next dev` + frontend/.env.local — tidak ikut `next build` / produksi.
+const isNextDevServer = process.argv.includes('dev');
+const allowDevTelegramLogin =
+  isNextDevServer && process.env.ALLOW_DEV_TELEGRAM_LOGIN === 'true';
+
 /** @type {import('next').NextConfig} */
 const nextConfig = {
+  env: {
+    NEXT_PUBLIC_TELEGRAM_BOT_NAME: telegramBotName,
+    NEXT_PUBLIC_ALLOW_DEV_TELEGRAM_LOGIN: allowDevTelegramLogin ? 'true' : '',
+  },
   images: {
     remotePatterns: [
       {

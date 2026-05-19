@@ -8,14 +8,14 @@ import {
   getDmMessageSide,
   getDmPreviewText,
   formatDmTimestamp,
-} from '../../../frontend/src/app/hertz/messages/MessagesClient';
+} from '../../../frontend/src/features/hertz/messages/dm-utils';
 
 describe('HERTZ direct message frontend state', () => {
   it('shows only a Telegram login CTA for guests', () => {
     expect(getDmAccessState(null)).toEqual({
       mode: 'guest',
-      title: 'Login Telegram untuk Direct Message',
-      body: 'DM hanya tersedia untuk member HERTZ yang sudah login.',
+      title: 'Login Telegram untuk pesan langsung',
+      body: 'Pesan langsung hanya tersedia untuk member HERTZ yang sudah login.',
     });
   });
 

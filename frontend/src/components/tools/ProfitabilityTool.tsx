@@ -1,7 +1,7 @@
 'use client';
 
-import { useMemo, useState } from 'react';
-import styles from './ToolShell.module.css';
+import { useId, useMemo, useState } from 'react';
+import styles from './toolShellProfitabilityStyles';
 import { useToolsLanguage } from './useToolsLanguage';
 import {
   analyzeSimulation,
@@ -18,9 +18,13 @@ import {
   type CurrencyCode,
   type GoalMode,
   type Inputs,
+  type NormalizedInputs,
   type PresetId,
   type SimulationResult,
 } from './profitabilityModel';
+import { ProfitabilityCharts } from './profitability/ProfitabilityCharts';
+import { ProfitabilityInsightPanel } from './profitability/ProfitabilityInsightPanel';
+import { ProfitabilityResultsSummary } from './profitability/ProfitabilityResultsSummary';
 
 const toolCopy = {
   id: {
@@ -39,16 +43,16 @@ const toolCopy = {
       USD_USC: 'USD / USC - Dolar atau akun cent',
     },
     goals: {
-      balanced: 'Balanced',
-      growth: 'Growth cepat',
+      balanced: 'Seimbang',
+      growth: 'Pertumbuhan cepat',
       low_drawdown: 'Drawdown rendah',
-      prop_firm_safe: 'Prop firm safe',
-      strategy_test: 'Testing strategi',
+      prop_firm_safe: 'Aman prop firm',
+      strategy_test: 'Uji strategi',
     },
     presetsTitle: 'Preset cepat',
     presets: {
       conservative: 'Konservatif',
-      balanced: 'Balanced',
+      balanced: 'Seimbang',
       aggressive: 'Agresif',
       high_rr: 'High RR',
       scalping: 'Scalping',
@@ -56,6 +60,8 @@ const toolCopy = {
       prop_firm_safe: 'Prop Firm Safe',
     },
     run: 'Jalankan simulasi',
+    previewNote: 'Parameter berubah. Klik «Jalankan simulasi» untuk memperbarui hasil resmi.',
+    stickyLabel: 'Ringkasan hasil',
     validation:
       'Beberapa nilai disesuaikan ke batas aman sesuai mata uang akun: saldo, risiko 0.1-25%, win rate 0-100%, trade 1-1000, simulasi 100-5000.',
     insight: {
@@ -81,7 +87,7 @@ const toolCopy = {
       emptyWarnings: 'Tidak ada peringatan besar dari simulasi ini.',
       labels: {
         conservative: 'Konservatif',
-        balanced: 'Balanced',
+        balanced: 'Seimbang',
         aggressive: 'Agresif',
       },
       warnings: {
@@ -176,6 +182,8 @@ const toolCopy = {
       prop_firm_safe: 'Prop Firm Safe',
     },
     run: 'Run simulation',
+    previewNote: 'Inputs changed. Click «Run simulation» to refresh official results.',
+    stickyLabel: 'Results summary',
     validation:
       'Some values were adjusted to safe limits for the selected account currency: balance, risk 0.1-25%, win rate 0-100%, trades 1-1000, simulations 100-5000.',
     insight: {
@@ -306,10 +314,16 @@ function getChartData(result: SimulationResult, startingBalance: number) {
   const equityValues = [startingBalance, ...result.tradeDetails.map((trade) => trade.balanceAfter)];
   const drawdownValues = result.tradeDetails.map((trade) => -trade.drawdown);
 
+  const sortedBalances = [...result.finalBalances].sort((a, b) => a - b);
+  const distributionMin = sortedBalances[0] ?? startingBalance;
+  const distributionMax = sortedBalances.at(-1) ?? startingBalance;
+
   return {
     equityPath: buildLinePath(equityValues),
     drawdownPath: buildLinePath(drawdownValues.length ? drawdownValues : [0, 0]),
     distribution: buildDistribution(result.finalBalances),
+    distributionMin,
+    distributionMax,
   };
 }
 
@@ -328,12 +342,25 @@ export function ProfitabilityTool() {
     trades: 100,
     simulations: 1000,
   });
-  const [lastInputs, setLastInputs] = useState(() => normalizeInputs(inputs, currency));
-  const [result, setResult] = useState<SimulationResult>(() => runSimulation(inputs, 1729, currency));
+  const [hasRun, setHasRun] = useState(false);
+  const [lastInputs, setLastInputs] = useState<NormalizedInputs | null>(null);
+  const [result, setResult] = useState<SimulationResult | null>(null);
   const [validationNote, setValidationNote] = useState<string | null>(null);
+  const distributionDescId = useId();
 
-  const analysis = useMemo(() => analyzeSimulation(lastInputs, result, goalMode), [lastInputs, result, goalMode]);
-  const chartData = useMemo(() => getChartData(result, lastInputs.balance), [result, lastInputs.balance]);
+  const analysis = useMemo(
+    () => (hasRun && result && lastInputs ? analyzeSimulation(lastInputs, result, goalMode) : null),
+    [hasRun, lastInputs, result, goalMode],
+  );
+  const chartData = useMemo(
+    () => (hasRun && result && lastInputs ? getChartData(result, lastInputs.balance) : null),
+    [hasRun, lastInputs, result],
+  );
+  const inputsStale = useMemo(() => {
+    if (!hasRun || !lastInputs) return false;
+    const current = normalizeInputs(inputs, currency);
+    return (Object.keys(current) as (keyof Inputs)[]).some((key) => current[key] !== lastInputs[key]);
+  }, [hasRun, inputs, currency, lastInputs]);
 
   const update = (field: Exclude<keyof Inputs, 'balance'>, value: string) => {
     setActivePreset(null);
@@ -371,7 +398,6 @@ export function ProfitabilityTool() {
     setInputs(nextInputs);
     setActivePreset(null);
     setValidationNote(null);
-    runWithInputs(nextInputs, nextCurrency, 1729);
   };
 
   const handlePreset = (presetId: PresetId) => {
@@ -379,11 +405,11 @@ export function ProfitabilityTool() {
     setInputs(nextInputs);
     setActivePreset(presetId);
     setValidationNote(null);
-    runWithInputs(nextInputs, currency, 1729);
   };
 
   const handleRun = () => {
     const normalized = runWithInputs(inputs, currency);
+    setHasRun(true);
     const changed = Object.entries(normalized).some(([key, value]) => {
       const current = inputs[key as keyof Inputs];
       return (current === '' ? 0 : current) !== value;
@@ -468,144 +494,49 @@ export function ProfitabilityTool() {
       </div>
 
       {validationNote ? <p className={styles.note}>{validationNote}</p> : null}
+      {inputsStale ? <p className={styles.previewNote}>{copy.previewNote}</p> : null}
 
-      <section className={`${styles.insightPanel} ${styles[`risk-${analysis.riskLevel}`]}`} aria-labelledby="strategy-insight">
-        <div className={styles.insightHeader}>
-          <div>
-            <p className={styles.eyebrow}>{copy.insight.subtitle}</p>
-            <h2 id="strategy-insight">{copy.insight.title}</h2>
-          </div>
-          <span className={styles.gradeBadge}>{copy.grade} {analysis.grade}</span>
-        </div>
-        <p className={styles.insightVerdict}>{copy.insight.verdicts[analysis.verdictId as keyof typeof copy.insight.verdicts]}</p>
-        <div className={styles.insightGrid}>
-          <div>
-            <span>{copy.insight.profile}</span>
-            <strong>{copy.insight.riskLevels[analysis.riskLevel]}</strong>
-          </div>
-          <div>
-            <span>{copy.insight.recommendation}</span>
-            <strong>{analysis.riskRecommendation.toFixed(2)}%</strong>
-            <small>{copy.insight.labels[analysis.recommendedRiskLabel]}</small>
-          </div>
-          <div>
-            <span>{copy.insight.expectancy}</span>
-            <strong>{analysis.expectancyPerRisk.toFixed(2)}R</strong>
-          </div>
-        </div>
-        <div className={styles.insightLists}>
-          <div>
-            <h3>{copy.insight.warningTitle}</h3>
-            {analysis.warnings.length ? (
-              <ul>
-                {analysis.warnings.map((warning) => (
-                  <li key={warning}>{copy.insight.warnings[warning as keyof typeof copy.insight.warnings]}</li>
-                ))}
-              </ul>
-            ) : (
-              <p>{copy.insight.emptyWarnings}</p>
-            )}
-          </div>
-          <div>
-            <h3>{copy.insight.strengthTitle}</h3>
-            <ul>
-              {analysis.strengths.map((strength) => (
-                <li key={strength}>{copy.insight.strengths[strength as keyof typeof copy.insight.strengths]}</li>
-              ))}
-            </ul>
-          </div>
-        </div>
-      </section>
-
-      <div className={styles.resultGrid}>
-        <div className={`${styles.metric} ${styles.metricPrimary}`}>
-          <span>{copy.metrics.expected}</span>
-          <strong>{formatCurrency(result.average, currency, language)}</strong>
-        </div>
-        <div className={styles.metric}>
-          <span>{copy.metrics.median}</span>
-          <strong>{formatCurrency(result.median, currency, language)}</strong>
-        </div>
-        <div className={styles.metric}>
-          <span>{copy.metrics.best}</span>
-          <strong>{formatCurrency(result.best, currency, language)}</strong>
-        </div>
-        <div className={styles.metric}>
-          <span>{copy.metrics.worst}</span>
-          <strong>{formatCurrency(result.worst, currency, language)}</strong>
-        </div>
-        <div className={styles.metric}>
-          <span>{copy.metrics.profitable}</span>
-          <strong>{result.profitablePct.toFixed(1)}%</strong>
-        </div>
-        <div className={`${styles.metric} ${styles.metricPrimary}`}>
-          <span>{copy.metrics.roi}</span>
-          <strong>{result.roi.toFixed(1)}%</strong>
-        </div>
-        <div className={`${styles.metric} ${styles.metricPrimary}`}>
-          <span>{copy.metrics.drawdown}</span>
-          <strong>{result.avgDrawdown.toFixed(1)}%</strong>
-        </div>
-      </div>
-
-      <section className={styles.dangerSection} aria-labelledby="danger-zone">
-        <h2 id="danger-zone">{copy.danger.title}</h2>
-        <div className={styles.dangerGrid}>
-          <div className={styles.metric}>
-            <span>{copy.danger.dd10}</span>
-            <strong>{result.drawdownBreach10Pct.toFixed(1)}%</strong>
-          </div>
-          <div className={styles.metric}>
-            <span>{copy.danger.dd20}</span>
-            <strong>{result.drawdownBreach20Pct.toFixed(1)}%</strong>
-          </div>
-          <div className={styles.metric}>
-            <span>{copy.danger.dd30}</span>
-            <strong>{result.drawdownBreach30Pct.toFixed(1)}%</strong>
-          </div>
-          <div className={styles.metric}>
-            <span>{copy.danger.p90}</span>
-            <strong>{result.maxDrawdownP90.toFixed(1)}%</strong>
-          </div>
-        </div>
-      </section>
-
-      <section className={styles.chartSection} aria-labelledby="simulation-visuals">
-        <h2 id="simulation-visuals">{copy.charts.title}</h2>
-        <div className={styles.chartGrid}>
-          <article className={styles.chartCard}>
-            <h3>{copy.charts.equity}</h3>
-            <svg className={styles.miniChart} viewBox="0 0 100 36" role="img" aria-label={copy.charts.equity} preserveAspectRatio="none">
-              <polyline points={chartData.equityPath} fill="none" stroke="currentColor" strokeWidth="2" vectorEffect="non-scaling-stroke" />
-            </svg>
-          </article>
-          <article className={styles.chartCard}>
-            <h3>{copy.charts.distribution}</h3>
-            <div className={styles.distributionBars} aria-hidden="true">
-              {chartData.distribution.map((bucket, index) => (
-                <span key={index} style={{ height: `${Math.max(bucket.pct, 4)}%` }} title={`${bucket.count}`} />
-              ))}
+      {hasRun && result && analysis && lastInputs ? (
+        <>
+          <aside className={styles.stickySummary} aria-label={copy.stickyLabel}>
+            <div>
+              <span>{copy.metrics.expected}</span>
+              <strong>{formatCurrency(result.average, currency, language)}</strong>
             </div>
-            <div className={styles.chartScale}>
-              <span>{copy.charts.low}</span>
-              <span>{copy.charts.high}</span>
+            <div>
+              <span>{copy.grade}</span>
+              <strong>{analysis.grade}</strong>
             </div>
-          </article>
-          <article className={styles.chartCard}>
-            <h3>{copy.charts.drawdown}</h3>
-            <svg className={`${styles.miniChart} ${styles.drawdownChart}`} viewBox="0 0 100 36" role="img" aria-label={copy.charts.drawdown} preserveAspectRatio="none">
-              <polyline points={chartData.drawdownPath} fill="none" stroke="currentColor" strokeWidth="2" vectorEffect="non-scaling-stroke" />
-            </svg>
-          </article>
-        </div>
-      </section>
+            <div>
+              <span>{copy.insight.profile}</span>
+              <strong>{copy.insight.riskLevels[analysis.riskLevel]}</strong>
+            </div>
+            <div>
+              <span>{copy.metrics.roi}</span>
+              <strong>{result.roi.toFixed(1)}%</strong>
+            </div>
+          </aside>
 
-      <p className={styles.note}>
-        {copy.note(result.simulations.toLocaleString(numberLocale), result.trades.toLocaleString(numberLocale))}
-      </p>
+          <ProfitabilityInsightPanel analysis={analysis} copy={{ ...copy.insight, grade: copy.grade }} />
 
-      <section className={styles.detailSection}>
-        <div className={styles.sectionHeader}>
+          <ProfitabilityResultsSummary
+            result={result}
+            currency={currency}
+            language={language}
+            metrics={copy.metrics}
+            danger={copy.danger}
+          />
+
+          {chartData ? (
+            <ProfitabilityCharts chartData={chartData} copy={copy.charts} distributionDescId={distributionDescId} />
+          ) : null}
+
+          <p className={styles.note}>
+            {copy.note(result.simulations.toLocaleString(numberLocale), result.trades.toLocaleString(numberLocale))}
+          </p>
+
+          <section className={styles.detailSection}>
+            <div className={styles.sectionHeader}>
           <div>
             <h2>{copy.detailTitle}</h2>
             <p>{copy.detailDescription}</p>
@@ -682,6 +613,8 @@ export function ProfitabilityTool() {
           ))}
         </div>
       </section>
+        </>
+      ) : null}
     </section>
   );
 }

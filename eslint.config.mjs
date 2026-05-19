@@ -31,6 +31,17 @@ export default defineConfig([
     },
   },
   {
+    files: ['frontend/src/features/**/*.{ts,tsx}'],
+    rules: {
+      'no-restricted-imports': ['error', {
+        patterns: [{
+          group: ['**/app/**', '@/app/**'],
+          message: 'features/ must not import from app/.',
+        }],
+      }],
+    },
+  },
+  {
     files: ['scripts/**/*.js'],
     rules: {
       '@typescript-eslint/no-require-imports': 'off',
@@ -46,6 +57,7 @@ export default defineConfig([
     'coverage/**',
     'data/**',
     'docs/tools/**',
+    'storybook-static/**',
     'node_modules/**',
     'frontend/node_modules/**',
     'frontend/next-env.d.ts',

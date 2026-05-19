@@ -14,9 +14,12 @@ export const reviewPages: ReviewPage[] = [
   { name: 'hertz-feed', path: '/hertz' },
   { name: 'hertz-profile', path: '/hertz/profile' },
   { name: 'hertz-messages', path: '/hertz/messages' },
+  { name: 'hertz-notifications', path: '/hertz/notifications' },
   { name: 'outlook', path: '/outlook' },
   { name: 'blog', path: '/blog' },
   { name: 'tools', path: '/tools' },
+  { name: 'tools-challenge', path: '/tools/challenge-tracker' },
+  { name: 'admin-login', path: '/admin/login' },
 ];
 
 export const reviewViewports: ReviewViewport[] = [

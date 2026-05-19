@@ -1,56 +1,19 @@
 import { notFound } from 'next/navigation';
 import Link from 'next/link';
-import { query, queryOne } from '@shared/db';
+import { OutlookArticleService } from '@shared/services/outlookArticleService';
 import { OutlookContent, OutlookEngagement, OutlookSnapshot } from '@/components/outlook';
 import { estimateReadTime, formatDate } from '@/components/article/ArticleMeta';
-import { HertzAppShell } from '@/components/hertz/HertzAppShell';
 import { getCurrentMember } from '@/lib/memberAuth';
 import { buildOutlookDetailModel } from '@/lib/outlookContent';
 import styles from './page.module.css';
 
 export const dynamic = 'force-dynamic';
 
-interface ArticleRow {
-  id: string;
-  title: string | null;
-  content_html: string;
-  category: string;
-  slug: string;
-  status: string;
-  created_at: Date;
-  author_name: string | null;
-  outlook_metadata: unknown;
-}
-
-interface MediaRow {
-  id: string;
-  file_url: string;
-  media_type: string;
-}
-
-interface CountRow {
-  count: string;
-}
-
 const kindLabels = {
   video: 'Video Outlook',
   article: 'Long Read',
   chart: 'Chart Note',
 } as const;
-
-interface OutlookDetail {
-  id: string;
-  title: string | null;
-  content_html: string;
-  category: string;
-  slug: string;
-  created_at: string;
-  author_name: string | null;
-  outlook_metadata: unknown;
-  media: Array<{ id: string; file_url: string; media_type: string }>;
-  commentCount: number;
-  likeCount: number;
-}
 
 function isDirectVideoUrl(url: string): boolean {
   return /\.(mp4|webm|ogg)(\?.*)?$/i.test(url);
@@ -62,50 +25,9 @@ function buildAuthorHandle(authorName: string | null): string {
   return clean.startsWith('@') ? clean : `@${clean}`;
 }
 
-async function getOutlookBySlug(slug: string): Promise<OutlookDetail | null> {
+async function loadOutlook(slug: string) {
   try {
-    const article = await queryOne<ArticleRow>(
-      `SELECT a.id, a.title, a.content_html, a.category, a.outlook_metadata,
-              a.slug, a.status, a.created_at, u.username AS author_name
-       FROM articles a
-       LEFT JOIN users u ON a.author_id = u.id
-       WHERE a.slug = $1 AND a.status = $2 AND a.category = $3`,
-      [slug, 'published', 'outlook']
-    );
-
-    if (!article) return null;
-
-    const [mediaResult, commentCountResult, likeCountResult] = await Promise.all([
-      query<MediaRow>(
-        `SELECT id, file_url, media_type FROM media WHERE article_id = $1 ORDER BY created_at ASC`,
-        [article.id]
-      ),
-      queryOne<CountRow>(
-        `SELECT COUNT(*)::text AS count FROM comments WHERE article_id = $1 AND status = $2`,
-        [article.id, 'visible']
-      ),
-      queryOne<CountRow>(
-        `SELECT COUNT(*)::text AS count FROM likes WHERE article_id = $1`,
-        [article.id]
-      ),
-    ]);
-
-    return {
-      id: article.id,
-      title: article.title,
-      content_html: article.content_html,
-      category: article.category,
-      slug: article.slug,
-      created_at:
-        article.created_at instanceof Date
-          ? article.created_at.toISOString()
-          : String(article.created_at),
-      author_name: article.author_name,
-      outlook_metadata: article.outlook_metadata,
-      media: mediaResult.rows,
-      commentCount: parseInt(commentCountResult?.count || '0', 10),
-      likeCount: parseInt(likeCountResult?.count || '0', 10),
-    };
+    return await new OutlookArticleService().getPublishedBySlug(slug);
   } catch {
     return null;
   }
@@ -117,7 +39,7 @@ export async function generateMetadata({
   params: Promise<{ slug: string }>;
 }) {
   const { slug } = await params;
-  const article = await getOutlookBySlug(slug);
+  const article = await loadOutlook(slug);
 
   if (!article) {
     return { title: 'Outlook Tidak Ditemukan' };
@@ -165,7 +87,7 @@ export default async function OutlookDetailPage({
   params: Promise<{ slug: string }>;
 }) {
   const { slug } = await params;
-  const [article, currentUser] = await Promise.all([getOutlookBySlug(slug), getCurrentMember()]);
+  const [article, currentUser] = await Promise.all([loadOutlook(slug), getCurrentMember()]);
 
   if (!article) {
     notFound();
@@ -206,13 +128,7 @@ export default async function OutlookDetailPage({
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
       />
-      <HertzAppShell
-        active="outlook"
-        title="Outlook"
-        description="Narasi market dan konteks besar sebelum eksekusi."
-        currentUser={currentUser}
-      >
-        <div className={styles.content}>
+      <div className={styles.content}>
           <Link href="/outlook" className={styles.backLink}>
             Kembali ke Outlook
           </Link>
@@ -311,8 +227,7 @@ export default async function OutlookDetailPage({
           initialCommentCount={article.commentCount}
           currentUser={currentUser}
         />
-        </div>
-      </HertzAppShell>
+      </div>
     </>
   );
 }

@@ -1,8 +1,12 @@
 'use client';
 
 import { useEffect, useState } from 'react';
+import { useRouter } from 'next/navigation';
 import type { MarketContext, MemberSessionUser, HertzPostCategory } from '@shared/types';
+import { ComposerMarketFields } from '@/features/hertz/composer/ComposerMarketFields';
 import { Button } from '@/components/ui/button';
+import { useToast } from '@/components/ui/Toast';
+import { refreshPreserveScroll } from '@/lib/hertzRefresh';
 import { HertzAvatar } from './HertzAvatar';
 import { HertzTelegramLogin } from './HertzTelegramLogin';
 import styles from './HertzComposer.module.css';
@@ -28,6 +32,8 @@ export function HertzComposer({
   currentUser: MemberSessionUser | null;
   activeCategory?: HertzPostCategory | string | null;
 }) {
+  const router = useRouter();
+  const { showToast } = useToast();
   const category = resolveComposerCategory(activeCategory);
   const isTradingPost = category === 'trading_room';
   const [content, setContent] = useState('');
@@ -43,7 +49,7 @@ export function HertzComposer({
   });
   const [mediaItems, setMediaItems] = useState<QueuedMedia[]>([]);
   const [uploading, setUploading] = useState(false);
-  const [status, setStatus] = useState<string | null>(null);
+  const [submitting, setSubmitting] = useState(false);
 
   useEffect(() => {
     if (isTradingPost) return;
@@ -87,17 +93,16 @@ export function HertzComposer({
     if (!currentUser || !files?.length) return;
     const nextFiles = Array.from(files).slice(0, Math.max(0, 4 - mediaItems.length));
     if (nextFiles.length === 0) {
-      setStatus('Maksimal 4 gambar per post.');
+      showToast('Maksimal 4 gambar per post.', 'warning');
       return;
     }
 
     setUploading(true);
-    setStatus('Mengunggah gambar...');
     try {
       const uploadedIds: string[] = [];
       for (const file of nextFiles) {
         if (!ALLOWED_IMAGE_TYPES.has(file.type.toLowerCase())) {
-          setStatus('HERTZ hanya mendukung gambar JPG, PNG, atau WEBP.');
+          showToast('HERTZ hanya mendukung gambar JPG, PNG, atau WEBP.', 'warning');
           continue;
         }
         const formData = new FormData();
@@ -111,9 +116,9 @@ export function HertzComposer({
         const url = typeof payload.data.media.file_url === 'string' ? payload.data.media.file_url : '';
         setMediaItems((items) => [...items, { id: payload.data.media.id, name: file.name, url }].slice(0, 4));
       }
-      setStatus(uploadedIds.length > 0 ? 'Gambar siap dipublish.' : null);
+      if (uploadedIds.length > 0) showToast('Gambar siap dipublish.', 'success');
     } catch (error) {
-      setStatus(error instanceof Error ? error.message : 'Gagal mengunggah gambar.');
+      showToast(error instanceof Error ? error.message : 'Gagal mengunggah gambar.', 'error');
     } finally {
       setUploading(false);
     }
@@ -125,14 +130,14 @@ export function HertzComposer({
 
   async function submit() {
     if (!currentUser) {
-      setStatus('Login Telegram member diperlukan.');
+      showToast('Login Telegram member diperlukan.', 'warning');
       return;
     }
     if (isTradingPost && (!market.pair.trim() || !market.riskPercent.trim())) {
-      setStatus('Pair dan risk wajib untuk Trading Room.');
+      showToast('Pair dan risk wajib untuk Trading Room.', 'warning');
       return;
     }
-    setStatus('Mengirim...');
+    setSubmitting(true);
     const response = await fetch('/api/hertz/posts', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
@@ -143,9 +148,10 @@ export function HertzComposer({
         mediaIds: mediaItems.map((item) => item.id),
       }),
     });
+    setSubmitting(false);
     if (!response.ok) {
       const data = await response.json().catch(() => null);
-      setStatus(data?.error?.message ?? 'Gagal mengirim post.');
+      showToast(data?.error?.message ?? 'Gagal mengirim post.', 'error');
       return;
     }
     setContent('');
@@ -160,8 +166,8 @@ export function HertzComposer({
       confidencePercent: '',
     });
     setMediaItems([]);
-    setStatus('Postingan terkirim.');
-    window.location.reload();
+    showToast('Postingan terkirim.', 'success');
+    refreshPreserveScroll(router);
   }
 
   if (!currentUser) {
@@ -176,7 +182,7 @@ export function HertzComposer({
   }
 
   return (
-    <section className={styles.composer} data-auth="member" aria-label="HERTZ composer">
+    <section className={styles.composer} data-auth="member" aria-label="Composer HERTZ">
       <HertzAvatar
         className={styles.avatar}
         src={currentUser.avatarUrl}
@@ -187,7 +193,7 @@ export function HertzComposer({
         <textarea
           value={content}
           onChange={(event) => setContent(event.target.value)}
-          placeholder={currentUser ? 'Kirim jurnal dari Telegram atau tulis setup...' : 'Login Telegram member untuk membuat post'}
+          placeholder="Kirim jurnal dari Telegram atau tulis setup..."
           disabled={!currentUser}
           rows={1}
         />
@@ -207,43 +213,15 @@ export function HertzComposer({
             />
           </label>
           {isTradingPost ? (
-            <>
-              <label className={styles.inlineField}>
-                <span>Pair</span>
-                <input value={market.pair} onChange={(event) => setMarketField('pair', event.target.value)} placeholder="XAUUSD" disabled={!currentUser} />
-              </label>
-              <label className={styles.inlineField}>
-                <span>TF</span>
-                <input value={market.timeframe} onChange={(event) => setMarketField('timeframe', event.target.value)} placeholder="H4" disabled={!currentUser} />
-              </label>
-              <label className={styles.inlineField}>
-                <span>Arah</span>
-                <input value={market.direction} onChange={(event) => setMarketField('direction', event.target.value)} placeholder="Buy" disabled={!currentUser} />
-              </label>
-              <label className={styles.inlineField}>
-                <span>Risk</span>
-                <input value={market.riskPercent} onChange={(event) => setMarketField('riskPercent', event.target.value)} placeholder="2" inputMode="decimal" disabled={!currentUser} />
-              </label>
-              <label className={styles.inlineField}>
-                <span>Entry</span>
-                <input value={market.entryPrice} onChange={(event) => setMarketField('entryPrice', event.target.value)} placeholder="0.00" inputMode="decimal" disabled={!currentUser} />
-              </label>
-              <label className={styles.inlineField}>
-                <span>SL</span>
-                <input value={market.stopLoss} onChange={(event) => setMarketField('stopLoss', event.target.value)} placeholder="0.00" inputMode="decimal" disabled={!currentUser} />
-              </label>
-              <label className={styles.inlineField}>
-                <span>TP</span>
-                <input value={market.takeProfit} onChange={(event) => setMarketField('takeProfit', event.target.value)} placeholder="0.00" inputMode="decimal" disabled={!currentUser} />
-              </label>
-              <label className={styles.inlineField}>
-                <span>Conf</span>
-                <input value={market.confidencePercent} onChange={(event) => setMarketField('confidencePercent', event.target.value)} placeholder="70" inputMode="decimal" disabled={!currentUser} />
-              </label>
-            </>
+            <details className={styles.marketAccordion}>
+              <summary>Setup market</summary>
+              <div className={styles.marketFields}>
+                <ComposerMarketFields market={market} disabled={!currentUser} onChange={setMarketField} />
+              </div>
+            </details>
           ) : null}
-          <Button className={styles.submit} type="button" onClick={submit} disabled={!currentUser || !content.trim()}>
-            Posting
+          <Button className={styles.submit} type="button" onClick={submit} disabled={!currentUser || !content.trim() || submitting}>
+            {submitting ? 'Mengirim...' : 'Posting'}
           </Button>
         </div>
         {mediaItems.length > 0 ? (
@@ -252,13 +230,14 @@ export function HertzComposer({
               <figure key={item.id}>
                 {item.url ? <img src={item.url} alt="" /> : null}
                 <figcaption>{item.name}</figcaption>
-                <button type="button" onClick={() => removeMedia(item.id)} aria-label={`Hapus ${item.name}`}>×</button>
+                <button type="button" onClick={() => removeMedia(item.id)} aria-label={`Hapus ${item.name}`}>
+                  ×
+                </button>
               </figure>
             ))}
           </div>
         ) : null}
         <p className={styles.mediaPolicy}>Posting HERTZ mendukung gambar JPG, PNG, atau WEBP, maksimal 4 file per postingan.</p>
-        {status ? <p className={styles.status}>{status}</p> : null}
       </div>
     </section>
   );

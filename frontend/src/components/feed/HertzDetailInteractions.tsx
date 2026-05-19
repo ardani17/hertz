@@ -1,8 +1,11 @@
 'use client';
 
 import { useState, type FormEvent } from 'react';
-import type { MemberSessionUser, HertzComment, HertzPostDetail } from '@shared/types';
-import { HertzAvatar } from './HertzAvatar';
+import { useRouter } from 'next/navigation';
+import type { MemberSessionUser, HertzPostDetail } from '@shared/types';
+import { CommentList } from '@/features/hertz/comments/CommentList';
+import { useToast } from '@/components/ui/Toast';
+import { refreshPreserveScroll } from '@/lib/hertzRefresh';
 import { CommentIcon } from './HertzIcons';
 import { HertzTelegramLogin } from './HertzTelegramLogin';
 import styles from './HertzDetailInteractions.module.css';
@@ -32,19 +35,25 @@ export function HertzDetailInteractions({
   post: HertzPostDetail;
   currentUser: MemberSessionUser | null;
 }) {
+  const router = useRouter();
+  const { showToast } = useToast();
   const [comment, setComment] = useState('');
   const [replyDraft, setReplyDraft] = useState('');
   const [replyTargetId, setReplyTargetId] = useState<string | null>(null);
-  const [message, setMessage] = useState<string | null>(null);
   const [pending, setPending] = useState<string | null>(null);
   const composerState = getHertzCommentComposerState(currentUser, pending === 'comment');
 
   function requireLogin() {
     if (!currentUser) {
-      setMessage('Login Telegram member untuk ikut berdiskusi.');
+      showToast('Login Telegram member untuk ikut berdiskusi.', 'warning');
       return false;
     }
     return true;
+  }
+
+  function afterMutation(message: string) {
+    showToast(message, 'success');
+    refreshPreserveScroll(router);
   }
 
   async function submitComment(event: FormEvent<HTMLFormElement>) {
@@ -52,7 +61,7 @@ export function HertzDetailInteractions({
     if (!requireLogin()) return;
     const content = comment.trim();
     if (!content) {
-      setMessage('Komentar tidak boleh kosong.');
+      showToast('Komentar tidak boleh kosong.', 'warning');
       return;
     }
     try {
@@ -64,13 +73,13 @@ export function HertzDetailInteractions({
       });
       if (!response.ok) {
         const data = await response.json().catch(() => null);
-        setMessage(data?.error?.message ?? 'Komentar gagal dikirim.');
+        showToast(data?.error?.message ?? 'Komentar gagal dikirim.', 'error');
         return;
       }
-      setMessage('Komentar terkirim.');
-      window.location.reload();
+      setComment('');
+      afterMutation('Komentar terkirim.');
     } catch {
-      setMessage('Komentar gagal dikirim.');
+      showToast('Komentar gagal dikirim.', 'error');
     } finally {
       setPending(null);
     }
@@ -80,7 +89,7 @@ export function HertzDetailInteractions({
     if (!requireLogin()) return;
     const content = replyDraft.trim();
     if (!content) {
-      setMessage('Balasan tidak boleh kosong.');
+      showToast('Balasan tidak boleh kosong.', 'warning');
       return;
     }
     try {
@@ -92,13 +101,14 @@ export function HertzDetailInteractions({
       });
       if (!response.ok) {
         const data = await response.json().catch(() => null);
-        setMessage(data?.error?.message ?? 'Balasan gagal dikirim.');
+        showToast(data?.error?.message ?? 'Balasan gagal dikirim.', 'error');
         return;
       }
-      setMessage('Balasan terkirim.');
-      window.location.reload();
+      setReplyDraft('');
+      setReplyTargetId(null);
+      afterMutation('Balasan terkirim.');
     } catch {
-      setMessage('Balasan gagal dikirim.');
+      showToast('Balasan gagal dikirim.', 'error');
     } finally {
       setPending(null);
     }
@@ -109,17 +119,17 @@ export function HertzDetailInteractions({
     const response = await fetch(`/api/hertz/posts/comments/${commentId}`, { method: 'DELETE' });
     if (!response.ok) {
       const data = await response.json().catch(() => null);
-      setMessage(data?.error?.message ?? 'Komentar gagal dihapus.');
+      showToast(data?.error?.message ?? 'Komentar gagal dihapus.', 'error');
       return;
     }
-    window.location.reload();
+    afterMutation('Komentar dihapus.');
   }
 
   async function editComment(commentId: string, content: string) {
     if (!requireLogin()) return;
     const cleaned = content.trim();
     if (!cleaned) {
-      setMessage('Komentar tidak boleh kosong.');
+      showToast('Komentar tidak boleh kosong.', 'warning');
       return;
     }
     const response = await fetch(`/api/hertz/posts/comments/${commentId}`, {
@@ -129,18 +139,19 @@ export function HertzDetailInteractions({
     });
     if (!response.ok) {
       const data = await response.json().catch(() => null);
-      setMessage(data?.error?.message ?? 'Komentar gagal diedit.');
+      showToast(data?.error?.message ?? 'Komentar gagal diedit.', 'error');
       return;
     }
-    window.location.reload();
+    afterMutation('Komentar diperbarui.');
   }
 
   return (
     <div className={styles.wrap}>
-      {message ? <p className={styles.message}>{message}</p> : null}
       <section id="comments" className={styles.section}>
         <div className={styles.sectionHeader}>
-          <h2><CommentIcon /> Komentar</h2>
+          <h2>
+            <CommentIcon /> Komentar
+          </h2>
           <span>{post.comments.length}</span>
         </div>
         {composerState.mode === 'guest' ? (
@@ -162,87 +173,28 @@ export function HertzDetailInteractions({
             />
             <div className={styles.formFooter}>
               <span>{comment.trim().length}/2000</span>
-              <button type="submit" disabled={pending === 'comment'}>{composerState.submitLabel}</button>
+              <button type="submit" disabled={pending === 'comment'}>
+                {composerState.submitLabel}
+              </button>
             </div>
           </form>
         )}
-        <div className={styles.list}>
-          {post.comments.length > 0
-            ? post.comments.map((item) => (
-              <CommentItem key={item.id} comment={item} currentUser={currentUser} replyDraft={replyTargetId === item.id ? replyDraft : ''} replyOpen={replyTargetId === item.id} replyPending={pending === `reply-${item.id}`} onToggleReply={() => { setReplyTargetId((value) => value === item.id ? null : item.id); setReplyDraft(''); }} onReplyDraftChange={setReplyDraft} onSubmitReply={() => submitReply(item.id)} onDeleteComment={deleteComment} onEditComment={editComment} />
-            ))
-            : <p className={styles.empty}>Belum ada komentar.</p>}
-        </div>
+        <CommentList
+          comments={post.comments}
+          currentUser={currentUser}
+          replyTargetId={replyTargetId}
+          replyDraft={replyDraft}
+          pending={pending}
+          onToggleReply={(commentId) => {
+            setReplyTargetId((value) => (value === commentId ? null : commentId));
+            setReplyDraft('');
+          }}
+          onReplyDraftChange={setReplyDraft}
+          onSubmitReply={submitReply}
+          onDeleteComment={deleteComment}
+          onEditComment={editComment}
+        />
       </section>
-
     </div>
-  );
-}
-
-function CommentItem({ comment, currentUser, replyDraft, replyOpen, replyPending, onToggleReply, onReplyDraftChange, onSubmitReply, onDeleteComment, onEditComment }: { comment: HertzComment; currentUser: MemberSessionUser | null; replyDraft: string; replyOpen: boolean; replyPending: boolean; onToggleReply: () => void; onReplyDraftChange: (value: string) => void; onSubmitReply: () => void; onDeleteComment: (commentId: string) => void; onEditComment: (commentId: string, content: string) => void }) {
-  const [editing, setEditing] = useState(false);
-  const [draft, setDraft] = useState(comment.content);
-
-  return (
-    <article className={styles.item}>
-      <HertzAvatar
-        className={styles.avatar}
-        src={comment.author.avatarUrl}
-        name={comment.author.name}
-        username={comment.author.username}
-      />
-      <div>
-        <div className={styles.itemTop}>
-          <strong>{comment.author.name}</strong>
-          <span>{new Date(comment.createdAt).toLocaleString('id-ID', { dateStyle: 'medium', timeStyle: 'short' })}</span>
-          {comment.editedAt ? <span>Diedit</span> : null}
-        </div>
-        {editing ? (
-          <form className={styles.inlineEdit} onSubmit={(event) => { event.preventDefault(); onEditComment(comment.id, draft); }}>
-            <textarea value={draft} onChange={(event) => setDraft(event.target.value)} rows={3} maxLength={2000} />
-            <div>
-              <button type="button" onClick={() => { setDraft(comment.content); setEditing(false); }}>Batal</button>
-              <button type="submit">Simpan</button>
-            </div>
-          </form>
-        ) : <p>{comment.content}</p>}
-        <div className={styles.inlineActions}>
-          {currentUser ? <button type="button" className={styles.textButton} onClick={onToggleReply}>Balas</button> : null}
-          {comment.canEdit ? <button type="button" className={styles.textButton} onClick={() => setEditing((value) => !value)}>Edit</button> : null}
-          {comment.canDelete ? <button type="button" className={styles.textButton} onClick={() => onDeleteComment(comment.id)}>Hapus</button> : null}
-        </div>
-        {replyOpen ? (
-          <form className={styles.replyForm} onSubmit={(event) => { event.preventDefault(); onSubmitReply(); }}>
-            <textarea value={replyDraft} onChange={(event) => onReplyDraftChange(event.target.value)} rows={2} maxLength={2000} placeholder={`Balas ${comment.author.name}`} />
-            <div><span>{replyDraft.trim().length}/2000</span><button type="submit" disabled={replyPending}>{replyPending ? 'Mengirim...' : 'Kirim balasan'}</button></div>
-          </form>
-        ) : null}
-        {comment.replies.length > 0 ? (
-          <div className={styles.replies}>
-            {comment.replies.map((reply) => <ReplyItem key={reply.id} comment={reply} onDeleteComment={onDeleteComment} onEditComment={onEditComment} />)}
-          </div>
-        ) : null}
-      </div>
-    </article>
-  );
-}
-
-function ReplyItem({ comment, onDeleteComment, onEditComment }: { comment: HertzComment; onDeleteComment: (commentId: string) => void; onEditComment: (commentId: string, content: string) => void }) {
-  const [editing, setEditing] = useState(false);
-  const [draft, setDraft] = useState(comment.content);
-  return (
-    <article className={styles.replyItem}>
-      <HertzAvatar className={styles.avatar} src={comment.author.avatarUrl} name={comment.author.name} username={comment.author.username} />
-      <div>
-        <div className={styles.itemTop}><strong>{comment.author.name}</strong><span>{new Date(comment.createdAt).toLocaleString('id-ID', { dateStyle: 'medium', timeStyle: 'short' })}</span>{comment.editedAt ? <span>Diedit</span> : null}</div>
-        {editing ? (
-          <form className={styles.inlineEdit} onSubmit={(event) => { event.preventDefault(); onEditComment(comment.id, draft); }}>
-            <textarea value={draft} onChange={(event) => setDraft(event.target.value)} rows={3} maxLength={2000} />
-            <div><button type="button" onClick={() => { setDraft(comment.content); setEditing(false); }}>Batal</button><button type="submit">Simpan</button></div>
-          </form>
-        ) : <p>{comment.content}</p>}
-        <div className={styles.inlineActions}>{comment.canEdit ? <button type="button" className={styles.textButton} onClick={() => setEditing((value) => !value)}>Edit</button> : null}{comment.canDelete ? <button type="button" className={styles.textButton} onClick={() => onDeleteComment(comment.id)}>Hapus</button> : null}</div>
-      </div>
-    </article>
   );
 }

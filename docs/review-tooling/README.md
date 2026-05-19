@@ -5,11 +5,16 @@ Status: installed untuk audit frontend Horizon/HERTZ di VPS.
 
 ## Installed Stack
 
-- Playwright: browser automation, screenshots, visual regression, trace, video.
-- Playwright MCP: browser agent/computer-use lewat MCP client.
-- Axe + Playwright: accessibility audit.
-- DOM snapshot script: structural snapshot dan DOM diff.
-- rrweb replay script: session replay saat audit, tanpa memasang recorder permanen ke UI produksi.
+- **Playwright** — browser automation, screenshots, visual regression, trace, video, interaction tests.
+- **Storybook** — katalog komponen (`npm run storybook`, port 6006).
+- **Chromatic** — visual diff komponen cloud (`npm run review:chromatic`, butuh `CHROMATIC_PROJECT_TOKEN`).
+- **Percy** — visual diff halaman cloud (`npm run review:percy`, butuh `PERCY_TOKEN`).
+- **Stagehand** — exploratory AI browser (`npm run review:stagehand`, butuh API key).
+- **Playwright MCP** — browser agent lewat MCP client ([mcp-setup.md](./mcp-setup.md)).
+- **Axe + Playwright** — accessibility audit.
+- **DOM snapshot** — structural snapshot dan DOM diff.
+- **rrweb replay** — session replay saat audit.
+- **Design-to-code** — [design-to-code.md](./design-to-code.md).
 
 ## Base URL
 
@@ -172,11 +177,38 @@ Viewport:
 - 390x844
 - 320x740
 
+## Storybook
+
+```bash
+npm run storybook
+npm run build-storybook
+```
+
+Stories: `frontend/src/**/*.stories.tsx` (UI Button, SkeletonLoader, ErrorPage).
+
+## Chromatic & Percy
+
+```bash
+# Komponen (CI)
+CHROMATIC_PROJECT_TOKEN=xxx npm run review:chromatic
+
+# Halaman (CI)
+PERCY_TOKEN=xxx REVIEW_BASE_URL=https://horizon.cloudnexify.com npm run review:percy
+```
+
+## Semua review lokal
+
+```bash
+npm run review:install-browsers
+REVIEW_BASE_URL=https://horizon.cloudnexify.com npm run review:all
+```
+
 ## Workflow Review yang Disarankan
 
 1. Build/deploy produksi seperti biasa.
-2. Jalankan `npm run review:a11y`.
-3. Jalankan `npm run review:dom` untuk mengecek struktur berubah dari baseline.
-4. Jalankan `npm run review:visual` untuk visual regression.
-5. Jika perlu investigasi interaktif, pakai `npm run review:mcp`.
-6. Jika perlu bukti alur, jalankan `npm run review:replay`.
+2. `npm run review:a11y`
+3. `npm run review:dom`
+4. `npm run review:visual` + `review:interaction`
+5. `npm run build-storybook` (opsional Chromatic/Percy di CI)
+6. Investigasi: `npm run review:mcp` atau `review:stagehand`
+7. Bukti alur: `npm run review:replay`

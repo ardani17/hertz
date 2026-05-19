@@ -1,6 +1,5 @@
 import type { Metadata } from 'next';
 import { ChallengeTrackerToolPage } from '@/components/tools/ChallengeTrackerToolPage';
-import { HertzAppShell } from '@/components/hertz/HertzAppShell';
 import { getCurrentMember } from '@/lib/memberAuth';
 
 export const metadata: Metadata = {
@@ -10,10 +9,5 @@ export const metadata: Metadata = {
 
 export default async function ChallengeTrackerPage() {
   const currentUser = await getCurrentMember();
-
-  return (
-    <HertzAppShell active="tools" title="Tools" description="Tracker challenge trading untuk member Horizon." currentUser={currentUser}>
-      <ChallengeTrackerToolPage isAuthenticated={Boolean(currentUser)} />
-    </HertzAppShell>
-  );
+  return <ChallengeTrackerToolPage isAuthenticated={Boolean(currentUser)} />;
 }

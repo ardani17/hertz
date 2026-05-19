@@ -101,10 +101,12 @@ describe('HERTZ implementation wiring', () => {
 
   it('keeps Blog and Outlook separate from HERTZ feed routes', () => {
     const home = read('frontend/src/app/page.tsx');
+    const nav = read('frontend/src/features/marketing/sections/LandingNav.tsx');
     const blog = existsSync(join(root, 'frontend/src/app/blog/page.tsx'));
     const outlook = existsSync(join(root, 'frontend/src/app/outlook/page.tsx'));
 
-    expect(home).toContain('HERTZ');
+    expect(home).toContain('HorizonLandingView');
+    expect(nav).toContain('/hertz');
     expect(blog).toBe(true);
     expect(outlook).toBe(true);
   });

@@ -1,4 +1,4 @@
-import { defineConfig } from '@playwright/test';
+import { defineConfig, devices } from '@playwright/test';
 
 const baseURL =
   process.env.REVIEW_BASE_URL ||
@@ -32,9 +32,15 @@ export default defineConfig({
   },
   projects: [
     {
-      name: 'chromium-review',
+      name: 'chromium-desktop',
       use: {
         browserName: 'chromium',
+      },
+    },
+    {
+      name: 'chromium-mobile',
+      use: {
+        ...devices['Pixel 5'],
       },
     },
   ],

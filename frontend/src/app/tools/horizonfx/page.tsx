@@ -1,7 +1,5 @@
 import type { Metadata } from 'next';
 import Link from 'next/link';
-import { HertzAppShell } from '@/components/hertz/HertzAppShell';
-import { getCurrentMember } from '@/lib/memberAuth';
 import styles from '../tools.module.css';
 
 export const metadata: Metadata = {
@@ -40,11 +38,8 @@ const featureGroups = [
   },
 ] as const;
 
-export default async function HorizonFxToolPage() {
-  const currentUser = await getCurrentMember();
-
+export default function HorizonFxToolPage() {
   return (
-    <HertzAppShell active="tools" title="Tools" description="Audit migrasi HorizonFX V2 ke tool aktif Horizon." currentUser={currentUser}>
     <section className={styles.main}>
       <section className={styles.hero}>
         <div>
@@ -93,6 +88,5 @@ export default async function HorizonFxToolPage() {
         </div>
       </section>
     </section>
-    </HertzAppShell>
   );
 }

@@ -3,6 +3,7 @@
 import { useState } from 'react';
 import type { MemberSessionUser, HertzPost } from '@shared/types';
 import { Button } from '@/components/ui/button';
+import { useToast } from '@/components/ui/Toast';
 import { shouldOpenDesktopPostModal } from '@/lib/hertzPostDetailUi';
 import { BookmarkIcon, CommentIcon, LoveIcon, RepostIcon, ShareIcon } from './HertzIcons';
 import { HertzShareSheet } from './HertzShareSheet';
@@ -19,7 +20,7 @@ export function HertzActionBar({
   enableDetailModal?: boolean;
   onOpenDetail?: () => void;
 }) {
-  const [message, setMessage] = useState<string | null>(null);
+  const { showToast } = useToast();
   const [pendingAction, setPendingAction] = useState<string | null>(null);
   const [pulsed, setPulsed] = useState(post.viewer.hasPulsed);
   const [pulses, setPulses] = useState(post.counts.pulses);
@@ -30,7 +31,7 @@ export function HertzActionBar({
 
   function requireLogin() {
     if (!currentUser) {
-      setMessage('Login Telegram member untuk memakai fitur ini.');
+      showToast('Login Telegram member untuk memakai fitur ini.', 'warning');
       return false;
     }
     return true;
@@ -40,7 +41,7 @@ export function HertzActionBar({
     const response = await fetch(path, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: '{}' });
     if (!response.ok) {
       const data = await response.json().catch(() => null);
-      setMessage(data?.error?.message ?? 'Aksi gagal.');
+      showToast(data?.error?.message ?? 'Aksi gagal.', 'error');
       return null;
     }
     return response.json();
@@ -54,7 +55,7 @@ export function HertzActionBar({
     });
     if (!response.ok) {
       const data = await response.json().catch(() => null);
-      setMessage(data?.error?.message ?? 'Aksi gagal.');
+      showToast(data?.error?.message ?? 'Aksi gagal.', 'error');
       return null;
     }
     return response.json();
@@ -78,8 +79,9 @@ export function HertzActionBar({
     const result = await postAction(`/api/hertz/posts/${post.shortId}/bookmark`);
     setPendingAction(null);
     if (result) {
-      setBookmarked(Boolean(result.data.active));
-      setMessage(result.data.active ? 'Postingan disimpan.' : 'Bookmark dibatalkan.');
+      const active = Boolean(result.data.active);
+      setBookmarked(active);
+      showToast(active ? 'Postingan disimpan.' : 'Bookmark dibatalkan.', 'success');
     }
   }
 
@@ -92,7 +94,7 @@ export function HertzActionBar({
       const active = Boolean(result.data.active);
       setReposted(active);
       setReposts((count) => Math.max(0, count + (active ? 1 : -1)));
-      setMessage(active ? 'Postingan direpost.' : 'Repost dibatalkan.');
+      showToast(active ? 'Postingan direpost.' : 'Repost dibatalkan.', 'success');
     }
   }
 
@@ -108,15 +110,24 @@ export function HertzActionBar({
   return (
     <div className={styles.wrap}>
       <div className={styles.actions}>
-        <Button type="button" variant="ghost" size="sm" onClick={openComments} aria-label="Komentar"><CommentIcon /> <span>Komentar</span> {post.counts.comments}</Button>
-        <Button type="button" variant="ghost" size="sm" onClick={togglePulse} className={pulsed ? styles.active : ''} disabled={pendingAction === 'pulse'} aria-label={pulsed ? 'Batal suka' : 'Suka'} aria-pressed={pulsed}><LoveIcon /> <span>Suka</span> {pulses}</Button>
-        <Button type="button" variant="ghost" size="sm" onClick={toggleRepost} className={reposted ? styles.active : ''} disabled={pendingAction === 'repost'} aria-label={reposted ? 'Batal repost' : 'Repost'} aria-pressed={reposted}><RepostIcon /> <span>Repost</span> {reposts}</Button>
-        <Button type="button" variant="ghost" size="sm" onClick={toggleBookmark} className={bookmarked ? styles.active : ''} disabled={pendingAction === 'bookmark'} aria-label={bookmarked ? 'Batal bookmark' : 'Bookmark'} aria-pressed={bookmarked}><BookmarkIcon /> <span>Simpan</span></Button>
-        <Button type="button" variant="ghost" size="sm" onClick={() => setShareOpen(true)} aria-label="Bagikan postingan" aria-haspopup="dialog"><ShareIcon /> <span>Bagikan</span></Button>
+        <Button type="button" variant="ghost" size="sm" onClick={openComments} aria-label={`Komentar, ${post.counts.comments} komentar`}>
+          <CommentIcon /> <span>Komentar</span> {post.counts.comments}
+        </Button>
+        <Button type="button" variant="ghost" size="sm" onClick={togglePulse} className={pulsed ? styles.active : ''} disabled={pendingAction === 'pulse'} aria-label={pulsed ? 'Batal suka' : 'Suka'} aria-pressed={pulsed}>
+          <LoveIcon /> <span>Suka</span> {pulses}
+        </Button>
+        <Button type="button" variant="ghost" size="sm" onClick={toggleRepost} className={reposted ? styles.active : ''} disabled={pendingAction === 'repost'} aria-label={reposted ? 'Batal repost' : 'Repost'} aria-pressed={reposted}>
+          <RepostIcon /> <span>Repost</span> {reposts}
+        </Button>
+        <Button type="button" variant="ghost" size="sm" onClick={toggleBookmark} className={bookmarked ? styles.active : ''} disabled={pendingAction === 'bookmark'} aria-label={bookmarked ? 'Batal bookmark' : 'Bookmark'} aria-pressed={bookmarked}>
+          <BookmarkIcon /> <span>Simpan</span>
+        </Button>
+        <Button type="button" variant="ghost" size="sm" onClick={() => setShareOpen(true)} aria-label="Bagikan postingan" aria-haspopup="dialog">
+          <ShareIcon /> <span>Bagikan</span>
+        </Button>
       </div>
-      {message ? <p className={styles.message}>{message}</p> : null}
       {shareOpen ? (
-        <HertzShareSheet post={post} onClose={() => setShareOpen(false)} onMessage={setMessage} />
+        <HertzShareSheet post={post} onClose={() => setShareOpen(false)} onMessage={(msg) => showToast(msg, 'success')} />
       ) : null}
     </div>
   );

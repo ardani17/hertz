@@ -1,6 +1,6 @@
 .main {
   min-height: 100vh;
-  background: #000000;
+  background: var(--hertz-shell-bg, #0f0f14);
   color: #e7f4ec;
 }
 

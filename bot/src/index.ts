@@ -2,6 +2,11 @@
 // Horizon Trader Platform — Bot Service Entry Point
 // ============================================
 
+import { config as loadEnv } from 'dotenv';
+import { resolve } from 'path';
+
+loadEnv({ path: resolve(process.cwd(), '.env') });
+
 import express from 'express';
 import { randomBytes } from 'crypto';
 import { Bot, webhookCallback } from 'grammy';
@@ -556,13 +561,20 @@ if (BOT_TOKEN) {
 
 // ---- Start Server ----
 
-app.listen(PORT, () => {
-  console.log(`Bot service running on port ${PORT}`);
-  console.log(`Bot token configured: ${BOT_TOKEN.length > 0}`);
-  console.log(`Group chat ID: ${GROUP_CHAT_ID}`);
-  console.log(`Registered handlers: ${commandRegistry.listCommands().map(h => h.name).join(', ')}`);
-  console.log(`Media service: ${mediaService ? 'enabled' : 'disabled (R2 not configured)'}`);
-});
+const shouldStartHttpServer =
+  process.env.VITEST !== 'true' &&
+  process.env.NODE_ENV !== 'test' &&
+  process.env.BOT_SKIP_LISTEN !== 'true';
+
+if (shouldStartHttpServer) {
+  app.listen(PORT, () => {
+    console.log(`Bot service running on port ${PORT}`);
+    console.log(`Bot token configured: ${BOT_TOKEN.length > 0}`);
+    console.log(`Group chat ID: ${GROUP_CHAT_ID}`);
+    console.log(`Registered handlers: ${commandRegistry.listCommands().map(h => h.name).join(', ')}`);
+    console.log(`Media service: ${mediaService ? 'enabled' : 'disabled (R2 not configured)'}`);
+  });
+}
 
 // ---- Exports ----
 

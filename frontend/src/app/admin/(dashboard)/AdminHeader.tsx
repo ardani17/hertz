@@ -1,7 +1,8 @@
 'use client';
 
-import { useRouter } from 'next/navigation';
+import { usePathname, useRouter } from 'next/navigation';
 import { useState } from 'react';
+import { getAdminPageTitle } from './admin-routes';
 import styles from './layout.module.css';
 
 interface AdminHeaderProps {
@@ -14,6 +15,8 @@ interface AdminHeaderProps {
  */
 export function AdminHeader({ username, onMenuToggle }: AdminHeaderProps) {
   const router = useRouter();
+  const pathname = usePathname();
+  const pageTitle = getAdminPageTitle(pathname);
   const [loggingOut, setLoggingOut] = useState(false);
 
   async function handleLogout() {
@@ -39,9 +42,9 @@ export function AdminHeader({ username, onMenuToggle }: AdminHeaderProps) {
           onClick={onMenuToggle}
           aria-label="Buka navigasi admin"
         >
-          ☰
+          Menu
         </button>
-        <span className={styles.pageTitle}>Dashboard Admin</span>
+        <span className={styles.pageTitle}>{pageTitle}</span>
       </div>
 
       <div className={styles.topBarRight}>

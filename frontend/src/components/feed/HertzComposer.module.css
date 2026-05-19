@@ -183,22 +183,58 @@
   width: 24px;
 }
 
-.status {
-  color: #fbbf24;
-  font-size: 12px;
-  margin: 6px 0 0;
+.marketAccordion {
+  flex: 1 1 100%;
+  width: 100%;
 }
 
-@media (max-width: 720px) {
+.marketAccordion summary {
+  cursor: pointer;
+  color: var(--hertz-accent-bright, #13d27b);
+  font-size: 12px;
+  font-weight: 650;
+  list-style: none;
+  min-height: 30px;
+  user-select: none;
+}
+
+.marketAccordion summary::-webkit-details-marker {
+  display: none;
+}
+
+.marketFields {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-top: 8px;
+}
+
+@media (min-width: 769px) {
+  .marketAccordion {
+    flex: 1 1 auto;
+    width: auto;
+  }
+
+  .marketAccordion summary {
+    display: none;
+  }
+
+  .marketFields {
+    display: contents;
+    margin-top: 0;
+  }
+}
+
+@media (max-width: 768px) {
   .composer {
     height: auto;
-    margin: 0.65rem 0.65rem 0.5rem 2.35rem;
+    margin: 0.65rem;
     padding: 0.75rem;
   }
 
   .composer[data-auth="guest"] {
     grid-template-columns: minmax(0, 1fr);
-    margin-left: 2.35rem;
+    margin-left: 0.65rem;
   }
 
   .composer[data-auth="guest"] > .avatar {

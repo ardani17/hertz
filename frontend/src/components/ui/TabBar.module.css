@@ -1,0 +1,39 @@
+.tabList {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.35rem;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.tab {
+  display: inline-flex;
+}
+
+.tabLink {
+  border: 1px solid transparent;
+  border-radius: 999px;
+  color: #8ea897;
+  font-size: 0.82rem;
+  font-weight: 600;
+  padding: 0.35rem 0.85rem;
+  text-decoration: none;
+  transition: background 0.15s ease, color 0.15s ease, border-color 0.15s ease;
+}
+
+.tabLink:hover {
+  background: rgba(16, 185, 129, 0.08);
+  color: #cde8d8;
+}
+
+.tabLinkActive {
+  background: rgba(16, 185, 129, 0.14);
+  border-color: rgba(52, 211, 153, 0.35);
+  color: #34d399;
+}
+
+.tabLink:focus-visible {
+  outline: 2px solid #10b981;
+  outline-offset: 2px;
+}
