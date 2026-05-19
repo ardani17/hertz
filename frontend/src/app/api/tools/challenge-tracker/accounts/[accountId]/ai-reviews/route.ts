@@ -14,7 +14,8 @@ const configuredProvider = process.env.CHALLENGE_AI_PROVIDER || process.env.AI_R
 const configuredBaseUrl = process.env.CHALLENGE_AI_BASE_URL || process.env.AI_REVIEW_BASE_URL || '';
 const configuredApiKey = process.env.CHALLENGE_AI_API_KEY || process.env.AI_REVIEW_API_KEY || '';
 const configuredModel = process.env.CHALLENGE_AI_MODEL || process.env.AI_REVIEW_MODEL || 'glm-5-turbo';
-const configuredTimeoutMs = Number(process.env.CHALLENGE_AI_TIMEOUT_MS || process.env.AI_REVIEW_TIMEOUT_MS || 45000);
+const configuredTimeoutMs = Number(process.env.CHALLENGE_AI_TIMEOUT_MS || process.env.AI_REVIEW_TIMEOUT_MS || 90000);
+const configuredMaxTokens = Number(process.env.CHALLENGE_AI_MAX_TOKENS || process.env.AI_REVIEW_MAX_TOKENS || 900);
 
 
 function readTradingProfessionalPersona() {
@@ -51,6 +52,7 @@ async function requestAIReview(prompts: { systemPrompt: string; contextPrompt: s
     body: JSON.stringify({
       model: configuredModel,
       temperature: 0.2,
+      max_tokens: Number.isFinite(configuredMaxTokens) ? configuredMaxTokens : 900,
       messages: [
         { role: 'system', content: prompts.systemPrompt },
         { role: 'user', content: prompts.contextPrompt },
@@ -58,7 +60,7 @@ async function requestAIReview(prompts: { systemPrompt: string; contextPrompt: s
         { role: 'user', content: prompts.userPrompt },
       ],
     }),
-    signal: AbortSignal.timeout(Number.isFinite(configuredTimeoutMs) ? configuredTimeoutMs : 45000),
+    signal: AbortSignal.timeout(Number.isFinite(configuredTimeoutMs) ? configuredTimeoutMs : 90000),
   });
   const json = await response.json().catch(() => null) as ChatCompletionResponse | null;
   if (!response.ok) {
@@ -77,14 +79,56 @@ function clampPromptText(value: string, maxLength: number) {
 }
 
 function buildConversationHistory(reviews: Awaited<ReturnType<ChallengeTrackerService['listAIReviews']>>): ChatCompletionMessage[] {
-  return reviews.slice(0, 6).reverse().flatMap((review) => {
-    const userMessage = clampPromptText(review.userMessage || review.userPrompt || '', 700);
-    const assistantResponse = clampPromptText(review.assistantResponse, 1400);
+  return reviews.slice(0, 3).reverse().flatMap((review) => {
+    const userMessage = clampPromptText(review.userMessage || review.userPrompt || '', 360);
+    const assistantResponse = clampPromptText(review.assistantResponse, 700);
     const messages: ChatCompletionMessage[] = [];
     if (userMessage) messages.push({ role: 'user', content: userMessage });
     if (assistantResponse) messages.push({ role: 'assistant', content: assistantResponse });
     return messages;
   });
+}
+
+function compactAccountForAI(account: Record<string, unknown>) {
+  return {
+    name: account.name,
+    currency: account.accountCurrency,
+    initialBalance: account.initialBalance,
+    currentBalance: account.currentBalance,
+    currentEquity: account.currentEquity,
+    profitTargetAmount: account.profitTargetAmount,
+    maxDailyLossAmount: account.maxDailyLossAmount,
+    maxOverallDrawdownAmount: account.maxOverallDrawdownAmount,
+    maxRiskPerTradePercent: account.maxRiskPerTradePercent,
+    maxTradesPerDay: account.maxTradesPerDay,
+    accountType: account.accountType,
+    drawdownMode: account.drawdownMode,
+  };
+}
+
+function compactTradesForAI(trades: ChallengeTradeDto[]) {
+  return {
+    totalSelectedTrades: trades.length,
+    latestTrades: trades.slice(0, 12).map((trade) => ({
+      date: trade.tradeDate,
+      symbol: trade.symbol,
+      session: trade.session,
+      direction: trade.direction,
+      result: trade.result,
+      pnlAmount: trade.pnlAmount,
+      riskPercent: trade.riskPercent,
+      rrRealized: trade.rrRealized,
+      setupName: trade.setupName,
+      emotion: trade.emotionalState,
+      mistake: trade.mistakeCategory,
+      disciplineScore: trade.disciplineScore,
+      notes: trade.evaluationNotes ? clampPromptText(trade.evaluationNotes, 180) : null,
+    })),
+  };
+}
+
+function isTimeoutError(error: unknown) {
+  return error instanceof Error && (error.name === 'TimeoutError' || error.message.toLowerCase().includes('timeout'));
 }
 
 function filterTrades(scope: string, trades: ChallengeTradeDto[]) {
@@ -136,8 +180,8 @@ export async function POST(request: NextRequest, context: RouteContext) {
     const previousReviews = await service.listAIReviews(user.id, accountId);
     const conversationHistory = buildConversationHistory(previousReviews);
     const prompts = buildAIReviewContext({
-      challengeConfig: account,
-      trades: selectedTrades as unknown as Array<Record<string, unknown>>,
+      challengeConfig: compactAccountForAI(account as unknown as Record<string, unknown>),
+      trades: [compactTradesForAI(selectedTrades)] as unknown as Array<Record<string, unknown>>,
       analytics,
       riskStatus,
       selectedPersona: 'Trading Professional',
@@ -162,6 +206,7 @@ export async function POST(request: NextRequest, context: RouteContext) {
     return apiSuccess({ review, prompts: { ...prompts, systemPrompt } }, 201);
   } catch (error) {
     console.error('[challenge-ai-review] POST failed', error);
+    if (isTimeoutError(error)) return apiError('AI_PROVIDER_TIMEOUT', 'AI provider timeout. Coba kirim ulang, atau gunakan pertanyaan yang lebih spesifik.', 504);
     if (error instanceof Error) return apiError('AI_REVIEW_FAILED', error.message, 502);
     return apiErrorFromUnknown(error);
   }

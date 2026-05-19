@@ -9,7 +9,7 @@ import { useToolsLanguage } from './useToolsLanguage';
 import { buildAIReviewContext, calculateChallengeAnalytics, calculateChallengeOverview, calculateRiskStatus, challengePresets } from './challengeTrackerModel';
 
 type TabId = 'overview' | 'rules' | 'journal' | 'analytics' | 'risk' | 'ai';
-type ApiResult<T> = { success: true; data: T } | { success: false; error?: { message?: string } };
+type ApiResult<T> = { success: true; data: T } | { success: false; error?: { message?: string; code?: string } };
 type AccountForm = Record<string, string | boolean>;
 type TradeForm = Record<string, string | boolean>;
 type ChatMessage = { id: string; role: 'user' | 'assistant'; content: string; createdAt: string };
@@ -51,8 +51,12 @@ const filtersDefault = { date: '', symbol: '', result: '', session: '', setup: '
 
 async function apiFetch<T>(url: string, options?: RequestInit): Promise<T> {
   const res = await fetch(url, { ...options, headers: { 'Content-Type': 'application/json', ...(options?.headers ?? {}) } });
-  const json = await res.json().catch(() => null) as ApiResult<T> | null;
-  if (!res.ok || !json || !json.success) throw new Error(json && !json.success ? json.error?.message ?? 'API error' : 'API error');
+  const text = await res.text();
+  const json = (text ? (() => { try { return JSON.parse(text) as ApiResult<T>; } catch { return null; } })() : null);
+  if (!res.ok || !json || !json.success) {
+    const message = json && !json.success ? json.error?.message ?? json.error?.code ?? `API error (${res.status})` : text.trim().slice(0, 220) || `API error (${res.status})`;
+    throw new Error(message);
+  }
   return json.data;
 }
 
