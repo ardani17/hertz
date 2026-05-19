@@ -1176,3 +1176,52 @@
     overflow-x: auto;
   }
 }
+
+.chatBubbleAssistant {
+  background: rgba(0, 0, 0, 0.28);
+  border: 1px solid rgba(19, 210, 123, 0.22);
+  border-radius: 10px;
+  display: grid;
+  gap: var(--space-2);
+  margin-top: var(--space-3);
+  padding: var(--space-4);
+}
+
+.chatBubbleAssistant span {
+  color: var(--color-accent);
+  font-size: var(--text-xs);
+  font-weight: 800;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+}
+
+.chatBubbleAssistant p {
+  color: var(--color-text-muted);
+  line-height: 1.55;
+  margin: 0;
+  white-space: pre-wrap;
+}
+
+.chatInputRow {
+  align-items: stretch;
+  display: grid;
+  gap: var(--space-3);
+  grid-template-columns: minmax(0, 1fr) auto;
+  margin-top: var(--space-4);
+}
+
+.chatInputRow textarea {
+  min-height: 96px;
+  resize: vertical;
+  width: 100%;
+}
+
+.chatInputRow button {
+  min-width: 120px;
+}
+
+@media (max-width: 700px) {
+  .chatInputRow {
+    grid-template-columns: 1fr;
+  }
+}

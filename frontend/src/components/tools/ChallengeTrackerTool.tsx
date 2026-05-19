@@ -2,10 +2,10 @@
 
 import { FormEvent, useEffect, useMemo, useState } from 'react';
 import type React from 'react';
-import type { ChallengeAccountDto, ChallengeAIReviewDto, ChallengePersonaDto, ChallengeTradeDto } from '@shared/types/challengeTracker';
+import type { ChallengeAccountDto, ChallengeAIReviewDto, ChallengeTradeDto } from '@shared/types/challengeTracker';
 import styles from './ToolShell.module.css';
 import { useToolsLanguage } from './useToolsLanguage';
-import { buildAIReviewContext, calculateChallengeAnalytics, calculateChallengeOverview, calculateRiskStatus, challengePresets, defaultPersonas } from './challengeTrackerModel';
+import { buildAIReviewContext, calculateChallengeAnalytics, calculateChallengeOverview, calculateRiskStatus, challengePresets } from './challengeTrackerModel';
 
 type TabId = 'overview' | 'rules' | 'journal' | 'analytics' | 'risk' | 'ai';
 type ApiResult<T> = { success: true; data: T } | { success: false; error?: { message?: string } };
@@ -25,7 +25,7 @@ const copy = {
     sections: { overview: 'Dashboard challenge', progress: 'Progress rules', rules: 'Rules challenge', presets: 'Preset cepat', journalInput: 'Journal Input', journalDash: 'Journal Dashboard', journalTable: 'Journal Table', filters: 'Filter journal', analytics: 'Analytics jurnal', charts: 'Chart sederhana', risk: 'Peringatan risiko', aiSettings: 'Persona & Review Settings', aiChat: 'Chat review', context: 'Preview context' },
     fields: { name: 'Nama challenge', currency: 'Mata uang', initial: 'Saldo awal', currentBalance: 'Saldo saat ini', currentEquity: 'Equity saat ini', targetPct: 'Target profit %', targetAmount: 'Target nominal', dailyPct: 'Max daily loss %', dailyAmount: 'Daily loss nominal', ddPct: 'Max drawdown %', ddAmount: 'Drawdown nominal', minDays: 'Minimum trading days', start: 'Tanggal mulai', end: 'Tanggal berakhir', accountType: 'Tipe akun', drawdownMode: 'Mode drawdown', news: 'News trading boleh', overnight: 'Hold overnight', weekend: 'Hold weekend', consistency: 'Consistency %', maxLot: 'Max lot', maxRisk: 'Max risk/trade %' },
     trade: { date: 'Tanggal', symbol: 'Pair / symbol', session: 'Session', direction: 'Buy/Sell', entry: 'Entry price', sl: 'Stop loss', tp: 'Take profit', exit: 'Exit price', lot: 'Lot size', riskAmount: 'Risk nominal', riskPercent: 'Risk %', result: 'Result', pnl: 'P/L nominal', pnlPercent: 'P/L %', rrPlanned: 'RR planned', rrRealized: 'RR realized', setup: 'Setup name', entryReason: 'Alasan entry', exitReason: 'Alasan exit', emotion: 'Emosi', mistake: 'Kesalahan', confidence: 'Confidence 1-5', disciplineInput: 'Discipline 1-5', quality: 'Quality', followedPlan: 'Followed plan', screenshot: 'Screenshot URL', notes: 'Catatan evaluasi', add: 'Tambah trade', clear: 'Reset form', delete: 'Delete' },
-    ai: { persona: 'Persona', personaName: 'Nama persona', personaDescription: 'Deskripsi persona', personaFile: 'Persona File', savePersona: 'Simpan persona', deletePersona: 'Hapus', scope: 'Data direview', style: 'Gaya review', providerManaged: 'Provider AI diatur admin melalui .env', message: 'Pertanyaan user', reviewJournal: 'Review Journal', reviewLast: 'Review Last Trade', reviewRisk: 'Review Risk', actionPlan: 'Create Action Plan', clear: 'Clear Chat', mock: 'AI Review belum terhubung ke provider. Context sudah berhasil dibuat.' },
+    ai: { scope: 'Mode review', style: 'Gaya review', message: 'Tulis pesan', reviewJournal: 'Kirim', reviewLast: 'Review trade terakhir', reviewRisk: 'Review risiko', actionPlan: 'Buat action plan', clear: 'Clear Chat', mock: 'AI Review belum terhubung ke provider. Context sudah berhasil dibuat.' },
     insights: { rr: 'Win rate rendah tetapi RR tinggi. Strategi masih bisa profit jika risk reward dijaga.', loss: 'Win rate tinggi namun akun masih loss. Evaluasi average loss dan disiplin cut loss.', overtrade: 'Jumlah trade hari ini melebihi batas. Pertimbangkan berhenti trading.', lossStreak: 'Loss streak mencapai 3 atau lebih. Istirahat dan evaluasi setup sebelum entry berikutnya.', noWarnings: 'Belum ada warning besar dari data jurnal.' },
   },
   en: {
@@ -37,7 +37,7 @@ const copy = {
     sections: { overview: 'Challenge dashboard', progress: 'Rules progress', rules: 'Challenge rules', presets: 'Quick presets', journalInput: 'Journal Input', journalDash: 'Journal Dashboard', journalTable: 'Journal Table', filters: 'Journal filters', analytics: 'Journal analytics', charts: 'Simple charts', risk: 'Risk warnings', aiSettings: 'Persona & Review Settings', aiChat: 'Review chat', context: 'Context preview' },
     fields: { name: 'Challenge name', currency: 'Currency', initial: 'Starting balance', currentBalance: 'Current balance', currentEquity: 'Current equity', targetPct: 'Profit target %', targetAmount: 'Target amount', dailyPct: 'Max daily loss %', dailyAmount: 'Daily loss amount', ddPct: 'Max drawdown %', ddAmount: 'Drawdown amount', minDays: 'Minimum trading days', start: 'Start date', end: 'End date', accountType: 'Account type', drawdownMode: 'Drawdown mode', news: 'News trading allowed', overnight: 'Hold overnight', weekend: 'Hold weekend', consistency: 'Consistency %', maxLot: 'Max lot', maxRisk: 'Max risk/trade %' },
     trade: { date: 'Date', symbol: 'Pair / symbol', session: 'Session', direction: 'Buy/Sell', entry: 'Entry price', sl: 'Stop loss', tp: 'Take profit', exit: 'Exit price', lot: 'Lot size', riskAmount: 'Risk amount', riskPercent: 'Risk %', result: 'Result', pnl: 'P/L amount', pnlPercent: 'P/L %', rrPlanned: 'RR planned', rrRealized: 'RR realized', setup: 'Setup name', entryReason: 'Entry reason', exitReason: 'Exit reason', emotion: 'Emotion', mistake: 'Mistake', confidence: 'Confidence 1-5', disciplineInput: 'Discipline 1-5', quality: 'Quality', followedPlan: 'Followed plan', screenshot: 'Screenshot URL', notes: 'Evaluation notes', add: 'Add trade', clear: 'Reset form', delete: 'Delete' },
-    ai: { persona: 'Persona', personaName: 'Persona name', personaDescription: 'Persona description', personaFile: 'Persona File', savePersona: 'Save persona', deletePersona: 'Delete', scope: 'Review data', style: 'Review style', providerManaged: 'AI provider is configured by admin via .env', message: 'User question', reviewJournal: 'Review Journal', reviewLast: 'Review Last Trade', reviewRisk: 'Review Risk', actionPlan: 'Create Action Plan', clear: 'Clear Chat', mock: 'AI Review is not connected to a provider yet. Context was built successfully.' },
+    ai: { scope: 'Review mode', style: 'Review style', message: 'Write a message', reviewJournal: 'Send', reviewLast: 'Review Last Trade', reviewRisk: 'Review Risk', actionPlan: 'Create Action Plan', clear: 'Clear Chat', mock: 'AI Review is not connected to a provider yet. Context was built successfully.' },
     insights: { rr: 'Win rate is low but RR is high. The strategy can still work if reward-risk is maintained.', loss: 'Win rate is high but the account is losing. Review average loss and cutting discipline.', overtrade: 'Trades today exceed the rule. Consider stopping for the day.', lossStreak: 'Loss streak is 3 or more. Rest and review setup quality before the next entry.', noWarnings: 'No major journal warning yet.' },
   },
 };
@@ -96,7 +96,6 @@ export function ChallengeTrackerTool() {
   const [accounts, setAccounts] = useState<ChallengeAccountDto[]>([]);
   const [selectedId, setSelectedId] = useState('');
   const [trades, setTrades] = useState<ChallengeTradeDto[]>([]);
-  const [personas, setPersonas] = useState<ChallengePersonaDto[]>([]);
   const [reviews, setReviews] = useState<ChallengeAIReviewDto[]>([]);
   const [accountForm, setAccountForm] = useState<AccountForm>(emptyAccountForm);
   const [tradeForm, setTradeForm] = useState<TradeForm>(emptyTradeForm);
@@ -130,18 +129,15 @@ export function ChallengeTrackerTool() {
       const account = data.accounts.find((item) => item.id === nextId) || data.accounts[0];
       setAccountForm(account ? formFromAccount(account) : emptyAccountForm());
       if (nextId) {
-        const [tradeData, personaData, reviewData] = await Promise.all([
+        const [tradeData, reviewData] = await Promise.all([
           apiFetch<{ trades: ChallengeTradeDto[] }>(`/api/tools/challenge-tracker/accounts/${nextId}/trades`),
-          apiFetch<{ personas: ChallengePersonaDto[] }>('/api/tools/challenge-tracker/personas'),
           apiFetch<{ reviews: ChallengeAIReviewDto[] }>(`/api/tools/challenge-tracker/accounts/${nextId}/ai-reviews`),
         ]);
         setTrades(tradeData.trades);
-        setPersonas(personaData.personas);
         setReviews(reviewData.reviews);
       } else {
-        setTrades([]); setReviews([]);
-        const personaData = await apiFetch<{ personas: ChallengePersonaDto[] }>('/api/tools/challenge-tracker/personas');
-        setPersonas(personaData.personas);
+        setTrades([]);
+        setReviews([]);
       }
       setMessage('');
     } catch (error) {
@@ -197,15 +193,6 @@ export function ChallengeTrackerTool() {
     await apiFetch<{ deleted: boolean }>(`/api/tools/challenge-tracker/trades/${id}`, { method: 'DELETE' });
     await loadAll(selectedId);
   }
-  async function savePersona() {
-    const data = await apiFetch<{ persona: ChallengePersonaDto }>('/api/tools/challenge-tracker/personas', { method: 'POST', body: JSON.stringify({ name: aiState.personaName, description: aiState.personaDescription, content: aiState.customPersonaText || defaultPersonas['Strict Prop Firm Coach'], isDefault: false }) });
-    setPersonas((items) => [data.persona, ...items]);
-    setAiState((state) => ({ ...state, selectedPersona: data.persona.name, customPersonaText: data.persona.content }));
-  }
-  async function deletePersona(id: string) {
-    await apiFetch<{ deleted: boolean }>(`/api/tools/challenge-tracker/personas/${id}`, { method: 'DELETE' });
-    setPersonas((items) => items.filter((item) => item.id !== id));
-  }
   async function runReview(mode?: 'last_trade' | 'risk' | 'action') {
     if (!selectedId || !effectiveAccount) return;
     const reviewScope = mode === 'last_trade' ? 'last_trade' : mode === 'risk' ? 'risk' : aiState.reviewScope;
@@ -242,7 +229,7 @@ export function ChallengeTrackerTool() {
       {tab === 'journal' && selected ? <Journal t={t} form={tradeForm} setForm={setTradeForm} onSubmit={addTrade} filters={filters} setFilters={setFilters} trades={filteredTrades} analytics={analytics} insights={journalInsights} onDelete={deleteTrade} currency={selected.accountCurrency} /> : null}
       {tab === 'analytics' && selected ? <Analytics t={t} analytics={analytics} trades={trades} currency={selected.accountCurrency} /> : null}
       {tab === 'risk' && selected && effectiveAccount && riskStatus ? <RiskMonitor t={t} account={effectiveAccount} analytics={analytics} riskStatus={riskStatus} insights={journalInsights} /> : null}
-      {tab === 'ai' && selected ? <AIReview t={t} aiState={aiState} setAiState={setAiState} personas={personas} reviews={reviews} savePersona={savePersona} deletePersona={deletePersona} runReview={runReview} /> : null}
+      {tab === 'ai' && selected ? <AIReview t={t} aiState={aiState} setAiState={setAiState} reviews={reviews} runReview={runReview} /> : null}
     </section>
   );
 }
@@ -271,7 +258,57 @@ function RiskMonitor({ t, account, analytics, riskStatus, insights }: { t: Copy;
   const warnings = [...riskStatus.warnings, ...insights.filter((item) => item !== t.insights.noWarnings)];
   return <section className={styles.panel}><div className={styles.sectionHeader}><div><h2>{t.sections.risk}</h2><p>{account.name}</p></div><StatusBadge status={riskStatus.status} labels={t.status} /></div><div className={styles.progressGrid}><Progress label={t.metrics.dailyLoss} value={riskStatus.dailyLossUsagePct} /><Progress label={t.metrics.drawdown} value={riskStatus.overallDrawdownUsagePct} /><Progress label={t.metrics.avgRisk} value={account.maxRiskPerTradePercent ? (analytics.averageRiskPercent / account.maxRiskPerTradePercent) * 100 : 0} /></div><div className={styles.insightLists}><div><h3>Warnings</h3><ul>{(warnings.length ? warnings : [t.insights.noWarnings]).map((item) => <li key={item}>{item}</li>)}</ul></div></div></section>;
 }
-function AIReview({ t, aiState, setAiState, personas, reviews, savePersona, deletePersona, runReview }: { t: Copy; aiState: { selectedPersona: string; customPersonaText: string; personaName: string; personaDescription: string; reviewScope: string; reviewStyle: string; userMessage: string; contextPreview: string; assistant: string }; setAiState: React.Dispatch<React.SetStateAction<{ selectedPersona: string; customPersonaText: string; personaName: string; personaDescription: string; reviewScope: string; reviewStyle: string; userMessage: string; contextPreview: string; assistant: string }>>; personas: ChallengePersonaDto[]; reviews: ChallengeAIReviewDto[]; savePersona: () => void; deletePersona: (id: string) => void; runReview: (mode?: 'last_trade' | 'risk' | 'action') => void }) {
+function AIReview({ t, aiState, setAiState, reviews, runReview }: { t: Copy; aiState: { selectedPersona: string; customPersonaText: string; personaName: string; personaDescription: string; reviewScope: string; reviewStyle: string; userMessage: string; contextPreview: string; assistant: string }; setAiState: React.Dispatch<React.SetStateAction<{ selectedPersona: string; customPersonaText: string; personaName: string; personaDescription: string; reviewScope: string; reviewStyle: string; userMessage: string; contextPreview: string; assistant: string }>>; reviews: ChallengeAIReviewDto[]; runReview: (mode?: 'last_trade' | 'risk' | 'action') => void }) {
   const set = (k: string, v: string) => setAiState((state) => ({ ...state, [k]: v }));
-  return <section className={styles.aiLayout}><aside className={styles.panel}><h2>{t.sections.aiSettings}</h2><SelectField label={t.ai.persona} value={aiState.selectedPersona} onChange={(v) => { const persona = personas.find((item) => item.name === v); setAiState((state) => ({ ...state, selectedPersona: v, customPersonaText: persona?.content ?? defaultPersonas[v] ?? state.customPersonaText })); }}>{Object.keys(defaultPersonas).map((name) => <option key={name}>{name}</option>)}{personas.map((persona) => <option key={persona.id}>{persona.name}</option>)}<option>Custom Persona</option></SelectField><TextField label={t.ai.personaName} value={aiState.personaName} onChange={(v) => set('personaName', v)} /><TextField label={t.ai.personaDescription} value={aiState.personaDescription} onChange={(v) => set('personaDescription', v)} /><div className={styles.field}><label>{t.ai.personaFile}</label><textarea value={aiState.customPersonaText} onChange={(event) => set('customPersonaText', event.target.value)} /></div><div className={styles.actions}><button type="button" onClick={() => void savePersona()}>{t.ai.savePersona}</button></div><div className={styles.signalCards}>{personas.map((persona) => <article key={persona.id} className={styles.signalCard}><h4>{persona.name}</h4><p>{persona.description}</p><button type="button" className="btn-secondary" onClick={() => void deletePersona(persona.id)}>{t.ai.deletePersona}</button></article>)}</div></aside><section className={styles.panel}><h2>{t.sections.aiChat}</h2><div className={styles.formGridThree}><SelectField label={t.ai.scope} value={aiState.reviewScope} onChange={(v) => set('reviewScope', v)}><option value="all">Review semua jurnal</option><option value="today">Review trade hari ini</option><option value="week">Review minggu ini</option><option value="month">Review bulan ini</option><option value="last_trade">Review trade terakhir</option><option value="losses">Review hanya trade loss</option><option value="mistakes">Review hanya trade mistake</option><option value="risk">Review rules & risk</option></SelectField><SelectField label={t.ai.style} value={aiState.reviewStyle} onChange={(v) => set('reviewStyle', v)}><option>Ringkas</option><option>Detail</option><option>Tegas</option><option>Edukatif</option><option>Checklist</option><option>Action plan</option></SelectField><article className={styles.mobileDataCard}><p>{t.ai.providerManaged}</p></article></div><div className={styles.field}><label>{t.ai.message}</label><textarea value={aiState.userMessage} onChange={(event) => set('userMessage', event.target.value)} placeholder="Review jurnal dan status challenge saya." /></div><div className={styles.actions}><button type="button" onClick={() => void runReview()}>{t.ai.reviewJournal}</button><button type="button" className="btn-secondary" onClick={() => void runReview('last_trade')}>{t.ai.reviewLast}</button><button type="button" className="btn-secondary" onClick={() => void runReview('risk')}>{t.ai.reviewRisk}</button><button type="button" className="btn-secondary" onClick={() => void runReview('action')}>{t.ai.actionPlan}</button><button type="button" className="btn-secondary" onClick={() => setAiState((state) => ({ ...state, assistant: '', contextPreview: '', userMessage: '' }))}>{t.ai.clear}</button></div><article className={styles.mobileDataCard}><h3>Assistant</h3><p>{aiState.assistant || reviews[0]?.assistantResponse || t.ai.mock}</p></article><div className={styles.field}><label>{t.sections.context}</label><textarea readOnly value={aiState.contextPreview || reviews[0]?.contextPrompt || ''} /></div></section></section>;
+  const latest = aiState.assistant || reviews[0]?.assistantResponse || t.ai.mock;
+  return (
+    <section className={styles.panel}>
+      <div className={styles.sectionHeader}>
+        <div>
+          <h2>{t.sections.aiChat}</h2>
+          <p>AI memakai persona Trading Professional dari file <code>shared/prompts/challengeTradingProfessionalPersona.md</code>.</p>
+        </div>
+      </div>
+      <article className={styles.chatBubbleAssistant}>
+        <span>AI</span>
+        <p>{latest}</p>
+      </article>
+      {reviews.slice(0, 3).map((review) => (
+        <article className={styles.chatBubbleAssistant} key={review.id}>
+          <span>{new Date(review.createdAt).toLocaleString('id-ID')}</span>
+          <p>{review.assistantResponse}</p>
+        </article>
+      ))}
+      <div className={styles.formGridThree}>
+        <SelectField label={t.ai.scope} value={aiState.reviewScope} onChange={(v) => set('reviewScope', v)}>
+          <option value="all">Review semua jurnal</option>
+          <option value="today">Review trade hari ini</option>
+          <option value="week">Review minggu ini</option>
+          <option value="month">Review bulan ini</option>
+          <option value="last_trade">Review trade terakhir</option>
+          <option value="losses">Review hanya trade loss</option>
+          <option value="mistakes">Review hanya trade mistake</option>
+          <option value="risk">Review rules & risk</option>
+        </SelectField>
+        <SelectField label={t.ai.style} value={aiState.reviewStyle} onChange={(v) => set('reviewStyle', v)}>
+          <option>Ringkas</option>
+          <option>Detail</option>
+          <option>Tegas</option>
+          <option>Edukatif</option>
+          <option>Checklist</option>
+          <option>Action plan</option>
+        </SelectField>
+      </div>
+      <div className={styles.chatInputRow}>
+        <textarea value={aiState.userMessage} onChange={(event) => set('userMessage', event.target.value)} placeholder="Tanya AI untuk review jurnal, risiko, disiplin, atau action plan berikutnya." />
+        <button type="button" onClick={() => void runReview()}>{t.ai.reviewJournal}</button>
+      </div>
+      <div className={styles.actions}>
+        <button type="button" className="btn-secondary" onClick={() => void runReview('last_trade')}>{t.ai.reviewLast}</button>
+        <button type="button" className="btn-secondary" onClick={() => void runReview('risk')}>{t.ai.reviewRisk}</button>
+        <button type="button" className="btn-secondary" onClick={() => void runReview('action')}>{t.ai.actionPlan}</button>
+        <button type="button" className="btn-secondary" onClick={() => setAiState((state) => ({ ...state, assistant: '', contextPreview: '', userMessage: '' }))}>{t.ai.clear}</button>
+      </div>
+    </section>
+  );
 }

@@ -1,8 +1,10 @@
+import { readFileSync } from 'node:fs';
+import { join } from 'node:path';
 import { NextRequest } from 'next/server';
 import { ChallengeTrackerService } from '@shared/services/challengeTrackerService';
 import { apiError, apiErrorFromUnknown, apiSuccess } from '@/lib/apiResponse';
 import { getCurrentMember } from '@/lib/memberAuth';
-import { buildAIReviewContext, calculateChallengeAnalytics, calculateRiskStatus, defaultPersonas } from '@/components/tools/challengeTrackerModel';
+import { buildAIReviewContext, calculateChallengeAnalytics, calculateRiskStatus } from '@/components/tools/challengeTrackerModel';
 import type { ChallengeTradeDto } from '@shared/types/challengeTracker';
 
 interface RouteContext { params: Promise<{ accountId: string }> }
@@ -13,6 +15,15 @@ const configuredBaseUrl = process.env.CHALLENGE_AI_BASE_URL || process.env.AI_RE
 const configuredApiKey = process.env.CHALLENGE_AI_API_KEY || process.env.AI_REVIEW_API_KEY || '';
 const configuredModel = process.env.CHALLENGE_AI_MODEL || process.env.AI_REVIEW_MODEL || 'glm-5-turbo';
 const configuredTimeoutMs = Number(process.env.CHALLENGE_AI_TIMEOUT_MS || process.env.AI_REVIEW_TIMEOUT_MS || 45000);
+
+
+function readTradingProfessionalPersona() {
+  try {
+    return readFileSync(join(process.cwd(), 'shared', 'prompts', 'challengeTradingProfessionalPersona.md'), 'utf8').trim();
+  } catch {
+    return 'Kamu adalah AI Trading Professional yang fokus pada review jurnal, risk management, disiplin trading, dan action plan praktis.';
+  }
+}
 
 type ChatCompletionResponse = {
   choices?: Array<{ message?: { content?: string } }>;
@@ -99,8 +110,7 @@ export async function POST(request: NextRequest, context: RouteContext) {
     const selectedTrades = filterTrades(reviewScope, trades);
     const analytics = calculateChallengeAnalytics(trades);
     const riskStatus = calculateRiskStatus(account, trades);
-    const selectedPersona = String(body?.selectedPersona ?? 'Calm Trading Mentor');
-    const customPersonaText = typeof body?.customPersonaText === 'string' ? body.customPersonaText : '';
+    const personaPrompt = readTradingProfessionalPersona();
     const reviewStyle = String(body?.reviewStyle ?? 'Action plan');
     const userMessage = typeof body?.userMessage === 'string' ? body.userMessage : '';
     const prompts = buildAIReviewContext({
@@ -108,13 +118,13 @@ export async function POST(request: NextRequest, context: RouteContext) {
       trades: selectedTrades as unknown as Array<Record<string, unknown>>,
       analytics,
       riskStatus,
-      selectedPersona,
-      customPersonaText,
+      selectedPersona: 'Trading Professional',
+      customPersonaText: personaPrompt,
       reviewScope,
       reviewStyle,
       userMessage,
     });
-    const systemPrompt = customPersonaText.trim() || defaultPersonas[selectedPersona] || prompts.systemPrompt;
+    const systemPrompt = personaPrompt;
     const assistantResponse = await requestAIReview({ ...prompts, systemPrompt });
     const review = await service.createAIReview(user.id, accountId, {
       personaId: typeof body?.personaId === 'string' ? body.personaId : null,
