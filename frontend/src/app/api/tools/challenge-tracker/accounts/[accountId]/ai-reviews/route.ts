@@ -71,10 +71,15 @@ async function requestAIReview(prompts: { systemPrompt: string; contextPrompt: s
 
 
 
+function clampPromptText(value: string, maxLength: number) {
+  const text = value.trim();
+  return text.length > maxLength ? `${text.slice(0, maxLength)}...` : text;
+}
+
 function buildConversationHistory(reviews: Awaited<ReturnType<ChallengeTrackerService['listAIReviews']>>): ChatCompletionMessage[] {
-  return reviews.slice(0, 8).reverse().flatMap((review) => {
-    const userMessage = (review.userMessage || review.userPrompt || '').trim();
-    const assistantResponse = review.assistantResponse.trim();
+  return reviews.slice(0, 6).reverse().flatMap((review) => {
+    const userMessage = clampPromptText(review.userMessage || review.userPrompt || '', 700);
+    const assistantResponse = clampPromptText(review.assistantResponse, 1400);
     const messages: ChatCompletionMessage[] = [];
     if (userMessage) messages.push({ role: 'user', content: userMessage });
     if (assistantResponse) messages.push({ role: 'assistant', content: assistantResponse });
@@ -107,6 +112,7 @@ export async function GET(_request: NextRequest, context: RouteContext) {
     if (!account) return apiError('RESOURCE_NOT_FOUND', 'Challenge tidak ditemukan', 404);
     return apiSuccess({ reviews: await service.listAIReviews(user.id, accountId) });
   } catch (error) {
+    console.error('[challenge-ai-review] GET failed', error);
     return apiErrorFromUnknown(error);
   }
 }
@@ -155,6 +161,8 @@ export async function POST(request: NextRequest, context: RouteContext) {
     });
     return apiSuccess({ review, prompts: { ...prompts, systemPrompt } }, 201);
   } catch (error) {
+    console.error('[challenge-ai-review] POST failed', error);
+    if (error instanceof Error) return apiError('AI_REVIEW_FAILED', error.message, 502);
     return apiErrorFromUnknown(error);
   }
 }
