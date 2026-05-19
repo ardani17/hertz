@@ -117,7 +117,7 @@ export function ProfitabilityToolPage() {
       <ToolNav />
       <section className={styles.header}>
         <p className={styles.eyebrow}>{copy.eyebrow}</p>
-        <h1>{copy.title}</h1>
+        <h2>{copy.title}</h2>
         <p>{copy.description}</p>
         <details className={styles.helpDetails}>
           <summary>{copy.helpTitle}</summary>
