@@ -382,6 +382,48 @@
   background: transparent;
 }
 
+.tradeTableWrap {
+  overflow-x: visible;
+}
+
+.tradeTable {
+  min-width: 0;
+  table-layout: fixed;
+}
+
+.tradeTable th,
+.tradeTable td {
+  padding: var(--space-2);
+  overflow-wrap: anywhere;
+  word-break: normal;
+}
+
+.tradeTable th:nth-child(1),
+.tradeTable td:nth-child(1) {
+  width: 48px;
+}
+
+.tradeTable th:nth-child(2),
+.tradeTable td:nth-child(2) {
+  width: 86px;
+}
+
+.tradeTable th:nth-child(3),
+.tradeTable td:nth-child(3),
+.tradeTable th:nth-child(5),
+.tradeTable td:nth-child(5),
+.tradeTable th:nth-child(6),
+.tradeTable td:nth-child(6) {
+  width: 16%;
+}
+
+.tradeTable th:nth-child(4),
+.tradeTable td:nth-child(4),
+.tradeTable th:nth-child(7),
+.tradeTable td:nth-child(7) {
+  width: 12%;
+}
+
 .barTrack {
   width: 100%;
   min-width: 140px;

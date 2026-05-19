@@ -609,8 +609,8 @@ export function ProfitabilityTool() {
           <span className={styles.badgeMuted}>{copy.detailCount(result.tradeDetails.length.toLocaleString(numberLocale))}</span>
         </div>
 
-        <div className={styles.tableWrap} data-mobile-cards="true">
-          <table className={styles.table}>
+        <div className={`${styles.tableWrap} ${styles.tradeTableWrap}`} data-mobile-cards="true">
+          <table className={`${styles.table} ${styles.tradeTable}`}>
             <thead>
               <tr>
                 <th>#</th>
