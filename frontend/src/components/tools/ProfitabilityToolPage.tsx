@@ -9,25 +9,25 @@ const pageCopy = {
   id: {
     eyebrow: 'Simulator',
     title: 'Profitability Simulator',
-    description: 'Uji risk, win rate, reward-risk, preset strategi, dan danger zone dalam ribuan skenario acak.',
+    description: 'Uji risiko, win rate, reward-risk, preset strategi, dan zona bahaya dalam ribuan skenario acak.',
     helpTitle: 'Penjelasan input simulator',
     helpIntro:
-      'Buka bagian ini jika ingin memahami maksud setiap kolom sebelum menjalankan simulasi. Nilai yang Anda isi akan digunakan untuk membuat ribuan skenario acak, lalu tool menampilkan insight strategi, rekomendasi risk, danger zone, chart, dan rincian contoh trade.',
+      'Buka bagian ini jika ingin memahami maksud setiap kolom sebelum menjalankan simulasi. Nilai yang Anda isi akan digunakan untuk membuat ribuan skenario acak, lalu tool menampilkan insight strategi, rekomendasi risiko, zona bahaya, chart, dan rincian contoh trade.',
     items: [
       {
         title: 'Tujuan simulasi dan preset',
         body:
-          'Tujuan simulasi membantu tool menilai hasil sesuai konteks: growth, drawdown rendah, prop firm safe, atau testing strategi. Preset cepat mengisi risk, win rate, reward-risk, jumlah trade, dan simulasi sebagai titik awal; Anda tetap bisa mengubah angkanya sebelum menjalankan ulang.',
+          'Tujuan simulasi membantu tool menilai hasil sesuai konteks: growth, drawdown rendah, prop firm safe, atau testing strategi. Preset cepat mengisi risiko, win rate, reward-risk, jumlah trade, dan simulasi sebagai titik awal; Anda tetap bisa mengubah angkanya sebelum menjalankan ulang.',
       },
       {
-        title: 'Balance awal',
+        title: 'Saldo awal',
         body:
-          'Modal awal yang menjadi titik mulai simulasi, mengikuti mata uang akun yang dipilih: IDR atau USD/USC. Semua risk per trade dihitung dari balance berjalan, bukan angka tetap. Contoh: jika balance awal 10.000.000 dan risk 2%, maka risk trade pertama adalah 200.000. Setelah balance naik atau turun, nominal risk berikutnya ikut berubah.',
+          'Modal awal yang menjadi titik mulai simulasi, mengikuti mata uang akun yang dipilih: IDR atau USD/USC. Semua risiko per trade dihitung dari saldo berjalan, bukan angka tetap. Contoh: jika saldo awal 10.000.000 dan risiko 2%, maka risiko trade pertama adalah 200.000. Setelah saldo naik atau turun, nominal risiko berikutnya ikut berubah.',
       },
       {
-        title: 'Risk per trade (%)',
+        title: 'Risiko per trade (%)',
         body:
-          'Persentase modal yang dipertaruhkan pada setiap trade. Angka ini bukan ukuran lot langsung, tetapi batas risiko terhadap balance. Semakin besar risk per trade, hasil simulasi bisa naik lebih cepat, tetapi drawdown dan kemungkinan kerusakan modal juga membesar.',
+          'Persentase modal yang dipertaruhkan pada setiap trade. Angka ini bukan ukuran lot langsung, tetapi batas risiko terhadap saldo. Semakin besar risiko per trade, hasil simulasi bisa naik lebih cepat, tetapi drawdown dan kemungkinan kerusakan modal juga membesar.',
       },
       {
         title: 'Win rate (%)',
@@ -35,24 +35,24 @@ const pageCopy = {
           'Perkiraan persentase trade yang berakhir profit. Win rate 35% berarti dari 100 trade, sekitar 35 trade diasumsikan menang dan 65 kalah secara acak. Win rate harus dibaca bersama reward-risk, karena win rate rendah masih bisa profitable jika reward jauh lebih besar dari risiko.',
       },
       {
-        title: 'Reward risk',
+        title: 'Rasio reward-risk',
         body:
-          'Perbandingan potensi profit terhadap risiko. Nilai 2 berarti setiap trade menang menghasilkan kira-kira dua kali risk. Jika risk trade adalah 200.000, maka trade menang menambah sekitar 400.000, sedangkan trade kalah mengurangi 200.000.',
+          'Perbandingan potensi profit terhadap risiko. Nilai 2 berarti setiap trade menang menghasilkan kira-kira dua kali risiko. Jika risiko trade adalah 200.000, maka trade menang menambah sekitar 400.000, sedangkan trade kalah mengurangi 200.000.',
       },
       {
         title: 'Jumlah trade',
         body:
-          'Banyaknya trade dalam satu jalur simulasi. Jika diisi 100, setiap simulasi akan menjalankan 100 trade berurutan. Rincian trade di bawah hasil menampilkan salah satu jalur tersebut agar Anda bisa melihat perubahan balance dari trade ke trade.',
+          'Banyaknya trade dalam satu jalur simulasi. Jika diisi 100, setiap simulasi akan menjalankan 100 trade berurutan. Rincian trade di bawah hasil menampilkan salah satu jalur tersebut agar Anda bisa melihat perubahan saldo dari trade ke trade.',
       },
       {
         title: 'Simulasi',
         body:
-          'Jumlah skenario acak yang dijalankan. Semakin besar angka ini, semakin stabil gambaran statistiknya, tetapi proses bisa lebih berat. Metrik seperti Expected balance, Median, Best 10%, Worst 10%, dan Profitable dihitung dari kumpulan simulasi ini.',
+          'Jumlah skenario acak yang dijalankan. Semakin besar angka ini, semakin stabil gambaran statistiknya, tetapi proses bisa lebih berat. Metrik seperti estimasi saldo, median, 10% terbaik, 10% terburuk, dan peluang profit dihitung dari kumpulan simulasi ini.',
       },
       {
         title: 'Drawdown',
         body:
-          'Penurunan balance dari titik tertinggi sebelumnya. Contoh: jika balance sempat naik ke 1.000 lalu turun ke 900, drawdown-nya 10%. Avg drawdown menunjukkan rata-rata penurunan terdalam dari simulasi, sehingga membantu membaca tekanan risiko modal, bukan sekadar hasil akhir profit atau rugi.',
+          'Penurunan saldo dari titik tertinggi sebelumnya. Contoh: jika saldo sempat naik ke 1.000 lalu turun ke 900, drawdown-nya 10%. Rata-rata drawdown menunjukkan rata-rata penurunan terdalam dari simulasi, sehingga membantu membaca tekanan risiko modal, bukan sekadar hasil akhir profit atau rugi.',
       },
     ],
   },

@@ -26,17 +26,17 @@ const toolCopy = {
   id: {
     fields: {
       currency: 'Mata uang akun',
-      balance: 'Balance awal',
-      riskPercent: 'Risk per trade (%)',
+      balance: 'Saldo awal',
+      riskPercent: 'Risiko per trade (%)',
       winRate: 'Win rate (%)',
-      rewardRisk: 'Reward risk',
+      rewardRisk: 'Rasio reward-risk',
       trades: 'Jumlah trade',
       simulations: 'Simulasi',
       goal: 'Tujuan simulasi',
     },
     currencyOptions: {
       IDR: 'IDR - Rupiah',
-      USD_USC: 'USD / USC - Dollar atau akun cent',
+      USD_USC: 'USD / USC - Dolar atau akun cent',
     },
     goals: {
       balanced: 'Balanced',
@@ -47,9 +47,9 @@ const toolCopy = {
     },
     presetsTitle: 'Preset cepat',
     presets: {
-      conservative: 'Conservative',
+      conservative: 'Konservatif',
       balanced: 'Balanced',
-      aggressive: 'Aggressive',
+      aggressive: 'Agresif',
       high_rr: 'High RR',
       scalping: 'Scalping',
       swing: 'Swing',
@@ -57,14 +57,14 @@ const toolCopy = {
     },
     run: 'Jalankan simulasi',
     validation:
-      'Beberapa nilai disesuaikan ke batas aman sesuai mata uang akun: balance, risk 0.1-25%, win rate 0-100%, trade 1-1000, simulasi 100-5000.',
+      'Beberapa nilai disesuaikan ke batas aman sesuai mata uang akun: saldo, risiko 0.1-25%, win rate 0-100%, trade 1-1000, simulasi 100-5000.',
     insight: {
       title: 'Insight strategi',
       subtitle: 'Ringkasan otomatis dari hasil simulasi terakhir.',
       verdicts: {
         healthy: 'Setup sehat: ekspektasi positif dengan tekanan drawdown masih terkendali.',
         usable_with_control: 'Setup bisa digunakan, tetapi perlu kontrol risiko dan disiplin eksekusi.',
-        reduce_risk: 'Setup agresif: turunkan risk atau perbaiki win rate/RR sebelum dipakai serius.',
+        reduce_risk: 'Setup agresif: turunkan risiko atau perbaiki win rate/RR sebelum dipakai serius.',
         dangerous: 'Setup berbahaya: probabilitas rugi/drawdown terlalu besar untuk dipakai apa adanya.',
       },
       riskLevels: {
@@ -73,25 +73,25 @@ const toolCopy = {
         aggressive: 'Agresif',
         danger: 'Bahaya',
       },
-      recommendation: 'Rekomendasi risk',
+      recommendation: 'Rekomendasi risiko',
       expectancy: 'Expectancy per 1R',
       profile: 'Profil',
       warningTitle: 'Peringatan',
       strengthTitle: 'Kekuatan',
       emptyWarnings: 'Tidak ada peringatan besar dari simulasi ini.',
       labels: {
-        conservative: 'Conservative',
+        conservative: 'Konservatif',
         balanced: 'Balanced',
-        aggressive: 'Aggressive',
+        aggressive: 'Agresif',
       },
       warnings: {
-        negative_expectancy: 'Expectancy negatif: kombinasi win rate dan reward-risk belum cukup mengimbangi loss.',
+        negative_expectancy: 'Expectancy negatif: kombinasi win rate dan reward-risk belum cukup mengimbangi kerugian.',
         low_profitability: 'Probabilitas profitable masih rendah pada simulasi ini.',
         severe_drawdown: 'Risiko drawdown ekstrem muncul di cukup banyak skenario.',
-        high_drawdown: 'Drawdown cukup tinggi; pertimbangkan risk lebih kecil.',
-        oversized_risk: 'Risk per trade besar, rawan merusak modal saat losing streak.',
-        goal_risk_mismatch: 'Risk terlalu besar untuk tujuan drawdown rendah / prop firm safe.',
-        weak_worst_case: 'Worst 10% menunjukkan skenario buruk yang perlu diantisipasi.',
+        high_drawdown: 'Drawdown cukup tinggi; pertimbangkan risiko lebih kecil.',
+        oversized_risk: 'Risiko per trade besar, rawan merusak modal saat losing streak.',
+        goal_risk_mismatch: 'Risiko terlalu besar untuk tujuan drawdown rendah / prop firm safe.',
+        weak_worst_case: '10% terburuk menunjukkan skenario buruk yang perlu diantisipasi.',
       },
       strengths: {
         positive_expectancy: 'Expectancy strategi positif.',
@@ -100,28 +100,28 @@ const toolCopy = {
       },
     },
     metrics: {
-      expected: 'Expected balance',
+      expected: 'Estimasi saldo',
       median: 'Median',
-      best: 'Best 10%',
-      worst: 'Worst 10%',
-      profitable: 'Profitable',
-      roi: 'Average ROI',
-      drawdown: 'Avg drawdown',
+      best: '10% terbaik',
+      worst: '10% terburuk',
+      profitable: 'Peluang profit',
+      roi: 'Rata-rata ROI',
+      drawdown: 'Rata-rata drawdown',
     },
     danger: {
-      title: 'Danger zone',
+      title: 'Zona bahaya',
       dd10: 'Peluang DD ≥ 10%',
       dd20: 'Peluang DD ≥ 20%',
       dd30: 'Peluang DD ≥ 30%',
-      p90: 'Worst drawdown P90',
+      p90: 'Drawdown terburuk P90',
     },
     charts: {
       title: 'Visual simulasi',
-      equity: 'Equity curve contoh',
+      equity: 'Contoh kurva ekuitas',
       distribution: 'Distribusi hasil akhir',
-      drawdown: 'Drawdown curve contoh',
-      low: 'Low',
-      high: 'High',
+      drawdown: 'Contoh kurva drawdown',
+      low: 'Rendah',
+      high: 'Tinggi',
     },
     note: (simulations: string, trades: string) =>
       `Hasil terakhir berdasarkan ${simulations} simulasi dan ${trades} trade per simulasi. Fungsi tool ini membantu membaca ekspektasi dan drawdown, bukan prediksi profit.`,
@@ -130,15 +130,18 @@ const toolCopy = {
       'Contoh jalur trade dari simulasi pertama. Tabel ini menjadi dasar sebelum fitur export CSV/PDF ditambahkan.',
     detailCount: (trades: string) => `${trades} trade`,
     table: {
-      result: 'Result',
-      balanceBefore: 'Balance awal trade',
-      risk: 'Risk',
+      result: 'Hasil',
+      balanceBefore: 'Saldo awal trade',
+      risk: 'Risiko',
       pnl: 'P/L',
-      balanceAfter: 'Balance akhir',
+      balanceAfter: 'Saldo akhir',
       drawdown: 'Drawdown saat ini',
       win: 'Menang',
       loss: 'Rugi',
     },
+    grade: 'Grade',
+    presetSummary: (risk: number, winRate: number, rewardRisk: number) =>
+      `${risk}% risiko · ${winRate}% WR · ${rewardRisk}R`,
   },
   en: {
     fields: {
@@ -256,6 +259,9 @@ const toolCopy = {
       win: 'Win',
       loss: 'Loss',
     },
+    grade: 'Grade',
+    presetSummary: (risk: number, winRate: number, rewardRisk: number) =>
+      `${risk}% risk · ${winRate}% WR · ${rewardRisk}R`,
   },
 };
 
@@ -449,9 +455,7 @@ export function ProfitabilityTool() {
               type="button"
             >
               <strong>{copy.presets[preset.id]}</strong>
-              <span>
-                {preset.riskPercent}% risk · {preset.winRate}% WR · {preset.rewardRisk}R
-              </span>
+              <span>{copy.presetSummary(preset.riskPercent, preset.winRate, preset.rewardRisk)}</span>
             </button>
           ))}
         </div>
@@ -471,7 +475,7 @@ export function ProfitabilityTool() {
             <p className={styles.eyebrow}>{copy.insight.subtitle}</p>
             <h2 id="strategy-insight">{copy.insight.title}</h2>
           </div>
-          <span className={styles.gradeBadge}>Grade {analysis.grade}</span>
+          <span className={styles.gradeBadge}>{copy.grade} {analysis.grade}</span>
         </div>
         <p className={styles.insightVerdict}>{copy.insight.verdicts[analysis.verdictId as keyof typeof copy.insight.verdicts]}</p>
         <div className={styles.insightGrid}>
