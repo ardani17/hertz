@@ -1,0 +1,33 @@
+services:
+  journal-api:
+    image: mt5-vps-journal:latest
+    build:
+      context: .
+      dockerfile: Dockerfile
+    restart: unless-stopped
+    env_file:
+      - .env
+    ports:
+      # Keep private behind Nginx/Caddy/Traefik on the VPS host.
+      - "127.0.0.1:8088:8088"
+    volumes:
+      - ./accounts.json:/app/accounts.json:ro
+      - journal-data:/app/data
+      - journal-logs:/app/logs
+    security_opt:
+      - no-new-privileges:true
+    read_only: true
+    tmpfs:
+      - /tmp:size=64m,mode=1777
+    cap_drop:
+      - ALL
+    healthcheck:
+      test: ["CMD", "python", "-c", "import json,urllib.request; d=json.loads(urllib.request.urlopen('http://127.0.0.1:8088/healthz', timeout=3).read().decode()); raise SystemExit(0 if d.get('ok') else 1)"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 10s
+
+volumes:
+  journal-data:
+  journal-logs:

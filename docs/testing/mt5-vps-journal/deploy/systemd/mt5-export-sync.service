@@ -1,0 +1,11 @@
+[Unit]
+Description=Push MT5 exported CSV into dashboard API
+After=mt5-journal.service
+
+[Service]
+Type=oneshot
+User=mt5journal
+Group=mt5journal
+EnvironmentFile=/etc/mt5-journal.env
+WorkingDirectory=/opt/mt5-vps-journal
+ExecStart=/opt/mt5-vps-journal/scripts/push_csv.sh ${MT5_SYNC_LOGIN} ${MT5_SYNC_CSV} http://127.0.0.1:${APP_PORT}

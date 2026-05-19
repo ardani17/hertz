@@ -1,0 +1,122 @@
+services:
+  volume-init:
+    image: busybox:1.36
+    container_name: mt5-volume-init
+    restart: "no"
+    command: >
+      sh -c "mkdir -p /wine-prefix /mt5 /exports /mt5-logs /sync-logs &&
+             chown -R 999:999 /wine-prefix /mt5 /exports /mt5-logs &&
+             chown -R 100:101 /sync-logs"
+    volumes:
+      - mt5-wine-prefix:/wine-prefix
+      - mt5-terminal:/mt5
+      - mt5-exports:/exports
+      - mt5-logs:/mt5-logs
+      - export-sync-logs:/sync-logs
+    security_opt:
+      - no-new-privileges:true
+
+  journal-api:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: mt5-vps-journal:latest
+    container_name: mt5-vps-journal
+    restart: unless-stopped
+    environment:
+      APP_HOST: 0.0.0.0
+      APP_PORT: 8088
+      INGEST_TOKEN: "${INGEST_TOKEN}"
+      DASHBOARD_USER: "${DASHBOARD_USER:-}"
+      DASHBOARD_PASSWORD: "${DASHBOARD_PASSWORD:-}"
+      TRADING_DIR: /app
+      DATA_DIR: /app/data
+      PUBLIC_DIR: /app/public
+      ACCOUNTS_PATH: /app/accounts.json
+      ENV_PATH: /app/.env
+    ports:
+      - "127.0.0.1:8088:8088"
+    volumes:
+      - ./accounts.json:/app/accounts.json:ro
+      - journal-data:/app/data
+      - journal-logs:/app/logs
+    healthcheck:
+      test: ["CMD", "python", "-c", "import json,urllib.request; d=json.loads(urllib.request.urlopen('http://127.0.0.1:8088/healthz', timeout=3).read().decode()); raise SystemExit(0 if d.get('ok') else 1)"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 10s
+
+  mt5-runner:
+    build:
+      context: .
+      dockerfile: Dockerfile.mt5-runner
+    image: mt5-runner-wine:latest
+    container_name: mt5-runner
+    restart: unless-stopped
+    depends_on:
+      volume-init:
+        condition: service_completed_successfully
+    environment:
+      MT5_LOGIN: "${MT5_308881_LOGIN:-308881}"
+      MT5_PASSWORD: "${MT5_308881_PASSWORD}"
+      MT5_SERVER: "${MT5_308881_SERVER:-Nozax-Trade}"
+      MT5_RUN_MODE: "${MT5_RUN_MODE:-mock}"
+      MT5_TERMINAL_EXE: "${MT5_TERMINAL_EXE:-/mt5/terminal64.exe}"
+      EXPORT_DIR: /exports
+      MOCK_INTERVAL_SECONDS: "10"
+      DISPLAY: ":99"
+      WINEPREFIX: /wine-prefix
+    volumes:
+      - mt5-wine-prefix:/wine-prefix
+      - mt5-terminal:/mt5
+      - mt5-exports:/exports
+      - mt5-logs:/logs
+    tmpfs:
+      - /tmp
+    shm_size: 512m
+    security_opt:
+      - no-new-privileges:true
+    cap_drop:
+      - ALL
+
+  export-sync:
+    build:
+      context: .
+      dockerfile: Dockerfile.export-sync
+    image: mt5-export-sync:latest
+    container_name: mt5-export-sync
+    restart: unless-stopped
+    depends_on:
+      volume-init:
+        condition: service_completed_successfully
+      journal-api:
+        condition: service_healthy
+      mt5-runner:
+        condition: service_started
+    environment:
+      INGEST_TOKEN: "${INGEST_TOKEN}"
+      SYNC_LOGIN: "${MT5_308881_LOGIN:-308881}"
+      API_BASE_URL: http://journal-api:8088
+      EXPORT_DIR: /exports
+      LOG_DIR: /logs
+      SYNC_INTERVAL_SECONDS: "5"
+      SYNC_EXIT_AFTER_ERRORS: "12"
+    volumes:
+      - mt5-exports:/exports:ro
+      - export-sync-logs:/logs
+    tmpfs:
+      - /tmp
+    security_opt:
+      - no-new-privileges:true
+    cap_drop:
+      - ALL
+
+volumes:
+  journal-data:
+  journal-logs:
+  mt5-wine-prefix:
+  mt5-terminal:
+  mt5-exports:
+  mt5-logs:
+  export-sync-logs:

@@ -1,0 +1,34 @@
+services:
+  journal-api:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: mt5-vps-journal:latest
+    container_name: mt5-vps-journal
+    restart: unless-stopped
+    env_file:
+      - .env
+    environment:
+      APP_HOST: 0.0.0.0
+      APP_PORT: 8088
+      TRADING_DIR: /app
+      DATA_DIR: /app/data
+      PUBLIC_DIR: /app/public
+      ACCOUNTS_PATH: /app/accounts.json
+      ENV_PATH: /app/.env
+    ports:
+      - "127.0.0.1:8088:8088"
+    volumes:
+      - ./accounts.json:/app/accounts.json:ro
+      - journal-data:/app/data
+      - journal-logs:/app/logs
+    healthcheck:
+      test: ["CMD", "python", "-c", "import json,urllib.request; d=json.loads(urllib.request.urlopen('http://127.0.0.1:8088/healthz', timeout=3).read().decode()); raise SystemExit(0 if d.get('ok') else 1)"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 10s
+
+volumes:
+  journal-data:
+  journal-logs:

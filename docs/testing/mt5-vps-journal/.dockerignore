@@ -1,0 +1,13 @@
+.git
+.venv
+__pycache__
+*.pyc
+.env
+logs/*
+data/*.csv
+data/*-history.json
+data/dashboard-data.json
+mt5/wine-prefix
+mt5/terminal
+review
+*.png

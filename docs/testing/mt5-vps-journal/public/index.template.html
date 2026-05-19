@@ -1,0 +1,45 @@
+<!doctype html>
+<html lang="id">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Local MT5 trading journal dashboard with parsed account history, PnL, cashflow, and discipline review.">
+  <meta name="theme-color" content="#11100e">
+  <title>Trading Journal Dashboard</title>
+  <style>
+__DASHBOARD_CSS__
+  </style>
+</head>
+<body>
+  <a class="skip-link" href="#dashboard-root">Lewati ke dashboard</a>
+  <div class="app-shell">
+    <header class="topbar" aria-label="Dashboard header">
+      <div>
+        <p class="eyebrow">Trading journal</p>
+        <h1>MT5 account review</h1>
+        <p class="hero-copy">Ringkasan performa akun, cashflow, dan disiplin trading dalam satu dashboard lokal.</p>
+      </div>
+      <div class="generated" id="generated-at">Loading data</div>
+    </header>
+
+    <section class="control-panel" aria-label="Dashboard controls">
+      <div>
+        <p class="control-label">Account</p>
+        <div class="account-switcher" id="account-switcher"></div>
+      </div>
+      <label class="month-control" for="month-selector">
+        <span class="control-label">Month</span>
+        <select id="month-selector"></select>
+      </label>
+    </section>
+
+    <main id="dashboard-root" tabindex="-1"></main>
+  </div>
+
+  <script id="dashboard-data" type="application/json">__DASHBOARD_DATA_JSON__</script>
+  <script>
+__DASHBOARD_JS__
+  </script>
+</body>
+</html>
+

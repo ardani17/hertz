@@ -1,0 +1,8 @@
+.env
+.venv/
+__pycache__/
+*.pyc
+logs/*.log
+mt5/wine-prefix/
+mt5/terminal/
+data/trade_history_*.csv
