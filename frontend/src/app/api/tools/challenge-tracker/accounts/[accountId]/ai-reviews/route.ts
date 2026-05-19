@@ -9,6 +9,53 @@ interface RouteContext { params: Promise<{ accountId: string }> }
 export const dynamic = 'force-dynamic';
 const service = new ChallengeTrackerService();
 const configuredProvider = process.env.CHALLENGE_AI_PROVIDER || process.env.AI_REVIEW_PROVIDER || 'mock';
+const configuredBaseUrl = process.env.CHALLENGE_AI_BASE_URL || process.env.AI_REVIEW_BASE_URL || '';
+const configuredApiKey = process.env.CHALLENGE_AI_API_KEY || process.env.AI_REVIEW_API_KEY || '';
+const configuredModel = process.env.CHALLENGE_AI_MODEL || process.env.AI_REVIEW_MODEL || 'glm-5-turbo';
+const configuredTimeoutMs = Number(process.env.CHALLENGE_AI_TIMEOUT_MS || process.env.AI_REVIEW_TIMEOUT_MS || 45000);
+
+type ChatCompletionResponse = {
+  choices?: Array<{ message?: { content?: string } }>;
+  error?: { message?: string };
+};
+
+function providerReady() {
+  return Boolean(configuredBaseUrl && configuredApiKey && configuredModel && configuredProvider !== 'mock');
+}
+
+async function requestAIReview(prompts: { systemPrompt: string; contextPrompt: string; userPrompt: string }) {
+  if (!providerReady()) {
+    return 'AI Review belum terhubung ke provider. Context sudah berhasil dibuat dan siap dikirim ke adapter AI pilihan admin.';
+  }
+
+  const endpoint = `${configuredBaseUrl.replace(/\/$/, '')}/chat/completions`;
+  const response = await fetch(endpoint, {
+    method: 'POST',
+    headers: {
+      Authorization: `Bearer ${configuredApiKey}`,
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({
+      model: configuredModel,
+      temperature: 0.2,
+      messages: [
+        { role: 'system', content: prompts.systemPrompt },
+        { role: 'user', content: `${prompts.contextPrompt}
+
+${prompts.userPrompt}` },
+      ],
+    }),
+    signal: AbortSignal.timeout(Number.isFinite(configuredTimeoutMs) ? configuredTimeoutMs : 45000),
+  });
+  const json = await response.json().catch(() => null) as ChatCompletionResponse | null;
+  if (!response.ok) {
+    throw new Error(json?.error?.message || `AI provider error ${response.status}`);
+  }
+  const content = json?.choices?.[0]?.message?.content?.trim();
+  if (!content) throw new Error('AI provider tidak mengembalikan review');
+  return content;
+}
+
 
 function filterTrades(scope: string, trades: ChallengeTradeDto[]) {
   const today = new Date().toISOString().slice(0, 10);
@@ -68,7 +115,7 @@ export async function POST(request: NextRequest, context: RouteContext) {
       userMessage,
     });
     const systemPrompt = customPersonaText.trim() || defaultPersonas[selectedPersona] || prompts.systemPrompt;
-    const assistantResponse = 'AI Review belum terhubung ke provider. Context sudah berhasil dibuat dan siap dikirim ke adapter AI pilihan Anda.';
+    const assistantResponse = await requestAIReview({ ...prompts, systemPrompt });
     const review = await service.createAIReview(user.id, accountId, {
       personaId: typeof body?.personaId === 'string' ? body.personaId : null,
       provider: configuredProvider,
