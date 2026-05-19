@@ -366,3 +366,4 @@ export type * from './feed';
 export type * from './hertz';
 export type * from './membership';
 export type * from './communityNote';
+export type * from './challengeTracker';
