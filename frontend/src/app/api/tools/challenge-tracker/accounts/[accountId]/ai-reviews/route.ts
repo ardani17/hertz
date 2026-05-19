@@ -25,6 +25,8 @@ function readTradingProfessionalPersona() {
   }
 }
 
+type ChatCompletionMessage = { role: 'system' | 'user' | 'assistant'; content: string };
+
 type ChatCompletionResponse = {
   choices?: Array<{ message?: { content?: string } }>;
   error?: { message?: string };
@@ -34,7 +36,7 @@ function providerReady() {
   return Boolean(configuredBaseUrl && configuredApiKey && configuredModel && configuredProvider !== 'mock');
 }
 
-async function requestAIReview(prompts: { systemPrompt: string; contextPrompt: string; userPrompt: string }) {
+async function requestAIReview(prompts: { systemPrompt: string; contextPrompt: string; userPrompt: string }, history: ChatCompletionMessage[] = []) {
   if (!providerReady()) {
     return 'AI Review belum terhubung ke provider. Context sudah berhasil dibuat dan siap dikirim ke adapter AI pilihan admin.';
   }
@@ -51,9 +53,9 @@ async function requestAIReview(prompts: { systemPrompt: string; contextPrompt: s
       temperature: 0.2,
       messages: [
         { role: 'system', content: prompts.systemPrompt },
-        { role: 'user', content: `${prompts.contextPrompt}
-
-${prompts.userPrompt}` },
+        { role: 'user', content: prompts.contextPrompt },
+        ...history,
+        { role: 'user', content: prompts.userPrompt },
       ],
     }),
     signal: AbortSignal.timeout(Number.isFinite(configuredTimeoutMs) ? configuredTimeoutMs : 45000),
@@ -67,6 +69,18 @@ ${prompts.userPrompt}` },
   return content;
 }
 
+
+
+function buildConversationHistory(reviews: Awaited<ReturnType<ChallengeTrackerService['listAIReviews']>>): ChatCompletionMessage[] {
+  return reviews.slice(0, 8).reverse().flatMap((review) => {
+    const userMessage = (review.userMessage || review.userPrompt || '').trim();
+    const assistantResponse = review.assistantResponse.trim();
+    const messages: ChatCompletionMessage[] = [];
+    if (userMessage) messages.push({ role: 'user', content: userMessage });
+    if (assistantResponse) messages.push({ role: 'assistant', content: assistantResponse });
+    return messages;
+  });
+}
 
 function filterTrades(scope: string, trades: ChallengeTradeDto[]) {
   const today = new Date().toISOString().slice(0, 10);
@@ -113,6 +127,8 @@ export async function POST(request: NextRequest, context: RouteContext) {
     const personaPrompt = readTradingProfessionalPersona();
     const reviewStyle = String(body?.reviewStyle ?? 'Action plan');
     const userMessage = typeof body?.userMessage === 'string' ? body.userMessage : '';
+    const previousReviews = await service.listAIReviews(user.id, accountId);
+    const conversationHistory = buildConversationHistory(previousReviews);
     const prompts = buildAIReviewContext({
       challengeConfig: account,
       trades: selectedTrades as unknown as Array<Record<string, unknown>>,
@@ -125,7 +141,7 @@ export async function POST(request: NextRequest, context: RouteContext) {
       userMessage,
     });
     const systemPrompt = personaPrompt;
-    const assistantResponse = await requestAIReview({ ...prompts, systemPrompt });
+    const assistantResponse = await requestAIReview({ ...prompts, systemPrompt }, conversationHistory);
     const review = await service.createAIReview(user.id, accountId, {
       personaId: typeof body?.personaId === 'string' ? body.personaId : null,
       provider: configuredProvider,

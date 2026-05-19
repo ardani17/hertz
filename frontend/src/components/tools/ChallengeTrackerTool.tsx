@@ -1,7 +1,8 @@
 'use client';
 
-import { FormEvent, useEffect, useMemo, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import type React from 'react';
+import type { FormEvent, KeyboardEvent } from 'react';
 import type { ChallengeAccountDto, ChallengeAIReviewDto, ChallengeTradeDto } from '@shared/types/challengeTracker';
 import styles from './ToolShell.module.css';
 import { useToolsLanguage } from './useToolsLanguage';
@@ -11,6 +12,7 @@ type TabId = 'overview' | 'rules' | 'journal' | 'analytics' | 'risk' | 'ai';
 type ApiResult<T> = { success: true; data: T } | { success: false; error?: { message?: string } };
 type AccountForm = Record<string, string | boolean>;
 type TradeForm = Record<string, string | boolean>;
+type ChatMessage = { id: string; role: 'user' | 'assistant'; content: string; createdAt: string };
 
 type Copy = typeof copy.id;
 
@@ -58,6 +60,12 @@ function n(value: unknown) { const parsed = Number(value); return Number.isFinit
 function f(value: number, currency = 'USD') { return new Intl.NumberFormat('id-ID', { style: 'currency', currency, maximumFractionDigits: currency === 'IDR' ? 0 : 2 }).format(value || 0); }
 function p(value: number) { return `${(value || 0).toFixed(1)}%`; }
 function safeValue(value: unknown) { return value === null || value === undefined || value === '' ? null : value; }
+function messagesFromReviews(reviews: ChallengeAIReviewDto[]): ChatMessage[] {
+  return reviews.slice().reverse().flatMap((review) => [
+    { id: `${review.id}-user`, role: 'user' as const, content: review.userMessage || review.userPrompt || 'Review jurnal saya.', createdAt: review.createdAt },
+    { id: `${review.id}-assistant`, role: 'assistant' as const, content: review.assistantResponse, createdAt: review.createdAt },
+  ]);
+}
 
 function formFromAccount(account: ChallengeAccountDto): AccountForm {
   return {
@@ -96,13 +104,13 @@ export function ChallengeTrackerTool() {
   const [accounts, setAccounts] = useState<ChallengeAccountDto[]>([]);
   const [selectedId, setSelectedId] = useState('');
   const [trades, setTrades] = useState<ChallengeTradeDto[]>([]);
-  const [reviews, setReviews] = useState<ChallengeAIReviewDto[]>([]);
   const [accountForm, setAccountForm] = useState<AccountForm>(emptyAccountForm);
   const [tradeForm, setTradeForm] = useState<TradeForm>(emptyTradeForm);
   const [filters, setFilters] = useState(filtersDefault);
   const [message, setMessage] = useState('');
   const [loading, setLoading] = useState(true);
   const [aiLoading, setAiLoading] = useState(false);
+  const [chatMessages, setChatMessages] = useState<ChatMessage[]>([]);
   const [aiState, setAiState] = useState({ selectedPersona: 'Strict Prop Firm Coach', customPersonaText: '', personaName: 'Prop Firm Evaluator', personaDescription: '', reviewScope: 'all', reviewStyle: 'Action plan', userMessage: '', contextPreview: '', assistant: '' });
 
   const selected = accounts.find((account) => account.id === selectedId) ?? null;
@@ -135,10 +143,10 @@ export function ChallengeTrackerTool() {
           apiFetch<{ reviews: ChallengeAIReviewDto[] }>(`/api/tools/challenge-tracker/accounts/${nextId}/ai-reviews`),
         ]);
         setTrades(tradeData.trades);
-        setReviews(reviewData.reviews);
+        setChatMessages(messagesFromReviews(reviewData.reviews));
       } else {
         setTrades([]);
-        setReviews([]);
+        setChatMessages([]);
       }
       setMessage('');
     } catch (error) {
@@ -204,15 +212,20 @@ export function ChallengeTrackerTool() {
     try {
       setMessage('');
       setAiLoading(true);
-      setAiState((state) => ({ ...state, assistant: 'AI sedang membaca jurnal dan membuat review...' }));
-      const localContext = buildAIReviewContext({ challengeConfig: effectiveAccount, trades: trades as unknown as Array<Record<string, unknown>>, analytics, riskStatus: riskStatus ?? calculateRiskStatus(effectiveAccount, trades), selectedPersona: aiState.selectedPersona, customPersonaText: aiState.customPersonaText, reviewScope, reviewStyle, userMessage: aiState.userMessage });
+      const fallbackMessage = mode === 'last_trade' ? 'Review trade terakhir saya.' : mode === 'risk' ? 'Review risiko dan rules challenge saya.' : mode === 'action' ? 'Buat action plan untuk challenge saya.' : 'Review jurnal dan status challenge saya.';
+      const outgoingMessage = aiState.userMessage.trim() || fallbackMessage;
+      const sentAt = new Date().toISOString();
+      setChatMessages((items) => [...items, { id: `local-user-${sentAt}`, role: 'user', content: outgoingMessage, createdAt: sentAt }]);
+      setAiState((state) => ({ ...state, userMessage: '', assistant: 'AI sedang membaca jurnal dan membuat review...' }));
+      const localContext = buildAIReviewContext({ challengeConfig: effectiveAccount, trades: trades as unknown as Array<Record<string, unknown>>, analytics, riskStatus: riskStatus ?? calculateRiskStatus(effectiveAccount, trades), selectedPersona: aiState.selectedPersona, customPersonaText: aiState.customPersonaText, reviewScope, reviewStyle, userMessage: outgoingMessage });
       setAiState((state) => ({ ...state, contextPreview: [localContext.systemPrompt, localContext.contextPrompt, localContext.userPrompt].join('\n\n---\n\n') }));
-      const data = await apiFetch<{ review: ChallengeAIReviewDto; prompts: { systemPrompt: string; contextPrompt: string; userPrompt: string } }>(`/api/tools/challenge-tracker/accounts/${selectedId}/ai-reviews`, { method: 'POST', body: JSON.stringify({ ...aiState, reviewScope, reviewStyle }) });
-      setReviews((items) => [data.review, ...items]);
+      const data = await apiFetch<{ review: ChallengeAIReviewDto; prompts: { systemPrompt: string; contextPrompt: string; userPrompt: string } }>(`/api/tools/challenge-tracker/accounts/${selectedId}/ai-reviews`, { method: 'POST', body: JSON.stringify({ ...aiState, userMessage: outgoingMessage, reviewScope, reviewStyle }) });
+      setChatMessages((items) => [...items, { id: `${data.review.id}-assistant`, role: 'assistant', content: data.review.assistantResponse, createdAt: data.review.createdAt }]);
       setAiState((state) => ({ ...state, assistant: data.review.assistantResponse, contextPreview: [data.prompts.systemPrompt, data.prompts.contextPrompt, data.prompts.userPrompt].join('\n\n---\n\n') }));
     } catch (error) {
       const errorMessage = error instanceof Error ? error.message : t.error;
       setMessage(errorMessage);
+      setChatMessages((items) => [...items, { id: `local-error-${Date.now()}`, role: 'assistant', content: `AI Review gagal: ${errorMessage}`, createdAt: new Date().toISOString() }]);
       setAiState((state) => ({ ...state, assistant: `AI Review gagal: ${errorMessage}` }));
     } finally {
       setAiLoading(false);
@@ -244,7 +257,7 @@ export function ChallengeTrackerTool() {
       {tab === 'journal' && selected ? <Journal t={t} form={tradeForm} setForm={setTradeForm} onSubmit={addTrade} filters={filters} setFilters={setFilters} trades={filteredTrades} analytics={analytics} insights={journalInsights} onDelete={deleteTrade} currency={selected.accountCurrency} /> : null}
       {tab === 'analytics' && selected ? <Analytics t={t} analytics={analytics} trades={trades} currency={selected.accountCurrency} /> : null}
       {tab === 'risk' && selected && effectiveAccount && riskStatus ? <RiskMonitor t={t} account={effectiveAccount} analytics={analytics} riskStatus={riskStatus} insights={journalInsights} /> : null}
-      {tab === 'ai' && selected ? <AIReview t={t} aiState={aiState} setAiState={setAiState} reviews={reviews} runReview={runReview} aiLoading={aiLoading} /> : null}
+      {tab === 'ai' && selected ? <AIReview t={t} aiState={aiState} setAiState={setAiState} messages={chatMessages} runReview={runReview} aiLoading={aiLoading} onClear={() => setChatMessages([])} /> : null}
     </section>
   );
 }
@@ -273,57 +286,82 @@ function RiskMonitor({ t, account, analytics, riskStatus, insights }: { t: Copy;
   const warnings = [...riskStatus.warnings, ...insights.filter((item) => item !== t.insights.noWarnings)];
   return <section className={styles.panel}><div className={styles.sectionHeader}><div><h2>{t.sections.risk}</h2><p>{account.name}</p></div><StatusBadge status={riskStatus.status} labels={t.status} /></div><div className={styles.progressGrid}><Progress label={t.metrics.dailyLoss} value={riskStatus.dailyLossUsagePct} /><Progress label={t.metrics.drawdown} value={riskStatus.overallDrawdownUsagePct} /><Progress label={t.metrics.avgRisk} value={account.maxRiskPerTradePercent ? (analytics.averageRiskPercent / account.maxRiskPerTradePercent) * 100 : 0} /></div><div className={styles.insightLists}><div><h3>Warnings</h3><ul>{(warnings.length ? warnings : [t.insights.noWarnings]).map((item) => <li key={item}>{item}</li>)}</ul></div></div></section>;
 }
-function AIReview({ t, aiState, setAiState, reviews, runReview, aiLoading }: { t: Copy; aiState: { selectedPersona: string; customPersonaText: string; personaName: string; personaDescription: string; reviewScope: string; reviewStyle: string; userMessage: string; contextPreview: string; assistant: string }; setAiState: React.Dispatch<React.SetStateAction<{ selectedPersona: string; customPersonaText: string; personaName: string; personaDescription: string; reviewScope: string; reviewStyle: string; userMessage: string; contextPreview: string; assistant: string }>>; reviews: ChallengeAIReviewDto[]; aiLoading: boolean; runReview: (mode?: 'last_trade' | 'risk' | 'action') => void }) {
+function AIReview({ t, aiState, setAiState, messages, runReview, aiLoading, onClear }: { t: Copy; aiState: { selectedPersona: string; customPersonaText: string; personaName: string; personaDescription: string; reviewScope: string; reviewStyle: string; userMessage: string; contextPreview: string; assistant: string }; setAiState: React.Dispatch<React.SetStateAction<{ selectedPersona: string; customPersonaText: string; personaName: string; personaDescription: string; reviewScope: string; reviewStyle: string; userMessage: string; contextPreview: string; assistant: string }>>; messages: ChatMessage[]; aiLoading: boolean; onClear: () => void; runReview: (mode?: 'last_trade' | 'risk' | 'action') => void }) {
   const set = (k: string, v: string) => setAiState((state) => ({ ...state, [k]: v }));
-  const latest = aiState.assistant || reviews[0]?.assistantResponse || t.ai.mock;
+  const endRef = useRef<HTMLDivElement | null>(null);
+  const visibleMessages = messages.length ? messages : [{ id: 'intro', role: 'assistant' as const, content: 'Halo, saya siap membantu review jurnal, risk, disiplin, dan action plan challenge ini. Tulis pertanyaan Anda seperti chat biasa.', createdAt: new Date().toISOString() }];
+
+  useEffect(() => {
+    endRef.current?.scrollIntoView({ block: 'end', behavior: 'smooth' });
+  }, [messages.length, aiLoading]);
+
+  function submitMessage() {
+    if (aiLoading || !aiState.userMessage.trim()) return;
+    void runReview();
+  }
+
+  function handleKeyDown(event: KeyboardEvent<HTMLTextAreaElement>) {
+    if (event.key !== 'Enter' || event.shiftKey) return;
+    event.preventDefault();
+    submitMessage();
+  }
+
   return (
-    <section className={styles.panel}>
+    <section className={`${styles.panel} ${styles.chatPanel}`}>
       <div className={styles.sectionHeader}>
         <div>
           <h2>{t.sections.aiChat}</h2>
-          <p>AI memakai persona Trading Professional dari file <code>shared/prompts/challengeTradingProfessionalPersona.md</code>.</p>
+          <p>Chat dua arah. AI memakai persona Trading Professional dari file <code>shared/prompts/challengeTradingProfessionalPersona.md</code>.</p>
         </div>
+        <button type="button" className="btn-secondary" onClick={() => { onClear(); setAiState((state) => ({ ...state, assistant: '', contextPreview: '', userMessage: '' })); }}>{t.ai.clear}</button>
       </div>
-      <article className={styles.chatBubbleAssistant}>
-        <span>AI</span>
-        <p>{latest}</p>
-      </article>
-      {reviews.slice(0, 3).map((review) => (
-        <article className={styles.chatBubbleAssistant} key={review.id}>
-          <span>{new Date(review.createdAt).toLocaleString('id-ID')}</span>
-          <p>{review.assistantResponse}</p>
-        </article>
-      ))}
-      <div className={styles.formGridThree}>
-        <SelectField label={t.ai.scope} value={aiState.reviewScope} onChange={(v) => set('reviewScope', v)}>
-          <option value="all">Review semua jurnal</option>
-          <option value="today">Review trade hari ini</option>
-          <option value="week">Review minggu ini</option>
-          <option value="month">Review bulan ini</option>
-          <option value="last_trade">Review trade terakhir</option>
-          <option value="losses">Review hanya trade loss</option>
-          <option value="mistakes">Review hanya trade mistake</option>
-          <option value="risk">Review rules & risk</option>
-        </SelectField>
-        <SelectField label={t.ai.style} value={aiState.reviewStyle} onChange={(v) => set('reviewStyle', v)}>
-          <option>Ringkas</option>
-          <option>Detail</option>
-          <option>Tegas</option>
-          <option>Edukatif</option>
-          <option>Checklist</option>
-          <option>Action plan</option>
-        </SelectField>
+      <div className={styles.chatWindow} aria-live="polite">
+        {visibleMessages.map((message) => (
+          <article className={message.role === 'user' ? styles.chatBubbleUser : styles.chatBubbleAssistant} key={message.id}>
+            <span>{message.role === 'user' ? 'Anda' : 'AI'}</span>
+            <p>{message.content}</p>
+          </article>
+        ))}
+        {aiLoading ? (
+          <article className={`${styles.chatBubbleAssistant} ${styles.chatTypingBubble}`}>
+            <span>AI</span>
+            <p>Mengetik...</p>
+          </article>
+        ) : null}
+        <div ref={endRef} />
       </div>
-      <div className={styles.chatInputRow}>
-        <textarea value={aiState.userMessage} onChange={(event) => set('userMessage', event.target.value)} placeholder="Tanya AI untuk review jurnal, risiko, disiplin, atau action plan berikutnya." />
-        <button type="button" disabled={aiLoading} onClick={() => void runReview()}>{aiLoading ? t.ai.sending : t.ai.reviewJournal}</button>
-      </div>
-      <div className={styles.actions}>
+      <div className={styles.chatQuickActions}>
         <button type="button" className="btn-secondary" disabled={aiLoading} onClick={() => void runReview('last_trade')}>{t.ai.reviewLast}</button>
         <button type="button" className="btn-secondary" disabled={aiLoading} onClick={() => void runReview('risk')}>{t.ai.reviewRisk}</button>
         <button type="button" className="btn-secondary" disabled={aiLoading} onClick={() => void runReview('action')}>{t.ai.actionPlan}</button>
-        <button type="button" className="btn-secondary" onClick={() => setAiState((state) => ({ ...state, assistant: '', contextPreview: '', userMessage: '' }))}>{t.ai.clear}</button>
       </div>
+      <form className={styles.chatInputRow} onSubmit={(event) => { event.preventDefault(); submitMessage(); }}>
+        <textarea value={aiState.userMessage} onChange={(event) => set('userMessage', event.target.value)} onKeyDown={handleKeyDown} placeholder="Ketik pesan... Enter untuk kirim, Shift+Enter untuk baris baru." />
+        <button type="submit" disabled={aiLoading || !aiState.userMessage.trim()}>{aiLoading ? t.ai.sending : t.ai.reviewJournal}</button>
+      </form>
+      <details className={styles.chatSettings}>
+        <summary>Pengaturan konteks</summary>
+        <div className={styles.formGridThree}>
+          <SelectField label={t.ai.scope} value={aiState.reviewScope} onChange={(v) => set('reviewScope', v)}>
+            <option value="all">Review semua jurnal</option>
+            <option value="today">Review trade hari ini</option>
+            <option value="week">Review minggu ini</option>
+            <option value="month">Review bulan ini</option>
+            <option value="last_trade">Review trade terakhir</option>
+            <option value="losses">Review hanya trade loss</option>
+            <option value="mistakes">Review hanya trade mistake</option>
+            <option value="risk">Review rules & risk</option>
+          </SelectField>
+          <SelectField label={t.ai.style} value={aiState.reviewStyle} onChange={(v) => set('reviewStyle', v)}>
+            <option>Ringkas</option>
+            <option>Detail</option>
+            <option>Tegas</option>
+            <option>Edukatif</option>
+            <option>Checklist</option>
+            <option>Action plan</option>
+          </SelectField>
+        </div>
+      </details>
     </section>
   );
 }
