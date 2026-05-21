@@ -21,12 +21,10 @@ function toIso(value: Date | string): string {
 
 export function buildProfileActivityTabs(activity: HertzProfileActivity) {
   return [
-    { key: 'posts', label: 'Post saya', count: activity.posts.length },
+    { key: 'posts', label: 'Postingan', count: activity.posts.length },
     { key: 'saved', label: 'Disimpan', count: activity.saved.length },
-    { key: 'reposts', label: 'Repost saya', count: activity.reposts.length },
-    { key: 'comments', label: 'Komentar saya', count: activity.comments.length },
-    { key: 'credit', label: 'Credit', count: null },
-    { key: 'session', label: 'Session Telegram', count: null },
+    { key: 'reposts', label: 'Repost', count: activity.reposts.length },
+    { key: 'comments', label: 'Komentar', count: activity.comments.length },
   ];
 }
 

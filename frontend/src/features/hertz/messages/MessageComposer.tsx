@@ -60,9 +60,21 @@ export function MessageComposer({
         <input
           value={body}
           onChange={(event) => onBodyChange(event.target.value)}
-          placeholder={activeId ? 'Tulis pesan baru...' : 'Pilih percakapan dulu'}
+          onKeyDown={(event) => {
+            if (event.key === 'Enter' && !event.shiftKey) {
+              event.preventDefault();
+              if (activeId && !uploading && body.trim()) onSend();
+            }
+          }}
+          placeholder={activeId ? 'Tulis pesan...' : 'Pilih percakapan dulu'}
+          disabled={!activeId}
         />
-        <button type="button" onClick={onSend} disabled={!activeId || uploading} aria-label="Kirim pesan">
+        <button
+          type="button"
+          onClick={onSend}
+          disabled={!activeId || uploading || (!body.trim() && attachments.length === 0)}
+          aria-label="Kirim pesan"
+        >
           <SendHorizontal aria-hidden="true" />
           <span>Kirim</span>
         </button>

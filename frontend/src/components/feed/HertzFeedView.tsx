@@ -30,7 +30,12 @@ export function HertzFeedView({
   return (
     <HertzLayout variant="feed" active="home" currentUser={currentUser}>
       <HertzHeader activeCategory={activeCategory} activeSearch={activeSearch} activeSort={activeSort} />
-      <HertzComposer currentUser={currentUser} activeCategory={activeCategory} />
+      <HertzComposer
+        currentUser={currentUser}
+        activeCategory={activeCategory}
+        activeSearch={activeSearch}
+        activeSort={activeSort}
+      />
       <div className={styles.feed}>
         {posts.length > 0 ? (
           posts.map((post) => <HertzPostCard key={post.id} post={post} currentUser={currentUser} />)

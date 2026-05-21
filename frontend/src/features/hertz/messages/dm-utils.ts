@@ -55,6 +55,26 @@ export function formatDmTimestamp(value: string | null | undefined) {
   });
 }
 
+/** Ringkas untuk daftar percakapan (hari ini → jam, minggu ini → hari). */
+export function formatDmListTime(value: string | null | undefined) {
+  if (!value) return '';
+  const date = new Date(value);
+  if (Number.isNaN(date.getTime())) return '';
+  const now = new Date();
+  const sameDay =
+    date.getDate() === now.getDate()
+    && date.getMonth() === now.getMonth()
+    && date.getFullYear() === now.getFullYear();
+  if (sameDay) {
+    return date.toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit' });
+  }
+  const diffDays = Math.floor((now.getTime() - date.getTime()) / 86400000);
+  if (diffDays < 7) {
+    return date.toLocaleDateString('id-ID', { weekday: 'short' });
+  }
+  return date.toLocaleDateString('id-ID', { day: '2-digit', month: 'short' });
+}
+
 export function getDmThreadMenuActions({ active, archived }: { active: boolean; archived: boolean }) {
   if (!active) return [];
   return [archived ? 'Buka arsip' : 'Arsipkan', 'Blokir'];

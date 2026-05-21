@@ -7,6 +7,16 @@
   padding: 0;
 }
 
+.tabListCenter {
+  gap: 0.85rem;
+  justify-content: center;
+  width: 100%;
+}
+
+.tabListCenter .tabLink {
+  padding: 0.4rem 1.1rem;
+}
+
 .tab {
   display: inline-flex;
 }
@@ -36,4 +46,42 @@
 .tabLink:focus-visible {
   outline: 2px solid #10b981;
   outline-offset: 2px;
+}
+
+@media (max-width: 1024px) {
+  .tabListFeedSort {
+    gap: 0;
+    width: 100%;
+  }
+
+  .tabListFeedSort .tab {
+    flex: 1 1 0;
+    min-width: 0;
+  }
+
+  .tabListFeedSort .tabLink {
+    background: transparent;
+    border: 0;
+    border-bottom: 3px solid transparent;
+    border-radius: 0;
+    color: #8ea897;
+    font-size: 0.92rem;
+    font-weight: 700;
+    justify-content: center;
+    min-height: 48px;
+    padding: 0.65rem 0.5rem 0.5rem;
+    text-align: center;
+    width: 100%;
+  }
+
+  .tabListFeedSort .tabLink:hover {
+    background: transparent;
+    color: #d1fae5;
+  }
+
+  .tabListFeedSort .tabLinkActive {
+    background: transparent;
+    border-bottom-color: #13d27b;
+    color: #f4fff8;
+  }
 }

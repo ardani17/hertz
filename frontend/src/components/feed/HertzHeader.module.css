@@ -22,14 +22,15 @@
   z-index: 5;
 }
 
-.top {
-  align-items: center;
-  border-bottom: 0;
-  display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  height: 74px;
+.navRow {
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+  display: flex;
+  justify-content: center;
   margin: 0 auto;
   max-width: 42rem;
+  padding-block: 0;
+  padding-inline: 1.25rem;
+  width: 100%;
 }
 
 .feedTitle,
@@ -173,15 +174,8 @@
     overflow: hidden;
   }
 
-  .top {
-    height: 54px;
-  }
-
-  .feedTitle,
-  .feedTitleActive {
-    font-size: 16px;
-    height: 54px;
-    line-height: 54px;
+  .navRow {
+    padding-inline: 0.9rem;
   }
 
   .tabs {

@@ -60,15 +60,18 @@ export function HertzLayout(props: HertzLayoutProps) {
       <div className={hideRightRail ? styles.shellCompact : styles.shell}>
         <HertzLeftRail currentUser={currentUser} active={active} />
         <section className={contentClass} aria-label={props.variant === 'feed' ? 'HERTZ timeline' : undefined}>
-          <a className={styles.mobileBrand} href="/hertz" aria-label="Horizon Home">
-            <Image
-              src="/images/logo/Logo-Horizon-Atom-Online-White_8.png"
-              alt=""
-              width={34}
-              height={34}
-              priority
-            />
-          </a>
+          <header className={styles.mobileHeader}>
+            <a className={styles.mobileBrand} href="/hertz" aria-label="HERTZ — Horizon feed">
+              <Image
+                src="/images/logo/Logo-Horizon-Atom-Online-White_8.png"
+                alt=""
+                width={34}
+                height={34}
+                priority
+              />
+              <span className={styles.mobileBrandTitle}>HERTZ</span>
+            </a>
+          </header>
           {props.variant === 'page' ? (
             <header className={styles.pageHeader}>
               <h1>{props.title}</h1>

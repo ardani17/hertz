@@ -11,12 +11,10 @@ describe('HertzProfileService activity tabs', () => {
     };
 
     expect(buildProfileActivityTabs(activity)).toEqual([
-      { key: 'posts', label: 'Post saya', count: 1 },
+      { key: 'posts', label: 'Postingan', count: 1 },
       { key: 'saved', label: 'Disimpan', count: 1 },
-      { key: 'reposts', label: 'Repost saya', count: 0 },
-      { key: 'comments', label: 'Komentar saya', count: 0 },
-      { key: 'credit', label: 'Credit', count: null },
-      { key: 'session', label: 'Session Telegram', count: null },
+      { key: 'reposts', label: 'Repost', count: 0 },
+      { key: 'comments', label: 'Komentar', count: 0 },
     ]);
   });
 });

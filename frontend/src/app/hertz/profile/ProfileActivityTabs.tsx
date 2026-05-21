@@ -64,7 +64,7 @@ export function ProfileActivityTabs({
               <strong>{item.text || 'Postingan HERTZ'}</strong>
               <em>{formatDate(item.createdAt)}</em>
             </Link>
-          )) : <p>{panel.empty}</p>}
+          )) : <p className={styles.emptyCopy}>{panel.empty}</p>}
         </div>
       </div>
     </>

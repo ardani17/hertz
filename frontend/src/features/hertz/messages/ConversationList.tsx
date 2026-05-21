@@ -1,9 +1,9 @@
 'use client';
 
+import { DmAvatar } from './DmAvatar';
 import {
   filterLabels,
-  formatDmTimestamp,
-  getDmInitial,
+  formatDmListTime,
   getDmPreviewText,
 } from './dm-utils';
 import type { Conversation, DmFilter, MemberResult } from './types';
@@ -12,6 +12,7 @@ import styles from './messages.module.css';
 type ConversationListProps = {
   conversations: Conversation[];
   members: MemberResult[];
+  activeId: string | null;
   query: string;
   filter: DmFilter;
   status: string | null;
@@ -24,6 +25,7 @@ type ConversationListProps = {
 export function ConversationList({
   conversations,
   members,
+  activeId,
   query,
   filter,
   status,
@@ -38,21 +40,26 @@ export function ConversationList({
     return true;
   });
 
+  const unreadTotal = conversations.reduce((sum, item) => sum + item.unreadCount, 0);
+
   return (
     <aside className={styles.sidebar}>
       <div className={styles.sidebarHeader}>
         <div>
-          <h2>Pesan</h2>
-          <span>{conversations.length} percakapan</span>
+          <p className={styles.sidebarLabel}>Pesan langsung</p>
+          <h2>Kotak masuk</h2>
         </div>
+        {unreadTotal > 0 ? <span className={styles.unreadPill}>{unreadTotal} baru</span> : null}
       </div>
-      {status ? <p className={styles.status}>{status}</p> : null}
-      <div className={styles.filters}>
+      {status ? <p className={styles.status} role="status">{status}</p> : null}
+      <div className={styles.filters} role="tablist" aria-label="Filter pesan">
         {(['inbox', 'unread', 'admin', 'archived'] as const).map((item) => (
           <button
-            className={filter === item ? styles.activeFilter : ''}
+            className={filter === item ? styles.activeFilter : styles.filterChip}
             type="button"
             key={item}
+            role="tab"
+            aria-selected={filter === item}
             onClick={() => onFilterChange(item)}
           >
             {filterLabels[item]}
@@ -63,10 +70,12 @@ export function ConversationList({
         className={styles.search}
         value={query}
         onChange={(event) => onSearch(event.target.value)}
-        placeholder="Cari pesan langsung"
+        placeholder="Cari member..."
+        aria-label="Cari member untuk memulai percakapan"
       />
-      {members.length ? (
-        <div className={styles.searchResults}>
+      {members.length > 0 ? (
+        <div className={styles.searchResults} aria-label="Hasil pencarian member">
+          <p className={styles.sectionHint}>Mulai percakapan baru</p>
           {members.map((member) => (
             <button
               className={styles.item}
@@ -74,15 +83,13 @@ export function ConversationList({
               key={member.id}
               onClick={() => onStartConversation(member.id)}
             >
-              <span className={styles.itemAvatar} aria-hidden="true">
-                {getDmInitial(member.display_name, member.username)}
-              </span>
+              <DmAvatar displayName={member.display_name} username={member.username} className={styles.itemAvatar} />
               <span className={styles.itemMain}>
                 <span className={styles.itemTop}>
-                  <strong>{member.display_name ?? member.username ?? 'Member Horizon'}</strong>
+                  <strong>{member.display_name ?? member.username ?? 'Member'}</strong>
                 </span>
                 <span className={styles.itemMeta}>
-                  {member.username ? `@${member.username}` : 'HERTZ member'}
+                  {member.username ? `@${member.username}` : 'Member HERTZ'}
                 </span>
               </span>
             </button>
@@ -90,29 +97,49 @@ export function ConversationList({
         </div>
       ) : null}
       <div className={styles.list}>
-        {filtered.map((item) => (
-          <button
-            className={styles.item}
-            type="button"
-            key={item.id}
-            onClick={() => onSelectConversation(item.id)}
-          >
-            <span className={styles.itemAvatar} aria-hidden="true">
-              {getDmInitial(item.peer?.displayName, item.peer?.username)}
-            </span>
-            <span className={styles.itemMain}>
-              <span className={styles.itemTop}>
-                <strong>{item.peer?.displayName ?? `Conversation ${item.id.slice(0, 8)}`}</strong>
-                <time>{formatDmTimestamp(item.lastMessageAt)}</time>
-              </span>
-              <span className={styles.itemMeta}>
-                {item.peer?.username ? `@${item.peer.username}` : 'HERTZ member'}
-              </span>
-              <span className={styles.itemPreview}>{getDmPreviewText(item.lastMessageBody)}</span>
-            </span>
-            {item.unreadCount > 0 ? <em>{item.unreadCount}</em> : null}
-          </button>
-        ))}
+        {filtered.length === 0 ? (
+          <div className={styles.emptyList} role="status">
+            <p>
+              {filter === 'unread'
+                ? 'Tidak ada pesan belum dibaca.'
+                : filter === 'archived'
+                  ? 'Arsip masih kosong.'
+                  : filter === 'admin'
+                    ? 'Belum ada percakapan dengan admin.'
+                    : 'Belum ada percakapan. Cari member di atas untuk mulai.'}
+            </p>
+          </div>
+        ) : (
+          filtered.map((item) => {
+            const isActive = item.id === activeId;
+            return (
+              <button
+                className={`${styles.item} ${isActive ? styles.itemActive : ''} ${item.unreadCount > 0 ? styles.itemUnread : ''}`}
+                type="button"
+                key={item.id}
+                aria-current={isActive ? 'true' : undefined}
+                onClick={() => onSelectConversation(item.id)}
+              >
+                <DmAvatar
+                  src={item.peer?.avatarUrl}
+                  displayName={item.peer?.displayName}
+                  username={item.peer?.username}
+                  className={styles.itemAvatar}
+                />
+                <span className={styles.itemMain}>
+                  <span className={styles.itemTop}>
+                    <strong>{item.peer?.displayName ?? 'Percakapan'}</strong>
+                    <time dateTime={item.lastMessageAt ?? undefined}>
+                      {formatDmListTime(item.lastMessageAt)}
+                    </time>
+                  </span>
+                  <span className={styles.itemPreview}>{getDmPreviewText(item.lastMessageBody)}</span>
+                </span>
+                {item.unreadCount > 0 ? <em aria-label={`${item.unreadCount} belum dibaca`}>{item.unreadCount}</em> : null}
+              </button>
+            );
+          })
+        )}
       </div>
     </aside>
   );

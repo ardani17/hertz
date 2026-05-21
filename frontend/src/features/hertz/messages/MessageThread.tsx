@@ -1,9 +1,11 @@
 'use client';
 
+import { useEffect, useRef } from 'react';
+import { createPortal } from 'react-dom';
 import { MoreIcon } from '@/components/feed/HertzIcons';
+import { DmAvatar } from './DmAvatar';
 import {
   formatDmTimestamp,
-  getDmInitial,
   getDmMessageSide,
   getDmThreadMenuActions,
 } from './dm-utils';
@@ -42,105 +44,144 @@ export function MessageThread({
   onReportMessage,
   composer,
 }: MessageThreadProps) {
+  const messagesEndRef = useRef<HTMLDivElement | null>(null);
   const threadActions = getDmThreadMenuActions({ active: Boolean(activeId), archived: filter === 'archived' });
+
+  useEffect(() => {
+    if (!activeId || messages.length === 0) return;
+    messagesEndRef.current?.scrollIntoView({ behavior: 'smooth', block: 'end' });
+  }, [activeId, messages]);
+
+  useEffect(() => {
+    if (!threadMenuOpen) return;
+    function onKeyDown(event: KeyboardEvent) {
+      if (event.key === 'Escape') onToggleMenu();
+    }
+    window.addEventListener('keydown', onKeyDown);
+    return () => window.removeEventListener('keydown', onKeyDown);
+  }, [threadMenuOpen, onToggleMenu]);
+
+  const threadMenu =
+    threadMenuOpen && activeId ? (
+      <div className={styles.threadMenuBackdrop} role="presentation" onClick={onToggleMenu}>
+        <div
+          className={styles.threadMenuSheet}
+          role="menu"
+          onClick={(event) => event.stopPropagation()}
+        >
+          {threadActions.includes('Arsipkan') ? (
+            <button type="button" role="menuitem" onClick={() => onArchive(true)}>
+              Arsipkan
+            </button>
+          ) : null}
+          {threadActions.includes('Buka arsip') ? (
+            <button type="button" role="menuitem" onClick={() => onArchive(false)}>
+              Buka arsip
+            </button>
+          ) : null}
+          <button type="button" role="menuitem" onClick={onBlock} disabled={!activeConversation?.peer?.id}>
+            Blokir pengguna
+          </button>
+        </div>
+      </div>
+    ) : null;
 
   return (
     <section className={styles.thread}>
       <div className={styles.threadHeader}>
         <button type="button" className={styles.backButton} onClick={onBack}>
-          Kotak masuk
+          ← Kembali
         </button>
-        <div className={styles.threadPeerAvatar} aria-hidden="true">
-          {getDmInitial(activeConversation?.peer?.displayName, activeConversation?.peer?.username)}
-        </div>
-        <div>
+        <DmAvatar
+          src={activeConversation?.peer?.avatarUrl}
+          displayName={activeConversation?.peer?.displayName}
+          username={activeConversation?.peer?.username}
+          className={styles.threadPeerAvatar}
+        />
+        <div className={styles.threadPeerMeta}>
           <strong>{activeConversation?.peer?.displayName ?? 'Pilih percakapan'}</strong>
-          <span>{activeConversation?.peer?.username ? `@${activeConversation.peer.username}` : 'Pesan HERTZ'}</span>
+          <span>
+            {activeConversation?.peer?.username
+              ? `@${activeConversation.peer.username}`
+              : 'Pilih dari kotak masuk atau cari member'}
+          </span>
         </div>
-        <div className={styles.threadMenu}>
-          <button
-            type="button"
-            className={styles.menuTrigger}
-            onClick={onToggleMenu}
-            disabled={!activeId}
-            aria-label="Menu percakapan"
-            aria-expanded={threadMenuOpen}
-          >
-            <MoreIcon />
-          </button>
-          {threadMenuOpen ? (
-            <div className={styles.threadActions}>
-              {threadActions.includes('Arsipkan') ? (
-                <button type="button" onClick={() => onArchive(true)}>
-                  Arsipkan
-                </button>
-              ) : null}
-              {threadActions.includes('Buka arsip') ? (
-                <button type="button" onClick={() => onArchive(false)}>
-                  Buka arsip
-                </button>
-              ) : null}
-              <button type="button" onClick={onBlock} disabled={!activeConversation?.peer?.id}>
-                Blokir
-              </button>
-            </div>
-          ) : null}
-        </div>
+        <button
+          type="button"
+          className={styles.menuTrigger}
+          onClick={onToggleMenu}
+          disabled={!activeId}
+          aria-label="Menu percakapan"
+          aria-expanded={threadMenuOpen}
+          aria-haspopup="menu"
+        >
+          <MoreIcon />
+        </button>
       </div>
       <div className={styles.messages}>
         {!activeId ? (
           <div className={styles.emptyThread}>
-            <h2>Pilih pesan</h2>
-            <p>Pilih percakapan atau cari member untuk mulai pesan langsung.</p>
+            <h2>Pilih percakapan</h2>
+            <p>Buka chat dari daftar kiri atau cari member untuk memulai pesan baru.</p>
           </div>
         ) : messages.length === 0 ? (
           <div className={styles.emptyThread}>
             <h2>Belum ada pesan</h2>
-            <p>Kirim pesan pertama ke percakapan ini.</p>
+            <p>Kirim pesan pertama — teks atau gambar di bawah.</p>
           </div>
         ) : (
-          messages.map((item) => {
-            const side = getDmMessageSide(item.senderId, currentUserId);
-            return (
-              <div
-                className={`${styles.bubbleRow} ${side === 'outgoing' ? styles.outgoing : styles.incoming}`}
-                key={item.id}
-              >
-                {side === 'incoming' ? (
-                  <span className={styles.messageAvatar} aria-hidden="true">
-                    {getDmInitial(item.sender.displayName, item.sender.username)}
-                  </span>
-                ) : null}
-                <div className={styles.bubble}>
-                  <div className={styles.bubbleMeta}>
-                    <strong>{side === 'outgoing' ? 'Anda' : item.sender.displayName}</strong>
-                    <time>{formatDmTimestamp(item.createdAt)}</time>
-                  </div>
-                  <span>{item.body ?? 'Pesan dihapus'}</span>
-                  {item.attachments.length ? (
-                    <div className={styles.attachments}>
-                      {item.attachments.map((attachment) => (
-                        <img key={attachment.id} src={attachment.url} alt="DM attachment" />
-                      ))}
-                    </div>
+          <>
+            {messages.map((item) => {
+              const side = getDmMessageSide(item.senderId, currentUserId);
+              const isOutgoing = side === 'outgoing';
+              return (
+                <div
+                  className={`${styles.bubbleRow} ${isOutgoing ? styles.outgoing : styles.incoming}`}
+                  key={item.id}
+                >
+                  {!isOutgoing ? (
+                    <DmAvatar
+                      src={item.sender.avatarUrl}
+                      displayName={item.sender.displayName}
+                      username={item.sender.username}
+                      className={styles.messageAvatar}
+                    />
                   ) : null}
-                  <div className={styles.messageActions}>
-                    {item.canDelete ? (
-                      <button type="button" onClick={() => onDeleteMessage(item.id)}>
-                        Hapus
-                      </button>
+                  <article className={styles.bubble}>
+                    {!isOutgoing ? (
+                      <span className={styles.bubbleSender}>{item.sender.displayName}</span>
                     ) : null}
-                    <button type="button" onClick={() => onReportMessage(item.id)}>
-                      Laporkan
-                    </button>
-                  </div>
+                    <p className={styles.bubbleBody}>{item.body ?? 'Pesan dihapus'}</p>
+                    {item.attachments.length > 0 ? (
+                      <div className={styles.attachments}>
+                        {item.attachments.map((attachment) => (
+                          <img key={attachment.id} src={attachment.url} alt="Lampiran pesan" />
+                        ))}
+                      </div>
+                    ) : null}
+                    <footer className={styles.bubbleFooter}>
+                      <time dateTime={item.createdAt}>{formatDmTimestamp(item.createdAt)}</time>
+                      <div className={styles.messageActions}>
+                        {item.canDelete ? (
+                          <button type="button" onClick={() => onDeleteMessage(item.id)}>
+                            Hapus
+                          </button>
+                        ) : null}
+                        <button type="button" onClick={() => onReportMessage(item.id)}>
+                          Laporkan
+                        </button>
+                      </div>
+                    </footer>
+                  </article>
                 </div>
-              </div>
-            );
-          })
+              );
+            })}
+            <div ref={messagesEndRef} aria-hidden="true" />
+          </>
         )}
       </div>
       {composer}
+      {typeof document !== 'undefined' && threadMenu ? createPortal(threadMenu, document.body) : null}
     </section>
   );
 }

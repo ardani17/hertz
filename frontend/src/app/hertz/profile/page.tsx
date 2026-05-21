@@ -1,13 +1,15 @@
 import type { Metadata } from 'next';
 import Link from 'next/link';
 import { query, queryOne } from '@shared/db';
-import type { CreditTransaction } from '@shared/types';
+import type { CreditTransaction, MemberSessionUser } from '@shared/types';
 import { buildProfileActivityTabs, HertzProfileService, type HertzProfileActivity } from '@shared/services/hertzProfileService';
 import { HertzAppShell } from '@/components/hertz/HertzAppShell';
+import { HertzAvatar } from '@/components/feed/HertzAvatar';
 import { HertzTelegramLogin } from '@/components/feed/HertzTelegramLogin';
 import { getCurrentMember } from '@/lib/memberAuth';
 import type { ProfileActivityTab } from '@/lib/hertzProfileActivity';
 import { ProfileActivityTabs } from './ProfileActivityTabs';
+import { ProfileSessionActions } from './ProfileSessionActions';
 import styles from './page.module.css';
 
 export const dynamic = 'force-dynamic';
@@ -63,86 +65,136 @@ function formatDate(value: Date | string) {
   }).format(date);
 }
 
+function formatCredit(value: number | null) {
+  if (value === null) return '0';
+  return new Intl.NumberFormat('id-ID').format(value);
+}
+
+function memberBadge(user: MemberSessionUser) {
+  if (user.badge === 'admin') return 'Admin';
+  return 'Verified Member';
+}
+
+function ProfileStats({ activity }: { activity: HertzProfileActivity }) {
+  const items = [
+    { label: 'Postingan', value: activity.posts.length },
+    { label: 'Disimpan', value: activity.saved.length },
+    { label: 'Repost', value: activity.reposts.length },
+    { label: 'Komentar', value: activity.comments.length },
+  ];
+
+  return (
+    <dl className={styles.stats}>
+      {items.map((item) => (
+        <div key={item.label}>
+          <dt>{item.label}</dt>
+          <dd>{item.value}</dd>
+        </div>
+      ))}
+    </dl>
+  );
+}
+
 export default async function HertzProfilePage() {
   const currentUser = await getCurrentMember();
   const credit = await getCreditSummary(currentUser?.id ?? null);
   const activity = await getActivity(currentUser?.id ?? null);
-  const tabs = activity ? buildProfileActivityTabs(activity) as ProfileActivityTab[] : [];
+  const tabs = activity ? (buildProfileActivityTabs(activity) as ProfileActivityTab[]) : [];
 
   return (
     <HertzAppShell
       active="profile"
-      title="Akun HERTZ"
-      description="Status Telegram, credit, dan shortcut aktivitas member."
+      title="Profil"
+      description="Ringkasan akun, credit, dan aktivitas HERTZ kamu."
       currentUser={currentUser}
       hideRightRail
     >
       {!currentUser ? (
-        <section className={styles.panel}>
+        <section className={styles.guestPanel}>
           <span className={styles.badge}>Mode baca</span>
-          <h2>Login Telegram untuk membuka akun HERTZ</h2>
-          <p>Setelah login, status member dan credit akan tampil di halaman ini.</p>
+          <h2>Login Telegram untuk membuka profil</h2>
+          <p>Setelah login, status member, credit, dan aktivitas akan tampil di sini.</p>
           <HertzTelegramLogin />
         </section>
       ) : (
-        <div className={styles.grid}>
-          <section className={styles.panel}>
-            <span className={styles.badge}>{currentUser.badge === 'admin' ? 'Admin' : 'Verified Member'}</span>
-            <h2>{currentUser.displayName}</h2>
-            <dl className={styles.metaList}>
-              <div>
-                <dt>Username</dt>
-                <dd>{currentUser.username ? `@${currentUser.username}` : '-'}</dd>
-              </div>
-              <div>
-                <dt>Telegram ID</dt>
-                <dd>{currentUser.telegramId ?? '-'}</dd>
-              </div>
-              <div>
-                <dt>Role</dt>
-                <dd>{currentUser.role}</dd>
-              </div>
-              <div>
-                <dt>Status</dt>
-                <dd>{currentUser.verifiedMemberAt ? `Verified ${formatDate(currentUser.verifiedMemberAt)}` : 'Verified'}</dd>
-              </div>
-            </dl>
-          </section>
-
-          <section className={styles.panel}>
-            <span className={styles.badge}>Credit</span>
-            <h2>{credit.balance ?? 0}</h2>
-            <p>Saldo credit member yang tercatat di Horizon.</p>
-            <div className={styles.actions}>
-              <Link href="/hertz">Post saya</Link>
-              <Link href="/tools">Tools</Link>
+        <div className={styles.profile}>
+          <section className={styles.hero}>
+            <HertzAvatar
+              className={styles.heroAvatar}
+              src={currentUser.avatarUrl}
+              name={currentUser.displayName}
+              username={currentUser.username}
+            />
+            <div className={styles.heroMain}>
+              <span className={styles.badge}>{memberBadge(currentUser)}</span>
+              <h2>{currentUser.displayName}</h2>
+              <p className={styles.handle}>
+                {currentUser.username ? `@${currentUser.username}` : 'Member HERTZ'}
+              </p>
+              {activity ? <ProfileStats activity={activity} /> : null}
+              <ProfileSessionActions />
             </div>
           </section>
 
-          <section className={`${styles.panel} ${styles.historyPanel}`}>
-            <span className={styles.badge}>Riwayat</span>
-            <h2>Transaksi credit</h2>
-            {credit.transactions.length > 0 ? (
-              <div className={styles.historyList}>
-                {credit.transactions.map((item) => (
-                  <div key={item.id}>
-                    <strong>{item.amount > 0 ? `+${item.amount}` : item.amount}</strong>
-                    <span>{item.description ?? item.source_type}</span>
-                    <em>{formatDate(item.created_at)}</em>
-                  </div>
-                ))}
+          <div className={styles.grid}>
+            <section className={`${styles.panel} ${styles.creditPanel}`}>
+              <p className={styles.panelLabel}>Saldo credit</p>
+              <p className={styles.creditValue}>{formatCredit(credit.balance)}</p>
+              <p className={styles.panelHint}>Credit dipakai untuk fitur premium di Horizon.</p>
+              <div className={styles.quickLinks}>
+                <Link href="/tools">Buka tools</Link>
+                <Link href="/hertz">Ke feed</Link>
               </div>
-            ) : (
-              <p>Belum ada riwayat credit yang bisa ditampilkan.</p>
-            )}
-          </section>
-          {activity ? (
-            <section className={`${styles.panel} ${styles.historyPanel}`}>
-              <span className={styles.badge}>Aktivitas</span>
-              <h2>Aktivitas HERTZ</h2>
-              <ProfileActivityTabs activity={activity} tabs={tabs} />
             </section>
-          ) : null}
+
+            <section className={styles.panel}>
+              <p className={styles.panelLabel}>Informasi akun</p>
+              <dl className={styles.metaList}>
+                <div>
+                  <dt>Role</dt>
+                  <dd>{currentUser.role}</dd>
+                </div>
+                <div>
+                  <dt>Status</dt>
+                  <dd>
+                    {currentUser.verifiedMemberAt
+                      ? `Verified · ${formatDate(currentUser.verifiedMemberAt)}`
+                      : 'Verified member'}
+                  </dd>
+                </div>
+                <div>
+                  <dt>Telegram</dt>
+                  <dd className={styles.mono}>{currentUser.telegramId ?? '—'}</dd>
+                </div>
+              </dl>
+            </section>
+
+            <section className={`${styles.panel} ${styles.historyPanel}`}>
+              <p className={styles.panelLabel}>Riwayat credit</p>
+              {credit.transactions.length > 0 ? (
+                <ul className={styles.historyList}>
+                  {credit.transactions.map((item) => (
+                    <li key={item.id}>
+                      <strong className={item.amount >= 0 ? styles.creditPlus : styles.creditMinus}>
+                        {item.amount > 0 ? `+${formatCredit(item.amount)}` : formatCredit(item.amount)}
+                      </strong>
+                      <span>{item.description ?? item.source_type}</span>
+                      <em>{formatDate(item.created_at)}</em>
+                    </li>
+                  ))}
+                </ul>
+              ) : (
+                <p className={styles.emptyCopy}>Belum ada transaksi credit.</p>
+              )}
+            </section>
+
+            {activity ? (
+              <section className={`${styles.panel} ${styles.activityPanel}`}>
+                <p className={styles.panelLabel}>Aktivitas</p>
+                <ProfileActivityTabs activity={activity} tabs={tabs} />
+              </section>
+            ) : null}
+          </div>
         </div>
       )}
     </HertzAppShell>

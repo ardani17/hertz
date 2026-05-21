@@ -1,6 +1,7 @@
 'use client';
 
 import { useEffect, useMemo, useRef, useState } from 'react';
+import { createPortal } from 'react-dom';
 import type { HertzPost } from '@shared/types';
 import { Button } from '@/components/ui/button';
 import { trapFocusWithin } from '@/lib/focusTrap';
@@ -52,6 +53,7 @@ export function HertzShareSheet({
   onMessage: (message: string) => void;
 }) {
   const closeRef = useRef<HTMLButtonElement | null>(null);
+  const [mounted, setMounted] = useState(false);
   const [nativeShareAvailable, setNativeShareAvailable] = useState(false);
   const origin = typeof window === 'undefined' ? 'https://horizon.cloudnexify.com' : window.location.origin;
   const canonicalUrl = buildCanonicalPostUrl(post.shortId, origin);
@@ -61,15 +63,25 @@ export function HertzShareSheet({
   );
 
   useEffect(() => {
+    setMounted(true);
+  }, []);
+
+  useEffect(() => {
     setNativeShareAvailable(canUseNativeShare(navigator));
     closeRef.current?.focus();
+
+    const previousOverflow = document.body.style.overflow;
+    document.body.style.overflow = 'hidden';
 
     function handleKeyDown(event: KeyboardEvent) {
       if (event.key === 'Escape') onClose();
     }
 
     window.addEventListener('keydown', handleKeyDown);
-    return () => window.removeEventListener('keydown', handleKeyDown);
+    return () => {
+      document.body.style.overflow = previousOverflow;
+      window.removeEventListener('keydown', handleKeyDown);
+    };
   }, [onClose]);
 
   async function copyLink() {
@@ -94,7 +106,9 @@ export function HertzShareSheet({
     }
   }
 
-  return (
+  if (!mounted) return null;
+
+  return createPortal(
     <div className={styles.backdrop} role="presentation" onClick={onClose}>
       <section
         className={styles.sheet}
@@ -129,6 +143,7 @@ export function HertzShareSheet({
           </Button>
         </div>
       </section>
-    </div>
+    </div>,
+    document.body,
   );
 }

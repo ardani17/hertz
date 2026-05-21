@@ -55,6 +55,45 @@
   color: #92aa9b;
 }
 
+.categoryRow {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+  margin-bottom: 0.65rem;
+}
+
+.categoryChip {
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 999px;
+  color: #8ea897;
+  font-size: 0.72rem;
+  font-weight: 650;
+  line-height: 1;
+  padding: 0.32rem 0.7rem;
+  text-decoration: none;
+  transition: background 0.15s ease, border-color 0.15s ease, color 0.15s ease;
+}
+
+.categoryChip:hover {
+  background: rgba(16, 185, 129, 0.08);
+  color: #cde8d8;
+}
+
+.categoryChipActive {
+  background: rgba(16, 185, 129, 0.14);
+  border-color: rgba(52, 211, 153, 0.35);
+  color: #34d399;
+}
+
+.composeFab,
+.sheetBackdrop {
+  display: none;
+}
+
+.desktopComposer {
+  display: block;
+}
+
 .controls {
   align-items: center;
   display: flex;
@@ -184,7 +223,7 @@
 }
 
 .marketAccordion {
-  flex: 1 1 100%;
+  margin-top: 0.65rem;
   width: 100%;
 }
 
@@ -210,18 +249,137 @@
 }
 
 @media (min-width: 769px) {
-  .marketAccordion {
-    flex: 1 1 auto;
-    width: auto;
-  }
-
   .marketAccordion summary {
     display: none;
   }
 
   .marketFields {
-    display: contents;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
     margin-top: 0;
+  }
+}
+
+@media (max-width: 1024px) {
+  .desktopComposer {
+    display: none;
+  }
+
+  .composeFab {
+    align-items: center;
+    background: #13d27b;
+    border: 0;
+    border-radius: 999px;
+    bottom: calc(78px + env(safe-area-inset-bottom) + 0.85rem);
+    box-shadow: 0 10px 28px rgba(0, 0, 0, 0.42);
+    color: #02100a;
+    cursor: pointer;
+    display: inline-flex;
+    height: 56px;
+    justify-content: center;
+    position: fixed;
+    right: 1rem;
+    width: 56px;
+    z-index: 28;
+  }
+
+  .composeFab svg {
+    height: 26px;
+    width: 26px;
+  }
+
+  .composeFab:focus-visible {
+    outline: 2px solid #a7f3d0;
+    outline-offset: 3px;
+  }
+
+  .sheetBackdrop {
+    align-items: flex-end;
+    background: rgba(0, 0, 0, 0.62);
+    display: flex;
+    inset: 0;
+    justify-content: center;
+    position: fixed;
+    z-index: 40;
+  }
+
+  .composeSheet {
+    background: #0f0f14;
+    border-top: 1px solid rgba(19, 210, 123, 0.28);
+    border-radius: 16px 16px 0 0;
+    display: grid;
+    gap: 0;
+    max-height: min(88svh, 720px);
+    overflow: hidden;
+    width: min(100%, 860px);
+  }
+
+  .sheetHeader {
+    align-items: center;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+    display: flex;
+    justify-content: space-between;
+    min-height: 52px;
+    padding: 0 0.85rem;
+  }
+
+  .sheetHeader h2 {
+    color: #f4fff8;
+    font-size: 1rem;
+    font-weight: 750;
+    margin: 0;
+  }
+
+  .sheetClose {
+    align-items: center;
+    background: transparent;
+    border: 0;
+    border-radius: 999px;
+    color: #8ea897;
+    cursor: pointer;
+    display: inline-flex;
+    height: 40px;
+    justify-content: center;
+    width: 40px;
+  }
+
+  .sheetBody {
+    display: grid;
+    gap: 0.75rem;
+    grid-template-columns: 40px minmax(0, 1fr);
+    overflow-y: auto;
+    padding: 0.85rem;
+  }
+
+  .sheetAvatar {
+    height: 40px;
+    width: 40px;
+  }
+
+  .sheetForm {
+    min-width: 0;
+  }
+
+  .sheetForm textarea {
+    background: transparent;
+    border: 0;
+    color: #f0fbf4;
+    font: inherit;
+    font-size: 14px;
+    min-height: 88px;
+    line-height: 1.45;
+    outline: none;
+    resize: vertical;
+    width: 100%;
+  }
+
+  .sheetForm textarea::placeholder {
+    color: #92aa9b;
+  }
+
+  .sheetGuestBody {
+    padding: 1rem 0.85rem 1.25rem;
   }
 }
 

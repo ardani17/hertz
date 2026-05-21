@@ -199,7 +199,6 @@
 }
 .mediaGrid {
   position: relative;
-  z-index: 2;
   background: #050d09;
   display: grid;
   gap: 0.35rem;

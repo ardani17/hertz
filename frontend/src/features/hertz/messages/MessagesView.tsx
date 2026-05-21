@@ -17,8 +17,8 @@ export function MessagesView() {
     <HertzLayout
       variant="page"
       active="messages"
-      title="Pesan langsung"
-      description="Percakapan privat antar member HERTZ."
+      title="Pesan"
+      description="Chat privat antar member HERTZ."
       currentUser={dm.currentUser}
       hideRightRail
     >
@@ -34,6 +34,7 @@ export function MessagesView() {
           <ConversationList
             conversations={dm.conversations}
             members={dm.members}
+            activeId={dm.activeId}
             query={dm.query}
             filter={dm.filter}
             status={dm.status}
