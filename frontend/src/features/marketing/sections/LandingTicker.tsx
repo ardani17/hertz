@@ -16,7 +16,7 @@ export function LandingTicker({ marketGroups }: { marketGroups: MarketRailGroup[
   if (marketGroups.length === 0) return null;
 
   return (
-    <section className={styles.tickerStrip} aria-label="Live market ticker">
+    <section className={styles.tickerStrip} aria-label="Ticker market live">
       <div className={styles.tickerInner}>
         {marketGroups.map((group) => (
           <div className={styles.tickerGroup} key={group.title}>

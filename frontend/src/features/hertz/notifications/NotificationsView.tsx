@@ -171,7 +171,7 @@ export function NotificationsView() {
           ) : null}
 
           {status === 'loading' ? (
-            <p className={styles.stateBox} role="status">
+            <p className={styles.stateBox} role="status" aria-live="polite">
               Memuat notifikasi...
             </p>
           ) : null}
@@ -194,6 +194,7 @@ export function NotificationsView() {
                   <a
                     className={`${styles.item} ${isUnread ? styles.itemUnread : ''}`}
                     href={item.href}
+                    aria-label={`${getNotificationActionCopy(item)}${isUnread ? ', belum dibaca' : ''}`}
                     onClick={() => void markItemRead(item.id)}
                   >
                     <span className={styles.avatarWrap}>

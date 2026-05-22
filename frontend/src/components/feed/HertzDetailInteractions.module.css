@@ -367,11 +367,12 @@
 }
 
 .replies {
-  border-left: 2px solid rgba(19, 210, 123, 0.24);
+  background: linear-gradient(90deg, rgba(19, 210, 123, 0.06) 0%, transparent 12%);
   display: grid;
   gap: 0.55rem;
   margin-top: 0.75rem;
-  padding-left: 0.75rem;
+  padding: 0.25rem 0 0.25rem 0.75rem;
+  border-radius: 8px;
 }
 
 .replyItem {

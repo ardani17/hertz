@@ -17,38 +17,38 @@ export function LandingHero({ previewPost, heroAsset, supportingRows }: LandingH
   return (
     <section className={styles.hero} aria-labelledby="horizon-market-title">
       <div className={styles.copy}>
-        <p className={styles.eyebrow}>Free forex workspace for serious traders</p>
-        <h1 id="horizon-market-title">Everything a Forex Trader Needs. One Platform.</h1>
+        <p className={styles.eyebrow}>Workspace forex gratis untuk trader serius</p>
+        <h1 id="horizon-market-title">Semua yang Trader Forex Butuh. Satu Platform.</h1>
         <p className={styles.lead}>
-          Live market data, trade journaling, daily analysis, and research tools — all in one place.
-          Stop switching between 5 apps. Start trading with clarity.
+          Data market live, jurnal trading, analisa harian, dan tools riset — dalam satu tempat.
+          Berhenti bolak-balik aplikasi. Mulai trading dengan konteks yang jelas.
         </p>
         <div className={styles.actions}>
           <div className={styles.ctaPrimaryWrap}>
             <Link className={styles.primary} href="/hertz">
-              Join Free — No Credit Card
+              Gabung Gratis — Tanpa Kartu Kredit
             </Link>
-            <span className={styles.microcopy}>Takes 30 seconds. Free forever.</span>
+            <span className={styles.microcopy}>Daftar ~30 detik. Gratis selamanya.</span>
           </div>
           <Link className={styles.secondary} href="/outlook">
-            See How It Works
+            Lihat Cara Kerjanya
           </Link>
         </div>
-        <div className={styles.trustRow} aria-label="Horizon live data summary">
-          <span>Live Forex Data</span>
-          <span>Free to Join</span>
-          <span>{previewPost ? 'Active Community' : 'Active Community'}</span>
+        <div className={styles.trustRow} aria-label="Ringkasan Horizon">
+          <span>Data Forex Live</span>
+          <span>Gratis untuk Member</span>
+          <span>{previewPost ? 'Komunitas Aktif' : 'Komunitas Trader'}</span>
         </div>
       </div>
 
-      <aside className={styles.forexHero} aria-label="Live forex market preview">
+      <aside className={styles.forexHero} aria-label="Pratinjau market forex live">
         {heroAsset ? (
           <>
             <div className={styles.heroAssetTop}>
               <div>
-                <span className={styles.marketLabel}>Live forex</span>
+                <span className={styles.marketLabel}>Forex live</span>
                 <strong>{heroAsset.symbol}</strong>
-                <p>{heroAsset.symbol === 'XAUUSD' ? 'Gold / US Dollar' : 'Major forex pair'}</p>
+                <p>{heroAsset.symbol === 'XAUUSD' ? 'Emas / Dolar AS' : 'Pair forex utama'}</p>
               </div>
               <div className={styles.heroPrice}>
                 <strong>{heroAsset.price}</strong>
@@ -75,7 +75,7 @@ export function LandingHero({ previewPost, heroAsset, supportingRows }: LandingH
               </svg>
             </div>
 
-            <div className={styles.forexStrip} aria-label="Major forex pairs">
+            <div className={styles.forexStrip} aria-label="Pair forex utama">
               {supportingRows.map((row) => {
                 const miniPath = buildSparklinePath(row.sparkline, 140, 42);
                 return (
@@ -94,7 +94,7 @@ export function LandingHero({ previewPost, heroAsset, supportingRows }: LandingH
             </div>
           </>
         ) : (
-          <div className={styles.emptyMarket}>Forex market data sedang diperbarui.</div>
+          <div className={styles.emptyMarket}>Data market akan tampil saat koneksi tersedia.</div>
         )}
       </aside>
     </section>

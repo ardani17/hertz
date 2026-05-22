@@ -1,16 +1,17 @@
 import type { Metadata, Viewport } from 'next';
-import { Inter } from 'next/font/google';
+import { DM_Sans } from 'next/font/google';
 import Script from 'next/script';
 import { ToastProvider } from '@/components/ui/Toast';
 import { HorizonSWRProvider } from '@/lib/swr/config';
 import { themeInitScript } from '@/lib/theme-init';
 import './globals.css';
 
-const inter = Inter({
+const dmSans = DM_Sans({
   subsets: ['latin'],
   display: 'swap',
-  variable: '--font-inter',
+  variable: '--font-dm-sans',
   preload: true,
+  weight: ['400', '500', '600', '700'],
 });
 
 export const metadata: Metadata = {
@@ -56,7 +57,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="id" className={`${inter.variable} dark`} data-theme="dark">
+    <html lang="id" className={`${dmSans.variable} dark`} data-theme="dark">
       <head>
         <link rel="icon" href="/images/logo/Logo-Horizon-Atom-Online-Black_7.png" media="(prefers-color-scheme: light)" />
         <link rel="icon" href="/images/logo/Logo-Horizon-Atom-Online-White_8.png" media="(prefers-color-scheme: dark)" />

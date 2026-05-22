@@ -4,21 +4,21 @@ const testimonials = [
   {
     initial: 'R',
     quote:
-      'Finally stopped switching between TradingView and Telegram. Everything I need is in one place now.',
+      'Akhirnya tidak bolak-balik TradingView dan Telegram. Semua yang saya butuhkan ada di satu tempat.',
     name: 'Rizky P.',
     role: 'Swing Trader',
   },
   {
     initial: 'A',
     quote:
-      'The daily outlook saves me at least an hour of prep time every morning. Key levels are always on point.',
+      'Outlook harian menghemat waktu persiapan pagi. Level kunci selalu jelas sebelum sesi dibuka.',
     name: 'Andi S.',
     role: 'Day Trader',
   },
   {
     initial: 'D',
     quote:
-      'Journaling trades on HERTZ changed my consistency. Being able to look back at setups helps me avoid the same mistakes.',
+      'Jurnal di HERTZ mengubah konsistensi saya. Bisa melihat ulang setup membantu hindari kesalahan yang sama.',
     name: 'Dimas W.',
     role: 'Scalper',
   },
@@ -26,10 +26,10 @@ const testimonials = [
 
 export function LandingTestimonials() {
   return (
-    <section className={styles.testimonials} aria-label="Trader testimonials">
+    <section className={styles.testimonials} aria-label="Testimoni trader">
       <div className={styles.testimonialsContent}>
-        <p className={styles.eyebrow}>Trusted by traders</p>
-        <h2>What traders are saying</h2>
+        <p className={styles.eyebrow}>Dipercaya komunitas</p>
+        <h2>Kata trader tentang Horizon</h2>
         <div className={styles.testimonialsGrid}>
           {testimonials.map((item) => (
             <div className={styles.testimonialCard} key={item.name}>

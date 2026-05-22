@@ -43,9 +43,9 @@ function ProductVisual({ index }: { index: number }) {
 
 export function LandingProducts({ previewLine }: { previewLine: string }) {
   return (
-    <section className={styles.products} aria-label="Horizon ecosystem">
+    <section className={styles.products} aria-label="Ekosistem Horizon">
       <div className={styles.socialProof}>
-        <span className={styles.socialProofLabel}>What traders are saying on HERTZ</span>
+        <span className={styles.socialProofLabel}>Suara trader di HERTZ</span>
         <p>{previewLine}</p>
       </div>
 

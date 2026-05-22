@@ -4,10 +4,10 @@ import styles from '../HorizonLanding.module.css';
 
 export function LandingFaq() {
   return (
-    <section className={styles.faq} aria-label="Frequently asked questions">
+    <section className={styles.faq} aria-label="Pertanyaan umum">
       <div className={styles.faqContent}>
-        <p className={styles.eyebrow}>Common questions</p>
-        <h2>Frequently Asked Questions</h2>
+        <p className={styles.eyebrow}>Pertanyaan umum</p>
+        <h2>Yang Sering Ditanyakan</h2>
         <FaqAccordion items={faqItems} />
       </div>
     </section>

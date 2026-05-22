@@ -2,30 +2,30 @@ import styles from '../HorizonLanding.module.css';
 
 export function LandingHowItWorks() {
   return (
-    <section className={styles.howItWorks} aria-label="How it works">
+    <section className={styles.howItWorks} aria-label="Cara kerja Horizon">
       <div className={styles.howItWorksContent}>
-        <p className={styles.eyebrow}>Simple as 1-2-3</p>
-        <h2>From zero to trading smarter in 3 steps</h2>
+        <p className={styles.eyebrow}>Tiga langkah</p>
+        <h2>Dari nol ke trading lebih terarah dalam 3 langkah</h2>
         <div className={styles.howItWorksGrid}>
           <div className={styles.howCard}>
             <span className={styles.howCardNumber}>1</span>
-            <strong className={styles.howCardTitle}>Sign Up Free</strong>
+            <strong className={styles.howCardTitle}>Daftar Gratis</strong>
             <p className={styles.howCardDesc}>
-              Create your account in 30 seconds. No credit card, no broker integration needed.
+              Buat akun kurang dari 30 detik lewat Telegram. Tanpa kartu kredit dan tanpa koneksi broker.
             </p>
           </div>
           <div className={styles.howCard}>
             <span className={styles.howCardNumber}>2</span>
-            <strong className={styles.howCardTitle}>Explore Market Data</strong>
+            <strong className={styles.howCardTitle}>Cek Data Market</strong>
             <p className={styles.howCardDesc}>
-              Live forex pairs, daily outlook, and analysis tools — everything updates in real-time.
+              Pair forex live, Outlook harian, dan tools riset — diperbarui untuk sesi trading Anda.
             </p>
           </div>
           <div className={styles.howCard}>
             <span className={styles.howCardNumber}>3</span>
-            <strong className={styles.howCardTitle}>Join the Community</strong>
+            <strong className={styles.howCardTitle}>Gabung Komunitas</strong>
             <p className={styles.howCardDesc}>
-              Share setups, journal trades, and learn from active traders on HERTZ.
+              Bagikan setup, catat jurnal, dan belajar dari trader aktif di HERTZ.
             </p>
           </div>
         </div>

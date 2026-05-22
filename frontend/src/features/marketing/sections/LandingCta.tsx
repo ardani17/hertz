@@ -3,25 +3,24 @@ import styles from '../HorizonLanding.module.css';
 
 export function LandingCta() {
   return (
-    <section className={styles.ctaSection} aria-label="Get started">
+    <section className={styles.ctaSection} aria-label="Mulai pakai Horizon">
       <div className={styles.ctaGlow} aria-hidden="true" />
       <div className={styles.ctaContent}>
-        <h2 className={styles.ctaTitle}>Ready to Trade with More Clarity?</h2>
+        <h2 className={styles.ctaTitle}>Siap trading dengan konteks yang lebih jelas?</h2>
         <p className={styles.ctaDescription}>
-          Join thousands of forex traders who use Horizon to stay informed, journal their trades, and make
-          better decisions. Free forever — no hidden costs.
+          Ribuan trader forex memakai Horizon untuk data market, jurnal trade, dan komunitas HERTZ — gratis
+          selamanya, tanpa biaya tersembunyi.
         </p>
         <div className={styles.ctaActions}>
           <Link className={styles.primary} href="/hertz">
-            Get Started Free
+            Gabung Gratis
           </Link>
           <Link className={styles.secondary} href="/tools">
-            See What&apos;s Included
+            Lihat Semua Tools
           </Link>
         </div>
         <p className={styles.securityReassurance}>
-          Your data stays private. No broker integration required. We never ask for trading account
-          credentials.
+          Data Anda tetap privat. Tidak perlu koneksi broker. Kami tidak pernah meminta kredensial akun trading.
         </p>
       </div>
     </section>

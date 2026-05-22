@@ -1,62 +1,62 @@
 export const productModules = [
   {
     title: 'HERTZ',
-    text: 'Share setups, journal every trade, and learn from a community of active forex traders. Your trading diary — but social.',
+    text: 'Bagikan setup, catat setiap trade, dan belajar dari komunitas trader aktif. Jurnal trading Anda — dengan sosial.',
     href: '/hertz',
-    metric: 'Social trading',
-    cta: 'Explore HERTZ →',
+    metric: 'Feed sosial',
+    cta: 'Jelajahi HERTZ →',
   },
   {
     title: 'Outlook',
-    text: 'Daily market analysis with chart breakdowns, key levels, and bias calls. Know what to watch before the session opens.',
+    text: 'Analisa harian dengan breakdown chart, level kunci, dan bias. Tahu fokus market sebelum sesi dibuka.',
     href: '/outlook',
-    metric: 'Market outlook',
-    cta: "Read Today's Outlook →",
+    metric: 'Outlook market',
+    cta: 'Baca Outlook Hari Ini →',
   },
   {
     title: 'Blog',
-    text: 'In-depth research articles on forex strategy, risk management, and market structure. Go deeper than a Telegram signal.',
+    text: 'Artikel riset strategi forex, manajemen risiko, dan struktur market. Lebih dalam dari sekadar sinyal Telegram.',
     href: '/blog',
-    metric: 'Longform research',
-    cta: 'Browse Articles →',
+    metric: 'Riset mendalam',
+    cta: 'Lihat Artikel →',
   },
   {
     title: 'Tools',
-    text: 'Pivot points, profitability simulator, economic calendar, and more — free research tools that save you from opening 10 browser tabs.',
+    text: 'Pivot point, simulator profitabilitas, kalender ekonomi, dan lainnya — tools riset gratis tanpa buka puluhan tab.',
     href: '/tools',
-    metric: 'Research tools',
-    cta: 'Try Free Tools →',
+    metric: 'Tools riset',
+    cta: 'Coba Tools Gratis →',
   },
 ] as const;
 
 export const faqItems = [
   {
-    question: 'Is Horizon free?',
+    question: 'Apakah Horizon gratis?',
     answer:
-      'Yes, Horizon is completely free for all members. No credit card required, no hidden costs, no premium tiers.',
+      'Ya. Horizon gratis untuk semua member. Tanpa kartu kredit, tanpa biaya tersembunyi, dan tanpa tier premium.',
   },
   {
-    question: 'Is Horizon a broker?',
+    question: 'Apakah Horizon broker?',
     answer:
-      "No. Horizon is an independent market intelligence and community platform. We don't handle trades, deposits, or withdrawals.",
+      'Tidak. Horizon adalah platform intelijen market dan komunitas independen. Kami tidak menangani trade, deposit, atau withdrawal.',
   },
   {
-    question: 'Do I need to connect my trading account?',
+    question: 'Perlu menghubungkan akun trading?',
     answer:
-      'No. Horizon works independently. We never ask for your broker credentials or MT4/MT5 login.',
+      'Tidak. Horizon berdiri sendiri. Kami tidak meminta kredensial broker atau login MT4/MT5.',
   },
   {
-    question: 'What is HERTZ?',
+    question: 'Apa itu HERTZ?',
     answer:
-      'HERTZ is our social trading feed — think of it as a trading journal meets community. Share setups, post analysis, and learn from active forex traders.',
+      'HERTZ adalah feed sosial trading — gabungan jurnal trading dan komunitas. Bagikan setup, analisa, dan belajar dari trader aktif.',
   },
   {
-    question: 'What markets does Horizon cover?',
+    question: 'Market apa yang dicakup?',
     answer:
-      'Horizon focuses primarily on forex pairs including majors, minors, and exotics. We also cover gold (XAUUSD) and key indices.',
+      'Fokus utama forex (major, minor, eksotik), plus emas (XAUUSD) dan indeks kunci.',
   },
   {
-    question: 'How do I get started?',
-    answer: "Simply click 'Join Free' and create your account with Telegram. It takes less than 30 seconds.",
+    question: 'Bagaimana cara mulai?',
+    answer: 'Klik "Gabung Gratis" dan daftar dengan Telegram. Kurang dari 30 detik.',
   },
 ] as const;

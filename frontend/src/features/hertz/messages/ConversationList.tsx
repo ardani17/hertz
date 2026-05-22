@@ -43,11 +43,11 @@ export function ConversationList({
   const unreadTotal = conversations.reduce((sum, item) => sum + item.unreadCount, 0);
 
   return (
-    <aside className={styles.sidebar}>
+    <aside className={styles.sidebar} aria-labelledby="dm-inbox-title">
       <div className={styles.sidebarHeader}>
         <div>
           <p className={styles.sidebarLabel}>Pesan langsung</p>
-          <h2>Kotak masuk</h2>
+          <h2 id="dm-inbox-title">Kotak masuk</h2>
         </div>
         {unreadTotal > 0 ? <span className={styles.unreadPill}>{unreadTotal} baru</span> : null}
       </div>

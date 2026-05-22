@@ -1,53 +1,34 @@
-# Horizon Frontend Design System
+# Horizon Frontend — Implementasi Design
 
-Tema utama: **dark-first**, aksen **emerald** (`#10b981`), tipografi **Inter**.
+Dokumen kanonik desain: **`/DESIGN.md`** (root) + **`/PRODUCT.md`**.
 
-## Token (globals.css)
+## Ringkasan cepat
 
-| Token | Dark | Usage |
-|-------|------|--------|
-| `--color-bg` | `#0a0a0a` | Halaman |
-| `--color-surface` | `#141414` | Kartu, panel |
-| `--color-text` | `#f1f1f1` | Body |
-| `--color-text-muted` | `#a1a1a1` | Meta, caption |
-| `--color-border` | `#1f1f1f` | Garis pemisah |
-| `--color-accent` | `#10b981` | CTA, link aktif |
-| `--border-radius` | `10px` | Kartu, input |
+- Tema: **dark-first**, aksen **emerald** `#13d27b`
+- Font: **DM Sans** (`--font-dm-sans` di `layout.tsx`)
+- Token utama di `src/app/globals.css` (`--horizon-*`)
 
-HERTZ shell memakai surface `#0f0f14` di layout module (selaras dengan feed).
+## Token
+
+| Token | Usage |
+|-------|--------|
+| `--horizon-bg-base` | Halaman |
+| `--horizon-surface` | Kartu, panel |
+| `--horizon-text` / `--horizon-text-muted` | Copy |
+| `--horizon-accent` | CTA, aktif |
+| `--horizon-accent-soft` | Row terpilih (DM, notifikasi) |
 
 ## Breakpoint
 
-Gunakan [`src/lib/breakpoints.ts`](src/lib/breakpoints.ts) — jangan hardcode nilai baru.
-
-| Nama | px |
-|------|-----|
-| mobileSm | 320 |
-| mobile | 390 |
-| tablet | 768 |
-| desktop | 1024 |
-| desktopLg | 1440 |
-
-## Komponen wajib
-
-- `components/ui/button`, `card`, `input`, `SkeletonLoader`, `ErrorPage`, `Toast`
-- `components/layout/HertzLayout` — shell sosial 3-kolom
-- `components/ui/TabBar` — navigasi tab dengan ARIA
+Gunakan [`src/lib/breakpoints.ts`](src/lib/breakpoints.ts).
 
 ## Copy
 
-- UI user-facing: **Bahasa Indonesia**
-- `aria-label` / error teknis: Indonesia, hindari campuran EN kecuali istilah produk (HERTZ, Outlook)
-
-## File size
-
-- TSX: target **≤200 baris**
-- CSS module: **≤250 baris** per file; pecah per section jika lebih
+- UI: **Bahasa Indonesia**
+- Nama produk: HERTZ, Outlook, Horizon (tidak diterjemahkan)
 
 ## Impor
 
 ```
 app/ → features/ → components/ui|layout → lib/
 ```
-
-`features/` tidak boleh impor dari `app/`.

@@ -209,9 +209,7 @@
 }
 
 .itemActive {
-  background: rgba(19, 210, 123, 0.1);
-  border-left: 3px solid #13d27b;
-  padding-left: calc(1rem - 3px);
+  background: linear-gradient(90deg, var(--horizon-accent-soft, rgba(19, 210, 123, 0.14)) 0%, transparent 28%);
 }
 
 .itemUnread .itemPreview {
@@ -833,10 +831,6 @@
   .item {
     padding-left: 0.75rem;
     padding-right: 0.75rem;
-  }
-
-  .itemActive {
-    padding-left: calc(0.75rem - 3px);
   }
 
   .attachButton span,

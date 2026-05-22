@@ -6,16 +6,17 @@ export const revalidate = 300;
 
 /** Landing tetap SSR/ISR penuh untuk SEO — bukan pola SPA client-shell. */
 export const metadata: Metadata = {
-  title: 'Horizon — Everything a Forex Trader Needs. One Platform.',
+  title: 'Horizon — Semua yang Trader Forex Butuh. Satu Platform.',
   description:
-    'Live market data, trade journaling, daily analysis, and research tools — all in one place. Free forever, no credit card required.',
+    'Data market live, jurnal trading, analisa harian, dan tools riset — dalam satu workspace. Gratis selamanya, tanpa kartu kredit.',
   alternates: { canonical: '/' },
   openGraph: {
-    title: 'Horizon — Everything a Forex Trader Needs. One Platform.',
+    title: 'Horizon — Semua yang Trader Forex Butuh. Satu Platform.',
     description:
-      'Live market data, trade journaling, daily analysis, and research tools — all in one place. Free forever, no credit card required.',
+      'Data market live, jurnal trading, analisa harian, dan tools riset — dalam satu workspace. Gratis selamanya, tanpa kartu kredit.',
     url: '/',
     type: 'website',
+    locale: 'id_ID',
   },
 };
 

@@ -252,7 +252,7 @@
   padding: 14px 15px 13px;
   border: 1px solid #13d27b;
   border-radius: 8px;
-  background: #000;
+  background: #050a07;
 }
 .noteSpineNode {
   position: absolute;
@@ -267,7 +267,7 @@
   border: 1.5px solid var(--horizon-accent-strong, #00e38a);
   background: #063b25;
   color: var(--horizon-accent-strong, #00e38a);
-  box-shadow: 0 0 0 4px #000, 0 0 18px rgba(0, 227, 138, 0.22);
+  box-shadow: 0 0 0 4px #050a07, 0 0 18px rgba(0, 227, 138, 0.22);
 }
 .noteSpineNode svg {
   width: 16px;

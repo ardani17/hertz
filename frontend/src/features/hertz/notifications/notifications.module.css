@@ -181,9 +181,7 @@
 }
 
 .itemUnread {
-  background: rgba(19, 210, 123, 0.08);
-  border-left: 3px solid #13d27b;
-  padding-left: calc(1rem - 3px);
+  background: linear-gradient(90deg, var(--horizon-accent-soft, rgba(19, 210, 123, 0.14)) 0%, rgba(19, 210, 123, 0.06) 40%, transparent 72%);
 }
 
 .avatarWrap {
@@ -274,10 +272,6 @@
   .item {
     grid-template-columns: auto minmax(0, 1fr);
     padding: 0.85rem 0.75rem;
-  }
-
-  .itemUnread {
-    padding-left: calc(0.75rem - 3px);
   }
 
   .meta {

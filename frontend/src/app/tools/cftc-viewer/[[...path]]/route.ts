@@ -45,7 +45,7 @@ body {
   background:
     radial-gradient(circle at 16% 0%, rgba(16, 185, 129, 0.08), transparent 28rem),
     var(--horizon-bg);
-  font-family: Inter, "Segoe UI", Arial, sans-serif;
+  font-family: "DM Sans", "Segoe UI", Arial, sans-serif;
   line-height: 1.6;
 }
 body > .antialiased {

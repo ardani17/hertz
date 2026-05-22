@@ -9,14 +9,14 @@ export function LandingNav() {
         <Image src="/images/logo/Logo-Horizon-Atom-Online-White_8.png" alt="" width={36} height={36} priority />
         <strong>HORIZON</strong>
       </Link>
-      <nav aria-label="Horizon navigation">
+      <nav aria-label="Navigasi utama Horizon">
         <Link href="/hertz">HERTZ</Link>
         <Link href="/outlook">Outlook</Link>
         <Link href="/blog">Blog</Link>
         <Link href="/tools">Tools</Link>
       </nav>
       <Link className={styles.login} href="/hertz">
-        Sign In
+        Masuk
       </Link>
     </header>
   );

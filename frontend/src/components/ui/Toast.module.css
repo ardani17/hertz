@@ -14,23 +14,22 @@
   font-weight: 600;
   padding: var(--space-3) var(--space-6);
   border: var(--border-width) solid var(--color-border);
-  border-left: 3px solid var(--color-accent);
   border-radius: var(--border-radius);
-  box-shadow: var(--shadow-lg);
+  box-shadow: var(--shadow-lg), inset 0 0 0 1px rgba(19, 210, 123, 0.12);
   animation: slideUp 0.3s ease-out;
   pointer-events: auto;
 }
 
 .success {
-  border-left-color: var(--color-accent);
+  box-shadow: var(--shadow-lg), inset 0 0 0 1px rgba(19, 210, 123, 0.28);
 }
 
 .error {
-  border-left-color: var(--color-danger);
+  box-shadow: var(--shadow-lg), inset 0 0 0 1px rgba(239, 68, 68, 0.35);
 }
 
 .warning {
-  border-left-color: var(--color-warning);
+  box-shadow: var(--shadow-lg), inset 0 0 0 1px rgba(245, 158, 11, 0.35);
 }
 
 @keyframes slideUp {
