@@ -1,46 +1,52 @@
-import { TabBar } from '@/components/ui/TabBar';
-import { buildHertzFeedHref } from '@/lib/hertzFeedNav';
+'use client';
+
+import { type FormEvent } from 'react';
+import { Button } from '@/components/ui/button';
+import type { HertzFeedFilterPatch, HertzFeedFilters } from '@/lib/hertzFeedFilters';
 import { SearchIcon } from './HertzIcons';
 import styles from './HertzHeader.module.css';
 
 export function HertzHeader({
-  activeCategory,
-  activeSearch,
-  activeSort = 'latest',
+  filters,
+  onFilterChange,
 }: {
-  activeCategory?: string | null;
-  activeSearch?: string | null;
-  activeSort?: 'latest' | 'trending';
+  filters: HertzFeedFilters;
+  onFilterChange: (patch: HertzFeedFilterPatch) => void;
 }) {
-  const forYouHref = buildHertzFeedHref({
-    category: activeCategory ?? null,
-    search: activeSearch ?? null,
-    sort: 'latest',
-  });
-  const trendingHref = buildHertzFeedHref({
-    category: activeCategory ?? null,
-    search: activeSearch ?? null,
-    sort: 'trending',
-  });
-
   const sortItems = [
-    { id: 'latest', label: 'Untuk Anda', href: forYouHref, active: activeSort === 'latest' },
-    { id: 'trending', label: 'Trending', href: trendingHref, active: activeSort === 'trending' },
+    { id: 'latest' as const, label: 'Untuk Anda', active: filters.sort === 'latest' },
+    { id: 'trending' as const, label: 'Trending', active: filters.sort === 'trending' },
   ];
+
+  function handleSearchSubmit(event: FormEvent<HTMLFormElement>) {
+    event.preventDefault();
+    const formData = new FormData(event.currentTarget);
+    const nextSearch = String(formData.get('q') ?? '').trim();
+    onFilterChange({ search: nextSearch || null });
+  }
 
   return (
     <div className={styles.header}>
       <div className={styles.navRow}>
-        <TabBar
-          items={sortItems}
-          ariaLabel="Urutan feed HERTZ"
-          align="center"
-          variant="feedSort"
-        />
+        <nav aria-label="Urutan feed HERTZ">
+          <ul className={`${styles.sortTabs} ${styles.sortTabsCenter}`} role="tablist">
+            {sortItems.map((item) => (
+              <li key={item.id} className={styles.sortTab} role="presentation">
+                <button
+                  type="button"
+                  className={item.active ? `${styles.sortTabButton} ${styles.sortTabButtonActive}` : styles.sortTabButton}
+                  role="tab"
+                  aria-selected={item.active}
+                  onClick={() => onFilterChange({ sort: item.id })}
+                >
+                  {item.label}
+                </button>
+              </li>
+            ))}
+          </ul>
+        </nav>
       </div>
-      <form className={styles.mobileSearch} action="/hertz" method="get" role="search">
-        {activeCategory ? <input type="hidden" name="category" value={activeCategory} /> : null}
-        {activeSort === 'trending' ? <input type="hidden" name="sort" value="trending" /> : null}
+      <form className={styles.mobileSearch} onSubmit={handleSearchSubmit} role="search">
         <label className={styles.mobileSearchLabel} htmlFor="hertz-mobile-search">
           <SearchIcon />
           <span className={styles.srOnly}>Cari di HERTZ</span>
@@ -49,16 +55,19 @@ export function HertzHeader({
           id="hertz-mobile-search"
           type="search"
           name="q"
-          defaultValue={activeSearch ?? ''}
+          defaultValue={filters.search ?? ''}
+          key={filters.search ?? 'empty-search'}
           placeholder="Cari postingan, member, pair..."
           autoComplete="off"
           enterKeyHint="search"
         />
       </form>
-      {activeSearch ? (
+      {filters.search ? (
         <div className={styles.searchChip}>
-          <span>Pencarian: {activeSearch}</span>
-          <a href={buildHertzFeedHref({ category: activeCategory ?? null, sort: activeSort })}>Hapus</a>
+          <span>Pencarian: {filters.search}</span>
+          <Button type="button" variant="ghost" onClick={() => onFilterChange({ search: null })}>
+            Hapus
+          </Button>
         </div>
       ) : null}
     </div>

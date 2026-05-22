@@ -21,7 +21,7 @@ export function DmAvatar({
   return (
     <span className={`${styles.dmAvatar} ${className ?? ''}`.trim()} aria-hidden="true">
       {showImage ? (
-        <img src={src!} alt="" onError={() => setFailed(true)} />
+        <img src={src!} alt="" loading="lazy" decoding="async" width={40} height={40} onError={() => setFailed(true)} />
       ) : (
         getDmInitial(displayName, username)
       )}

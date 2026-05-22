@@ -1,4 +1,5 @@
 import type { ReactNode } from 'react';
+import { OutlookShell } from '@/components/outlook/OutlookShell';
 import { HertzLayout } from '@/components/layout/HertzLayout';
 import { getCurrentMember } from '@/lib/memberAuth';
 
@@ -12,7 +13,7 @@ export default async function OutlookLayout({ children }: { children: ReactNode 
       description="Ringkasan narasi market, ide besar, dan konteks sebelum eksekusi."
       currentUser={currentUser}
     >
-      {children}
+      <OutlookShell currentUser={currentUser}>{children}</OutlookShell>
     </HertzLayout>
   );
 }

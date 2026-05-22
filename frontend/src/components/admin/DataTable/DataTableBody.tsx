@@ -2,6 +2,7 @@
 
 import type { ReactNode } from 'react';
 import type { Column } from '../DataTable';
+import { AdminEmptyState } from '../AdminEmptyState';
 import styles from '../DataTable.module.css';
 
 type DataTableBodyProps<T> = {
@@ -30,12 +31,16 @@ export function DataTableBody<T>({
       </thead>
       <tbody>
         {loading ? (
-          <tr className={styles.emptyRow}>
-            <td colSpan={columns.length}>Memuat data...</td>
+          <tr>
+            <td colSpan={columns.length} className={styles.loadingCell}>
+              Memuat data...
+            </td>
           </tr>
         ) : data.length === 0 ? (
-          <tr className={styles.emptyRow}>
-            <td colSpan={columns.length}>{emptyMessage}</td>
+          <tr>
+            <td colSpan={columns.length} className={styles.emptyCell}>
+              <AdminEmptyState title={emptyMessage} subtitle="Coba ubah filter atau tambahkan data baru." />
+            </td>
           </tr>
         ) : (
           data.map((row) => (

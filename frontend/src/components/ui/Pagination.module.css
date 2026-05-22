@@ -50,7 +50,7 @@
 }
 
 .pageButtonActive:hover {
-  background-color: #059669;
+  background-color: var(--horizon-success-muted);
   color: #ffffff;
 }
 

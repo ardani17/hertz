@@ -219,8 +219,18 @@ build_and_start() {
 
     ok "Build selesai."
 
+    info "Membersihkan container Horizon lama ..."
+    local horizon_containers=(horizon-frontend horizon-bot horizon-db horizon-redis)
+    for ctr in "${horizon_containers[@]}"; do
+        docker rm -f "$ctr" 2>/dev/null || true
+    done
+    $COMPOSE down --remove-orphans 2>/dev/null || true
+
     info "Menjalankan semua service ..."
-    $COMPOSE up -d
+    if ! $COMPOSE up -d; then
+        err "Gagal memulai container. Cek: docker ps -a && docker network inspect horizon-net"
+        exit 1
+    fi
 
     ok "Semua container dimulai."
 }
@@ -262,8 +272,8 @@ health_check() {
     info "Menjalankan health check ..."
     echo ""
 
-    local services=("db" "bot" "frontend")
-    local containers=("horizon-db" "horizon-bot" "horizon-frontend")
+    local services=("db" "redis" "bot" "frontend")
+    local containers=("horizon-db" "horizon-redis" "horizon-bot" "horizon-frontend")
     local max_retries=30
     local all_healthy=true
 

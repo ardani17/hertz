@@ -83,6 +83,21 @@
   margin: 0;
 }
 
+.publicLinkRow {
+  margin: 0.15rem 0 0;
+}
+
+.publicLink {
+  color: #13d27b;
+  font-size: 0.82rem;
+  font-weight: 600;
+  text-decoration: none;
+}
+
+.publicLink:hover {
+  text-decoration: underline;
+}
+
 .stats {
   display: grid;
   gap: 0.45rem;
@@ -261,7 +276,7 @@
 }
 
 .creditPlus {
-  color: #34d399;
+  color: var(--horizon-accent);
 }
 
 .creditMinus {

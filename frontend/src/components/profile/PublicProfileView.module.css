@@ -1,0 +1,100 @@
+.profile {
+  display: grid;
+  gap: 1.25rem;
+}
+
+.header {
+  align-items: center;
+  display: flex;
+  gap: 1rem;
+}
+
+.avatar {
+  height: 72px;
+  width: 72px;
+}
+
+.bio {
+  color: var(--horizon-text-muted);
+  margin: 0.35rem 0 0;
+}
+
+.counters {
+  display: grid;
+  gap: 0.75rem;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+.counters strong {
+  color: var(--horizon-text);
+  display: block;
+  font-size: 1.2rem;
+}
+
+.counters span {
+  color: var(--horizon-text-muted);
+  font-size: 0.75rem;
+}
+
+.cta {
+  background: var(--horizon-accent);
+  border: 0;
+  border-radius: 999px;
+  color: #04140c;
+  cursor: pointer;
+  display: inline-flex;
+  font-weight: 700;
+  justify-content: center;
+  padding: 0.65rem 1.2rem;
+  text-decoration: none;
+  width: fit-content;
+}
+
+.postsSection {
+  border-top: 1px solid var(--horizon-border);
+  display: grid;
+  gap: 0.75rem;
+  padding-top: 1rem;
+}
+
+.postsSection h3 {
+  font-size: 1rem;
+  margin: 0;
+}
+
+.emptyPosts {
+  color: var(--horizon-text-muted);
+  margin: 0;
+}
+
+.postList {
+  display: grid;
+  gap: 0.65rem;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.postLink {
+  border: 1px solid var(--horizon-border);
+  border-radius: 12px;
+  color: inherit;
+  display: grid;
+  gap: 0.35rem;
+  padding: 0.85rem 1rem;
+  text-decoration: none;
+  transition: border-color 0.15s ease;
+}
+
+.postLink:hover {
+  border-color: var(--horizon-accent);
+}
+
+.postExcerpt {
+  line-height: 1.45;
+}
+
+.postLink time {
+  color: var(--horizon-text-muted);
+  font-size: 0.75rem;
+}

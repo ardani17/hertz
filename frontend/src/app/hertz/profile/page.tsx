@@ -131,6 +131,13 @@ export default async function HertzProfilePage() {
               <p className={styles.handle}>
                 {currentUser.username ? `@${currentUser.username}` : 'Member HERTZ'}
               </p>
+              {currentUser.username ? (
+                <p className={styles.publicLinkRow}>
+                  <Link href={`/@${currentUser.username}`} className={styles.publicLink}>
+                    Lihat profil publik
+                  </Link>
+                </p>
+              ) : null}
               {activity ? <ProfileStats activity={activity} /> : null}
               <ProfileSessionActions />
             </div>

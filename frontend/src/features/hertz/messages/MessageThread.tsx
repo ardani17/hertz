@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useRef } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import { createPortal } from 'react-dom';
 import { MoreIcon } from '@/components/feed/HertzIcons';
 import { DmAvatar } from './DmAvatar';
@@ -9,6 +9,7 @@ import {
   getDmMessageSide,
   getDmThreadMenuActions,
 } from './dm-utils';
+import { MessageThreadSkeleton } from './MessageThreadSkeleton';
 import type { ReactNode } from 'react';
 import type { Conversation, Message } from './types';
 import styles from './messages.module.css';
@@ -20,6 +21,8 @@ type MessageThreadProps = {
   currentUserId?: string;
   threadMenuOpen: boolean;
   filter: 'inbox' | 'unread' | 'admin' | 'archived';
+  isLoading?: boolean;
+  typingLabel?: string | null;
   onBack: () => void;
   onToggleMenu: () => void;
   onArchive: (archived: boolean) => void;
@@ -29,6 +32,10 @@ type MessageThreadProps = {
   composer?: ReactNode;
 };
 
+function isNearBottom(element: HTMLElement, threshold = 72) {
+  return element.scrollHeight - element.scrollTop - element.clientHeight <= threshold;
+}
+
 export function MessageThread({
   activeId,
   activeConversation,
@@ -36,6 +43,8 @@ export function MessageThread({
   currentUserId,
   threadMenuOpen,
   filter,
+  isLoading = false,
+  typingLabel = null,
   onBack,
   onToggleMenu,
   onArchive,
@@ -45,12 +54,49 @@ export function MessageThread({
   composer,
 }: MessageThreadProps) {
   const messagesEndRef = useRef<HTMLDivElement | null>(null);
+  const listRef = useRef<HTMLDivElement | null>(null);
+  const prevCountRef = useRef(0);
+  const [newMessagesCount, setNewMessagesCount] = useState(0);
   const threadActions = getDmThreadMenuActions({ active: Boolean(activeId), archived: filter === 'archived' });
 
+  const scrollToBottom = useCallback((behavior: ScrollBehavior = 'smooth') => {
+    messagesEndRef.current?.scrollIntoView({ behavior, block: 'end' });
+    setNewMessagesCount(0);
+  }, []);
+
   useEffect(() => {
-    if (!activeId || messages.length === 0) return;
-    messagesEndRef.current?.scrollIntoView({ behavior: 'smooth', block: 'end' });
-  }, [activeId, messages]);
+    if (!activeId) {
+      prevCountRef.current = 0;
+      setNewMessagesCount(0);
+    }
+  }, [activeId]);
+
+  useEffect(() => {
+    const list = listRef.current;
+    if (!list) return undefined;
+    const onScroll = () => {
+      if (isNearBottom(list)) setNewMessagesCount(0);
+    };
+    list.addEventListener('scroll', onScroll, { passive: true });
+    return () => list.removeEventListener('scroll', onScroll);
+  }, [activeId]);
+
+  useEffect(() => {
+    if (!activeId || messages.length === 0) {
+      prevCountRef.current = messages.length;
+      return;
+    }
+    const list = listRef.current;
+    const previous = prevCountRef.current;
+    const grew = messages.length > previous;
+    prevCountRef.current = messages.length;
+    if (!grew) return;
+    if (!list || isNearBottom(list)) {
+      scrollToBottom(previous === 0 ? 'auto' : 'smooth');
+      return;
+    }
+    setNewMessagesCount((value) => value + (messages.length - previous));
+  }, [activeId, messages, scrollToBottom]);
 
   useEffect(() => {
     if (!threadMenuOpen) return;
@@ -60,6 +106,20 @@ export function MessageThread({
     window.addEventListener('keydown', onKeyDown);
     return () => window.removeEventListener('keydown', onKeyDown);
   }, [threadMenuOpen, onToggleMenu]);
+
+  useEffect(() => {
+    if (!activeId || messages.length === 0) return;
+    const list = listRef.current;
+    const previous = prevCountRef.current;
+    const grew = messages.length > previous;
+    prevCountRef.current = messages.length;
+    if (!grew) return;
+    if (!list || isNearBottom(list)) {
+      scrollToBottom(previous === 0 ? 'auto' : 'smooth');
+      return;
+    }
+    setNewMessagesCount((value) => value + (messages.length - previous));
+  }, [activeId, messages, scrollToBottom]);
 
   const threadMenu =
     threadMenuOpen && activeId ? (
@@ -85,6 +145,10 @@ export function MessageThread({
         </div>
       </div>
     ) : null;
+
+  if (activeId && isLoading && messages.length === 0) {
+    return <MessageThreadSkeleton />;
+  }
 
   return (
     <section className={styles.thread}>
@@ -118,7 +182,7 @@ export function MessageThread({
           <MoreIcon />
         </button>
       </div>
-      <div className={styles.messages}>
+      <div className={styles.messages} data-testid="dm-message-list" ref={listRef}>
         {!activeId ? (
           <div className={styles.emptyThread}>
             <h2>Pilih percakapan</h2>
@@ -155,7 +219,7 @@ export function MessageThread({
                     {item.attachments.length > 0 ? (
                       <div className={styles.attachments}>
                         {item.attachments.map((attachment) => (
-                          <img key={attachment.id} src={attachment.url} alt="Lampiran pesan" />
+                          <img key={attachment.id} src={attachment.url} alt="Lampiran pesan" loading="lazy" decoding="async" width={320} height={240} />
                         ))}
                       </div>
                     ) : null}
@@ -179,7 +243,13 @@ export function MessageThread({
             <div ref={messagesEndRef} aria-hidden="true" />
           </>
         )}
+        {newMessagesCount > 0 ? (
+          <button type="button" className={styles.newMessagesPill} onClick={() => scrollToBottom()}>
+            Pesan baru
+          </button>
+        ) : null}
       </div>
+      {typingLabel ? <p className={styles.typingIndicator}>{typingLabel}</p> : null}
       {composer}
       {typeof document !== 'undefined' && threadMenu ? createPortal(threadMenu, document.body) : null}
     </section>

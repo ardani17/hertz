@@ -1,5 +1,10 @@
 import type { Metadata } from 'next';
-import { ProfitabilityToolPage } from '@/components/tools/ProfitabilityToolPage';
+import dynamic from 'next/dynamic';
+
+const ProfitabilityToolPage = dynamic(
+  () => import('@/components/tools/ProfitabilityToolPage').then((mod) => mod.ProfitabilityToolPage),
+  { loading: () => <p role="status">Memuat simulator…</p> },
+);
 
 export const metadata: Metadata = {
   title: 'Profitability Simulator',

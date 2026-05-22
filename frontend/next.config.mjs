@@ -1,3 +1,4 @@
+import createBundleAnalyzer from '@next/bundle-analyzer';
 import { config as loadEnv } from 'dotenv';
 import { resolve, dirname } from 'path';
 import { fileURLToPath } from 'url';
@@ -17,6 +18,10 @@ const allowDevTelegramLogin =
 
 /** @type {import('next').NextConfig} */
 const nextConfig = {
+  // pg native modules and bcryptjs must run as CommonJS at runtime, not
+  // be bundled by Turbopack. Bundling pg breaks the connection pool with
+  // "Connection terminated unexpectedly" errors.
+  serverExternalPackages: ['pg', 'pg-native', 'bcryptjs', 'ioredis'],
   env: {
     NEXT_PUBLIC_TELEGRAM_BOT_NAME: telegramBotName,
     NEXT_PUBLIC_ALLOW_DEV_TELEGRAM_LOGIN: allowDevTelegramLogin ? 'true' : '',
@@ -37,6 +42,15 @@ const nextConfig = {
       },
     ],
     formats: ['image/avif', 'image/webp'],
+  },
+  async redirects() {
+    return [
+      {
+        source: '/artikel/:slug',
+        destination: '/blog/:slug',
+        permanent: true,
+      },
+    ];
   },
   async headers() {
     return [
@@ -73,4 +87,7 @@ const nextConfig = {
   },
 };
 
-export default nextConfig;
+const withBundleAnalyzer = createBundleAnalyzer({ enabled: process.env.ANALYZE === 'true' });
+
+export default withBundleAnalyzer(nextConfig);
+

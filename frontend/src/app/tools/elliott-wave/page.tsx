@@ -1,9 +1,14 @@
 import type { Metadata } from 'next';
-import { ElliottWaveToolPage } from '@/components/tools/ElliottWaveToolPage';
+import dynamic from 'next/dynamic';
+
+const ElliottWaveToolPage = dynamic(
+  () => import('@/components/tools/ElliottWaveToolPage').then((mod) => mod.ElliottWaveToolPage),
+  { loading: () => <p role="status">Memuat kalkulator Elliott…</p> },
+);
 
 export const metadata: Metadata = {
-  title: 'Elliott Wave',
-  description: 'Kalkulator level observasi berbasis range dan Fibonacci.',
+  title: 'Elliott Wave Calculator',
+  description: 'Kalkulator gelombang Elliott untuk analisis struktur pasar.',
 };
 
 export default function ElliottWavePage() {

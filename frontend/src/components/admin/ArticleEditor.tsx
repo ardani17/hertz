@@ -353,7 +353,7 @@ export function ArticleEditor({
                     <video src={item.file_url} muted />
                   ) : (
 
-                    <img src={item.file_url} alt={`Media ${index + 1}`} />
+                    <img src={item.file_url} alt={`Media ${index + 1}`} loading="lazy" decoding="async" width={120} height={120} />
                   )}
                   <button
                     type="button"

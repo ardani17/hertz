@@ -76,7 +76,7 @@
 }
 
 .rangeBtnActive:hover {
-  background-color: #059669;
+  background-color: var(--horizon-success-muted);
   color: #ffffff;
 }
 
@@ -122,7 +122,7 @@
   width: 100%;
   min-height: 2px;
   background-color: var(--color-accent);
-  border: 1px solid #059669;
+  border: 1px solid var(--horizon-success-muted);
   border-radius: var(--border-radius) var(--border-radius) 0 0;
   transition: height 0.3s ease;
 }

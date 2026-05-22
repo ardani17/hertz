@@ -3,7 +3,7 @@
 import { useState, useEffect, useCallback } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
-import { DataTable, StatusBadge } from '@/components/admin';
+import { DataTable, StatusBadge, AdminPageHeader, AdminRowActions } from '@/components/admin';
 import type { Column } from '@/components/admin';
 import styles from './articles.module.css';
 
@@ -160,36 +160,28 @@ export default function AdminArticlesPage() {
       key: 'actions',
       label: 'Aksi',
       render: (row) => (
-        <div className={styles.actions}>
-          <button
-            className={`btn btn-secondary ${styles.actionBtn}`}
-            onClick={() => router.push(`/admin/articles/${row.id}/edit`)}
-            title="Edit"
-          >
-            ✏️
-          </button>
-          <button
-            className={`btn btn-secondary ${styles.actionBtn}`}
-            onClick={() => toggleStatus(row)}
-            title={row.status === 'published' ? 'Sembunyikan' : 'Publikasikan'}
-          >
-            {row.status === 'published' ? '👁️' : '🔓'}
-          </button>
-          <button
-            className={`btn btn-secondary ${styles.actionBtn} ${styles.actionBtnDanger}`}
-            onClick={() => deleteArticle(row)}
-            title="Hapus"
-          >
-            🗑️
-          </button>
-        </div>
+        <AdminRowActions
+          onEdit={() => router.push(`/admin/articles/${row.id}/edit`)}
+          onToggleVisibility={() => toggleStatus(row)}
+          isPublished={row.status === 'published'}
+          onDelete={() => deleteArticle(row)}
+        />
       ),
     },
   ];
 
   return (
     <div>
-      <h2>Manajemen Artikel</h2>
+      <AdminPageHeader
+        kicker="Konten"
+        title="Manajemen Artikel"
+        description="Kelola semua artikel komunitas — trading, cerita, dan general."
+        actions={
+          <Link href="/admin/articles/new" className="btn btn-primary">
+            + Artikel Baru
+          </Link>
+        }
+      />
       <DataTable
         columns={columns}
         data={articles}
@@ -235,11 +227,7 @@ export default function AdminArticlesPage() {
             },
           },
         ]}
-        toolbarActions={
-          <Link href="/admin/articles/new" className="btn btn-primary">
-            + Artikel Baru
-          </Link>
-        }
+        toolbarActions={null}
         emptyMessage="Belum ada artikel."
         loading={loading}
       />

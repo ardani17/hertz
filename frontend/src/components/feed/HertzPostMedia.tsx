@@ -8,7 +8,7 @@ export function HertzPostMedia({ media }: { media: HertzMedia[] }) {
     <div className={styles.mediaGrid} data-count={Math.min(media.length, 4)}>
       {media.slice(0, 4).map((item) => (
         item.type === 'image'
-          ? <img key={item.id} src={item.url} alt={item.alt ?? 'Hertz media'} />
+          ? <img key={item.id} src={item.url} alt={item.alt ?? 'Hertz media'} loading="lazy" decoding="async" width={640} height={360} />
           : <video key={item.id} src={item.url} controls preload="metadata" />
       ))}
     </div>

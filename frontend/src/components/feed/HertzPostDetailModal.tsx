@@ -12,6 +12,7 @@ import { HertzActionBar } from './HertzActionBar';
 import { HertzAuthorLine } from './HertzAuthorLine';
 import { HertzAvatar } from './HertzAvatar';
 import { HertzDetailInteractions } from './HertzDetailInteractions';
+import { HertzViewTracker } from './HertzViewTracker';
 import { HertzMarketMeta } from './HertzMarketMeta';
 import { HertzPostMedia } from './HertzPostMedia';
 import { QuotePostCard } from './QuotePostCard';
@@ -92,6 +93,7 @@ export function HertzPostDetailModal({
         {!post && !error ? <p className={styles.loading}>Memuat postingan...</p> : null}
         {post ? (
           <div className={styles.content}>
+            <HertzViewTracker shortId={post.shortId} />
             <article className={styles.post}>
               <HertzAvatar className={styles.avatar} src={post.author.avatarUrl} name={post.author.name} username={post.author.username} />
               <div className={styles.body}>
@@ -100,7 +102,7 @@ export function HertzPostDetailModal({
                 <HertzPostMedia media={post.media} />
                 <HertzMarketMeta post={post} />
                 <QuotePostCard post={post.quotedPost} />
-                <HertzActionBar post={post} currentUser={currentUser} enableDetailModal={false} />
+                <HertzActionBar post={post} currentUser={currentUser} />
               </div>
             </article>
             <HertzDetailInteractions post={post} currentUser={currentUser} />

@@ -3,7 +3,7 @@
 import { useState, useEffect, useCallback } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
-import { DataTable, StatusBadge } from '@/components/admin';
+import { DataTable, StatusBadge, AdminPageHeader, AdminRowActions } from '@/components/admin';
 import type { Column } from '@/components/admin';
 import styles from './outlook.module.css';
 
@@ -139,36 +139,28 @@ export default function AdminOutlookPage() {
       key: 'actions',
       label: 'Aksi',
       render: (row) => (
-        <div className={styles.actions}>
-          <button
-            className={`btn btn-secondary ${styles.actionBtn}`}
-            onClick={() => router.push(`/admin/outlook/${row.id}/edit`)}
-            title="Edit"
-          >
-            ✏️
-          </button>
-          <button
-            className={`btn btn-secondary ${styles.actionBtn}`}
-            onClick={() => toggleStatus(row)}
-            title={row.status === 'published' ? 'Sembunyikan' : 'Publikasikan'}
-          >
-            {row.status === 'published' ? '👁️' : '🔓'}
-          </button>
-          <button
-            className={`btn btn-secondary ${styles.actionBtn} ${styles.actionBtnDanger}`}
-            onClick={() => deleteArticle(row)}
-            title="Hapus"
-          >
-            🗑️
-          </button>
-        </div>
+        <AdminRowActions
+          onEdit={() => router.push(`/admin/outlook/${row.id}/edit`)}
+          onToggleVisibility={() => toggleStatus(row)}
+          isPublished={row.status === 'published'}
+          onDelete={() => deleteArticle(row)}
+        />
       ),
     },
   ];
 
   return (
     <div>
-      <h2>Manajemen Outlook</h2>
+      <AdminPageHeader
+        kicker="Outlook"
+        title="Manajemen Outlook"
+        description="Kelola konten market outlook: video, long read, dan chart note."
+        actions={
+          <Link href="/admin/outlook/new" className="btn btn-primary">
+            + Outlook Baru
+          </Link>
+        }
+      />
       <DataTable
         columns={columns}
         data={articles}
@@ -199,11 +191,7 @@ export default function AdminOutlookPage() {
             },
           },
         ]}
-        toolbarActions={
-          <Link href="/admin/outlook/new" className="btn btn-primary">
-            + Outlook Baru
-          </Link>
-        }
+        toolbarActions={null}
         emptyMessage="Belum ada artikel outlook."
         loading={loading}
       />

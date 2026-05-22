@@ -1,6 +1,6 @@
 .main {
   min-height: 100vh;
-  background: var(--hertz-shell-bg, #0f0f14);
+  background: var(--hertz-shell-bg, var(--horizon-bg-base));
   color: #e7f4ec;
 }
 
@@ -17,6 +17,6 @@
   align-items: center;
   min-height: 44px;
   padding: 0.75rem 1.25rem;
-  color: #34d399;
+  color: var(--horizon-accent);
   text-decoration: none;
 }

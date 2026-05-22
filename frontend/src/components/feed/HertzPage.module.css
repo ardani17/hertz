@@ -1,7 +1,7 @@
 .main {
   min-height: 100vh;
   overflow-x: hidden;
-  background: #0f0f14;
+  background: var(--horizon-bg-base);
   color: #e7f4ec;
 }
 
@@ -50,7 +50,7 @@
 
 .kicker {
   margin: 0 0 0.2rem;
-  color: #34d399;
+  color: var(--horizon-accent);
   font-size: 0.78rem;
   font-weight: 700;
 }
@@ -126,7 +126,7 @@
   .main {
     min-height: 100svh;
     padding-bottom: calc(78px + env(safe-area-inset-bottom));
-    background: #0f0f14;
+    background: var(--horizon-bg-base);
   }
 
   .shell {

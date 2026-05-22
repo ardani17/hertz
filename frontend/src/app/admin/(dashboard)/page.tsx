@@ -1,5 +1,5 @@
 import { query } from '@shared/db';
-import { StatsCards } from '@/components/admin/StatsCards';
+import { StatsCards, AdminPageHeader } from '@/components/admin';
 import type { StatsSummary } from '@/components/admin/StatsCards';
 import { DashboardClientWidgets } from './DashboardClientWidgets';
 
@@ -48,7 +48,11 @@ export default async function AdminDashboardPage() {
 
   return (
     <div>
-      <h2>Dashboard</h2>
+      <AdminPageHeader
+        kicker="Admin"
+        title="Dashboard"
+        description="Ringkasan platform, statistik member, dan aktivitas terbaru."
+      />
       <StatsCards summary={summary} />
       <DashboardClientWidgets />
     </div>

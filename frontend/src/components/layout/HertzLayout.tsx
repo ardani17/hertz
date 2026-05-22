@@ -1,12 +1,14 @@
 'use client';
 
 import Image from 'next/image';
+import Link from 'next/link';
 import type { ReactNode } from 'react';
 import type { MemberSessionUser } from '@shared/types';
 import { HertzLeftRail } from '@/components/feed/HertzLeftRail';
 import { HertzMobileMarket } from '@/components/feed/HertzMobileMarket';
 import { HertzRightRail } from '@/components/feed/HertzRightRail';
 import { MobileBottomNav } from '@/components/hertz/MobileBottomNav';
+import { NotificationBell } from '@/components/notifications/NotificationBell';
 import styles from './HertzLayout.module.css';
 
 export type HertzActiveNav =
@@ -60,8 +62,11 @@ export function HertzLayout(props: HertzLayoutProps) {
       <div className={hideRightRail ? styles.shellCompact : styles.shell}>
         <HertzLeftRail currentUser={currentUser} active={active} />
         <section className={contentClass} aria-label={props.variant === 'feed' ? 'HERTZ timeline' : undefined}>
+          <header className={styles.desktopHeader}>
+            <NotificationBell currentUser={currentUser} className={styles.desktopNotificationBell} />
+          </header>
           <header className={styles.mobileHeader}>
-            <a className={styles.mobileBrand} href="/hertz" aria-label="HERTZ — Horizon feed">
+            <Link className={styles.mobileBrand} href="/hertz" aria-label="Horizon Home" prefetch>
               <Image
                 src="/images/logo/Logo-Horizon-Atom-Online-White_8.png"
                 alt=""
@@ -70,7 +75,8 @@ export function HertzLayout(props: HertzLayoutProps) {
                 priority
               />
               <span className={styles.mobileBrandTitle}>HERTZ</span>
-            </a>
+            </Link>
+            <NotificationBell currentUser={currentUser} className={styles.mobileNotificationBell} />
           </header>
           {props.variant === 'page' ? (
             <header className={styles.pageHeader}>

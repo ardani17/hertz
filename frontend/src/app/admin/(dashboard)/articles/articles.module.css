@@ -1,8 +1,7 @@
 /* ============================================
-   Admin Articles Pages — Styles
+   Admin Articles Pages — Hertz-aligned styles
    ============================================ */
 
-/* List page */
 .titleCell {
   display: flex;
   flex-direction: column;
@@ -11,8 +10,8 @@
 }
 
 .titleLink {
-  font-weight: 600;
-  color: var(--color-text);
+  font-weight: 700;
+  color: #f3fff8;
   text-decoration: none;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -20,18 +19,18 @@
 }
 
 .titleLink:hover {
-  color: var(--color-accent);
+  color: #13d27b;
   text-decoration: underline;
 }
 
 .noTitle {
-  color: var(--color-text-muted);
+  color: #8ea897;
   font-weight: 400;
 }
 
 .slug {
   font-size: var(--text-xs);
-  color: var(--color-text-muted);
+  color: #769383;
   font-family: var(--font-mono);
   overflow: hidden;
   text-overflow: ellipsis;
@@ -41,61 +40,37 @@
 .sourceTag {
   font-size: var(--text-xs);
   white-space: nowrap;
+  color: #8ea897;
 }
 
-.actions {
-  display: flex;
-  gap: var(--space-1);
-  flex-wrap: nowrap;
-}
-
-.actionBtn {
-  padding: var(--space-1) var(--space-2);
-  min-height: 32px;
-  min-width: 32px;
-  font-size: var(--text-sm);
-}
-
-.actionBtnDanger {
-  border-color: var(--color-danger);
-}
-
-.actionBtnDanger:hover {
-  background-color: var(--color-danger);
-  color: #ffffff;
-}
-
-/* New / Edit page */
 .pageHeader {
-  display: flex;
-  align-items: center;
-  gap: var(--space-3);
-  margin-bottom: var(--space-6);
+  margin-bottom: 1.25rem;
 }
 
 .backLink {
-  font-size: var(--text-sm);
-  color: var(--color-text-muted);
-  text-decoration: none;
+  color: #13d27b;
   display: inline-flex;
-  align-items: center;
-  gap: var(--space-1);
-  min-height: 44px;
+  font-size: 0.84rem;
+  font-weight: 700;
+  gap: 0.35rem;
+  margin-bottom: 0.75rem;
+  min-height: auto;
+  text-decoration: none;
 }
 
 .backLink:hover {
-  color: var(--color-accent);
+  color: #ffffff;
 }
 
 .editorCard {
-  background-color: var(--color-surface);
-  border: var(--border-width) solid var(--color-border);
-  border-radius: var(--border-radius);
-  padding: var(--space-6);
+  background: rgba(2, 12, 7, 0.82);
+  border: 1px solid rgba(19, 210, 123, 0.26);
+  border-radius: 8px;
+  padding: 1.25rem;
 }
 
 @media (max-width: 768px) {
   .editorCard {
-    padding: var(--space-4);
+    padding: 1rem;
   }
 }

@@ -1,0 +1,34 @@
+.bell {
+  align-items: center;
+  background: transparent;
+  border: 0;
+  border-radius: 999px;
+  color: var(--horizon-text);
+  cursor: pointer;
+  display: inline-flex;
+  height: 40px;
+  justify-content: center;
+  position: relative;
+  width: 40px;
+}
+
+.bell:hover {
+  background: var(--horizon-accent-soft);
+}
+
+.badge {
+  align-items: center;
+  background: var(--horizon-accent);
+  border-radius: 999px;
+  color: #04140c;
+  display: inline-flex;
+  font-size: 0.62rem;
+  font-weight: 800;
+  height: 1.1rem;
+  justify-content: center;
+  min-width: 1.1rem;
+  padding: 0 0.25rem;
+  position: absolute;
+  right: 0.1rem;
+  top: 0.1rem;
+}

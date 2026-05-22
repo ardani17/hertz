@@ -1,5 +1,6 @@
 'use client';
 
+import Link from 'next/link';
 import { useState } from 'react';
 
 function initials(name: string, username?: string | null) {
@@ -23,17 +24,32 @@ export function HertzAvatar({
 }) {
   const [failed, setFailed] = useState(false);
 
-  return (
-    <div className={className}>
+  const avatar = (
+    <>
       {src && !failed ? (
         <img
           src={src}
           alt={name}
           referrerPolicy="no-referrer"
           loading="lazy"
+          decoding="async"
+          width={40}
+          height={40}
           onError={() => setFailed(true)}
         />
-      ) : initials(name, username)}
-    </div>
+      ) : (
+        initials(name, username)
+      )}
+    </>
   );
+
+  if (username) {
+    return (
+      <Link href={`/@${username}`} className={className} prefetch>
+        {avatar}
+      </Link>
+    );
+  }
+
+  return <div className={className}>{avatar}</div>;
 }

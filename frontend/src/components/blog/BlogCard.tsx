@@ -28,17 +28,20 @@ export function BlogCard({ article }: BlogCardProps) {
   const excerpt = getExcerpt(article.content_html);
   const displayTitle = article.title || excerpt.slice(0, 80);
   const readTime = estimateReadTime(article.content_html);
+  const href = `/blog/${article.slug}`;
 
   return (
-    <ClickableArticle className={styles.card} href={`/blog/${article.slug}`}>
+    <ClickableArticle className={styles.card} href={href}>
       <div className={styles.thumbnail}>
         {article.cover_image ? (
-
           <img
             src={article.cover_image}
             alt={displayTitle}
             className={styles.thumbnailImage}
             loading="lazy"
+            decoding="async"
+            width={320}
+            height={180}
           />
         ) : (
           <div className={styles.thumbnailPlaceholder} aria-hidden="true">
@@ -56,7 +59,7 @@ export function BlogCard({ article }: BlogCardProps) {
         </div>
 
         <h3 className={styles.title}>
-          <Link href={`/blog/${article.slug}`} className={styles.titleLink}>
+          <Link href={href} className={styles.titleLink}>
             {displayTitle}
           </Link>
         </h3>

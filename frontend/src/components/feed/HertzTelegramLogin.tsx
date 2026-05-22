@@ -114,7 +114,13 @@ function HertzTelegramWidgetLogin({ compact = false }: { compact?: boolean }) {
       });
       const payload = await response.json().catch(() => null);
       if (!response.ok || !payload?.success) {
-        setStatus(payload?.error?.message ?? 'Login Telegram gagal.');
+        if (response.status === 444 || response.status === 0) {
+          setStatus('Permintaan diblokir firewall server (444). Coba lagi beberapa menit atau hubungi admin.');
+        } else if (response.status === 503) {
+          setStatus('Verifikasi membership sedang tidak tersedia. Coba lagi nanti.');
+        } else {
+          setStatus(payload?.error?.message ?? 'Login Telegram gagal.');
+        }
         return;
       }
       setStatus('Login berhasil. Memuat feed...');

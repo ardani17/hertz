@@ -27,3 +27,16 @@ The Superpowers plugin is installed for this Codex environment. When the user gi
 - Before claiming completion, use `verification-before-completion` behavior and run the relevant verification command. On this VPS, do not start a dev server; build/check instead.
 - When the task is complete, commit the relevant changes immediately while keeping unrelated existing changes out of the commit.
 <!-- END:superpowers-workflow -->
+
+<!-- BEGIN:impeccable-design-skill -->
+# Impeccable (design skill)
+
+Skill [Impeccable](https://impeccable.style/) terpasang untuk UI/UX:
+
+- Cursor: `.cursor/skills/impeccable/`
+- Agent (Codex/Cursor agents): `.agents/skills/impeccable/`
+
+Perintah utama: `/impeccable teach` (setup PRODUCT.md + DESIGN.md), lalu `/impeccable polish`, `/impeccable audit`, `/impeccable craft`, dll. Ketik `/impeccable` untuk daftar 23 perintah.
+
+Update skill: `npx impeccable skills update` atau `npx skills add pbakaus/impeccable`.
+<!-- END:impeccable-design-skill -->

@@ -1,19 +1,32 @@
 'use client';
 
-import { useCallback, useEffect, useState } from 'react';
-import type { MemberSessionUser } from '@shared/types';
+import { useEffect, useRef, useState } from 'react';
+import { useRouter, useSearchParams } from 'next/navigation';
+import {
+  consumeSessionValue,
+  DM_CONVERSATION_SESSION_KEY,
+  replaceCanonicalPath,
+  setSessionValue,
+} from '@/lib/spa/canonicalUrl';
 import { useToast } from '@/components/ui/Toast';
-import { canAddDmImages, HERTZ_DM_POLL_INTERVAL_MS } from './dm-utils';
-import type { Conversation, DmFilter, MemberResult, Message, PendingAttachment } from './types';
+import { useAuthMe } from '@/lib/swr/hooks/useAuthMe';
+import { useDmInbox } from '@/lib/swr/hooks/useDmInbox';
+import { useDmThread } from '@/lib/swr/hooks/useDmThread';
+import { canAddDmImages } from './dm-utils';
+import type { Conversation, DmFilter, MemberResult, PendingAttachment } from './types';
+
+type InboxPayload = { conversations: Conversation[] };
 
 export function useMessages() {
+  const router = useRouter();
   const { showToast } = useToast();
-  const [currentUser, setCurrentUser] = useState<MemberSessionUser | null>(null);
-  const [authState, setAuthState] = useState<'loading' | 'guest' | 'member'>('loading');
-  const [conversations, setConversations] = useState<Conversation[]>([]);
-  const [members, setMembers] = useState<MemberResult[]>([]);
+  const searchParams = useSearchParams();
+  const composerRef = useRef<HTMLTextAreaElement | null>(null);
+  const { data: meData, isLoading: meLoading } = useAuthMe();
+  const currentUser = meData?.user ?? null;
+  const authState = meLoading ? 'loading' : currentUser ? 'member' : 'guest';
+
   const [activeId, setActiveId] = useState<string | null>(null);
-  const [messages, setMessages] = useState<Message[]>([]);
   const [query, setQuery] = useState('');
   const [filter, setFilter] = useState<DmFilter>('inbox');
   const [body, setBody] = useState('');
@@ -22,37 +35,37 @@ export function useMessages() {
   const [status, setStatus] = useState<string | null>(null);
   const [mobileThreadOpen, setMobileThreadOpen] = useState(false);
   const [threadMenuOpen, setThreadMenuOpen] = useState(false);
+  const [members, setMembers] = useState<MemberResult[]>([]);
+
+  const inbox = useDmInbox<InboxPayload>(filter, authState === 'member');
+  const conversations = inbox.data?.conversations ?? [];
+  const thread = useDmThread(activeId);
+  const messages = thread.messages;
 
   const activeConversation = conversations.find((item) => item.id === activeId) ?? null;
 
-  const loadCurrentUser = useCallback(async () => {
-    const response = await fetch('/api/auth/me', { cache: 'no-store' });
-    const payload = await response.json().catch(() => null);
-    const user = response.ok && payload?.success ? payload.data.user ?? null : null;
-    setCurrentUser(user);
-    setAuthState(user ? 'member' : 'guest');
-  }, []);
+  useEffect(() => {
+    if (authState !== 'member' || conversations.length === 0) return;
+    setActiveId((current) => current ?? conversations[0]?.id ?? null);
+  }, [authState, conversations]);
 
-  const loadInbox = useCallback(async () => {
-    const response = await fetch(`/api/hertz/messages/inbox${filter === 'archived' ? '?archived=1' : ''}`, {
-      cache: 'no-store',
-    });
-    const payload = await response.json().catch(() => null);
-    if (response.ok && payload?.success) {
-      setConversations(payload.data.conversations);
-      setActiveId((current) => current ?? payload.data.conversations[0]?.id ?? null);
-    } else {
-      const msg = payload?.error?.message ?? 'Login member diperlukan.';
-      setStatus(msg);
-      showToast(msg, 'error');
+  useEffect(() => {
+    if (authState !== 'member') return;
+
+    const conversationParam = searchParams.get('conversation');
+    const sessionConversation = consumeSessionValue(DM_CONVERSATION_SESSION_KEY);
+    const conversationId = conversationParam ?? sessionConversation;
+    if (!conversationId) return;
+
+    setActiveId(conversationId);
+    setMobileThreadOpen(true);
+    if (conversationParam) {
+      replaceCanonicalPath('/hertz/messages');
+      router.replace('/hertz/messages', { scroll: false });
     }
-  }, [filter]);
-
-  const loadThread = useCallback(async (id: string) => {
-    const response = await fetch(`/api/hertz/messages/conversations/${id}`, { cache: 'no-store' });
-    const payload = await response.json().catch(() => null);
-    if (response.ok && payload?.success) setMessages(payload.data.messages);
-  }, []);
+    const timer = window.setTimeout(() => composerRef.current?.focus(), 120);
+    return () => window.clearTimeout(timer);
+  }, [searchParams, authState, router]);
 
   async function searchMembers(value: string) {
     setQuery(value);
@@ -75,11 +88,13 @@ export function useMessages() {
     });
     const payload = await response.json().catch(() => null);
     if (response.ok && payload?.success) {
-      setActiveId(payload.data.conversation.id);
+      const conversationId = payload.data.conversation.id as string;
+      setActiveId(conversationId);
+      setSessionValue(DM_CONVERSATION_SESSION_KEY, conversationId);
       setMobileThreadOpen(true);
       setMembers([]);
       setQuery('');
-      await loadInbox();
+      await inbox.mutate();
     }
   }
 
@@ -97,8 +112,8 @@ export function useMessages() {
     }
     setBody('');
     setAttachments([]);
-    await loadThread(activeId);
-    await loadInbox();
+    await thread.mutate();
+    await inbox.mutate();
   }
 
   async function archiveConversation(archived: boolean) {
@@ -114,8 +129,8 @@ export function useMessages() {
       return;
     }
     setActiveId(null);
-    setMessages([]);
-    await loadInbox();
+    thread.resetThread();
+    await inbox.mutate();
   }
 
   async function blockPeer() {
@@ -135,7 +150,7 @@ export function useMessages() {
       showToast(payload?.error?.message ?? 'Pesan gagal dihapus.', 'error');
       return;
     }
-    if (activeId) await loadThread(activeId);
+    if (activeId) await thread.mutate();
   }
 
   async function reportMessage(messageId: string) {
@@ -197,22 +212,6 @@ export function useMessages() {
     }
   }
 
-  useEffect(() => {
-    void loadCurrentUser();
-  }, [loadCurrentUser]);
-
-  useEffect(() => {
-    if (authState !== 'member') return;
-    void loadInbox();
-  }, [authState, loadInbox]);
-
-  useEffect(() => {
-    if (!activeId) return undefined;
-    void loadThread(activeId);
-    const timer = window.setInterval(() => void loadThread(activeId), HERTZ_DM_POLL_INTERVAL_MS);
-    return () => window.clearInterval(timer);
-  }, [activeId, loadThread]);
-
   return {
     currentUser,
     authState,
@@ -221,6 +220,7 @@ export function useMessages() {
     activeId,
     setActiveId,
     messages,
+    threadLoading: thread.isLoading,
     query,
     filter,
     setFilter,
@@ -235,6 +235,7 @@ export function useMessages() {
     threadMenuOpen,
     setThreadMenuOpen,
     activeConversation,
+    composerRef,
     searchMembers,
     startConversation,
     send,

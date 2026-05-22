@@ -5,7 +5,7 @@
 /* --- Design Tokens --- */
 .main {
   /* Surface hierarchy */
-  --lp-bg: #050a07;
+  --lp-bg: var(--horizon-bg-base, #050a07);
   --lp-bg-deep: #020503;
   --lp-surface: rgba(10, 22, 14, 0.82);
   --lp-surface-hover: rgba(14, 30, 18, 0.9);

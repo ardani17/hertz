@@ -7,7 +7,7 @@ import { OutlookEngagement } from '@/components/outlook';
 import { getCurrentMember } from '@/lib/memberAuth';
 import styles from './page.module.css';
 
-export const dynamic = 'force-dynamic';
+export const revalidate = 300;
 
 async function loadBlog(slug: string) {
   try {
@@ -105,7 +105,15 @@ export default async function BlogDetailPage({
           />
 
           {coverImage ? (
-            <img src={coverImage.file_url} alt={displayTitle} className={styles.coverImage} />
+            <img
+              src={coverImage.file_url}
+              alt={displayTitle}
+              className={styles.coverImage}
+              loading="lazy"
+              decoding="async"
+              width={960}
+              height={540}
+            />
           ) : null}
 
           <ArticleContent html={article.content_html} />

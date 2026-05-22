@@ -166,7 +166,7 @@
 }
 
 .submitButton:hover:not(:disabled) {
-  background-color: #059669;
+  background-color: var(--horizon-success-muted);
 }
 
 .submitButton:disabled {

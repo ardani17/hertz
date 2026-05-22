@@ -82,26 +82,26 @@
 }
 
 .backLink {
-  font-size: var(--text-sm);
-  color: var(--color-text-muted);
-  text-decoration: none;
+  color: #13d27b;
   display: inline-flex;
-  align-items: center;
-  gap: var(--space-1);
-  min-height: 44px;
+  font-size: 0.84rem;
+  font-weight: 700;
+  gap: 0.35rem;
+  margin-bottom: 0.75rem;
+  text-decoration: none;
 }
 
 .backLink:hover {
-  color: var(--color-accent);
+  color: #ffffff;
 }
 
 /* Profile card */
 .profileCard {
-  background-color: var(--color-surface);
-  border: var(--border-width) solid var(--color-border);
-  border-radius: var(--border-radius);
-  padding: var(--space-6);
-  margin-bottom: var(--space-6);
+  background: rgba(2, 12, 7, 0.82);
+  border: 1px solid rgba(19, 210, 123, 0.26);
+  border-radius: 8px;
+  padding: 1.25rem;
+  margin-bottom: 1.25rem;
 }
 
 .profileHeader {
@@ -163,10 +163,10 @@
 }
 
 .statCard {
-  background-color: var(--color-bg);
-  border: 1px solid var(--color-border);
-  border-radius: var(--border-radius);
-  padding: var(--space-4);
+  background: rgba(0, 10, 6, 0.72);
+  border: 1px solid rgba(19, 210, 123, 0.22);
+  border-radius: 8px;
+  padding: 1rem;
   text-align: center;
 }
 
@@ -364,10 +364,10 @@
 }
 
 .section {
-  background-color: var(--color-surface);
-  border: var(--border-width) solid var(--color-border);
-  border-radius: var(--border-radius);
-  padding: var(--space-4);
+  background: rgba(2, 12, 7, 0.82);
+  border: 1px solid rgba(19, 210, 123, 0.26);
+  border-radius: 8px;
+  padding: 1rem;
   overflow: hidden;
 }
 

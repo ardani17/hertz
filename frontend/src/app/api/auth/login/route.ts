@@ -165,7 +165,8 @@ export async function POST(request: NextRequest) {
         },
       },
     });
-  } catch {
+  } catch (error) {
+    console.error('[admin-login] error:', error instanceof Error ? error.message : error);
     return errorResponse(
       'INTERNAL_ERROR',
       'Terjadi kesalahan pada server',

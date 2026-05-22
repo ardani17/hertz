@@ -19,7 +19,7 @@
 }
 
 .content a:hover {
-  color: #059669;
+  color: var(--horizon-success-muted);
 }
 
 /* Inline images for charts and analysis graphics */

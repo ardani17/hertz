@@ -5,6 +5,7 @@ import { useRouter, useParams } from 'next/navigation';
 import Link from 'next/link';
 import dynamic from 'next/dynamic';
 import type { ArticleFormData, MediaAttachment } from '@/components/admin';
+import { AdminPageHeader } from '@/components/admin';
 
 /** Dynamic import for ArticleEditor — heavy rich text editor loaded on demand */
 const ArticleEditor = dynamic(
@@ -112,12 +113,10 @@ export default function AdminEditArticlePage() {
   if (loading) {
     return (
       <div>
-        <div className={styles.pageHeader}>
-          <Link href="/admin/articles" className={styles.backLink}>
-            ← Kembali
-          </Link>
-          <h2>Edit Artikel</h2>
-        </div>
+        <Link href="/admin/articles" className={styles.backLink}>
+          ← Kembali ke Artikel
+        </Link>
+        <AdminPageHeader kicker="Konten" title="Edit Artikel" />
         <div className={styles.editorCard}>
           <p>Memuat artikel...</p>
         </div>
@@ -128,12 +127,10 @@ export default function AdminEditArticlePage() {
   if (error || !article) {
     return (
       <div>
-        <div className={styles.pageHeader}>
-          <Link href="/admin/articles" className={styles.backLink}>
-            ← Kembali
-          </Link>
-          <h2>Edit Artikel</h2>
-        </div>
+        <Link href="/admin/articles" className={styles.backLink}>
+          ← Kembali ke Artikel
+        </Link>
+        <AdminPageHeader kicker="Konten" title="Edit Artikel" />
         <div className={styles.editorCard}>
           <p style={{ color: 'var(--color-danger)' }}>{error || 'Artikel tidak ditemukan'}</p>
         </div>
@@ -149,12 +146,10 @@ export default function AdminEditArticlePage() {
 
   return (
     <div>
-      <div className={styles.pageHeader}>
-        <Link href="/admin/articles" className={styles.backLink}>
-          ← Kembali
-        </Link>
-        <h2>Edit Artikel</h2>
-      </div>
+      <Link href="/admin/articles" className={styles.backLink}>
+        ← Kembali ke Artikel
+      </Link>
+      <AdminPageHeader kicker="Konten" title="Edit Artikel" />
       <div className={styles.editorCard}>
         <ArticleEditor
           initialData={{

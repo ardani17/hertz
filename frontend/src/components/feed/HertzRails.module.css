@@ -20,7 +20,7 @@
 }
 
 .right {
-  background: #0f0f14;
+  background: var(--horizon-bg-base);
   border-left: 1px solid rgba(255, 255, 255, 0.05);
   position: fixed;
   right: var(--left-rail-offset, 0);
@@ -344,7 +344,7 @@
 }
 
 .marketTitle svg {
-  color: #00e38a;
+  color: var(--horizon-accent-strong);
   height: 14px;
   width: 14px;
 }
@@ -458,7 +458,7 @@
 }
 
 .up {
-  color: #34d399;
+  color: var(--horizon-accent);
 }
 
 .down {

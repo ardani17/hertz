@@ -1,4 +1,4 @@
-import { query, withTransaction } from '../db';
+import { query, queryOne, withTransaction } from '../db';
 import { HertzDmRepository } from '../repositories/hertzDmRepository';
 import { HertzForbiddenError, HertzValidationError } from './hertzPostService';
 import { PushNotificationService } from './pushNotificationService';
@@ -30,41 +30,73 @@ export class HertzDmService {
   }
 
   async createDirect(user: MemberSessionUser, recipientId: string) {
+    const result = await this.createDirectResolved(user, { recipientId });
+    return result.conversation;
+  }
+
+  async createDirectResolved(
+    user: MemberSessionUser,
+    input: { recipientId?: string; recipientUsername?: string },
+  ): Promise<{ conversation: { id: string }; existing: boolean }> {
+    let recipientId = input.recipientId?.trim() ?? '';
+    if (!recipientId && input.recipientUsername) {
+      const row = await queryOne<{ id: string }>(
+        `SELECT id FROM users WHERE LOWER(username) = LOWER($1) AND verified_member_at IS NOT NULL LIMIT 1`,
+        [input.recipientUsername.trim()],
+      );
+      recipientId = row?.id ?? '';
+    }
     if (!recipientId) throw new HertzValidationError('Penerima wajib dipilih');
     if (recipientId === user.id) throw new HertzValidationError('Tidak bisa DM diri sendiri');
-    return withTransaction((client) => this.repo.createDirectConversation(user.id, recipientId, client));
+    const directKey = [user.id, recipientId].sort().join(':');
+    const existing = await queryOne<{ id: string }>(
+      `SELECT id FROM hertz_conversations WHERE direct_key = $1 LIMIT 1`,
+      [directKey],
+    );
+    if (existing) return { conversation: { id: existing.id }, existing: true };
+    const conversation = await withTransaction((client) => this.repo.createDirectConversation(user.id, recipientId, client));
+    return { conversation, existing: false };
+  }
+
+  async threadAfter(user: MemberSessionUser, conversationId: string, afterMessageId: string) {
+    const messages = await this.repo.listMessagesAfter(conversationId, user.id, afterMessageId);
+    const mapped = await this.mapThreadMessages(user, messages);
+    return { isPartial: true, messages: mapped };
   }
 
   async thread(user: MemberSessionUser, conversationId: string) {
     const messages = await this.repo.listMessages(conversationId, user.id);
-    const attachments = await this.repo.listAttachments(messages.map((message) => message.id));
     await this.repo.markRead(conversationId, user.id);
-    return {
-      messages: messages.map((message) => ({
-        id: message.id,
-        conversationId: message.conversation_id,
-        senderId: message.sender_id,
-        body: message.deleted_at ? null : message.body,
-        deletedAt: message.deleted_at,
-        createdAt: message.created_at,
-        sender: {
-          id: message.sender_id,
-          username: message.sender_username,
-          displayName: message.sender_display_name ?? message.sender_username ?? 'Member Horizon',
-          avatarUrl: message.sender_avatar_url,
-          role: message.sender_role,
-        },
-        attachments: attachments
-          .filter((attachment) => attachment.message_id === message.id)
-          .map((attachment) => ({
-            id: attachment.id,
-            url: attachment.file_url,
-            mimeType: attachment.mime_type,
-            size: Number(attachment.file_size),
-          })),
-        canDelete: message.sender_id === user.id,
-      })),
-    };
+    const mapped = await this.mapThreadMessages(user, messages);
+    return { isPartial: false, messages: mapped };
+  }
+
+  private async mapThreadMessages(user: MemberSessionUser, messages: Awaited<ReturnType<HertzDmRepository['listMessages']>>) {
+    const attachments = await this.repo.listAttachments(messages.map((message) => message.id));
+    return messages.map((message) => ({
+      id: message.id,
+      conversationId: message.conversation_id,
+      senderId: message.sender_id,
+      body: message.deleted_at ? null : message.body,
+      deletedAt: message.deleted_at,
+      createdAt: message.created_at,
+      sender: {
+        id: message.sender_id,
+        username: message.sender_username,
+        displayName: message.sender_display_name ?? message.sender_username ?? 'Member Horizon',
+        avatarUrl: message.sender_avatar_url,
+        role: message.sender_role,
+      },
+      attachments: attachments
+        .filter((attachment) => attachment.message_id === message.id)
+        .map((attachment) => ({
+          id: attachment.id,
+          url: attachment.file_url,
+          mimeType: attachment.mime_type,
+          size: Number(attachment.file_size),
+        })),
+      canDelete: message.sender_id === user.id,
+    }));
   }
 
   async send(user: MemberSessionUser, conversationId: string, body: unknown, attachments: unknown = []) {

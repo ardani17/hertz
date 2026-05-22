@@ -44,3 +44,21 @@
     padding: 1.4rem 1rem 1.55rem;
   }
 }
+
+.retry {
+  background: transparent;
+  border: 1px solid var(--horizon-border);
+  border-radius: 999px;
+  color: var(--horizon-accent);
+  cursor: pointer;
+  display: block;
+  margin: 1rem auto;
+  padding: 0.5rem 1rem;
+}
+
+.endMarker {
+  color: var(--horizon-text-muted);
+  font-size: 0.78rem;
+  margin: 1rem;
+  text-align: center;
+}

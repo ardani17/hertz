@@ -1,3 +1,4 @@
+import Link from 'next/link';
 import type { HertzPost } from '@shared/types';
 import { formatHertzAuthorHandle } from '@/lib/hertzAuthorDisplay';
 import styles from './HertzPost.module.css';
@@ -14,8 +15,17 @@ export function HertzAuthorLine({ post }: { post: HertzPost }) {
   return (
     <div>
       <div className={styles.authorLine}>
-        <strong>{post.author.name}</strong>
-        <span className={styles.authorHandle}>{formatHertzAuthorHandle(post.author.username)}</span>
+        {post.author.username ? (
+          <Link href={`/@${post.author.username}`} className={styles.authorLink} prefetch>
+            <strong>{post.author.name}</strong>
+            <span className={styles.authorHandle}>{formatHertzAuthorHandle(post.author.username)}</span>
+          </Link>
+        ) : (
+          <>
+            <strong>{post.author.name}</strong>
+            <span className={styles.authorHandle}>{formatHertzAuthorHandle(post.author.username)}</span>
+          </>
+        )}
       </div>
       <div className={styles.metaLine}>
         <span>{post.source === 'telegram' || post.source === 'admin' ? 'via Telegram' : 'via Web'}</span>

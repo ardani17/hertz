@@ -1,4 +1,5 @@
 import { execute, query, queryOne, type DbClient } from '../db';
+import { HertzPostStatsRepository } from './hertzPostStatsRepository';
 import type { MarketContext, HertzPostCategory, HertzPostSource, HertzPostStatus, HertzPostType } from '../types/feed';
 
 export interface HertzPostRow {
@@ -57,6 +58,7 @@ export interface HertzMediaRow {
 }
 
 export class HertzPostRepository {
+  private readonly postStats = new HertzPostStatsRepository();
   async shortIdExists(shortId: string, client?: DbClient): Promise<boolean> {
     const row = await queryOne<{ id: string }>('SELECT id FROM hertz_posts WHERE short_id = $1', [shortId], client);
     return Boolean(row);
@@ -250,6 +252,98 @@ export class HertzPostRepository {
   }
 
   private async queryRows(
+    whereSql: string,
+    values: unknown[],
+    viewerParam: number,
+    limitParam: number,
+    sort: 'latest' | 'trending' = 'latest',
+    client?: DbClient,
+  ): Promise<HertzPostRow[]> {
+    try {
+      return await this.queryRowsWithStats(whereSql, values, viewerParam, limitParam, sort, client);
+    } catch (error) {
+      if ((error as { code?: string }).code !== '42P01') throw error;
+      return this.queryRowsLegacy(whereSql, values, viewerParam, limitParam, sort, client);
+    }
+  }
+
+  private async queryRowsWithStats(
+    whereSql: string,
+    values: unknown[],
+    viewerParam: number,
+    limitParam: number,
+    sort: 'latest' | 'trending' = 'latest',
+    client?: DbClient,
+  ): Promise<HertzPostRow[]> {
+    const orderSql = sort === 'trending'
+      ? `ORDER BY hp.pinned_at DESC NULLS LAST,
+                (COALESCE(s.pulse_count, rc.pulse_count, 0) * 4 + COALESCE(s.repost_count, rp.repost_count, 0) * 5 + COALESCE(s.comment_count, cc.comment_count, 0) * 3 + COALESCE(s.view_count, vc.view_count, 0)) DESC,
+                hp.created_at DESC,
+                hp.id DESC`
+      : 'ORDER BY hp.pinned_at DESC NULLS LAST, hp.created_at DESC, hp.id DESC';
+    const result = await query<HertzPostRow>(
+      `SELECT hp.id, hp.short_id, hp.article_id, hp.author_id,
+              hp.type AS post_type, hp.source, hp.category, hp.status, hp.visibility,
+              hp.quoted_post_id, hp.telegram_message_id, hp.telegram_chat_id,
+              hp.pinned_at, hp.edited_at, hp.deleted_at, hp.created_at, hp.updated_at,
+              COALESCE(a.content_html, hp.content, '') AS content_html,
+              a.title, a.slug,
+              u.username AS author_username,
+              u.display_name AS author_display_name,
+              u.avatar_url AS author_avatar_url,
+              u.role AS author_role,
+              u.verified_member_at AS author_verified_member_at,
+              COALESCE(s.comment_count, cc.comment_count, 0)::text AS comment_count,
+              COALESCE(s.pulse_count, rc.pulse_count, 0)::text AS pulse_count,
+              COALESCE(s.repost_count, rp.repost_count, 0)::text AS repost_count,
+              COALESCE(s.view_count, vc.view_count, 0)::text AS view_count,
+              vr.id IS NOT NULL AS viewer_has_pulsed,
+              vb.id IS NOT NULL AS viewer_has_bookmarked,
+              vrr.id IS NOT NULL AS viewer_has_reposted,
+              pmc.pair, pmc.timeframe, pmc.risk_percent::text, pmc.direction,
+              pmc.entry_price::text, pmc.entry_zone, pmc.stop_loss::text,
+              pmc.take_profit::text, pmc.setup_type, pmc.confidence_percent::text,
+              pmc.broker_or_source
+       FROM hertz_posts hp
+       LEFT JOIN articles a ON a.id = hp.article_id
+       LEFT JOIN users u ON u.id = hp.author_id
+       LEFT JOIN hertz_post_market_context pmc ON pmc.post_id = hp.id
+       LEFT JOIN hertz_post_stats s ON s.post_id = hp.id
+       LEFT JOIN LATERAL (
+         SELECT COUNT(*) AS comment_count FROM hertz_comments c
+         WHERE c.post_id = hp.id AND c.status = 'visible' AND c.deleted_at IS NULL
+       ) cc ON s.post_id IS NULL
+       LEFT JOIN LATERAL (
+         SELECT COUNT(*) AS pulse_count FROM hertz_reactions r
+         WHERE r.post_id = hp.id AND r.type = 'pulse' AND r.deleted_at IS NULL
+       ) rc ON s.post_id IS NULL
+       LEFT JOIN LATERAL (
+         SELECT COUNT(*) AS repost_count FROM hertz_reposts r
+         WHERE r.original_post_id = hp.id AND r.deleted_at IS NULL
+       ) rp ON s.post_id IS NULL
+       LEFT JOIN LATERAL (
+         SELECT COUNT(*) AS view_count FROM hertz_views v WHERE v.post_id = hp.id
+       ) vc ON s.post_id IS NULL
+       LEFT JOIN hertz_reactions vr
+         ON vr.post_id = hp.id AND vr.user_id = $${viewerParam}::uuid AND vr.type = 'pulse' AND vr.deleted_at IS NULL
+       LEFT JOIN hertz_bookmarks vb
+         ON vb.post_id = hp.id AND vb.user_id = $${viewerParam}::uuid AND vb.deleted_at IS NULL
+       LEFT JOIN hertz_reposts vrr
+         ON vrr.original_post_id = hp.id AND vrr.user_id = $${viewerParam}::uuid AND vrr.repost_type = 'repost' AND vrr.deleted_at IS NULL
+       WHERE ${whereSql}
+       ${orderSql}
+       LIMIT $${limitParam}`,
+      values,
+      client,
+    );
+    const rows = result.rows;
+    const cached = await this.postStats.getMany(rows.map((row) => row.id), client);
+    const missing = rows.filter((row) => !cached.has(row.id)).map((row) => row.id);
+    if (missing.length > 0) await this.postStats.ensureCanonicalForPosts(missing, client);
+    return rows;
+  }
+
+  private async queryRowsLegacy(
     whereSql: string,
     values: unknown[],
     viewerParam: number,

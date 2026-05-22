@@ -105,6 +105,21 @@ export class HertzDmRepository {
     return conversation;
   }
 
+  async listMessagesAfter(conversationId: string, userId: string, afterMessageId: string, client?: DbClient): Promise<HertzMessageRow[]> {
+    const result = await query<HertzMessageRow>(
+      `SELECT m.*, u.username AS sender_username, u.display_name AS sender_display_name,
+              u.avatar_url AS sender_avatar_url, u.role AS sender_role
+       FROM hertz_messages m
+       JOIN hertz_conversation_participants p ON p.conversation_id = m.conversation_id
+       JOIN users u ON u.id = m.sender_id
+       WHERE m.conversation_id = $1 AND p.user_id = $2 AND m.id > $3::uuid
+       ORDER BY m.created_at ASC`,
+      [conversationId, userId, afterMessageId],
+      client,
+    );
+    return result.rows;
+  }
+
   async listMessages(conversationId: string, userId: string, client?: DbClient): Promise<HertzMessageRow[]> {
     const result = await query<HertzMessageRow>(
       `SELECT m.*, u.username AS sender_username, u.display_name AS sender_display_name,

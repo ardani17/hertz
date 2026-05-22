@@ -48,6 +48,21 @@
 
 /* --- CSS Custom Properties (Non-Color Tokens) --- */
 :root {
+
+  /* Horizon Social UX Uplift locked identity tokens */
+  --horizon-bg-base: #0a0a0f;
+  --horizon-accent: #13d27b;
+  --horizon-surface: rgba(15, 19, 18, 0.78);
+  --horizon-surface-strong: rgba(20, 28, 24, 0.94);
+  --horizon-border: rgba(19, 210, 123, 0.24);
+  --horizon-text: #f3fff8;
+  --horizon-text-muted: #91a79a;
+  --horizon-accent-soft: rgba(19, 210, 123, 0.14);
+  --horizon-success: #13d27b;
+  --horizon-success-muted: #10b981;
+  --horizon-shell-offset: 2rem;
+  --horizon-mobile-offset: 7.25rem;
+
   /* Typography */
   --font-body: 'Inter', 'Segoe UI', 'Helvetica Neue', Arial, sans-serif;
   --font-heading: 'Inter', 'Segoe UI', 'Helvetica Neue', Arial, sans-serif;
@@ -120,15 +135,17 @@
 /* --- Dark Theme Tokens --- */
 [data-theme="dark"] {
   /* Core Colors */
-  --color-bg: #0a0a0a;
-  --color-surface: #141414;
-  --hertz-shell-bg: #0f0f14;
-  --hertz-accent-bright: #13d27b;
-  --hertz-muted-text: #8fa899;
-  --color-text: #f1f1f1;
-  --color-text-muted: #a1a1a1;
-  --color-border: #1f1f1f;
-  --color-accent: #10b981;
+  --color-bg: var(--horizon-bg-base);
+  --color-surface: var(--horizon-surface-strong);
+  --hertz-shell-bg: var(--horizon-bg-base);
+  --hertz-accent-bright: var(--horizon-accent);
+  --hertz-muted-text: var(--horizon-text-muted);
+  --hertz-surface: var(--horizon-surface);
+  --hertz-border: var(--horizon-border);
+  --color-text: var(--horizon-text);
+  --color-text-muted: var(--horizon-text-muted);
+  --color-border: var(--horizon-border);
+  --color-accent: var(--horizon-accent);
 
   /* Utility Colors */
   --color-danger: #ef4444;
@@ -150,7 +167,7 @@
   --color-text: #1a1a1a;
   --color-text-muted: #6b7280;
   --color-border: #d1d5db;
-  --color-accent: #10b981;
+  --color-accent: var(--horizon-accent);
 
   /* Utility Colors */
   --color-danger: #ef4444;
@@ -185,7 +202,7 @@ body {
   font-size: var(--text-base);
   line-height: 1.6;
   color: var(--color-text);
-  background-color: var(--color-bg);
+  background: var(--horizon-bg-base);
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   min-height: 100vh;

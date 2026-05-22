@@ -1,6 +1,7 @@
 'use client';
 
 import { useCallback, useEffect, useState } from 'react';
+import { AdminPageHeader } from '@/components/admin';
 import styles from './hertz.module.css';
 
 interface PendingHertzPost {
@@ -88,15 +89,16 @@ export default function AdminHertzPage() {
 
   return (
     <div className={styles.page}>
-      <header className={styles.header}>
-        <div>
-          <p className={styles.kicker}>HERTZ</p>
-          <h1>Moderasi Feed</h1>
-        </div>
-        <button className={styles.refreshButton} onClick={loadPending} disabled={loading}>
-          Refresh
-        </button>
-      </header>
+      <AdminPageHeader
+        kicker="HERTZ"
+        title="Moderasi Feed"
+        description="Review draft Telegram, report terbuka, dan antrian moderasi feed."
+        actions={
+          <button className={styles.refreshButton} onClick={loadPending} disabled={loading} type="button">
+            Refresh
+          </button>
+        }
+      />
 
       <section className={styles.metrics} aria-label="HERTZ moderation summary">
         <div>

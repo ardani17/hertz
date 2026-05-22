@@ -1,5 +1,6 @@
 import { HertzBookmarkRepository, HertzReactionRepository, HertzRepostRepository, HertzViewRepository } from '../repositories/hertzInteractionRepository';
 import { HertzPostRepository } from '../repositories/hertzPostRepository';
+import { HertzPostStatsRepository } from '../repositories/hertzPostStatsRepository';
 import { ActivityLogService } from './activityLog';
 import { hashForView, HertzForbiddenError, HertzNotFoundError, HertzPostService } from './hertzPostService';
 import { HertzInAppNotificationService } from './hertzInAppNotificationService';
@@ -9,6 +10,7 @@ import type { MemberSessionUser } from '../types/membership';
 export class HertzReactionService {
   private readonly reactions = new HertzReactionRepository();
   private readonly posts = new HertzPostRepository();
+  private readonly postStats = new HertzPostStatsRepository();
   private readonly logs = new ActivityLogService();
   private readonly inAppNotifications = new HertzInAppNotificationService();
 
@@ -17,6 +19,7 @@ export class HertzReactionService {
     const resolvedPostId = await this.posts.resolvePostId(postId);
     if (!resolvedPostId) throw new HertzNotFoundError('Post tidak ditemukan');
     const result = await this.reactions.togglePulse(resolvedPostId, user.id);
+    await this.postStats.incr(resolvedPostId, 'pulse_count', result.active ? 1 : -1);
     await this.logs.log({
       actor_id: user.id,
       actor_type: user.role === 'admin' ? 'admin' : 'member',
@@ -47,6 +50,7 @@ export class HertzBookmarkService {
 export class HertzRepostService {
   private readonly posts = new HertzPostRepository();
   private readonly reposts = new HertzRepostRepository();
+  private readonly postStats = new HertzPostStatsRepository();
   private readonly hertz = new HertzPostService();
   private readonly inAppNotifications = new HertzInAppNotificationService();
 
@@ -57,6 +61,7 @@ export class HertzRepostService {
     if (input.type === 'repost') {
       if (original.author_id === user.id) throw new HertzForbiddenError('Tidak bisa repost post sendiri');
       const result = await this.reposts.togglePlainRepost(original.id, user.id);
+      await this.postStats.incr(original.id, 'repost_count', result.active ? 1 : -1);
       if (!result.active) {
         if (result.repostPostId) await this.posts.updateStatus(result.repostPostId, 'deleted');
         return result;
@@ -74,6 +79,7 @@ export class HertzRepostService {
       mediaIds: input.mediaIds,
     });
     await this.reposts.createQuote(original.id, user.id, quote.id);
+    await this.postStats.incr(original.id, 'repost_count', 1);
     void this.inAppNotifications.notifyQuote({ postId: original.id, actorUserId: user.id, quotePostId: quote.id }).catch(() => undefined);
     return { post: quote };
   }
@@ -82,6 +88,7 @@ export class HertzRepostService {
 export class HertzViewService {
   private readonly views = new HertzViewRepository();
   private readonly posts = new HertzPostRepository();
+  private readonly postStats = new HertzPostStatsRepository();
 
   async recordView(params: {
     postId: string;
@@ -92,7 +99,7 @@ export class HertzViewService {
   }): Promise<{ recorded: boolean }> {
     const postId = await this.posts.resolvePostId(params.postId);
     if (!postId) return { recorded: false };
-    return this.views.recordView({
+    const result = await this.views.recordView({
       postId,
       userId: params.userId ?? null,
       sessionHash: hashForView(params.sessionToken),
@@ -100,5 +107,7 @@ export class HertzViewService {
       userAgentHash: hashForView(params.userAgent),
       dedupeHours: 6,
     });
+    if (result.recorded) await this.postStats.incr(postId, 'view_count', 1);
+    return result;
   }
 }

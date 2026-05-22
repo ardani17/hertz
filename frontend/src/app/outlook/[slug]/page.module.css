@@ -16,7 +16,7 @@
 
 .backLink {
   align-items: center;
-  color: #34d399;
+  color: var(--horizon-accent);
   display: inline-flex;
   font-size: 0.88rem;
   font-weight: 750;
@@ -46,9 +46,9 @@
 .spineNode {
   align-self: start;
   background: rgba(16, 185, 129, 0.1);
-  border: 1.5px solid #00e38a;
+  border: 1.5px solid var(--horizon-accent-strong);
   border-radius: 50%;
-  color: #00e38a;
+  color: var(--horizon-accent-strong);
   display: grid;
   height: 40px;
   place-items: center;

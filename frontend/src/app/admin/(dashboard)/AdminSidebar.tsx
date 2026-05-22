@@ -2,36 +2,54 @@
 
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
+import {
+  ArrowLeft,
+  BarChart3,
+  BookOpen,
+  Compass,
+  CreditCard,
+  FileText,
+  Hexagon,
+  KeyRound,
+  LayoutDashboard,
+  MessageSquare,
+  ScrollText,
+  Users,
+} from 'lucide-react';
+import type { LucideIcon } from 'lucide-react';
 import styles from './layout.module.css';
 import { Logo } from '@/components/ui/Logo';
 
-const navSections = [
+const navSections: {
+  label: string;
+  items: { label: string; href: string; Icon: LucideIcon }[];
+}[] = [
   {
     label: 'Utama',
     items: [
-      { label: 'Dashboard', href: '/admin', icon: 'DB' },
-      { label: 'HERTZ', href: '/admin/hertz', icon: 'HZ' },
-      { label: 'Artikel', href: '/admin/articles', icon: 'AR' },
-      { label: 'Outlook', href: '/admin/outlook', icon: 'OU' },
-      { label: 'Blog', href: '/admin/blog', icon: 'BL' },
+      { label: 'Dashboard', href: '/admin', Icon: LayoutDashboard },
+      { label: 'HERTZ', href: '/admin/hertz', Icon: Hexagon },
+      { label: 'Artikel', href: '/admin/articles', Icon: FileText },
+      { label: 'Outlook', href: '/admin/outlook', Icon: Compass },
+      { label: 'Blog', href: '/admin/blog', Icon: BookOpen },
     ],
   },
   {
     label: 'Pengguna',
     items: [
-      { label: 'User', href: '/admin/users', icon: 'US' },
-      { label: 'Kredit', href: '/admin/credits', icon: 'CR' },
-      { label: 'Komentar', href: '/admin/comments', icon: 'CM' },
+      { label: 'User', href: '/admin/users', Icon: Users },
+      { label: 'Kredit', href: '/admin/credits', Icon: CreditCard },
+      { label: 'Komentar', href: '/admin/comments', Icon: MessageSquare },
     ],
   },
   {
     label: 'Sistem',
     items: [
-      { label: 'Log', href: '/admin/logs', icon: 'LG' },
-      { label: 'API Keys', href: '/admin/api-keys', icon: 'AK' },
+      { label: 'Log', href: '/admin/logs', Icon: ScrollText },
+      { label: 'API Keys', href: '/admin/api-keys', Icon: KeyRound },
     ],
   },
-] as const;
+];
 
 interface AdminSidebarProps {
   isOpen: boolean;
@@ -61,8 +79,9 @@ export function AdminSidebar({ isOpen, onClose }: AdminSidebarProps) {
         aria-label="Navigasi admin"
       >
         <div className={styles.sidebarHeader}>
-          <Link href="/admin" className={styles.sidebarLogo} onClick={onClose}>
-            <Logo variant="compact" height={24} /> <span className={styles.sidebarBadge}>Admin</span>
+          <Link href="/admin" prefetch scroll={false} className={styles.sidebarLogo} onClick={onClose}>
+            <Logo variant="compact" height={24} />
+            <span className={styles.sidebarBadge}>Admin</span>
           </Link>
         </div>
 
@@ -75,12 +94,14 @@ export function AdminSidebar({ isOpen, onClose }: AdminSidebarProps) {
                   <li key={item.href} className={styles.navItem}>
                     <Link
                       href={item.href}
+                      prefetch
+                      scroll={false}
                       className={`${styles.navLink} ${isActive(item.href) ? styles.navLinkActive : ''}`}
                       onClick={onClose}
                       aria-current={isActive(item.href) ? 'page' : undefined}
                     >
                       <span className={styles.navIcon} aria-hidden="true">
-                        {item.icon}
+                        <item.Icon />
                       </span>
                       {item.label}
                     </Link>
@@ -92,8 +113,13 @@ export function AdminSidebar({ isOpen, onClose }: AdminSidebarProps) {
         </nav>
 
         <div className={styles.sidebarFooter}>
-          <Link href="/" className={styles.backToSite}>
-            Kembali ke situs
+          <Link href="/hertz" className={styles.backToSite}>
+            <ArrowLeft size={16} />
+            Kembali ke HERTZ
+          </Link>
+          <Link href="/" className={styles.backToSiteSecondary}>
+            <BarChart3 size={14} />
+            Situs publik
           </Link>
         </div>
       </aside>

@@ -2,6 +2,7 @@
 
 import { HertzLayout } from '@/components/layout/HertzLayout';
 import { HertzTelegramLogin } from '@/components/feed/HertzTelegramLogin';
+import { useTypingStatus } from '@/lib/swr/hooks/useTypingStatus';
 import { ConversationList } from './ConversationList';
 import { getDmAccessState } from './dm-utils';
 import { MessageComposer } from './MessageComposer';
@@ -9,9 +10,19 @@ import { MessageThread } from './MessageThread';
 import { useMessages } from './useMessages';
 import styles from './messages.module.css';
 
+function formatTypingLabel(names: string[]) {
+  if (names.length === 0) return null;
+  if (names.length === 1) return `${names[0]} sedang mengetik…`;
+  if (names.length === 2) return `${names[0]} dan ${names[1]} sedang mengetik…`;
+  return `${names[0]} dan ${names.length - 1} lainnya sedang mengetik…`;
+}
+
 export function MessagesView() {
   const dm = useMessages();
   const accessState = getDmAccessState(dm.currentUser);
+  const typing = useTypingStatus(dm.activeId, dm.authState === 'member');
+  const typingNames = (typing.data?.typingUsers ?? []).slice(0, 3).map((user) => user.displayName);
+  const typingLabel = formatTypingLabel(typingNames);
 
   return (
     <HertzLayout
@@ -30,7 +41,7 @@ export function MessagesView() {
           {dm.authState === 'guest' ? <HertzTelegramLogin /> : null}
         </section>
       ) : (
-        <div className={`${styles.dmLayout} ${dm.mobileThreadOpen ? styles.threadOpen : ''}`}>
+        <div data-testid="dm-layout" className={`${styles.dmLayout} ${dm.mobileThreadOpen ? styles.threadOpen : ''}`}>
           <ConversationList
             conversations={dm.conversations}
             members={dm.members}
@@ -53,6 +64,8 @@ export function MessagesView() {
             currentUserId={dm.currentUser?.id}
             threadMenuOpen={dm.threadMenuOpen}
             filter={dm.filter}
+            isLoading={dm.threadLoading}
+            typingLabel={typingLabel}
             onBack={() => dm.setMobileThreadOpen(false)}
             onToggleMenu={() => dm.setThreadMenuOpen((value) => !value)}
             onArchive={(archived) => {
@@ -71,6 +84,7 @@ export function MessagesView() {
                 body={dm.body}
                 attachments={dm.attachments}
                 uploading={dm.uploading}
+                textareaRef={dm.composerRef}
                 onBodyChange={dm.setBody}
                 onSend={() => void dm.send()}
                 onUpload={(files) => void dm.uploadImages(files)}

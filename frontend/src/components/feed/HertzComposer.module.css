@@ -63,9 +63,12 @@
 }
 
 .categoryChip {
+  background: transparent;
   border: 1px solid rgba(255, 255, 255, 0.12);
   border-radius: 999px;
   color: #8ea897;
+  cursor: pointer;
+  font: inherit;
   font-size: 0.72rem;
   font-weight: 650;
   line-height: 1;
@@ -82,7 +85,7 @@
 .categoryChipActive {
   background: rgba(16, 185, 129, 0.14);
   border-color: rgba(52, 211, 153, 0.35);
-  color: #34d399;
+  color: var(--horizon-accent);
 }
 
 .composeFab,
@@ -305,7 +308,7 @@
   }
 
   .composeSheet {
-    background: #0f0f14;
+    background: var(--horizon-bg-base);
     border-top: 1px solid rgba(19, 210, 123, 0.28);
     border-radius: 16px 16px 0 0;
     display: grid;

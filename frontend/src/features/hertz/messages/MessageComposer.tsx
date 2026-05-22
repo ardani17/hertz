@@ -1,6 +1,9 @@
 'use client';
 
+import { useEffect, useRef, type RefObject } from 'react';
 import { ImagePlus, SendHorizontal } from 'lucide-react';
+import { createThrottleEmitter } from '@/lib/throttle';
+import { shouldSendMessage } from './messageComposerRules';
 import type { PendingAttachment } from './types';
 import styles from './messages.module.css';
 
@@ -9,22 +12,55 @@ type MessageComposerProps = {
   body: string;
   attachments: PendingAttachment[];
   uploading: boolean;
+  textareaRef?: RefObject<HTMLTextAreaElement | null>;
   onBodyChange: (value: string) => void;
   onSend: () => void;
   onUpload: (files: FileList | null) => void;
   onRemoveAttachment: (fileUrl: string) => void;
 };
 
+const typingEmitter = createThrottleEmitter(1_800);
+
+async function emitTyping(conversationId: string) {
+  if (typeof document !== 'undefined' && document.visibilityState === 'hidden') return;
+  await fetch(`/api/hertz/messages/conversations/${conversationId}/typing`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({}),
+  }).catch(() => undefined);
+}
+
+async function clearTyping(conversationId: string) {
+  await fetch(`/api/hertz/messages/conversations/${conversationId}/typing`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ clear: true }),
+  }).catch(() => undefined);
+}
+
 export function MessageComposer({
   activeId,
   body,
   attachments,
   uploading,
+  textareaRef,
   onBodyChange,
   onSend,
   onUpload,
   onRemoveAttachment,
 }: MessageComposerProps) {
+  const localRef = useRef<HTMLTextAreaElement | null>(null);
+  const resolvedRef = textareaRef ?? localRef;
+
+  useEffect(() => {
+    typingEmitter.reset();
+  }, [activeId]);
+
+  async function handleSend() {
+    if (activeId) await clearTyping(activeId);
+    onSend();
+  }
+
   return (
     <>
       {attachments.length ? (
@@ -36,7 +72,7 @@ export function MessageComposer({
               onClick={() => onRemoveAttachment(attachment.fileUrl)}
               aria-label={`Hapus attachment ${attachment.name}`}
             >
-              <img src={attachment.fileUrl} alt="" />
+              <img src={attachment.fileUrl} alt="" loading="lazy" decoding="async" width={72} height={72} />
               <span>{attachment.name}</span>
             </button>
           ))}
@@ -57,13 +93,27 @@ export function MessageComposer({
             }}
           />
         </label>
-        <input
+        <textarea
+          ref={resolvedRef}
           value={body}
-          onChange={(event) => onBodyChange(event.target.value)}
+          rows={1}
+          onChange={(event) => {
+            onBodyChange(event.target.value);
+            if (activeId && typingEmitter.shouldEmit()) void emitTyping(activeId);
+          }}
           onKeyDown={(event) => {
-            if (event.key === 'Enter' && !event.shiftKey) {
+            if (
+              shouldSendMessage({
+                key: event.key,
+                shiftKey: event.shiftKey,
+                body,
+                attachmentCount: attachments.length,
+                uploading,
+                hasConversation: Boolean(activeId),
+              })
+            ) {
               event.preventDefault();
-              if (activeId && !uploading && body.trim()) onSend();
+              void handleSend();
             }
           }}
           placeholder={activeId ? 'Tulis pesan...' : 'Pilih percakapan dulu'}
@@ -71,7 +121,7 @@ export function MessageComposer({
         />
         <button
           type="button"
-          onClick={onSend}
+          onClick={() => void handleSend()}
           disabled={!activeId || uploading || (!body.trim() && attachments.length === 0)}
           aria-label="Kirim pesan"
         >

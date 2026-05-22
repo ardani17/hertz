@@ -1,10 +1,10 @@
 .dmLayout {
-  background: rgba(2, 12, 7, 0.72);
-  border: 1px solid rgba(75, 118, 92, 0.28);
+  background: var(--horizon-surface);
+  border: 1px solid var(--horizon-border);
   border-radius: 12px;
   display: grid;
   grid-template-columns: minmax(300px, 380px) minmax(0, 1fr);
-  min-height: min(720px, calc(100dvh - 12rem));
+  height: calc(100dvh - var(--horizon-shell-offset, 120px));
   min-width: 0;
   overflow: hidden;
 }
@@ -683,7 +683,7 @@
     border: 0;
     border-radius: 0;
     display: block;
-    min-height: calc(100dvh - 11rem);
+    height: calc(100svh - var(--horizon-mobile-offset, 0px));
   }
 
   .dmLayout:not(.threadOpen) .thread {
@@ -702,7 +702,7 @@
 
   .thread {
     grid-template-rows: auto minmax(0, 1fr) auto;
-    min-height: calc(100dvh - 11rem);
+    height: calc(100svh - var(--horizon-mobile-offset, 0px));
   }
 
   .threadHeader {
@@ -741,6 +741,80 @@
     margin-right: 0;
     padding-left: 0.75rem;
     padding-right: 0.75rem;
+  }
+}
+
+.threadSkeleton {
+  display: grid;
+  grid-template-rows: auto minmax(0, 1fr) auto;
+  height: 100%;
+  min-height: 0;
+}
+
+.skeletonHeader,
+.skeletonComposer {
+  background: linear-gradient(90deg, rgba(255, 255, 255, 0.04), rgba(255, 255, 255, 0.1), rgba(255, 255, 255, 0.04));
+  border-radius: 10px;
+  min-height: 56px;
+}
+
+.skeletonMessages {
+  display: grid;
+  gap: 0.65rem;
+  overflow: hidden;
+  padding: 1rem;
+}
+
+.skeletonBubbleLeft,
+.skeletonBubbleRight {
+  animation: dmSkeletonPulse 1.2s ease-in-out infinite;
+  background: linear-gradient(90deg, rgba(255, 255, 255, 0.04), rgba(255, 255, 255, 0.1), rgba(255, 255, 255, 0.04));
+  border-radius: 14px;
+  display: block;
+  height: 52px;
+}
+
+.skeletonBubbleLeft {
+  justify-self: start;
+  width: min(68%, 320px);
+}
+
+.skeletonBubbleRight {
+  justify-self: end;
+  width: min(58%, 280px);
+}
+
+.newMessagesPill {
+  background: var(--horizon-accent);
+  border: 0;
+  border-radius: 999px;
+  bottom: 0.75rem;
+  color: #04140b;
+  cursor: pointer;
+  font: inherit;
+  font-size: 0.78rem;
+  font-weight: 800;
+  left: 50%;
+  padding: 0.45rem 0.9rem;
+  position: sticky;
+  transform: translateX(-50%);
+  z-index: 2;
+}
+
+.typingIndicator {
+  color: var(--horizon-text-muted);
+  font-size: 0.78rem;
+  margin: 0;
+  padding: 0.35rem 1rem 0;
+}
+
+@keyframes dmSkeletonPulse {
+  0%,
+  100% {
+    opacity: 0.55;
+  }
+  50% {
+    opacity: 1;
   }
 }
 

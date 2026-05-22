@@ -1,9 +1,6 @@
 import type { Metadata } from 'next';
-import Link from 'next/link';
 import { BlogArticleService } from '@shared/services/blogArticleService';
-import { PAGINATION } from '@shared/constants';
-import { BlogCard } from '@/components/blog';
-import styles from './page.module.css';
+import { BlogListClient } from '@/components/blog/BlogListClient';
 
 export const metadata: Metadata = {
   title: 'Blog',
@@ -11,46 +8,7 @@ export const metadata: Metadata = {
   alternates: { canonical: '/blog' },
 };
 
-export const dynamic = 'force-dynamic';
-
-const PAGE_SIZE = PAGINATION.BLOG_PAGE_SIZE;
-
-function buildHref(page: number, search: string): string {
-  const params = new URLSearchParams();
-  if (page > 1) params.set('page', String(page));
-  if (search) params.set('search', search);
-  const qs = params.toString();
-  return qs ? `/blog?${qs}` : '/blog';
-}
-
-function ServerPagination({
-  currentPage,
-  totalPages,
-  search,
-}: {
-  currentPage: number;
-  totalPages: number;
-  search: string;
-}) {
-  if (totalPages <= 1) return null;
-  return (
-    <nav className={styles.pagination} aria-label="Navigasi halaman">
-      {currentPage > 1 ? (
-        <Link href={buildHref(currentPage - 1, search)} className={styles.pageLink}>
-          Prev
-        </Link>
-      ) : null}
-      <span className={styles.pageLinkActive}>
-        {currentPage} / {totalPages}
-      </span>
-      {currentPage < totalPages ? (
-        <Link href={buildHref(currentPage + 1, search)} className={styles.pageLink}>
-          Next
-        </Link>
-      ) : null}
-    </nav>
-  );
-}
+export const revalidate = 120;
 
 export default async function BlogPage({
   searchParams,
@@ -72,35 +30,12 @@ export default async function BlogPage({
     articles = [];
   }
 
-  const totalPages = Math.ceil(total / PAGE_SIZE);
-
   return (
-    <>
-      <form className={styles.searchForm} action="/blog" method="get">
-        <input
-          type="search"
-          name="search"
-          className={styles.searchInput}
-          placeholder="Cari artikel blog..."
-          defaultValue={search}
-          aria-label="Cari artikel blog"
-        />
-      </form>
-      {articles.length > 0 ? (
-        <>
-          <div className={styles.list}>
-            {articles.map((article) => (
-              <BlogCard key={article.id} article={article} />
-            ))}
-          </div>
-          <ServerPagination currentPage={currentPage} totalPages={totalPages} search={search} />
-        </>
-      ) : (
-        <div className={styles.empty}>
-          <p className={styles.emptyText}>Belum ada artikel WordPress</p>
-          <p className={styles.emptySubtext}>Artikel blog akan tampil setelah import WordPress selesai.</p>
-        </div>
-      )}
-    </>
+    <BlogListClient
+      initialArticles={articles}
+      initialTotal={total}
+      initialPage={currentPage}
+      initialSearch={search}
+    />
   );
 }

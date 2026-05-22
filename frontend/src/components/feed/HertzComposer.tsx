@@ -1,6 +1,5 @@
 'use client';
 
-import Link from 'next/link';
 import { useEffect, useState } from 'react';
 import { Plus, X } from 'lucide-react';
 import { useRouter } from 'next/navigation';
@@ -8,7 +7,8 @@ import type { MarketContext, MemberSessionUser, HertzPostCategory } from '@share
 import { ComposerMarketFields } from '@/features/hertz/composer/ComposerMarketFields';
 import { Button } from '@/components/ui/button';
 import { useToast } from '@/components/ui/Toast';
-import { buildHertzFeedHref, hertzCategoryTabs } from '@/lib/hertzFeedNav';
+import type { HertzFeedFilterPatch, HertzFeedFilters } from '@/lib/hertzFeedFilters';
+import { hertzCategoryTabs } from '@/lib/hertzFeedNav';
 import { refreshPreserveScroll } from '@/lib/hertzRefresh';
 import { HertzAvatar } from './HertzAvatar';
 import { HertzTelegramLogin } from './HertzTelegramLogin';
@@ -29,33 +29,28 @@ function resolveComposerCategory(activeCategory?: HertzPostCategory | string | n
 }
 
 function ComposerCategoryChips({
-  activeCategory,
-  activeSearch,
-  activeSort,
+  filters,
+  onFilterChange,
 }: {
-  activeCategory?: HertzPostCategory | string | null;
-  activeSearch?: string | null;
-  activeSort?: 'latest' | 'trending';
+  filters: HertzFeedFilters;
+  onFilterChange: (patch: HertzFeedFilterPatch) => void;
 }) {
-  const activeValue = activeCategory ?? null;
+  const activeValue = filters.category ?? null;
 
   return (
     <nav className={styles.categoryRow} aria-label="Kategori postingan">
       {hertzCategoryTabs.map((tab) => {
         const isActive = (tab.value ?? null) === activeValue;
         return (
-          <Link
+          <button
             key={tab.id}
-            href={buildHertzFeedHref({
-              category: tab.value,
-              search: activeSearch ?? null,
-              sort: activeSort ?? 'latest',
-            })}
+            type="button"
+            onClick={() => onFilterChange({ category: tab.value ?? null })}
             className={isActive ? `${styles.categoryChip} ${styles.categoryChipActive}` : styles.categoryChip}
             aria-current={isActive ? 'page' : undefined}
           >
             {tab.label}
-          </Link>
+          </button>
         );
       })}
     </nav>
@@ -64,15 +59,13 @@ function ComposerCategoryChips({
 
 function ComposerForm({
   category,
-  activeCategory,
-  activeSearch,
-  activeSort,
+  filters,
+  onFilterChange,
   onPosted,
 }: {
   category: ComposerCategory;
-  activeCategory?: HertzPostCategory | string | null;
-  activeSearch?: string | null;
-  activeSort?: 'latest' | 'trending';
+  filters: HertzFeedFilters;
+  onFilterChange: (patch: HertzFeedFilterPatch) => void;
   onPosted?: () => void;
 }) {
   const router = useRouter();
@@ -209,11 +202,7 @@ function ComposerForm({
 
   return (
     <>
-      <ComposerCategoryChips
-        activeCategory={activeCategory}
-        activeSearch={activeSearch}
-        activeSort={activeSort}
-      />
+      <ComposerCategoryChips filters={filters} onFilterChange={onFilterChange} />
       <textarea
         value={content}
         onChange={(event) => setContent(event.target.value)}
@@ -251,7 +240,7 @@ function ComposerForm({
         <div className={styles.mediaQueue} aria-label="Gambar siap diposting">
           {mediaItems.map((item) => (
             <figure key={item.id}>
-              {item.url ? <img src={item.url} alt="" /> : null}
+              {item.url ? <img src={item.url} alt="" loading="lazy" decoding="async" width={96} height={96} /> : null}
               <figcaption>{item.name}</figcaption>
               <button type="button" onClick={() => removeMedia(item.id)} aria-label={`Hapus ${item.name}`}>
                 ×
@@ -267,16 +256,14 @@ function ComposerForm({
 
 export function HertzComposer({
   currentUser,
-  activeCategory,
-  activeSearch,
-  activeSort = 'latest',
+  filters,
+  onFilterChange,
 }: {
   currentUser: MemberSessionUser | null;
-  activeCategory?: HertzPostCategory | string | null;
-  activeSearch?: string | null;
-  activeSort?: 'latest' | 'trending';
+  filters: HertzFeedFilters;
+  onFilterChange: (patch: HertzFeedFilterPatch) => void;
 }) {
-  const category = resolveComposerCategory(activeCategory);
+  const category = resolveComposerCategory(filters.category);
   const [composeOpen, setComposeOpen] = useState(false);
 
   useEffect(() => {
@@ -362,12 +349,7 @@ export function HertzComposer({
         username={currentUser.username}
       />
       <div className={styles.body}>
-        <ComposerForm
-          category={category}
-          activeCategory={activeCategory}
-          activeSearch={activeSearch}
-          activeSort={activeSort}
-        />
+        <ComposerForm category={category} filters={filters} onFilterChange={onFilterChange} />
       </div>
     </section>
   );
@@ -419,9 +401,8 @@ export function HertzComposer({
               <div className={styles.sheetForm}>
                 <ComposerForm
                   category={category}
-                  activeCategory={activeCategory}
-                  activeSearch={activeSearch}
-                  activeSort={activeSort}
+                  filters={filters}
+                  onFilterChange={onFilterChange}
                   onPosted={() => setComposeOpen(false)}
                 />
               </div>

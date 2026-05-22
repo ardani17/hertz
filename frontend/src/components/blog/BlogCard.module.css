@@ -71,7 +71,13 @@
 }
 
 .titleLink {
+  background: transparent;
+  border: 0;
   color: inherit;
+  cursor: pointer;
+  font: inherit;
+  padding: 0;
+  text-align: left;
   text-decoration: none;
 }
 

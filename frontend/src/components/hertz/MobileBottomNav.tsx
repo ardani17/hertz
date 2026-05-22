@@ -1,5 +1,6 @@
 'use client';
 
+import Link from 'next/link';
 import { useEffect, useState } from 'react';
 import { Bell, Compass, FileText, Home, MessageCircle, SlidersVertical, UserCircle } from 'lucide-react';
 import type { MemberSessionUser } from '@shared/types';
@@ -64,12 +65,13 @@ export function MobileBottomNav({
   return (
     <nav className={styles.mobileNav} aria-label="Mobile navigation">
       {visibleItems.map(({ key, href, label, Icon, ...item }) => (
-        <a
+        <Link
           key={key}
           href={href}
           className={active === key ? styles.active : undefined}
           aria-current={active === key ? 'page' : undefined}
           aria-label={'ariaLabel' in item ? item.ariaLabel : label}
+          prefetch={key === 'tools' ? false : undefined}
         >
           <Icon />
           <span>{label}</span>
@@ -83,7 +85,7 @@ export function MobileBottomNav({
               {getDmBadgeLabel(unreadDmCount)}
             </em>
           ) : null}
-        </a>
+        </Link>
       ))}
     </nav>
   );

@@ -2,7 +2,7 @@
 
 import { useState, useEffect, useCallback } from 'react';
 import Link from 'next/link';
-import { DataTable, StatusBadge } from '@/components/admin';
+import { DataTable, StatusBadge, AdminPageHeader, AdminRowActions } from '@/components/admin';
 import type { Column } from '@/components/admin';
 import styles from './comments.module.css';
 
@@ -154,29 +154,22 @@ export default function AdminCommentsPage() {
       key: 'actions',
       label: 'Aksi',
       render: (row) => (
-        <div className={styles.actions}>
-          <button
-            className={`btn btn-secondary ${styles.actionBtn}`}
-            onClick={() => toggleStatus(row)}
-            title={row.status === 'visible' ? 'Sembunyikan' : 'Tampilkan'}
-          >
-            {row.status === 'visible' ? '👁️' : '🔓'}
-          </button>
-          <button
-            className={`btn btn-secondary ${styles.actionBtn} ${styles.actionBtnDanger}`}
-            onClick={() => deleteComment(row)}
-            title="Hapus"
-          >
-            🗑️
-          </button>
-        </div>
+        <AdminRowActions
+          onToggleVisibility={() => toggleStatus(row)}
+          isPublished={row.status === 'visible'}
+          onDelete={() => deleteComment(row)}
+        />
       ),
     },
   ];
 
   return (
     <div>
-      <h2>Moderasi Komentar</h2>
+      <AdminPageHeader
+        kicker="Moderasi"
+        title="Moderasi Komentar"
+        description="Tinjau, sembunyikan, atau hapus komentar artikel komunitas."
+      />
       <DataTable
         columns={columns}
         data={comments}

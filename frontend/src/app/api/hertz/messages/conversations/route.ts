@@ -23,8 +23,14 @@ export async function POST(request: NextRequest) {
     const user = await getCurrentMember();
     if (!user) return apiError('AUTH_REQUIRED', 'Login member diperlukan', 401);
     const body = await request.json();
-    const conversation = await service.createDirect(user, String(body.recipientId || ''));
-    return apiSuccess({ conversation }, 201);
+    const result = await service.createDirectResolved(user, {
+      recipientId: body.recipientId ? String(body.recipientId) : undefined,
+      recipientUsername: body.recipientUsername ? String(body.recipientUsername) : undefined,
+    });
+    return apiSuccess(
+      { conversation: result.conversation, existing: result.existing },
+      result.existing ? 200 : 201,
+    );
   } catch (error) {
     return apiErrorFromUnknown(error);
   }

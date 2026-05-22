@@ -1,0 +1,48 @@
+.header {
+  margin-bottom: 1.25rem;
+}
+
+.kicker {
+  color: #13d27b;
+  display: block;
+  font-size: 0.68rem;
+  font-weight: 850;
+  letter-spacing: 0.08em;
+  margin-bottom: 0.35rem;
+  text-transform: uppercase;
+}
+
+.row {
+  align-items: flex-start;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+  justify-content: space-between;
+}
+
+.titleBlock {
+  min-width: 0;
+}
+
+.title {
+  color: #f3fff8;
+  font-size: 1.25rem;
+  font-weight: 800;
+  line-height: 1.25;
+  margin: 0;
+}
+
+.description {
+  color: #8ea897;
+  font-size: 0.84rem;
+  line-height: 1.45;
+  margin: 0.3rem 0 0;
+  max-width: 56ch;
+}
+
+.actions {
+  align-items: center;
+  display: flex;
+  flex-shrink: 0;
+  gap: 0.5rem;
+}

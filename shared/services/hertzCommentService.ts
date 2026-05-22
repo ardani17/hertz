@@ -1,5 +1,6 @@
 import { withTransaction } from '../db';
 import { HertzCommentRepository, type HertzCommentRow } from '../repositories/hertzCommentRepository';
+import { HertzPostStatsRepository } from '../repositories/hertzPostStatsRepository';
 import { HertzPostRepository } from '../repositories/hertzPostRepository';
 import { ActivityLogService } from './activityLog';
 import { HertzForbiddenError, HertzNotFoundError, HertzValidationError } from './hertzPostService';
@@ -22,6 +23,7 @@ export class HertzCommentService {
   private readonly logs = new ActivityLogService();
   private readonly push = new PushNotificationService();
   private readonly inAppNotifications = new HertzInAppNotificationService();
+  private readonly postStats = new HertzPostStatsRepository();
 
   async create(postId: string, user: MemberSessionUser | null, content: unknown, parentCommentId: unknown = null): Promise<HertzCommentRow> {
     if (!user) throw new HertzForbiddenError('Login member diperlukan');
@@ -30,6 +32,7 @@ export class HertzCommentService {
     const resolvedParentCommentId = await this.resolveParentCommentId(resolvedPostId, parentCommentId);
     const comment = await withTransaction(async (client) => {
       const comment = await this.comments.create(resolvedPostId, user.id, cleanComment(content), resolvedParentCommentId, client);
+      await this.postStats.incr(resolvedPostId, 'comment_count', 1, {}, client);
       await this.logs.log({
         actor_id: user.id,
         actor_type: user.role === 'admin' ? 'admin' : 'member',
@@ -69,7 +72,12 @@ export class HertzCommentService {
     const comment = await this.comments.findById(commentId);
     if (!comment) throw new HertzNotFoundError('Komentar tidak ditemukan');
     if (comment.user_id !== user.id && user.role !== 'admin') throw new HertzForbiddenError();
-    await this.comments.softDelete(commentId);
+    await withTransaction(async (client) => {
+      await this.comments.softDelete(commentId, client);
+      if (comment.status === 'visible' && !comment.deleted_at) {
+        await this.postStats.incr(comment.post_id, 'comment_count', -1, {}, client);
+      }
+    });
   }
 
   async hide(commentId: string, admin: MemberSessionUser): Promise<void> {

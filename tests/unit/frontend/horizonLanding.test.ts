@@ -13,7 +13,7 @@ describe('Horizon premium forex landing contract', () => {
     const page = read('frontend/src/app/page.tsx');
     const landingData = read('frontend/src/features/marketing/lib/landing-data.ts');
 
-    expect(page).toContain("export const dynamic = 'force-dynamic'");
+    expect(page).toContain('export const revalidate = 300');
     expect(page).toContain('getLandingMarketGroups');
     expect(page).toContain('HorizonLandingView');
     expect(landingData).toContain('getMarketRailGroups');

@@ -1,6 +1,6 @@
 'use client';
 
-import { LogViewer } from '@/components/admin/LogViewer';
+import { LogViewer, AdminPageHeader } from '@/components/admin';
 
 /**
  * Admin Activity Logs Page
@@ -14,7 +14,11 @@ import { LogViewer } from '@/components/admin/LogViewer';
 export default function AdminLogsPage() {
   return (
     <div>
-      <h2>Activity Logs</h2>
+      <AdminPageHeader
+        kicker="Sistem"
+        title="Activity Logs"
+        description="Audit trail aktivitas admin, member, dan sistem."
+      />
       <LogViewer />
     </div>
   );

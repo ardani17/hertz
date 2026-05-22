@@ -1,4 +1,6 @@
 .main {
+  background: var(--horizon-bg-base);
+  color: var(--horizon-text);
   padding: var(--space-6) var(--space-4);
 }
 
@@ -26,6 +28,8 @@
 
 @media (max-width: 768px) {
   .main {
+  background: var(--horizon-bg-base);
+  color: var(--horizon-text);
     padding: var(--space-4) var(--space-3);
   }
 

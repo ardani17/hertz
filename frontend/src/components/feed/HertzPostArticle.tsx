@@ -1,8 +1,7 @@
 'use client';
 
-import { useRouter } from 'next/navigation';
 import type { ReactNode, MouseEvent, KeyboardEvent } from 'react';
-import { shouldOpenDesktopPostModal } from '@/lib/hertzPostDetailUi';
+import { useHertzPostNavigation } from './HertzPostContext';
 
 function isInteractiveElement(target: EventTarget | null) {
   return (
@@ -15,24 +14,25 @@ export function HertzPostArticle({
   href,
   className,
   children,
-  onDesktopOpen,
+  onOpenPost,
 }: {
   href: string;
   className: string;
   children: ReactNode;
-  onDesktopOpen?: () => void;
+  onOpenPost?: () => void;
 }) {
-  const router = useRouter();
+  const { openPost } = useHertzPostNavigation();
 
   function navigate() {
-    if (onDesktopOpen && shouldOpenDesktopPostModal(window.innerWidth)) {
-      onDesktopOpen();
+    if (onOpenPost) {
+      onOpenPost();
       return;
     }
-    router.push(href);
+    const shortId = href.split('/').pop();
+    if (shortId) openPost(shortId);
   }
 
-  function openPost(event: MouseEvent<HTMLElement>) {
+  function handleActivate(event: MouseEvent<HTMLElement>) {
     if (event.defaultPrevented || isInteractiveElement(event.target)) return;
     const selection = window.getSelection()?.toString().trim();
     if (selection) return;
@@ -55,7 +55,7 @@ export function HertzPostArticle({
       className={className}
       role="link"
       tabIndex={0}
-      onClick={openPost}
+      onClick={handleActivate}
       onKeyDown={onKeyDown}
       aria-label="Buka detail postingan"
     >

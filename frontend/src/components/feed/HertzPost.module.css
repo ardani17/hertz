@@ -1,3 +1,24 @@
+.skeletonHeader,
+.skeletonBody,
+.skeletonActions {
+  background: rgba(255, 255, 255, 0.08);
+  border-radius: 8px;
+  grid-column: 1 / -1;
+}
+
+.skeletonHeader {
+  height: 2rem;
+}
+
+.skeletonBody {
+  height: 4.5rem;
+}
+
+.skeletonActions {
+  height: 1.5rem;
+  width: 60%;
+}
+
 .post {
   position: relative;
   display: grid;
@@ -31,9 +52,9 @@
   width: 40px;
   height: 40px;
   border-radius: 50%;
-  border: 1.5px solid #00e38a;
+  border: 1.5px solid var(--horizon-accent-strong, #00e38a);
   background: rgba(16, 185, 129, 0.1);
-  color: #00e38a;
+  color: var(--horizon-accent-strong, #00e38a);
   box-shadow: none;
 }
 .spineNode svg {
@@ -193,7 +214,7 @@
   z-index: 2;
   display: inline-block;
   margin-top: 0.3rem;
-  color: #34d399;
+  color: var(--horizon-accent);
   font-weight: 700;
   text-decoration: none;
 }
@@ -243,9 +264,9 @@
   width: 36px;
   height: 36px;
   border-radius: 50%;
-  border: 1.5px solid #00e38a;
+  border: 1.5px solid var(--horizon-accent-strong, #00e38a);
   background: #063b25;
-  color: #00e38a;
+  color: var(--horizon-accent-strong, #00e38a);
   box-shadow: 0 0 0 4px #000, 0 0 18px rgba(0, 227, 138, 0.22);
 }
 .noteSpineNode svg {

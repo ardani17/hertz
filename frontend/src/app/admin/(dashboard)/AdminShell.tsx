@@ -1,6 +1,7 @@
 'use client';
 
 import { useState } from 'react';
+import { AdminSpaContent } from '@/components/spa/AdminSpaContent';
 import { AdminSidebar } from './AdminSidebar';
 import { AdminHeader } from './AdminHeader';
 import styles from './layout.module.css';
@@ -31,7 +32,7 @@ export function AdminShell({ username, children }: AdminShellProps) {
         />
 
         <main className={styles.content} id="admin-content">
-          {children}
+          <AdminSpaContent>{children}</AdminSpaContent>
         </main>
       </div>
     </div>

@@ -11,8 +11,12 @@ export default defineConfig({
     },
   },
   test: {
-    include: ['tests/unit/**/*.test.ts', 'tests/integration/**/*.test.ts'],
-    exclude: ['node_modules', 'dist', '.next'],
+    include: [
+      'tests/unit/**/*.test.ts',
+      'tests/integration/**/*.test.ts',
+      'frontend/src/__tests__/**/*.{test,spec}.{ts,tsx}',
+    ],
+    exclude: ['node_modules', 'dist', '.next', 'frontend/.next'],
     testTimeout: 10000,
   },
 });

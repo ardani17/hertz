@@ -1,6 +1,6 @@
 'use client';
 
-import { CreditSettings } from '@/components/admin/CreditSettings';
+import { CreditSettings, AdminPageHeader } from '@/components/admin';
 
 /**
  * Admin Credit Settings Page
@@ -13,7 +13,11 @@ import { CreditSettings } from '@/components/admin/CreditSettings';
 export default function AdminCreditsPage() {
   return (
     <div>
-      <h2>Pengaturan Credit</h2>
+      <AdminPageHeader
+        kicker="Ekonomi"
+        title="Pengaturan Credit"
+        description="Atur biaya kredit fitur dan riwayat transaksi member."
+      />
       <CreditSettings />
     </div>
   );

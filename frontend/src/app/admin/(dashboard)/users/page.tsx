@@ -3,7 +3,7 @@
 import { useState, useEffect, useCallback } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
-import { DataTable } from '@/components/admin';
+import { DataTable, AdminPageHeader, AdminRowActions } from '@/components/admin';
 import type { Column } from '@/components/admin';
 import styles from './users.module.css';
 
@@ -120,22 +120,21 @@ export default function AdminUsersPage() {
       key: 'actions',
       label: 'Aksi',
       render: (row) => (
-        <div className={styles.actions}>
-          <button
-            className={`btn btn-secondary ${styles.actionBtn}`}
-            onClick={() => router.push(`/admin/users/${row.id}`)}
-            title="Lihat Profil"
-          >
-            👤
-          </button>
-        </div>
+        <AdminRowActions
+          onView={() => router.push(`/admin/users/${row.id}`)}
+          viewTitle="Lihat Profil"
+        />
       ),
     },
   ];
 
   return (
     <div>
-      <h2>Manajemen Pengguna</h2>
+      <AdminPageHeader
+        kicker="Pengguna"
+        title="Manajemen Pengguna"
+        description="Daftar member, saldo kredit, dan profil pengguna."
+      />
       <DataTable
         columns={columns}
         data={users}

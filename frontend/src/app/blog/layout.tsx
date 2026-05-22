@@ -1,4 +1,5 @@
 import type { ReactNode } from 'react';
+import { BlogShell } from '@/components/blog/BlogShell';
 import { HertzLayout } from '@/components/layout/HertzLayout';
 import { getCurrentMember } from '@/lib/memberAuth';
 
@@ -12,7 +13,7 @@ export default async function BlogLayout({ children }: { children: ReactNode }) 
       description="Artikel blog Horizon hasil import WordPress."
       currentUser={currentUser}
     >
-      {children}
+      <BlogShell currentUser={currentUser}>{children}</BlogShell>
     </HertzLayout>
   );
 }

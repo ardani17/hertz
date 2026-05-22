@@ -1,54 +1,36 @@
-import type { MemberSessionUser, HertzPost, HertzPostCategory } from '@shared/types';
+import type { MemberSessionUser, HertzPostCategory } from '@shared/types';
 import { HertzLayout } from '@/components/layout/HertzLayout';
-import { HertzComposer } from './HertzComposer';
-import { HertzHeader } from './HertzHeader';
-import { HertzPostCard } from './HertzPost';
-import { getHertzFeedEmptyState, getHertzFeedErrorState } from '@/lib/hertzFeedUi';
-import styles from './HertzFeedView.module.css';
+import { SectionShell } from '@/components/spa/SectionShell';
+import { HertzFeedClient } from './HertzFeedClient';
+import { HertzFeedShell } from './HertzFeedShell';
 
 export interface HertzFeedViewProps {
-  posts: HertzPost[];
   currentUser: MemberSessionUser | null;
   activeCategory?: HertzPostCategory | string | null;
   activeSearch?: string | null;
   activeSort?: 'latest' | 'trending';
-  errorMessage?: string | null;
+  initialPostShortId?: string | null;
 }
 
 export function HertzFeedView({
-  posts,
   currentUser,
   activeCategory,
   activeSearch,
   activeSort = 'latest',
-  errorMessage,
+  initialPostShortId = null,
 }: HertzFeedViewProps) {
-  const stateCopy = errorMessage
-    ? getHertzFeedErrorState(errorMessage)
-    : getHertzFeedEmptyState({ activeCategory, activeSearch });
-
   return (
     <HertzLayout variant="feed" active="home" currentUser={currentUser}>
-      <HertzHeader activeCategory={activeCategory} activeSearch={activeSearch} activeSort={activeSort} />
-      <HertzComposer
-        currentUser={currentUser}
-        activeCategory={activeCategory}
-        activeSearch={activeSearch}
-        activeSort={activeSort}
-      />
-      <div className={styles.feed}>
-        {posts.length > 0 ? (
-          posts.map((post) => <HertzPostCard key={post.id} post={post} currentUser={currentUser} />)
-        ) : (
-          <div
-            className={errorMessage ? `${styles.empty} ${styles.error}` : styles.empty}
-            role={errorMessage ? 'alert' : 'status'}
-          >
-            <h2>{stateCopy.title}</h2>
-            <p>{stateCopy.body}</p>
-          </div>
-        )}
-      </div>
+      <SectionShell section="hertz">
+        <HertzFeedShell currentUser={currentUser} initialPostShortId={initialPostShortId}>
+          <HertzFeedClient
+            currentUser={currentUser}
+            activeCategory={activeCategory}
+            activeSearch={activeSearch}
+            activeSort={activeSort}
+          />
+        </HertzFeedShell>
+      </SectionShell>
     </HertzLayout>
   );
 }

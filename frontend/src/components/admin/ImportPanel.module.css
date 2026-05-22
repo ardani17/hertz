@@ -39,7 +39,7 @@
 }
 
 .importBtn:hover:not(:disabled) {
-  background-color: #059669;
+  background-color: var(--horizon-success-muted);
 }
 
 .importBtn:disabled {
@@ -120,7 +120,7 @@
 }
 
 .confirmBtn:hover {
-  background-color: #059669;
+  background-color: var(--horizon-success-muted);
 }
 
 /* Progress section */

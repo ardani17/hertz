@@ -3,7 +3,7 @@
 import { useState, useEffect, useCallback } from 'react';
 import Link from 'next/link';
 import { useParams, useRouter } from 'next/navigation';
-import { UserProfile } from '@/components/admin/UserProfile';
+import { UserProfile, AdminPageHeader } from '@/components/admin';
 import styles from '../users.module.css';
 
 interface UserData {
@@ -113,11 +113,10 @@ export default function AdminUserDetailPage() {
   if (loading) {
     return (
       <div>
-        <div className={styles.pageHeader}>
-          <Link href="/admin/users" className={styles.backLink}>
-            ← Kembali ke Daftar Pengguna
-          </Link>
-        </div>
+        <Link href="/admin/users" className={styles.backLink}>
+          ← Kembali ke Daftar Pengguna
+        </Link>
+        <AdminPageHeader kicker="Pengguna" title="Profil Pengguna" />
         <p>Memuat profil pengguna...</p>
       </div>
     );
@@ -126,11 +125,10 @@ export default function AdminUserDetailPage() {
   if (error || !user || !stats) {
     return (
       <div>
-        <div className={styles.pageHeader}>
-          <Link href="/admin/users" className={styles.backLink}>
-            ← Kembali ke Daftar Pengguna
-          </Link>
-        </div>
+        <Link href="/admin/users" className={styles.backLink}>
+          ← Kembali ke Daftar Pengguna
+        </Link>
+        <AdminPageHeader kicker="Pengguna" title="Profil Pengguna" />
         <div>
           <p>{error || 'Pengguna tidak ditemukan.'}</p>
           <button className="btn btn-secondary" onClick={() => router.push('/admin/users')}>
@@ -143,12 +141,14 @@ export default function AdminUserDetailPage() {
 
   return (
     <div>
-      <div className={styles.pageHeader}>
-        <Link href="/admin/users" className={styles.backLink}>
-          ← Kembali ke Daftar Pengguna
-        </Link>
-      </div>
-      <h2>Profil Pengguna</h2>
+      <Link href="/admin/users" className={styles.backLink}>
+        ← Kembali ke Daftar Pengguna
+      </Link>
+      <AdminPageHeader
+        kicker="Pengguna"
+        title="Profil Pengguna"
+        description={user.username ? `@${user.username}` : 'Detail member dan riwayat aktivitas.'}
+      />
       <UserProfile
         user={user}
         stats={stats}

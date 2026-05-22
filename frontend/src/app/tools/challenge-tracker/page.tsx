@@ -1,10 +1,15 @@
 import type { Metadata } from 'next';
-import { ChallengeTrackerToolPage } from '@/components/tools/ChallengeTrackerToolPage';
+import dynamic from 'next/dynamic';
 import { getCurrentMember } from '@/lib/memberAuth';
+
+const ChallengeTrackerToolPage = dynamic(
+  () => import('@/components/tools/ChallengeTrackerToolPage').then((mod) => mod.ChallengeTrackerToolPage),
+  { loading: () => <p role="status">Memuat challenge tracker…</p> },
+);
 
 export const metadata: Metadata = {
   title: 'Challenge Tracker',
-  description: 'Pantau target profit, drawdown, rules, risk harian, dan jurnal trading challenge.',
+  description: 'Lacak progres challenge trading Anda.',
 };
 
 export default async function ChallengeTrackerPage() {

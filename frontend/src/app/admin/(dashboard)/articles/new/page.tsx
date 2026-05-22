@@ -5,6 +5,7 @@ import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import dynamic from 'next/dynamic';
 import type { ArticleFormData } from '@/components/admin';
+import { AdminPageHeader } from '@/components/admin';
 
 /** Dynamic import for ArticleEditor — heavy rich text editor loaded on demand */
 const ArticleEditor = dynamic(
@@ -64,12 +65,14 @@ export default function AdminNewArticlePage() {
 
   return (
     <div>
-      <div className={styles.pageHeader}>
-        <Link href="/admin/articles" className={styles.backLink}>
-          ← Kembali
-        </Link>
-        <h2>Artikel Baru</h2>
-      </div>
+      <Link href="/admin/articles" className={styles.backLink}>
+        ← Kembali ke Artikel
+      </Link>
+      <AdminPageHeader
+        kicker="Konten"
+        title="Artikel Baru"
+        description="Buat artikel komunitas baru dari dashboard admin."
+      />
       <div className={styles.editorCard}>
         <ArticleEditor
           onSubmit={handleSubmit}

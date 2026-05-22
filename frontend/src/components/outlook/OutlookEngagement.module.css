@@ -40,7 +40,7 @@
 .actions button:hover,
 .actions a:hover,
 .actions .active {
-  color: #34d399;
+  color: var(--horizon-accent);
 }
 
 .actions .active svg {
@@ -105,7 +105,7 @@
 }
 
 .shareHeader button:hover {
-  color: #34d399;
+  color: var(--horizon-accent);
 }
 
 .shareTargets {

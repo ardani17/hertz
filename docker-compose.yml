@@ -14,15 +14,34 @@ services:
       - ./db/init.sh:/docker-entrypoint-initdb.d/init.sh:ro
       - ./db/migrations:/docker-entrypoint-initdb.d/migrations:ro
     networks:
-      - horizon-net
+      horizon-net:
+        ipv4_address: 172.20.0.2
     expose:
       - "${POSTGRES_PORT:-5432}"
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER} -d ${POSTGRES_DB}"]
       interval: 10s
       timeout: 5s
       retries: 5
       start_period: 30s
+
+  redis:
+    image: redis:7-alpine
+    container_name: horizon-redis
+    restart: unless-stopped
+    command: ["redis-server", "--save", "", "--appendonly", "no"]
+    networks:
+      horizon-net:
+        ipv4_address: 172.20.0.5
+    expose:
+      - "6379"
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 3s
+      retries: 5
 
   bot:
     build:
@@ -32,6 +51,8 @@ services:
         BOT_PORT: ${BOT_PORT:-4000}
     container_name: horizon-bot
     restart: unless-stopped
+    extra_hosts:
+      - "db:172.20.0.2"
     environment:
       NODE_ENV: ${NODE_ENV:-production}
       BOT_PORT: ${BOT_PORT:-4000}
@@ -70,6 +91,9 @@ services:
         NEXT_PUBLIC_SITE_URL: "https://${DOMAIN}"
     container_name: horizon-frontend
     restart: unless-stopped
+    extra_hosts:
+      - "db:172.20.0.2"
+      - "host.docker.internal:host-gateway"
     environment:
       NODE_ENV: ${NODE_ENV:-production}
       PORT: ${FRONTEND_PORT:-3000}
@@ -99,8 +123,12 @@ services:
       CHALLENGE_AI_API_KEY: ${CHALLENGE_AI_API_KEY:-}
       CHALLENGE_AI_MODEL: ${CHALLENGE_AI_MODEL:-glm-5-turbo}
       CHALLENGE_AI_TIMEOUT_MS: ${CHALLENGE_AI_TIMEOUT_MS:-45000}
+      # Pakai service `redis` di horizon-net; jangan host.docker.internal (aaPanel Redis hanya 127.0.0.1).
+      REDIS_URL: redis://redis:6379
     depends_on:
       db:
+        condition: service_healthy
+      redis:
         condition: service_healthy
     networks:
       - horizon-net
@@ -117,3 +145,6 @@ networks:
   horizon-net:
     name: horizon-net
     driver: bridge
+    ipam:
+      config:
+        - subnet: 172.20.0.0/16

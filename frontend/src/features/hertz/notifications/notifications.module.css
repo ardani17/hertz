@@ -1,6 +1,6 @@
 .panel {
-  background: rgba(2, 12, 7, 0.78);
-  border: 1px solid rgba(75, 118, 92, 0.28);
+  background: var(--horizon-surface);
+  border: 1px solid var(--horizon-border);
   border-radius: 12px;
   overflow: hidden;
 }

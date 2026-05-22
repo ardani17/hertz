@@ -2,10 +2,12 @@
 
 import { useState, type FormEvent } from 'react';
 import { useRouter } from 'next/navigation';
-import type { MemberSessionUser, HertzPostDetail } from '@shared/types';
+import type { MemberSessionUser, HertzPostDetail, HertzComment } from '@shared/types';
 import { CommentList } from '@/features/hertz/comments/CommentList';
 import { useToast } from '@/components/ui/Toast';
 import { refreshPreserveScroll } from '@/lib/hertzRefresh';
+import { mergeOptimisticList } from '@/lib/swr/optimistic';
+import { useCommentList, type CommentListData } from '@/lib/swr/hooks/useComments';
 import { CommentIcon } from './HertzIcons';
 import { HertzTelegramLogin } from './HertzTelegramLogin';
 import styles from './HertzDetailInteractions.module.css';
@@ -28,6 +30,36 @@ export function getHertzCommentComposerState(user: Pick<MemberSessionUser, 'id'>
   };
 }
 
+function buildOptimisticComment(params: {
+  id: string;
+  postId: string;
+  user: MemberSessionUser;
+  content: string;
+  parentCommentId?: string | null;
+}): HertzComment {
+  return {
+    id: params.id,
+    postId: params.postId,
+    userId: params.user.id,
+    parentCommentId: params.parentCommentId ?? null,
+    replies: [],
+    author: {
+      id: params.user.id,
+      name: params.user.displayName ?? params.user.username ?? 'Member',
+      username: params.user.username,
+      badge: params.user.role === 'admin' ? 'admin' : 'verified_member',
+      avatarUrl: params.user.avatarUrl ?? null,
+    },
+    content: params.content,
+    status: 'visible',
+    createdAt: new Date().toISOString(),
+    updatedAt: new Date().toISOString(),
+    editedAt: null,
+    canEdit: true,
+    canDelete: true,
+  };
+}
+
 export function HertzDetailInteractions({
   post,
   currentUser,
@@ -37,6 +69,8 @@ export function HertzDetailInteractions({
 }) {
   const router = useRouter();
   const { showToast } = useToast();
+  const { data, isLoading, mutate } = useCommentList(post.shortId);
+  const comments = data?.comments ?? post.comments;
   const [comment, setComment] = useState('');
   const [replyDraft, setReplyDraft] = useState('');
   const [replyTargetId, setReplyTargetId] = useState<string | null>(null);
@@ -51,34 +85,53 @@ export function HertzDetailInteractions({
     return true;
   }
 
-  function afterMutation(message: string) {
-    showToast(message, 'success');
-    refreshPreserveScroll(router);
+  async function mutateComments(
+    updater: (current: CommentListData | undefined) => CommentListData,
+    revalidate = true,
+  ) {
+    await mutate(updater, { revalidate });
   }
 
   async function submitComment(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
-    if (!requireLogin()) return;
+    if (!requireLogin() || !currentUser) return;
     const content = comment.trim();
     if (!content) {
       showToast('Komentar tidak boleh kosong.', 'warning');
       return;
     }
+    const optimisticId = crypto.randomUUID();
+    const snapshot = data ?? { comments };
     try {
       setPending('comment');
+      const optimistic = buildOptimisticComment({
+        id: optimisticId,
+        postId: post.id,
+        user: currentUser,
+        content,
+      });
+      await mutateComments(
+        (current) => ({
+          comments: mergeOptimisticList(current?.comments ?? comments, optimistic, { optimisticId }),
+        }),
+        false,
+      );
       const response = await fetch(`/api/hertz/posts/${post.shortId}/comments`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ content }),
+        body: JSON.stringify({ content, client_id: optimisticId }),
       });
       if (!response.ok) {
-        const data = await response.json().catch(() => null);
-        showToast(data?.error?.message ?? 'Komentar gagal dikirim.', 'error');
+        const payload = await response.json().catch(() => null);
+        await mutate(snapshot, { revalidate: false });
+        showToast(payload?.error?.message ?? 'Komentar gagal dikirim.', 'error');
         return;
       }
       setComment('');
-      afterMutation('Komentar terkirim.');
+      showToast('Komentar terkirim.', 'success');
+      await mutate();
     } catch {
+      await mutate(snapshot, { revalidate: false });
       showToast('Komentar gagal dikirim.', 'error');
     } finally {
       setPending(null);
@@ -86,28 +139,46 @@ export function HertzDetailInteractions({
   }
 
   async function submitReply(parentCommentId: string) {
-    if (!requireLogin()) return;
+    if (!requireLogin() || !currentUser) return;
     const content = replyDraft.trim();
     if (!content) {
       showToast('Balasan tidak boleh kosong.', 'warning');
       return;
     }
+    const optimisticId = crypto.randomUUID();
+    const snapshot = data ?? { comments };
     try {
       setPending(`reply-${parentCommentId}`);
+      const optimistic = buildOptimisticComment({
+        id: optimisticId,
+        postId: post.id,
+        user: currentUser,
+        content,
+        parentCommentId,
+      });
+      await mutateComments(
+        (current) => ({
+          comments: mergeOptimisticList(current?.comments ?? comments, optimistic, { optimisticId }),
+        }),
+        false,
+      );
       const response = await fetch(`/api/hertz/posts/${post.shortId}/comments`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ content, parentCommentId }),
+        body: JSON.stringify({ content, parentCommentId, client_id: optimisticId }),
       });
       if (!response.ok) {
-        const data = await response.json().catch(() => null);
-        showToast(data?.error?.message ?? 'Balasan gagal dikirim.', 'error');
+        const payload = await response.json().catch(() => null);
+        await mutate(snapshot, { revalidate: false });
+        showToast(payload?.error?.message ?? 'Balasan gagal dikirim.', 'error');
         return;
       }
       setReplyDraft('');
       setReplyTargetId(null);
-      afterMutation('Balasan terkirim.');
+      showToast('Balasan terkirim.', 'success');
+      await mutate();
     } catch {
+      await mutate(snapshot, { revalidate: false });
       showToast('Balasan gagal dikirim.', 'error');
     } finally {
       setPending(null);
@@ -118,11 +189,13 @@ export function HertzDetailInteractions({
     if (!requireLogin()) return;
     const response = await fetch(`/api/hertz/posts/comments/${commentId}`, { method: 'DELETE' });
     if (!response.ok) {
-      const data = await response.json().catch(() => null);
-      showToast(data?.error?.message ?? 'Komentar gagal dihapus.', 'error');
+      const payload = await response.json().catch(() => null);
+      showToast(payload?.error?.message ?? 'Komentar gagal dihapus.', 'error');
+      refreshPreserveScroll(router);
       return;
     }
-    afterMutation('Komentar dihapus.');
+    showToast('Komentar dihapus.', 'success');
+    await mutate();
   }
 
   async function editComment(commentId: string, content: string) {
@@ -138,11 +211,13 @@ export function HertzDetailInteractions({
       body: JSON.stringify({ content: cleaned }),
     });
     if (!response.ok) {
-      const data = await response.json().catch(() => null);
-      showToast(data?.error?.message ?? 'Komentar gagal diedit.', 'error');
+      const payload = await response.json().catch(() => null);
+      showToast(payload?.error?.message ?? 'Komentar gagal diedit.', 'error');
+      refreshPreserveScroll(router);
       return;
     }
-    afterMutation('Komentar diperbarui.');
+    showToast('Komentar diperbarui.', 'success');
+    await mutate();
   }
 
   return (
@@ -152,7 +227,7 @@ export function HertzDetailInteractions({
           <h2>
             <CommentIcon /> Komentar
           </h2>
-          <span>{post.comments.length}</span>
+          <span>{comments.length}</span>
         </div>
         {composerState.mode === 'guest' ? (
           <div className={styles.guestCta}>
@@ -180,8 +255,9 @@ export function HertzDetailInteractions({
           </form>
         )}
         <CommentList
-          comments={post.comments}
+          comments={comments}
           currentUser={currentUser}
+          isLoading={isLoading && !data}
           replyTargetId={replyTargetId}
           replyDraft={replyDraft}
           pending={pending}

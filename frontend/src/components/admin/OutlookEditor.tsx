@@ -140,7 +140,7 @@ export function OutlookEditor({
       }]);
 
       // Insert img tag placeholder at cursor
-      insertAtCursor(`\n<img src="${objectUrl}" alt="Outlook image" />\n`);
+      insertAtCursor(`\n<img src="${objectUrl}" alt="Outlook image" loading="lazy" decoding="async" width="640" height="360" />\n`);
     }
 
     setError('');
@@ -156,7 +156,7 @@ export function OutlookEditor({
       if (img) {
         // Remove the img tag from content
         setContentHtml((content) =>
-          content.replace(new RegExp(`<img[^>]*src="${img.objectUrl.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}"[^>]*/?>`, 'g'), '')
+          content.replace(new RegExp(`<${'img'}[^>]*src="${img.objectUrl.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}"[^>]*/?>`, 'g'), '')
         );
         URL.revokeObjectURL(img.objectUrl);
       }
@@ -522,7 +522,7 @@ export function OutlookEditor({
             {inlineImages.map((img) => (
               <div key={img.id} className={styles.imageItem}>
                 { }
-                <img src={img.objectUrl} alt="Inline" className={styles.imageThumb} />
+                <img src={img.objectUrl} alt="Inline" className={styles.imageThumb} loading="lazy" decoding="async" width={96} height={96} />
                 <span className={styles.imageName}>{img.file.name}</span>
                 <button
                   type="button"

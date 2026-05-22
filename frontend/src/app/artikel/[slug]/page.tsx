@@ -138,6 +138,9 @@ export default async function ArticleDetailPage({
                         src={m.file_url}
                         alt={article.title || 'Media artikel'}
                         loading="lazy"
+                        decoding="async"
+                        width={480}
+                        height={270}
                       />
                     )}
                   </div>

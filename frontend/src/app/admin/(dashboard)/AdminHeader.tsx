@@ -2,6 +2,7 @@
 
 import { usePathname, useRouter } from 'next/navigation';
 import { useState } from 'react';
+import { LogOut, Menu } from 'lucide-react';
 import { getAdminPageTitle } from './admin-routes';
 import styles from './layout.module.css';
 
@@ -10,9 +11,6 @@ interface AdminHeaderProps {
   onMenuToggle: () => void;
 }
 
-/**
- * Admin top bar with mobile menu toggle, admin user info, and logout button.
- */
 export function AdminHeader({ username, onMenuToggle }: AdminHeaderProps) {
   const router = useRouter();
   const pathname = usePathname();
@@ -28,7 +26,6 @@ export function AdminHeader({ username, onMenuToggle }: AdminHeaderProps) {
       router.push('/admin/login');
       router.refresh();
     } catch {
-      // Even on error, redirect to login
       router.push('/admin/login');
     }
   }
@@ -42,7 +39,7 @@ export function AdminHeader({ username, onMenuToggle }: AdminHeaderProps) {
           onClick={onMenuToggle}
           aria-label="Buka navigasi admin"
         >
-          Menu
+          <Menu size={18} />
         </button>
         <span className={styles.pageTitle}>{pageTitle}</span>
       </div>
@@ -58,6 +55,7 @@ export function AdminHeader({ username, onMenuToggle }: AdminHeaderProps) {
           onClick={handleLogout}
           disabled={loggingOut}
         >
+          <LogOut size={15} />
           {loggingOut ? 'Keluar...' : 'Keluar'}
         </button>
       </div>

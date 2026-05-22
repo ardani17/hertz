@@ -8,6 +8,7 @@ import styles from '@/components/feed/HertzDetailInteractions.module.css';
 type CommentListProps = {
   comments: HertzComment[];
   currentUser: MemberSessionUser | null;
+  isLoading?: boolean;
   replyTargetId: string | null;
   replyDraft: string;
   pending: string | null;
@@ -21,6 +22,7 @@ type CommentListProps = {
 export function CommentList({
   comments,
   currentUser,
+  isLoading = false,
   replyTargetId,
   replyDraft,
   pending,
@@ -30,6 +32,16 @@ export function CommentList({
   onDeleteComment,
   onEditComment,
 }: CommentListProps) {
+  if (isLoading && comments.length === 0) {
+    return (
+      <div className={styles.list} role="status" aria-label="Memuat komentar">
+        {Array.from({ length: 3 }).map((_, index) => (
+          <div key={index} className={styles.skeletonRow} />
+        ))}
+      </div>
+    );
+  }
+
   if (comments.length === 0) {
     return <p className={styles.empty}>Belum ada komentar.</p>;
   }

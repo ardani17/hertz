@@ -3,7 +3,7 @@
 import { useState, useEffect, useCallback } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
-import { DataTable, StatusBadge, ImportPanel } from '@/components/admin';
+import { DataTable, StatusBadge, ImportPanel, AdminPageHeader, AdminRowActions } from '@/components/admin';
 import type { Column } from '@/components/admin';
 import styles from './blog.module.css';
 
@@ -141,36 +141,23 @@ export default function AdminBlogPage() {
       key: 'actions',
       label: 'Aksi',
       render: (row) => (
-        <div className={styles.actions}>
-          <button
-            className={`btn btn-secondary ${styles.actionBtn}`}
-            onClick={() => router.push(`/admin/articles/${row.id}/edit`)}
-            title="Edit"
-          >
-            ✏️
-          </button>
-          <button
-            className={`btn btn-secondary ${styles.actionBtn}`}
-            onClick={() => toggleStatus(row)}
-            title={row.status === 'published' ? 'Sembunyikan' : 'Publikasikan'}
-          >
-            {row.status === 'published' ? '👁️' : '🔓'}
-          </button>
-          <button
-            className={`btn btn-secondary ${styles.actionBtn} ${styles.actionBtnDanger}`}
-            onClick={() => deleteArticle(row)}
-            title="Hapus"
-          >
-            🗑️
-          </button>
-        </div>
+        <AdminRowActions
+          onEdit={() => router.push(`/admin/articles/${row.id}/edit`)}
+          onToggleVisibility={() => toggleStatus(row)}
+          isPublished={row.status === 'published'}
+          onDelete={() => deleteArticle(row)}
+        />
       ),
     },
   ];
 
   return (
     <div>
-      <h2>Manajemen Blog</h2>
+      <AdminPageHeader
+        kicker="Blog"
+        title="Manajemen Blog"
+        description="Kelola artikel blog impor WordPress dan sinkronisasi konten."
+      />
       <ImportPanel onImportComplete={fetchArticles} />
       <DataTable
         columns={columns}

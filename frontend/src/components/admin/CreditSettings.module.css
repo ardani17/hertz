@@ -301,7 +301,7 @@
 .toastSuccess {
   background-color: var(--color-accent);
   color: #ffffff;
-  border: var(--border-width) solid #059669;
+  border: var(--border-width) solid var(--horizon-success-muted);
 }
 
 .toastError {

@@ -1,8 +1,12 @@
+'use client';
+
+import type { MouseEvent } from 'react';
 import Link from 'next/link';
 import styles from './OutlookCard.module.css';
 import { estimateReadTime, formatDate } from '@/components/article/ArticleMeta';
-import { ClickableArticle } from '@/components/article/ClickableArticle';
 import { buildOutlookCardModel, type OutlookMediaInput } from '@/lib/outlookContent';
+import { buildOutlookArticlePath } from '@/lib/outlookSpa';
+import { useOutlookArticleNavigation } from './OutlookArticleContext';
 import { OutlookSnapshot } from './OutlookSnapshot';
 
 export interface OutlookCardData {
@@ -29,17 +33,38 @@ const kindLabels = {
 
 /** Card component for mixed Outlook content: video, long read, and chart notes. */
 export function OutlookCard({ article }: OutlookCardProps) {
+  const { openArticle } = useOutlookArticleNavigation();
   const model = buildOutlookCardModel(article);
   const readTime = estimateReadTime(article.content_html);
-  const href = `/outlook/${article.slug}`;
+  const href = buildOutlookArticlePath(article.slug);
   const cardClassName = [
     styles.card,
     model.mediaPreview ? styles.withMedia : styles.textOnly,
     styles[model.kind],
   ].join(' ');
 
+  function handleOpen(event: MouseEvent<HTMLElement>) {
+    if (event.defaultPrevented) return;
+    const target = event.target;
+    if (target instanceof Element && target.closest('a[href]')) return;
+    event.preventDefault();
+    openArticle(article.slug);
+  }
+
   return (
-    <ClickableArticle className={cardClassName} href={href}>
+    <article
+      className={cardClassName}
+      role="link"
+      tabIndex={0}
+      onClick={handleOpen}
+      onKeyDown={(event) => {
+        if (event.key === 'Enter' || event.key === ' ') {
+          event.preventDefault();
+          openArticle(article.slug);
+        }
+      }}
+      aria-label={`Buka artikel Outlook: ${model.title}`}
+    >
       {model.mediaPreview ? (
         <div className={styles.mediaPreview}>
           {model.mediaPreview.type === 'image' ? (
@@ -48,6 +73,9 @@ export function OutlookCard({ article }: OutlookCardProps) {
               alt={model.title}
               className={styles.previewImage}
               loading="lazy"
+              decoding="async"
+              width={320}
+              height={180}
             />
           ) : model.mediaPreview.type === 'video' ? (
             <video className={styles.previewVideo} preload="metadata" muted playsInline>
@@ -69,7 +97,14 @@ export function OutlookCard({ article }: OutlookCardProps) {
         </div>
 
         <h3 className={styles.title}>
-          <Link href={href} className={styles.titleLink}>
+          <Link
+            href={href}
+            className={styles.titleLink}
+            onClick={(event) => {
+              event.preventDefault();
+              openArticle(article.slug);
+            }}
+          >
             {model.title}
           </Link>
         </h3>
@@ -85,6 +120,6 @@ export function OutlookCard({ article }: OutlookCardProps) {
           </span>
         </div>
       </div>
-    </ClickableArticle>
+    </article>
   );
 }

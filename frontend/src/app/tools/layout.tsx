@@ -1,4 +1,5 @@
 import type { ReactNode } from 'react';
+import { ToolsShell } from '@/components/tools/ToolsShell';
 import { HertzLayout } from '@/components/layout/HertzLayout';
 import { getCurrentMember } from '@/lib/memberAuth';
 
@@ -13,7 +14,7 @@ export default async function ToolsLayout({ children }: { children: ReactNode })
       description="Trading research utilities untuk membaca market dengan cepat."
       currentUser={currentUser}
     >
-      {children}
+      <ToolsShell>{children}</ToolsShell>
     </HertzLayout>
   );
 }

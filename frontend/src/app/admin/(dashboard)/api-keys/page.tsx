@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useEffect, useCallback } from 'react';
-import { DataTable } from '@/components/admin';
+import { DataTable, AdminPageHeader } from '@/components/admin';
 import type { Column } from '@/components/admin';
 import styles from './api-keys.module.css';
 
@@ -209,7 +209,11 @@ export default function AdminApiKeysPage() {
 
   return (
     <div>
-      <h2>Manajemen API Key</h2>
+      <AdminPageHeader
+        kicker="Integrasi"
+        title="Manajemen API Key"
+        description="Buat, revoke, dan kelola API key untuk integrasi eksternal."
+      />
 
       {/* Create new API key form */}
       <div className={styles.createForm}>

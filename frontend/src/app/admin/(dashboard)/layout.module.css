@@ -1,11 +1,12 @@
 /* ============================================
-   Admin Dashboard Layout — Modern Theme
+   Admin Dashboard Layout — Hertz-aligned theme
    ============================================ */
 
 .adminLayout {
   display: flex;
   min-height: 100vh;
-  background: #0f0f14;
+  background: var(--horizon-bg-base);
+  color: #e7f4ec;
 }
 
 /* --- Sidebar --- */
@@ -13,10 +14,10 @@
   position: fixed;
   top: 0;
   left: 0;
-  width: 260px;
+  width: 256px;
   height: 100vh;
-  background: rgba(2, 12, 7, 0.96);
-  border-right: 1px solid rgba(19, 210, 123, 0.22);
+  background: #0a0a0f;
+  border-right: 1px solid rgba(255, 255, 255, 0.05);
   display: flex;
   flex-direction: column;
   z-index: 50;
@@ -24,8 +25,8 @@
 }
 
 .sidebarHeader {
-  padding: var(--space-4) var(--space-4);
-  border-bottom: 1px solid rgba(19, 210, 123, 0.18);
+  padding: 1.25rem 1rem 1rem;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
 }
 
 .sidebarLogo {
@@ -45,13 +46,15 @@
 }
 
 .sidebarBadge {
-  font-size: var(--text-xs);
-  font-weight: 600;
-  color: var(--color-accent);
-  background-color: rgba(19, 210, 123, 0.12);
-  padding: 2px var(--space-2);
-  border-radius: var(--border-radius);
-  letter-spacing: 0;
+  font-size: 0.68rem;
+  font-weight: 850;
+  color: #13d27b;
+  background-color: rgba(19, 210, 123, 0.1);
+  border: 1px solid rgba(19, 210, 123, 0.42);
+  padding: 0.12rem 0.45rem;
+  border-radius: 999px;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
 }
 
 .sidebarNav {
@@ -64,13 +67,13 @@
 }
 
 .navSectionLabel {
-  padding: 0 var(--space-4);
-  margin-bottom: var(--space-2);
-  font-size: var(--text-xs);
-  font-weight: 700;
-  color: var(--color-text-muted);
+  padding: 0 1rem;
+  margin-bottom: 0.35rem;
+  font-size: 0.68rem;
+  font-weight: 850;
+  color: #769383;
   text-transform: uppercase;
-  letter-spacing: 0;
+  letter-spacing: 0.08em;
 }
 
 .navList {
@@ -86,72 +89,98 @@
 .navLink {
   display: flex;
   align-items: center;
-  gap: var(--space-3);
-  padding: var(--space-2) var(--space-4);
-  min-height: 44px;
-  color: var(--color-text-muted);
+  gap: 0.72rem;
+  padding: 0 1rem;
+  min-height: 48px;
+  color: #9ca3af;
   text-decoration: none;
-  font-size: var(--text-sm);
-  font-weight: 500;
-  transition: background-color 0.15s ease, color 0.15s ease;
-  border-left: 3px solid transparent;
+  font-size: 0.875rem;
+  font-weight: 600;
+  border-radius: 8px;
+  margin: 0 0.5rem;
+  position: relative;
+  transition: background 160ms ease, color 160ms ease;
 }
 
 .navLink:hover {
-  background-color: rgba(19, 210, 123, 0.08);
-  color: var(--color-text);
+  background-color: rgba(255, 255, 255, 0.05);
+  color: #f4fff8;
 }
 
 .navLink:focus-visible {
-  outline: 2px solid var(--color-accent);
+  outline: 2px solid #13d27b;
   outline-offset: -2px;
 }
 
 .navLinkActive {
-  background-color: rgba(19, 210, 123, 0.1);
-  color: var(--color-text);
-  border-left-color: var(--color-accent);
-  font-weight: 600;
+  background-color: rgba(16, 185, 129, 0.05);
+  color: #13d27b;
+  font-weight: 700;
+}
+
+.navLinkActive::before {
+  background: #13d27b;
+  border-radius: 0 999px 999px 0;
+  bottom: 8px;
+  content: "";
+  left: 0;
+  position: absolute;
+  top: 8px;
+  width: 4px;
 }
 
 .navIcon {
-  width: 18px;
-  height: 18px;
+  width: 24px;
+  height: 24px;
   flex-shrink: 0;
-  opacity: 0.7;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  color: #9db5a7;
 }
 
 .navLink:hover .navIcon,
 .navLinkActive .navIcon {
-  opacity: 1;
+  color: currentColor;
 }
 
 .sidebarFooter {
-  padding: var(--space-4);
-  border-top: 1px solid rgba(19, 210, 123, 0.18);
+  padding: 1rem;
+  border-top: 1px solid rgba(255, 255, 255, 0.05);
+  display: grid;
+  gap: 0.35rem;
 }
 
-.backToSite {
+.backToSite,
+.backToSiteSecondary {
   display: flex;
   align-items: center;
-  gap: var(--space-2);
-  color: var(--color-text-muted);
+  gap: 0.55rem;
+  color: #8fa899;
   text-decoration: none;
-  font-size: var(--text-sm);
-  font-weight: 500;
-  min-height: 44px;
-  padding: var(--space-2) 0;
-  transition: color 0.15s ease;
+  font-size: 0.84rem;
+  font-weight: 600;
+  min-height: 40px;
+  padding: 0.35rem 0.5rem;
+  border-radius: 8px;
+  transition: background 160ms ease, color 160ms ease;
 }
 
-.backToSite:hover {
-  color: var(--color-text);
+.backToSite:hover,
+.backToSiteSecondary:hover {
+  background: rgba(255, 255, 255, 0.05);
+  color: #f3fff8;
+}
+
+.backToSiteSecondary {
+  font-size: 0.78rem;
+  color: #769383;
 }
 
 /* --- Main Content Area --- */
 .mainArea {
   flex: 1;
-  margin-left: 260px;
+  margin-left: 256px;
   display: flex;
   flex-direction: column;
   min-height: 100vh;
@@ -166,9 +195,10 @@
   align-items: center;
   justify-content: space-between;
   height: var(--header-height);
-  padding: 0 var(--space-6);
-  background: rgba(2, 12, 7, 0.94);
-  border-bottom: 1px solid rgba(19, 210, 123, 0.18);
+  padding: 0 1.5rem;
+  background: rgba(10, 10, 15, 0.92);
+  backdrop-filter: blur(8px);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
 }
 
 .topBarLeft {
@@ -197,10 +227,10 @@
 }
 
 .pageTitle {
-  font-size: var(--text-sm);
-  font-weight: 600;
-  color: var(--color-text-muted);
-  letter-spacing: 0;
+  font-size: 0.84rem;
+  font-weight: 700;
+  color: #8ea897;
+  letter-spacing: 0.02em;
 }
 
 .topBarRight {
@@ -222,35 +252,36 @@
 }
 
 .adminRole {
-  font-size: var(--text-xs);
-  color: var(--color-accent);
-  font-weight: 600;
-  background-color: rgba(19, 210, 123, 0.12);
-  padding: 2px var(--space-2);
-  border-radius: var(--border-radius);
+  font-size: 0.68rem;
+  color: #13d27b;
+  font-weight: 850;
+  background-color: rgba(19, 210, 123, 0.1);
+  border: 1px solid rgba(19, 210, 123, 0.42);
+  padding: 0.12rem 0.45rem;
+  border-radius: 999px;
+  text-transform: uppercase;
 }
 
 .logoutButton {
   display: flex;
   align-items: center;
-  gap: var(--space-2);
-  padding: var(--space-2) var(--space-3);
-  min-height: 44px;
-  font-size: var(--text-sm);
-  font-weight: 600;
-  color: var(--color-text);
+  gap: 0.45rem;
+  padding: 0.45rem 0.75rem;
+  min-height: 40px;
+  font-size: 0.84rem;
+  font-weight: 700;
+  color: #e7f4ec;
   background-color: rgba(0, 0, 0, 0.24);
   border: 1px solid rgba(19, 210, 123, 0.28);
-  border-radius: var(--border-radius);
+  border-radius: 8px;
   cursor: pointer;
-  letter-spacing: 0;
-  transition: background-color 0.15s ease, border-color 0.15s ease, color 0.15s ease;
+  transition: background 160ms ease, border-color 160ms ease, color 160ms ease;
 }
 
 .logoutButton:hover {
-  background-color: rgba(19, 210, 123, 0.08);
-  border-color: var(--color-danger);
-  color: var(--color-danger);
+  background-color: rgba(239, 68, 68, 0.1);
+  border-color: rgba(239, 68, 68, 0.45);
+  color: #fca5a5;
 }
 
 .logoutButton:focus-visible {
@@ -261,7 +292,7 @@
 /* --- Content Area --- */
 .content {
   flex: 1;
-  padding: var(--space-6);
+  padding: 1.25rem 1.5rem 3rem;
 }
 
 /* --- Mobile Overlay --- */
@@ -280,11 +311,11 @@
 /* --- Responsive --- */
 @media (max-width: 1024px) {
   .sidebar {
-    width: 240px;
+    width: 256px;
   }
 
   .mainArea {
-    margin-left: 240px;
+    margin-left: 256px;
   }
 }
 

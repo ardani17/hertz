@@ -1,14 +1,14 @@
 .main {
   min-height: 100vh;
   overflow-x: hidden;
-  background: #0f0f14;
-  color: #e7f4ec;
+  background: var(--horizon-bg-base);
+  color: var(--horizon-text);
 }
 
 .shell,
 .shellCompact {
-  border-left: 1px solid rgba(29, 185, 112, 0.22);
-  border-right: 1px solid rgba(29, 185, 112, 0.22);
+  border-left: 1px solid var(--horizon-border);
+  border-right: 1px solid var(--horizon-border);
   display: grid;
   margin: 0 auto;
   min-height: 100vh;
@@ -48,22 +48,50 @@
 }
 
 .pageHeader h1 {
-  color: #f3fff8;
+  color: var(--horizon-text);
   font-size: 1.25rem;
   margin: 0;
 }
 
 .pageHeader p {
-  color: #8ea897;
+  color: var(--horizon-text-muted);
   font-size: 0.84rem;
   margin: 0.3rem 0 0;
+}
+
+.desktopHeader {
+  align-items: center;
+  background: var(--horizon-bg-base);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+  display: flex;
+  justify-content: flex-end;
+  padding: 0.65rem 1rem;
+  position: sticky;
+  top: 0;
+  z-index: 6;
+}
+
+.desktopNotificationBell {
+  display: inline-flex;
 }
 
 .mobileHeader {
   display: none;
 }
 
+.mobileBrand {
+  display: none;
+}
+
+.mobileNotificationBell {
+  display: none;
+}
+
 @media (max-width: 1024px) {
+  .desktopHeader {
+    display: none;
+  }
+
   .main {
     padding-bottom: calc(78px + env(safe-area-inset-bottom));
   }
@@ -86,14 +114,22 @@
   }
 
   .mobileHeader {
+    align-items: center;
     border-bottom: 1px solid rgba(255, 255, 255, 0.06);
-    display: block;
+    display: flex;
+    gap: 0.5rem;
+    justify-content: space-between;
     margin: 0 0 0.5rem;
     padding: 0.7rem 0.9rem 0.65rem;
     position: sticky;
     top: 0;
     z-index: 6;
-    background: #0f0f14;
+    background: var(--horizon-bg-base);
+  }
+
+  .mobileNotificationBell {
+    display: inline-flex;
+    margin-left: auto;
   }
 
   .contentFeed .mobileHeader {
@@ -121,7 +157,7 @@
   }
 
   .mobileBrandTitle {
-    color: #f4fff8;
+    color: var(--horizon-text);
     font-size: 1.35rem;
     font-weight: 850;
     letter-spacing: 0.01em;

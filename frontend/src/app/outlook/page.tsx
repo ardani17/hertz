@@ -1,7 +1,6 @@
 import type { Metadata } from 'next';
 import { OutlookArticleService } from '@shared/services/outlookArticleService';
-import { OutlookCard } from '@/components/outlook';
-import styles from './page.module.css';
+import { OutlookListClient } from '@/components/outlook/OutlookListClient';
 
 export const metadata: Metadata = {
   title: 'Outlook',
@@ -9,7 +8,7 @@ export const metadata: Metadata = {
   alternates: { canonical: '/outlook' },
 };
 
-export const dynamic = 'force-dynamic';
+export const revalidate = 120;
 
 export default async function OutlookPage() {
   let articles: Awaited<ReturnType<OutlookArticleService['listPublished']>> = [];
@@ -19,20 +18,5 @@ export default async function OutlookPage() {
     articles = [];
   }
 
-  if (articles.length === 0) {
-    return (
-      <div className={styles.empty}>
-        <p className={styles.emptyText}>Belum ada artikel Outlook</p>
-        <p className={styles.emptySubtext}>Analisa market akan ditampilkan di sini.</p>
-      </div>
-    );
-  }
-
-  return (
-    <div className={styles.list}>
-      {articles.map((article) => (
-        <OutlookCard key={article.id} article={article} />
-      ))}
-    </div>
-  );
+  return <OutlookListClient initialArticles={articles} />;
 }

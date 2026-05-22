@@ -5,6 +5,7 @@ import { useRouter, useParams } from 'next/navigation';
 import Link from 'next/link';
 import dynamic from 'next/dynamic';
 import type { OutlookFormData, InlineImageEntry } from '@/components/admin/OutlookEditor';
+import { AdminPageHeader } from '@/components/admin';
 import type { OutlookMetadataInput } from '@/lib/outlookContent';
 
 /** Dynamic import for OutlookEditor — heavy rich text editor loaded on demand */
@@ -118,12 +119,10 @@ export default function AdminEditOutlookPage() {
   if (loading) {
     return (
       <div>
-        <div className={styles.pageHeader}>
-          <Link href="/admin/outlook" className={styles.backLink}>
-            ← Kembali
-          </Link>
-          <h2>Edit Outlook</h2>
-        </div>
+        <Link href="/admin/outlook" className={styles.backLink}>
+          ← Kembali ke Outlook
+        </Link>
+        <AdminPageHeader kicker="Outlook" title="Edit Outlook" />
         <div className={styles.editorCard}>
           <p>Memuat artikel...</p>
         </div>
@@ -134,12 +133,10 @@ export default function AdminEditOutlookPage() {
   if (error || !article) {
     return (
       <div>
-        <div className={styles.pageHeader}>
-          <Link href="/admin/outlook" className={styles.backLink}>
-            ← Kembali
-          </Link>
-          <h2>Edit Outlook</h2>
-        </div>
+        <Link href="/admin/outlook" className={styles.backLink}>
+          ← Kembali ke Outlook
+        </Link>
+        <AdminPageHeader kicker="Outlook" title="Edit Outlook" />
         <div className={styles.editorCard}>
           <p style={{ color: 'var(--color-danger)' }}>{error || 'Artikel tidak ditemukan'}</p>
         </div>
@@ -149,12 +146,10 @@ export default function AdminEditOutlookPage() {
 
   return (
     <div>
-      <div className={styles.pageHeader}>
-        <Link href="/admin/outlook" className={styles.backLink}>
-          ← Kembali
-        </Link>
-        <h2>Edit Outlook</h2>
-      </div>
+      <Link href="/admin/outlook" className={styles.backLink}>
+        ← Kembali ke Outlook
+      </Link>
+      <AdminPageHeader kicker="Outlook" title="Edit Outlook" />
       <div className={styles.editorCard}>
         <OutlookEditor
           initialData={{

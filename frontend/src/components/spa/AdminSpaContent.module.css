@@ -1,0 +1,13 @@
+.pane {
+  animation: adminSpaFade 0.16s ease-out;
+}
+
+@keyframes adminSpaFade {
+  from {
+    opacity: 0.72;
+  }
+
+  to {
+    opacity: 1;
+  }
+}

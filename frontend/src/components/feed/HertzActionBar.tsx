@@ -4,7 +4,6 @@ import { useState } from 'react';
 import type { MemberSessionUser, HertzPost } from '@shared/types';
 import { Button } from '@/components/ui/button';
 import { useToast } from '@/components/ui/Toast';
-import { shouldOpenDesktopPostModal } from '@/lib/hertzPostDetailUi';
 import { BookmarkIcon, CommentIcon, LoveIcon, RepostIcon, ShareIcon } from './HertzIcons';
 import { HertzShareSheet } from './HertzShareSheet';
 import styles from './HertzActionBar.module.css';
@@ -12,12 +11,10 @@ import styles from './HertzActionBar.module.css';
 export function HertzActionBar({
   post,
   currentUser,
-  enableDetailModal = true,
   onOpenDetail,
 }: {
   post: HertzPost;
   currentUser: MemberSessionUser | null;
-  enableDetailModal?: boolean;
   onOpenDetail?: () => void;
 }) {
   const { showToast } = useToast();
@@ -99,12 +96,14 @@ export function HertzActionBar({
   }
 
   function openComments() {
-    const detailUrl = `/hertz/post/${post.shortId}#comments`;
-    if (enableDetailModal && onOpenDetail && shouldOpenDesktopPostModal(window.innerWidth)) {
+    if (onOpenDetail) {
       onOpenDetail();
+      requestAnimationFrame(() => {
+        document.getElementById('comments')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      });
       return;
     }
-    window.location.href = detailUrl;
+    window.location.assign(`/hertz/post/${post.shortId}#comments`);
   }
 
   return (

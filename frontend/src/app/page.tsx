@@ -2,8 +2,9 @@ import type { Metadata } from 'next';
 import { HorizonLandingView } from '@/features/marketing/HorizonLandingView';
 import { getLandingMarketGroups, getLandingPreviewPost } from '@/features/marketing/lib/landing-data';
 
-export const dynamic = 'force-dynamic';
+export const revalidate = 300;
 
+/** Landing tetap SSR/ISR penuh untuk SEO — bukan pola SPA client-shell. */
 export const metadata: Metadata = {
   title: 'Horizon — Everything a Forex Trader Needs. One Platform.',
   description:

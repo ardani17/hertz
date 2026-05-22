@@ -5,6 +5,7 @@ import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import dynamic from 'next/dynamic';
 import type { OutlookFormData, InlineImageEntry } from '@/components/admin/OutlookEditor';
+import { AdminPageHeader } from '@/components/admin';
 
 /** Dynamic import for OutlookEditor — heavy rich text editor loaded on demand */
 const OutlookEditor = dynamic(
@@ -76,12 +77,14 @@ export default function AdminNewOutlookPage() {
 
   return (
     <div>
-      <div className={styles.pageHeader}>
-        <Link href="/admin/outlook" className={styles.backLink}>
-          ← Kembali
-        </Link>
-        <h2>Outlook Baru</h2>
-      </div>
+      <Link href="/admin/outlook" className={styles.backLink}>
+        ← Kembali ke Outlook
+      </Link>
+      <AdminPageHeader
+        kicker="Outlook"
+        title="Outlook Baru"
+        description="Buat konten market outlook: video, long read, atau chart note."
+      />
       <div className={styles.editorCard}>
         <OutlookEditor
           onSubmit={handleSubmit}

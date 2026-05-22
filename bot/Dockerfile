@@ -5,7 +5,8 @@ WORKDIR /app
 COPY package.json package-lock.json ./
 COPY .npmrc ./
 
-RUN npm ci
+# package-lock.json is generated with npm 11; node:20-alpine ships npm 10.
+RUN npm install -g npm@11.12.1 && npm ci
 
 # ---- Stage 2: Build ----
 FROM node:20-alpine AS builder
