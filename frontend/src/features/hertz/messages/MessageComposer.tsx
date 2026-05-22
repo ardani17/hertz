@@ -79,9 +79,8 @@ export function MessageComposer({
         </div>
       ) : null}
       <div className={styles.composer}>
-        <label className={styles.attachButton}>
+        <label className={styles.attachButton} aria-label="Lampirkan gambar">
           <ImagePlus aria-hidden="true" />
-          <span>Gambar</span>
           <input
             type="file"
             accept="image/jpeg,image/png,image/webp"
@@ -116,17 +115,17 @@ export function MessageComposer({
               void handleSend();
             }
           }}
-          placeholder={activeId ? 'Tulis pesan...' : 'Pilih percakapan dulu'}
+          placeholder={activeId ? 'Pesan' : 'Pilih percakapan dulu'}
           disabled={!activeId}
         />
         <button
           type="button"
+          className={styles.composerSend}
           onClick={() => void handleSend()}
           disabled={!activeId || uploading || (!body.trim() && attachments.length === 0)}
           aria-label="Kirim pesan"
         >
           <SendHorizontal aria-hidden="true" />
-          <span>Kirim</span>
         </button>
       </div>
     </>

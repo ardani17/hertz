@@ -37,6 +37,8 @@ type HertzLayoutPage = HertzLayoutBase & {
   variant: 'page';
   title: string;
   description: string;
+  /** DM / full-height tools: isi viewport, scroll hanya di panel anak */
+  fillViewport?: boolean;
 };
 
 export type HertzLayoutProps = HertzLayoutFeed | HertzLayoutPage;
@@ -52,10 +54,11 @@ export function HertzLayout(props: HertzLayoutProps) {
 
   const showMobileMarketBefore = !hideRightRail && mobileMarketPosition === 'before';
   const showMobileMarketAfter = !hideRightRail && mobileMarketPosition === 'after';
+  const fillViewport = props.variant === 'page' && props.fillViewport;
   const contentClass =
     props.variant === 'feed'
       ? `${styles.content} ${styles.contentFeed}`
-      : `${styles.content} ${styles.contentPage}`;
+      : `${styles.content} ${styles.contentPage}${fillViewport ? ` ${styles.contentPageFill}` : ''}`;
 
   return (
     <main className={styles.main}>
@@ -78,14 +81,14 @@ export function HertzLayout(props: HertzLayoutProps) {
             </Link>
             <NotificationBell currentUser={currentUser} className={styles.mobileNotificationBell} />
           </header>
-          {props.variant === 'page' ? (
+          {props.variant === 'page' && !fillViewport ? (
             <header className={styles.pageHeader}>
               <h1>{props.title}</h1>
               <p>{props.description}</p>
             </header>
           ) : null}
           {showMobileMarketBefore ? <HertzMobileMarket /> : null}
-          {children}
+          {fillViewport ? <div className={styles.pageBodyFill}>{children}</div> : children}
           {showMobileMarketAfter ? <HertzMobileMarket /> : null}
         </section>
         {hideRightRail ? null : <HertzRightRail />}

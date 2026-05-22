@@ -32,6 +32,7 @@ export function MessagesView() {
       description="Chat privat antar member HERTZ."
       currentUser={dm.currentUser}
       hideRightRail
+      fillViewport
     >
       {dm.authState !== 'member' ? (
         <section className={styles.guestPanel}>

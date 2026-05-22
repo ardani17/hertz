@@ -38,4 +38,4 @@ export interface PendingAttachment {
   name: string;
 }
 
-export type DmFilter = 'inbox' | 'unread' | 'admin' | 'archived';
+export type DmFilter = 'inbox' | 'unread' | 'archived';

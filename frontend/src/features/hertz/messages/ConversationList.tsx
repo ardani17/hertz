@@ -36,7 +36,6 @@ export function ConversationList({
 }: ConversationListProps) {
   const filtered = conversations.filter((item) => {
     if (filter === 'unread') return item.unreadCount > 0;
-    if (filter === 'admin') return item.peer?.role === 'admin';
     return true;
   });
 
@@ -46,14 +45,15 @@ export function ConversationList({
     <aside className={styles.sidebar} aria-labelledby="dm-inbox-title">
       <div className={styles.sidebarHeader}>
         <div>
-          <p className={styles.sidebarLabel}>Pesan langsung</p>
-          <h2 id="dm-inbox-title">Kotak masuk</h2>
+          <h2 id="dm-inbox-title" className={styles.inboxTitle}>
+            Pesan
+          </h2>
         </div>
         {unreadTotal > 0 ? <span className={styles.unreadPill}>{unreadTotal} baru</span> : null}
       </div>
       {status ? <p className={styles.status} role="status">{status}</p> : null}
       <div className={styles.filters} role="tablist" aria-label="Filter pesan">
-        {(['inbox', 'unread', 'admin', 'archived'] as const).map((item) => (
+        {(['inbox', 'unread', 'archived'] as const).map((item) => (
           <button
             className={filter === item ? styles.activeFilter : styles.filterChip}
             type="button"
@@ -70,7 +70,7 @@ export function ConversationList({
         className={styles.search}
         value={query}
         onChange={(event) => onSearch(event.target.value)}
-        placeholder="Cari member..."
+        placeholder="Cari..."
         aria-label="Cari member untuk memulai percakapan"
       />
       {members.length > 0 ? (
@@ -104,9 +104,7 @@ export function ConversationList({
                 ? 'Tidak ada pesan belum dibaca.'
                 : filter === 'archived'
                   ? 'Arsip masih kosong.'
-                  : filter === 'admin'
-                    ? 'Belum ada percakapan dengan admin.'
-                    : 'Belum ada percakapan. Cari member di atas untuk mulai.'}
+                  : 'Belum ada percakapan. Cari member di atas untuk mulai.'}
             </p>
           </div>
         ) : (

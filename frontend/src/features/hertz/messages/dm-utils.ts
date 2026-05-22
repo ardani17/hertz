@@ -4,8 +4,7 @@ export const HERTZ_DM_POLL_INTERVAL_MS = 7000;
 
 export const filterLabels = {
   inbox: 'Semua',
-  unread: 'Belum dibaca',
-  admin: 'Admin',
+  unread: 'Belum baca',
   archived: 'Arsip',
 } as const;
 
@@ -50,6 +49,57 @@ export function formatDmTimestamp(value: string | null | undefined) {
     day: '2-digit',
     month: 'short',
     year: 'numeric',
+    hour: '2-digit',
+    minute: '2-digit',
+  });
+}
+
+export function formatDmDateSeparator(value: string | null | undefined) {
+  if (!value) return '';
+  const date = new Date(value);
+  if (Number.isNaN(date.getTime())) return '';
+  return date.toLocaleDateString('id-ID', {
+    day: 'numeric',
+    month: 'short',
+    year: 'numeric',
+  });
+}
+
+export function groupDmMessagesByDate<T extends { createdAt: string }>(messages: T[]) {
+  const groups: Array<{ label: string; messages: T[] }> = [];
+  for (const message of messages) {
+    const label = formatDmDateSeparator(message.createdAt);
+    const last = groups[groups.length - 1];
+    if (!last || last.label !== label) {
+      groups.push({ label, messages: [message] });
+      continue;
+    }
+    last.messages.push(message);
+  }
+  return groups;
+}
+
+export function getDmProfileHref(username: string | null | undefined) {
+  const normalized = username?.trim().replace(/^@/, '');
+  return normalized ? `/@${normalized}` : null;
+}
+
+/** Waktu ringkas di gelembung chat (mirip DM Twitter). */
+export function formatDmBubbleTime(value: string | null | undefined) {
+  if (!value) return '';
+  const date = new Date(value);
+  if (Number.isNaN(date.getTime())) return '';
+  const now = new Date();
+  const sameDay =
+    date.getDate() === now.getDate() &&
+    date.getMonth() === now.getMonth() &&
+    date.getFullYear() === now.getFullYear();
+  if (sameDay) {
+    return date.toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit' });
+  }
+  return date.toLocaleString('id-ID', {
+    day: 'numeric',
+    month: 'short',
     hour: '2-digit',
     minute: '2-digit',
   });
