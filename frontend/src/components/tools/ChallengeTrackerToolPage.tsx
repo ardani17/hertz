@@ -1,6 +1,5 @@
 'use client';
 
-import { ToolNav } from './ToolNav';
 import { ChallengeTrackerTool } from './ChallengeTrackerTool';
 import styles from './toolShellChallengeStyles';
 import { HertzTelegramLogin } from '@/components/feed/HertzTelegramLogin';
@@ -49,7 +48,6 @@ export function ChallengeTrackerToolPage({ isAuthenticated }: { isAuthenticated:
 
   return (
     <section className={`${styles.shell} ${styles.wideShell}`}>
-      <ToolNav />
       <section className={styles.header}>
         <p className={styles.eyebrow}>{copy.eyebrow}</p>
         <h2>{copy.title}</h2>

@@ -6,8 +6,10 @@
   --color-accent: #13d27b;
   --border-radius: 8px;
 
-  border-left: 1px solid rgba(75, 118, 92, 0.28);
-  border-right: 1px solid rgba(75, 118, 92, 0.28);
+  border-radius: var(--border-radius);
+  box-shadow:
+    inset 1px 0 0 rgba(75, 118, 92, 0.14),
+    inset -1px 0 0 rgba(75, 118, 92, 0.14);
   margin: 0 auto;
   max-width: 720px;
   min-height: 100vh;

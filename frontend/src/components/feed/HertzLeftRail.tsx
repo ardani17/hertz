@@ -2,9 +2,16 @@
 
 import Image from 'next/image';
 import Link from 'next/link';
-import { Compass, FileText, Hexagon, Home, MessageCircle, SlidersVertical } from 'lucide-react';
+import { Compass, FileText, Hexagon, Home, MessageCircle, PanelLeft, PanelLeftClose, SlidersVertical } from 'lucide-react';
+import { useEffect, useState } from 'react';
 import type { MemberSessionUser } from '@shared/types';
 import { canShowNavItem, getAccessRole } from '@/lib/accessRole';
+import {
+  LEFT_RAIL_WIDTH_COLLAPSED,
+  LEFT_RAIL_WIDTH_EXPANDED,
+  readLeftRailCollapsed,
+  writeLeftRailCollapsed,
+} from '@/lib/tools/catalog';
 import { HertzAvatar } from './HertzAvatar';
 import styles from './HertzRails.module.css';
 
@@ -17,7 +24,6 @@ const navItems = [
   { key: 'tools', href: '/tools', label: 'Tools', Icon: SlidersVertical },
   { key: 'messages', href: '/hertz/messages', label: 'Direct Message', Icon: MessageCircle },
 ] as const;
-// Gallery is intentionally dormant and stays out of navigation until re-enabled.
 
 export function HertzLeftRail({
   currentUser,
@@ -28,9 +34,29 @@ export function HertzLeftRail({
 }) {
   const accessRole = getAccessRole(currentUser);
   const visibleItems = navItems.filter(({ key }) => canShowNavItem(accessRole, key));
+  const [collapsed, setCollapsed] = useState(false);
+  const [hydrated, setHydrated] = useState(false);
+
+  useEffect(() => {
+    setCollapsed(readLeftRailCollapsed());
+    setHydrated(true);
+  }, []);
+
+  useEffect(() => {
+    if (!hydrated) return;
+    const width = collapsed ? LEFT_RAIL_WIDTH_COLLAPSED : LEFT_RAIL_WIDTH_EXPANDED;
+    document.documentElement.style.setProperty('--hertz-left-rail-width', width);
+    writeLeftRailCollapsed(collapsed);
+  }, [collapsed, hydrated]);
+
+  function toggleCollapsed() {
+    setCollapsed((value) => !value);
+  }
+
+  const asideClass = collapsed ? `${styles.left} ${styles.leftCollapsed}` : styles.left;
 
   return (
-    <aside className={styles.left} aria-label="Horizon navigation">
+    <aside className={asideClass} aria-label="Horizon navigation">
       <div className={styles.brand}>
         <Image
           className={styles.brandLogo}
@@ -40,36 +66,76 @@ export function HertzLeftRail({
           height={42}
           priority
         />
-        <strong>HERTZ</strong>
+        <strong className={styles.brandTitle}>HERTZ</strong>
       </div>
       <nav className={styles.nav}>
         {visibleItems.map(({ key, href, label, Icon }) => (
-          <Link key={key} href={href} className={active === key ? styles.activeNav : undefined} prefetch>
-            <Icon />
-            {label}
+          <Link
+            key={key}
+            href={href}
+            className={active === key ? styles.activeNav : undefined}
+            prefetch
+            title={label}
+            aria-label={label}
+          >
+            <Icon aria-hidden="true" />
+            <span className={styles.navLabel}>{label}</span>
           </Link>
         ))}
       </nav>
       {currentUser?.role === 'admin' ? (
-        <Link href="/admin/hertz" className={styles.syncCard} prefetch={false}>
+        <Link
+          href="/admin/hertz"
+          className={styles.syncCard}
+          prefetch={false}
+          title="HERTZ sync active"
+          aria-label="HERTZ sync active"
+        >
           <span className={styles.syncDot} />
-          <strong>HERTZ sync active</strong>
-          <span>Draft review queue</span>
+          <strong className={styles.syncCardTitle}>HERTZ sync active</strong>
+          <span className={styles.syncCardHint}>Draft review queue</span>
         </Link>
       ) : null}
-      {currentUser?.role === 'admin' ? <Link href="/admin/hertz" className={styles.adminNav} prefetch={false}><Hexagon />Admin</Link> : null}
-      <Link href="/hertz/profile" className={`${styles.profile} ${active === 'profile' ? styles.activeProfile : ''}`} prefetch>
+      {currentUser?.role === 'admin' ? (
+        <Link
+          href="/admin/hertz"
+          className={styles.adminNav}
+          prefetch={false}
+          title="Admin"
+          aria-label="Admin"
+        >
+          <Hexagon aria-hidden="true" />
+          <span className={styles.navLabel}>Admin</span>
+        </Link>
+      ) : null}
+      <Link
+        href="/hertz/profile"
+        className={`${styles.profile} ${active === 'profile' ? styles.activeProfile : ''}`}
+        prefetch
+        title={currentUser?.displayName ?? 'Guest'}
+        aria-label={currentUser?.displayName ?? 'Guest profile'}
+      >
         <HertzAvatar
           className={styles.avatar}
           src={currentUser?.avatarUrl}
           name={currentUser?.displayName ?? 'Guest'}
           username={currentUser?.username}
         />
-        <div>
+        <div className={styles.profileMeta}>
           <strong>{currentUser?.displayName ?? 'Guest'}</strong>
           <span>{currentUser ? (currentUser.badge === 'admin' ? 'Admin' : 'Verified Member') : 'Mode baca'}</span>
         </div>
       </Link>
+      <button
+        type="button"
+        className={styles.railToggle}
+        onClick={toggleCollapsed}
+        aria-expanded={!collapsed}
+        aria-label={collapsed ? 'Perluas sidebar' : 'Ciutkan sidebar'}
+        title={collapsed ? 'Perluas sidebar' : 'Ciutkan sidebar'}
+      >
+        {collapsed ? <PanelLeft aria-hidden="true" /> : <PanelLeftClose aria-hidden="true" />}
+      </button>
     </aside>
   );
 }

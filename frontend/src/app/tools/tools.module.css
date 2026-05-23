@@ -47,8 +47,8 @@
 }
 
 .toolCard {
-  background: rgba(2, 12, 7, 0.82);
-  border: 1px solid rgba(19, 210, 123, 0.28);
+  background: var(--horizon-bg-base);
+  border: 1px solid var(--horizon-border);
   border-radius: 8px;
   display: flex;
   flex-direction: column;
@@ -127,8 +127,8 @@
 }
 
 .languagePanel {
-  background: rgba(2, 12, 7, 0.82);
-  border: 1px solid rgba(19, 210, 123, 0.28);
+  background: var(--horizon-bg-base);
+  border: 1px solid var(--horizon-border);
   border-radius: 8px;
   display: grid;
   gap: var(--space-2);

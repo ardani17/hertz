@@ -13,6 +13,7 @@ export function HertzAppShell({
   children,
   hideRightRail = false,
   mobileMarketPosition = 'before',
+  fillViewport = false,
 }: {
   active: HertzActiveNav;
   title: string;
@@ -21,6 +22,7 @@ export function HertzAppShell({
   children: ReactNode;
   hideRightRail?: boolean;
   mobileMarketPosition?: 'before' | 'after' | 'hidden';
+  fillViewport?: boolean;
 }) {
   return (
     <HertzLayout
@@ -31,6 +33,7 @@ export function HertzAppShell({
       currentUser={currentUser}
       hideRightRail={hideRightRail}
       mobileMarketPosition={mobileMarketPosition}
+      fillViewport={fillViewport}
     >
       {children}
     </HertzLayout>

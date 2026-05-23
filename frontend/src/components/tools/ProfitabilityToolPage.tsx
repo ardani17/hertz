@@ -1,6 +1,5 @@
 'use client';
 
-import { ToolNav } from './ToolNav';
 import { ProfitabilityTool } from './ProfitabilityTool';
 import styles from './toolShellProfitabilityStyles';
 import { useToolsLanguage } from './useToolsLanguage';
@@ -114,7 +113,6 @@ export function ProfitabilityToolPage() {
 
   return (
     <section className={styles.shell}>
-      <ToolNav />
       <section className={styles.header}>
         <p className={styles.eyebrow}>{copy.eyebrow}</p>
         <h2>{copy.title}</h2>

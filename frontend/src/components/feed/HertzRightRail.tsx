@@ -18,8 +18,6 @@ interface SearchResult {
 export function HertzRightRail({ activeSearch }: { activeSearch?: string | null }) {
   const [groups, setGroups] = useState<MarketRailGroup[]>([]);
   const [status, setStatus] = useState<'loading' | 'ready' | 'error'>('loading');
-  const [unreadDmCount, setUnreadDmCount] = useState(0);
-  const [unreadNotificationCount, setUnreadNotificationCount] = useState(0);
   const [searchQuery, setSearchQuery] = useState(activeSearch ?? '');
   const [searchResults, setSearchResults] = useState<SearchResult[]>([]);
   const [searchStatus, setSearchStatus] = useState<'idle' | 'loading' | 'ready'>('idle');
@@ -43,23 +41,6 @@ export function HertzRightRail({ activeSearch }: { activeSearch?: string | null 
     }
 
     loadMarketRail();
-    return () => {
-      cancelled = true;
-    };
-  }, []);
-
-  useEffect(() => {
-    let cancelled = false;
-    async function loadActivity() {
-      const response = await fetch('/api/hertz/notifications/summary', { cache: 'no-store' });
-      const payload = await response.json().catch(() => null);
-      if (!cancelled && response.ok && payload?.success) {
-        setUnreadDmCount(Number(payload.data.unreadDmCount ?? 0));
-        setUnreadNotificationCount(Number(payload.data.unreadCount ?? 0));
-      }
-    }
-
-    void loadActivity();
     return () => {
       cancelled = true;
     };
@@ -100,7 +81,6 @@ export function HertzRightRail({ activeSearch }: { activeSearch?: string | null 
   }, [searchQuery]);
 
   const emptyState = getHertzSearchEmptyState(searchQuery.trim());
-  const activityCopy = getHertzActivityIndicatorCopy({ unreadCount: unreadNotificationCount, unreadDmCount });
 
   return (
     <aside className={styles.right} aria-label="Market intelligence">
@@ -131,26 +111,7 @@ export function HertzRightRail({ activeSearch }: { activeSearch?: string | null 
           )}
         </div>
       ) : null}
-      <div className={styles.activityCard}>
-        <strong>{activityCopy.title}</strong>
-        <span>{activityCopy.body}</span>
-      </div>
       <MarketSidebarWidget groups={status === 'ready' ? groups : []} />
     </aside>
   );
-}
-
-export function getHertzActivityIndicatorCopy(input: number | { unreadCount?: number; unreadDmCount?: number }) {
-  const unreadDmCount = typeof input === 'number' ? input : Number(input.unreadDmCount ?? 0);
-  const unreadCount = typeof input === 'number' ? 0 : Number(input.unreadCount ?? 0);
-  if (unreadCount > 0 && unreadDmCount > 0) {
-    return { title: 'Aktivitas', body: `${unreadCount} notifikasi baru, termasuk ${unreadDmCount} DM.` };
-  }
-  if (unreadCount > 0) {
-    return { title: 'Aktivitas', body: `${unreadCount} notifikasi baru.` };
-  }
-  if (unreadDmCount > 0) {
-    return { title: 'Aktivitas', body: `${unreadDmCount} DM belum dibaca.` };
-  }
-  return { title: 'Aktivitas', body: 'Belum ada aktivitas baru.' };
 }

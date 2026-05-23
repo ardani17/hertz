@@ -31,7 +31,9 @@ export function FaqAccordion({ items }: { items: readonly FaqItem[] }) {
             </svg>
           </button>
           <div className={styles.faqAnswer}>
-            <p>{item.answer}</p>
+            <div className={styles.faqAnswerInner}>
+              <p>{item.answer}</p>
+            </div>
           </div>
         </div>
       ))}

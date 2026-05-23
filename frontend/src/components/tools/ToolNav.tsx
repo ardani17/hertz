@@ -2,6 +2,7 @@
 
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
+import { PUBLISHED_TOOLS } from '@/lib/tools/catalog';
 import styles from './ToolShell.module.css';
 import { useToolsLanguage } from './useToolsLanguage';
 
@@ -9,43 +10,12 @@ const navCopy = {
   id: {
     aria: 'Navigasi tools',
     allTools: 'Semua tools',
-    links: {
-      pivotPoint: 'Pivot Point',
-      profitability: 'Profitability',
-      challengeTracker: 'Challenge Tracker',
-      elliottWave: 'Elliott Wave',
-      economicCalendar: 'Kalender Ekonomi',
-      orderBook: 'Order Book',
-      exchangeLiquidity: 'Likuiditas Bursa',
-      cftc: 'CFTC COT',
-    },
   },
   en: {
     aria: 'Tools navigation',
     allTools: 'All tools',
-    links: {
-      pivotPoint: 'Pivot Point',
-      profitability: 'Profitability',
-      challengeTracker: 'Challenge Tracker',
-      elliottWave: 'Elliott Wave',
-      economicCalendar: 'Economic Calendar',
-      orderBook: 'Order Book',
-      exchangeLiquidity: 'Exchange Liquidity',
-      cftc: 'CFTC COT',
-    },
   },
-};
-
-const links = [
-  { href: '/tools/pivot-point', key: 'pivotPoint' },
-  { href: '/tools/profitability', key: 'profitability' },
-  { href: '/tools/challenge-tracker', key: 'challengeTracker' },
-  { href: '/tools/elliott-wave', key: 'elliottWave' },
-  { href: '/tools/economic-calendar', key: 'economicCalendar' },
-  { href: '/tools/order-book', key: 'orderBook' },
-  { href: '/tools/exchange-liquidity', key: 'exchangeLiquidity' },
-  { href: '/tools/cftc', key: 'cftc' },
-] as const;
+} as const;
 
 export function ToolNav() {
   const pathname = usePathname();
@@ -61,14 +31,14 @@ export function ToolNav() {
       >
         {copy.allTools}
       </Link>
-      {links.map((link) => (
+      {PUBLISHED_TOOLS.map((tool) => (
         <Link
-          key={link.href}
-          href={link.href}
-          className={pathname === link.href ? styles.toolNavActive : undefined}
-          aria-current={pathname === link.href ? 'page' : undefined}
+          key={tool.href}
+          href={tool.href}
+          className={pathname === tool.href ? styles.toolNavActive : undefined}
+          aria-current={pathname === tool.href ? 'page' : undefined}
         >
-          {copy.links[link.key]}
+          {language === 'id' ? tool.labelId : tool.labelEn}
         </Link>
       ))}
     </nav>

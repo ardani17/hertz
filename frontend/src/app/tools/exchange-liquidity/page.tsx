@@ -1,11 +1,10 @@
 import type { Metadata } from 'next';
-import { ExchangeLiquidityToolPage } from '@/components/tools/ExchangeLiquidityToolPage';
+import { notFound } from 'next/navigation';
 
 export const metadata: Metadata = {
-  title: 'Exchange Liquidity',
-  description: 'Peta likuidasi leverage untuk pair crypto.',
+  title: 'Tool tidak tersedia',
 };
 
 export default function ExchangeLiquidityPage() {
-  return <ExchangeLiquidityToolPage />;
+  notFound();
 }

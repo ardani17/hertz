@@ -55,6 +55,12 @@ export function HertzLayout(props: HertzLayoutProps) {
   const showMobileMarketBefore = !hideRightRail && mobileMarketPosition === 'before';
   const showMobileMarketAfter = !hideRightRail && mobileMarketPosition === 'after';
   const fillViewport = props.variant === 'page' && props.fillViewport;
+  const shellClass =
+    hideRightRail && fillViewport
+      ? styles.shellCompact
+      : hideRightRail
+        ? styles.shellNoRail
+        : styles.shell;
   const contentClass =
     props.variant === 'feed'
       ? `${styles.content} ${styles.contentFeed}`
@@ -62,7 +68,7 @@ export function HertzLayout(props: HertzLayoutProps) {
 
   return (
     <main className={styles.main}>
-      <div className={hideRightRail ? styles.shellCompact : styles.shell}>
+      <div className={shellClass}>
         <HertzLeftRail currentUser={currentUser} active={active} />
         <section className={contentClass} aria-label={props.variant === 'feed' ? 'HERTZ timeline' : undefined}>
           <header className={styles.desktopHeader}>

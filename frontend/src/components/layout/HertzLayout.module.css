@@ -22,14 +22,21 @@
 
 .shell {
   --left-rail-offset: max(0px, calc((100vw - 1680px) / 2));
-  grid-template-columns: 256px minmax(0, 1fr) 320px;
+  grid-template-columns: var(--hertz-left-rail-width, 256px) minmax(0, 1fr) 320px;
   max-width: 1680px;
   width: min(100vw, 1680px);
 }
 
+.shellNoRail {
+  --left-rail-offset: max(0px, calc((100vw - 1360px) / 2));
+  grid-template-columns: var(--hertz-left-rail-width, 256px) minmax(0, 1fr);
+  max-width: 1360px;
+  width: min(100vw, 1360px);
+}
+
 .shellCompact {
   --left-rail-offset: max(0px, calc((100vw - 1360px) / 2));
-  grid-template-columns: 256px minmax(0, 1fr);
+  grid-template-columns: var(--hertz-left-rail-width, 256px) minmax(0, 1fr);
   max-height: 100dvh;
   max-width: 1360px;
   min-height: 0;

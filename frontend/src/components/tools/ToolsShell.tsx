@@ -2,8 +2,14 @@
 
 import type { ReactNode } from 'react';
 import { SectionShell } from '@/components/spa/SectionShell';
+import { ToolNav } from './ToolNav';
 
-/** Tools hub shell — sub-routes navigate client-side within the shared Hertz layout. */
+/** Tools hub shell — persistent ToolNav + client-side sub-route navigation. */
 export function ToolsShell({ children }: { children: ReactNode }) {
-  return <SectionShell section="tools">{children}</SectionShell>;
+  return (
+    <SectionShell section="tools">
+      <ToolNav />
+      {children}
+    </SectionShell>
+  );
 }

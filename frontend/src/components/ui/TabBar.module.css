@@ -62,8 +62,8 @@
   .tabListFeedSort .tabLink {
     background: transparent;
     border: 0;
-    border-bottom: 3px solid transparent;
     border-radius: 0;
+    box-shadow: inset 0 -2px 0 0 transparent;
     color: #8ea897;
     font-size: 0.92rem;
     font-weight: 700;
@@ -81,7 +81,7 @@
 
   .tabListFeedSort .tabLinkActive {
     background: transparent;
-    border-bottom-color: #13d27b;
+    box-shadow: inset 0 -2px 0 0 var(--horizon-accent, #13d27b);
     color: #f4fff8;
   }
 }

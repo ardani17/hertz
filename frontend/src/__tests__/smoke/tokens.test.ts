@@ -7,7 +7,6 @@ const ROOT = join(process.cwd().endsWith('/frontend') || process.cwd().endsWith(
 const FORBIDDEN = ['#0f0f14', '#10b981', '#00e38a', '#34d399', '#059669'] as const;
 const EXEMPT = new Set([
   'app/globals.css',
-  'app/tools/cftc-viewer/[[...path]]/route.ts',
 ]);
 
 function walk(dir: string, files: string[] = []) {

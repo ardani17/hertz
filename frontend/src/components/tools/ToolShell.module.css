@@ -7,8 +7,8 @@
 }
 
 .header {
-  background: rgba(2, 9, 6, 0.62);
-  border: 1px solid rgba(19, 210, 123, 0.26);
+  background: var(--horizon-bg-base);
+  border: 1px solid var(--horizon-border);
   border-radius: 8px;
   box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.035);
   display: grid;
@@ -70,8 +70,8 @@
 .helpDetails {
   max-width: 960px;
   margin-top: var(--space-2);
-  background: rgba(2, 12, 7, 0.82);
-  border: 1px solid rgba(75, 118, 92, 0.32);
+  background: var(--horizon-bg-base);
+  border: 1px solid var(--horizon-border);
   border-radius: 8px;
 }
 
@@ -161,8 +161,8 @@
 }
 
 .linkPanel {
-  background: rgba(2, 12, 7, 0.82);
-  border: 1px solid rgba(19, 210, 123, 0.28);
+  background: var(--horizon-bg-base);
+  border: 1px solid var(--horizon-border);
   border-radius: 8px;
   display: grid;
   gap: var(--space-3);
@@ -192,9 +192,9 @@
 }
 
 .panel {
-  background: rgba(2, 12, 7, 0.82);
+  background: var(--horizon-bg-base);
   padding: var(--space-5);
-  border: 1px solid rgba(19, 210, 123, 0.28);
+  border: 1px solid var(--horizon-border);
   border-radius: 8px;
 }
 
@@ -786,7 +786,7 @@
   gap: var(--space-4);
   margin-top: var(--space-5);
   padding: var(--space-5);
-  background: linear-gradient(135deg, rgba(2, 12, 7, 0.95), rgba(0, 0, 0, 0.36));
+  background: var(--horizon-bg-base);
   border: 1px solid rgba(19, 210, 123, 0.3);
   border-radius: 10px;
 }
@@ -927,7 +927,7 @@
   width: 100%;
   height: 96px;
   color: var(--color-accent);
-  background: linear-gradient(rgba(19, 210, 123, 0.08), rgba(19, 210, 123, 0.02));
+  background: var(--horizon-bg-base);
   border: 1px solid rgba(19, 210, 123, 0.16);
   border-radius: 8px;
   overflow: visible;
@@ -944,7 +944,7 @@
   gap: var(--space-1);
   height: 96px;
   padding: var(--space-2);
-  background: linear-gradient(rgba(19, 210, 123, 0.08), rgba(19, 210, 123, 0.02));
+  background: var(--horizon-bg-base);
   border: 1px solid rgba(19, 210, 123, 0.16);
   border-radius: 8px;
 }

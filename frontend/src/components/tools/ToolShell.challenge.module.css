@@ -6,8 +6,8 @@
 
 .challengeToolbar {
   align-items: end;
-  background: rgba(2, 12, 7, 0.82);
-  border: 1px solid rgba(19, 210, 123, 0.24);
+  background: var(--horizon-bg-base);
+  border: 1px solid var(--horizon-border);
   border-radius: 8px;
   display: flex;
   flex-wrap: wrap;
@@ -200,10 +200,8 @@
 
 .chatWindow {
   align-content: start;
-  background:
-    linear-gradient(180deg, rgba(2, 12, 7, 0.92), rgba(4, 18, 11, 0.76)),
-    radial-gradient(circle at 100% 0%, rgba(19, 210, 123, 0.1), transparent 34%);
-  border: 1px solid rgba(19, 210, 123, 0.18);
+  background: var(--horizon-bg-base);
+  border: 1px solid var(--horizon-border);
   border-radius: 12px;
   box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.035);
   display: grid;
@@ -270,8 +268,8 @@
 
 .chatInputRow {
   align-items: stretch;
-  background: rgba(2, 12, 7, 0.94);
-  border: 1px solid rgba(19, 210, 123, 0.18);
+  background: var(--horizon-bg-base);
+  border: 1px solid var(--horizon-border);
   border-radius: 12px;
   display: grid;
   gap: var(--space-3);

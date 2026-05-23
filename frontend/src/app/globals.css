@@ -51,6 +51,7 @@
 
   /* Horizon Social UX Uplift locked identity tokens */
   --horizon-bg-base: #0a0a0f;
+  --hertz-left-rail-width: 256px;
   --horizon-accent: #13d27b;
   --horizon-surface: rgba(15, 19, 18, 0.78);
   --horizon-surface-strong: rgba(20, 28, 24, 0.94);

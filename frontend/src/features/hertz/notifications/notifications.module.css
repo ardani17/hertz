@@ -2,12 +2,30 @@
   background: var(--horizon-surface);
   border: 1px solid var(--horizon-border);
   border-radius: 12px;
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  height: 100%;
+  min-height: 0;
   overflow: hidden;
 }
 
+.header,
+.toolbar {
+  flex-shrink: 0;
+}
+
+.listScroll {
+  flex: 1;
+  min-height: 0;
+  overflow-x: hidden;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+}
+
 .guestPanel {
-  background: linear-gradient(135deg, rgba(19, 210, 123, 0.08), rgba(2, 12, 7, 0.95));
-  border: 1px solid rgba(19, 210, 123, 0.28);
+  background: var(--horizon-bg-base);
+  border: 1px solid var(--horizon-border);
   border-radius: 12px;
   display: grid;
   gap: 0.75rem;
@@ -78,6 +96,8 @@
   display: flex;
   flex-wrap: wrap;
   gap: 0.35rem;
+  max-width: 100%;
+  min-width: 0;
 }
 
 .filterChip,
@@ -181,7 +201,7 @@
 }
 
 .itemUnread {
-  background: linear-gradient(90deg, var(--horizon-accent-soft, rgba(19, 210, 123, 0.14)) 0%, rgba(19, 210, 123, 0.06) 40%, transparent 72%);
+  background: var(--horizon-bg-base);
 }
 
 .avatarWrap {
@@ -195,7 +215,7 @@
 
 .typeBadge {
   align-items: center;
-  background: #020906;
+  background: var(--horizon-bg-base);
   border: 1px solid rgba(19, 210, 123, 0.45);
   border-radius: 999px;
   bottom: -2px;

@@ -12,8 +12,8 @@
 }
 
 .guestPanel {
-  background: linear-gradient(135deg, rgba(19, 210, 123, 0.08), rgba(2, 12, 7, 0.95));
-  border: 1px solid rgba(19, 210, 123, 0.28);
+  background: var(--horizon-bg-base);
+  border: 1px solid var(--horizon-border);
   border-radius: 12px;
   display: grid;
   gap: 0.8rem;
@@ -250,7 +250,7 @@
 }
 
 .itemActive {
-  background: linear-gradient(90deg, var(--horizon-accent-soft, rgba(19, 210, 123, 0.14)) 0%, transparent 28%);
+  background: var(--horizon-bg-base);
 }
 
 .itemUnread .itemPreview {
@@ -364,7 +364,7 @@
 
 .threadHeader {
   align-items: center;
-  background: rgba(2, 12, 7, 0.55);
+  background: var(--horizon-bg-base);
   border-bottom: 1px solid rgba(75, 118, 92, 0.28);
   display: grid;
   gap: 0.65rem;
@@ -420,7 +420,7 @@
 
 .menuTrigger {
   align-items: center;
-  background: rgba(2, 12, 7, 0.82);
+  background: var(--horizon-bg-base);
   border: 1px solid rgba(75, 118, 92, 0.34);
   border-radius: 999px;
   color: #9fb4aa;
@@ -452,7 +452,7 @@
 }
 
 .threadMenuSheet {
-  background: #020906;
+  background: var(--horizon-bg-base);
   border: 1px solid rgba(75, 118, 92, 0.34);
   border-radius: 14px 14px 0 0;
   display: grid;
@@ -712,7 +712,7 @@
 }
 
 .messageActions {
-  background: rgba(2, 12, 7, 0.96);
+  background: var(--horizon-bg-base);
   border: 1px solid rgba(75, 118, 92, 0.35);
   border-radius: 8px;
   box-shadow: 0 6px 18px rgba(0, 0, 0, 0.35);
@@ -811,7 +811,7 @@
 
 .composer {
   align-items: flex-end;
-  background: rgba(2, 12, 7, 0.96);
+  background: var(--horizon-bg-base);
   border-top: 1px solid rgba(75, 118, 92, 0.28);
   display: grid;
   gap: 0.5rem;

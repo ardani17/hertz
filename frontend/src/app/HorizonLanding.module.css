@@ -43,10 +43,7 @@
 .main {
   min-height: 100dvh;
   padding-bottom: 0;
-  background:
-    radial-gradient(ellipse 80% 50% at 50% 0%, rgba(34, 199, 138, 0.04) 0%, transparent 60%),
-    radial-gradient(ellipse 60% 40% at 80% 80%, rgba(34, 199, 138, 0.02) 0%, transparent 50%),
-    linear-gradient(180deg, #050a07 0%, #030704 40%, #020503 100%);
+  background: var(--horizon-bg-base);
   color: var(--lp-text);
   overflow-x: hidden;
 }
@@ -261,9 +258,7 @@
   align-self: center;
   border: 1px solid var(--lp-border);
   border-radius: 12px;
-  background:
-    linear-gradient(180deg, rgba(255, 255, 255, 0.04), rgba(255, 255, 255, 0.01)),
-    var(--lp-surface);
+  background: var(--horizon-bg-base);
   backdrop-filter: blur(12px);
   -webkit-backdrop-filter: blur(12px);
   box-shadow: var(--lp-shadow-lg), var(--lp-shadow-glow);
@@ -723,9 +718,7 @@
 .productVisual {
   border: 1px solid var(--lp-border);
   border-radius: 12px;
-  background:
-    linear-gradient(135deg, rgba(34, 199, 138, 0.04) 0%, transparent 60%),
-    var(--lp-surface);
+  background: var(--horizon-bg-base);
   min-height: 200px;
   display: flex;
   align-items: center;
@@ -892,16 +885,21 @@
 }
 
 .faqAnswer {
-  max-height: 0;
-  overflow: hidden;
-  transition: max-height 0.3s ease, padding 0.3s ease;
+  display: grid;
+  grid-template-rows: 0fr;
+  transition: grid-template-rows 0.25s ease;
 }
 
 .faqItem[data-open="true"] .faqAnswer {
-  max-height: 200px;
+  grid-template-rows: 1fr;
 }
 
-.faqAnswer p {
+.faqAnswerInner {
+  min-height: 0;
+  overflow: hidden;
+}
+
+.faqAnswerInner p {
   color: var(--lp-text-muted);
   font-size: 0.92rem;
   line-height: 1.6;
@@ -926,7 +924,7 @@
   transform: translate(-50%, -50%);
   width: 600px;
   height: 400px;
-  background: radial-gradient(ellipse, rgba(34, 199, 138, 0.06) 0%, transparent 70%);
+  background: transparent;
   pointer-events: none;
   z-index: 0;
 }

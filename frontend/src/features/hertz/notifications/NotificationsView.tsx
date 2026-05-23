@@ -107,6 +107,7 @@ export function NotificationsView() {
       description="Aktivitas sosial di HERTZ — suka, komentar, repost, dan DM."
       currentUser={currentUser}
       mobileMarketPosition="hidden"
+      fillViewport
     >
       {authState !== 'member' ? (
         <section className={styles.guestPanel}>
@@ -147,7 +148,7 @@ export function NotificationsView() {
                 className={filter === 'unread' ? styles.filterActive : styles.filterChip}
                 onClick={() => setFilter('unread')}
               >
-                Belum dibaca
+                Belum baca
                 {unreadCount > 0 ? <em>{unreadCount}</em> : null}
               </button>
             </div>
@@ -161,33 +162,34 @@ export function NotificationsView() {
             </button>
           </div>
 
-          {status === 'error' ? (
-            <div className={styles.stateBox} role="alert">
-              <p>Notifikasi gagal dimuat.</p>
-              <button type="button" onClick={() => void loadNotifications()}>
-                Coba lagi
-              </button>
-            </div>
-          ) : null}
+          <div className={styles.listScroll}>
+            {status === 'error' ? (
+              <div className={styles.stateBox} role="alert">
+                <p>Notifikasi gagal dimuat.</p>
+                <button type="button" onClick={() => void loadNotifications()}>
+                  Coba lagi
+                </button>
+              </div>
+            ) : null}
 
-          {status === 'loading' ? (
-            <p className={styles.stateBox} role="status" aria-live="polite">
-              Memuat notifikasi...
-            </p>
-          ) : null}
-
-          {status === 'ready' && filteredItems.length === 0 ? (
-            <div className={styles.stateBox} role="status">
-              <p>
-                {filter === 'unread'
-                  ? 'Semua notifikasi sudah dibaca.'
-                  : 'Belum ada notifikasi. Interaksi di feed akan muncul di sini.'}
+            {status === 'loading' ? (
+              <p className={styles.stateBox} role="status" aria-live="polite">
+                Memuat notifikasi...
               </p>
-            </div>
-          ) : null}
+            ) : null}
 
-          <ul className={styles.list}>
-            {filteredItems.map((item) => {
+            {status === 'ready' && filteredItems.length === 0 ? (
+              <div className={styles.stateBox} role="status">
+                <p>
+                  {filter === 'unread'
+                    ? 'Semua notifikasi sudah dibaca.'
+                    : 'Belum ada notifikasi. Interaksi di feed akan muncul di sini.'}
+                </p>
+              </div>
+            ) : null}
+
+            <ul className={styles.list}>
+              {filteredItems.map((item) => {
               const isUnread = !item.readAt;
               return (
                 <li key={item.id}>
@@ -222,7 +224,8 @@ export function NotificationsView() {
                 </li>
               );
             })}
-          </ul>
+            </ul>
+          </div>
         </section>
       )}
     </HertzAppShell>

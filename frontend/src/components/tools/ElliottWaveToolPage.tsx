@@ -1,7 +1,6 @@
 'use client';
 
 import { ElliottWaveTool } from './ElliottWaveTool';
-import { ToolNav } from './ToolNav';
 import styles from './ToolShell.module.css';
 import { useToolsLanguage } from './useToolsLanguage';
 
@@ -75,7 +74,6 @@ export function ElliottWaveToolPage() {
 
   return (
     <section className={styles.shell}>
-      <ToolNav />
       <section className={styles.header}>
         <p className={styles.eyebrow}>{copy.eyebrow}</p>
         <h1>{copy.title}</h1>

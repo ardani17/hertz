@@ -5,8 +5,8 @@
 
 .guestPanel,
 .panel {
-  background: rgba(2, 9, 6, 0.72);
-  border: 1px solid rgba(19, 210, 123, 0.26);
+  background: var(--horizon-bg-base);
+  border: 1px solid var(--horizon-border);
   border-radius: 12px;
   display: grid;
   gap: 0.75rem;
@@ -43,8 +43,8 @@
 
 .hero {
   align-items: center;
-  background: linear-gradient(135deg, rgba(19, 210, 123, 0.1), rgba(2, 9, 6, 0.92));
-  border: 1px solid rgba(19, 210, 123, 0.3);
+  background: var(--horizon-bg-base);
+  border: 1px solid var(--horizon-border);
   border-radius: 12px;
   display: grid;
   gap: 1rem;
@@ -184,7 +184,7 @@
 }
 
 .creditPanel {
-  background: linear-gradient(160deg, rgba(19, 210, 123, 0.14), rgba(2, 9, 6, 0.95));
+  background: var(--horizon-bg-base);
 }
 
 .creditValue {
