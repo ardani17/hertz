@@ -26,6 +26,7 @@ type HertzLayoutBase = {
   currentUser: MemberSessionUser | null;
   children: ReactNode;
   hideRightRail?: boolean;
+  hidePageHeader?: boolean;
   mobileMarketPosition?: 'before' | 'after' | 'hidden';
 };
 
@@ -49,6 +50,7 @@ export function HertzLayout(props: HertzLayoutProps) {
     currentUser,
     children,
     hideRightRail = false,
+    hidePageHeader = false,
     mobileMarketPosition = 'before',
   } = props;
 
@@ -87,7 +89,7 @@ export function HertzLayout(props: HertzLayoutProps) {
             </Link>
             <NotificationBell currentUser={currentUser} className={styles.mobileNotificationBell} />
           </header>
-          {props.variant === 'page' && !fillViewport ? (
+          {props.variant === 'page' && !fillViewport && !hidePageHeader ? (
             <header className={styles.pageHeader}>
               <h1>{props.title}</h1>
               <p>{props.description}</p>

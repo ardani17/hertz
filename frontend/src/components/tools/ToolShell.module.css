@@ -536,7 +536,11 @@
   -webkit-overflow-scrolling: touch;
 }
 
-.toolNav a {
+.toolNav a,
+.toolNav button {
+  appearance: none;
+  background: transparent;
+  cursor: pointer;
   display: inline-flex;
   align-items: center;
   min-height: 38px;
@@ -545,20 +549,30 @@
   border: 1px solid transparent;
   border-radius: 999px;
   flex: 0 0 auto;
+  font: inherit;
   font-size: var(--text-sm);
   font-weight: 650;
   text-decoration: none;
   transition: color 0.15s ease, background-color 0.15s ease, border-color 0.15s ease;
 }
 
-.toolNav a:hover {
+.toolNav a:hover,
+.toolNav button:hover,
+.toolNav a:focus-visible,
+.toolNav button:focus-visible {
   color: var(--color-accent);
   background: rgba(19, 210, 123, 0.08);
   text-decoration: none;
 }
 
+.toolNav button:focus-visible {
+  outline: 2px solid rgba(19, 210, 123, 0.72);
+  outline-offset: 1px;
+}
+
 .toolNavActive,
-.toolNav a.toolNavActive:hover {
+.toolNav a.toolNavActive:hover,
+.toolNav button.toolNavActive:hover {
   color: #13d27b;
   background: rgba(16, 185, 129, 0.08);
   border-color: rgba(19, 210, 123, 0.42);
@@ -980,6 +994,23 @@
 
 .wideShell {
   max-width: 1180px;
+}
+
+.toolSpaPane {
+  min-height: 12rem;
+  min-width: 0;
+}
+
+.toolLoadingPane {
+  color: var(--color-text-muted);
+  font-size: var(--text-sm);
+  min-height: 8rem;
+  padding: 1rem 0;
+}
+
+.muted {
+  color: var(--color-text-muted);
+  margin: 0;
 }
 
 /* Challenge + profitability extensions: ToolShell.challenge.module.css, ToolShell.profitability.module.css */

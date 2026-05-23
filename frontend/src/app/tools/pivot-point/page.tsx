@@ -1,21 +1,5 @@
-import type { Metadata } from 'next';
-import { PivotPointTool } from '@/components/tools/PivotPointTool';
-import styles from '@/components/tools/ToolShell.module.css';
+import { LegacyToolRedirect } from '@/components/tools/LegacyToolRedirect';
 
-export const metadata: Metadata = {
-  title: 'Pivot Point Calculator',
-  description: 'Hitung pivot point, support, dan resistance dari data OHLC.',
-};
-
-export default function PivotPointPage() {
-  return (
-    <section className={styles.shell}>
-      <section className={styles.header}>
-        <p className={styles.eyebrow}>Calculator</p>
-        <h1>Pivot Point Calculator</h1>
-        <p>Masukkan data OHLC periode sebelumnya untuk menghitung pivot, support, dan resistance.</p>
-      </section>
-      <PivotPointTool />
-    </section>
-  );
+export default function PivotPointLegacyPage() {
+  return <LegacyToolRedirect slug="pivot-point" />;
 }

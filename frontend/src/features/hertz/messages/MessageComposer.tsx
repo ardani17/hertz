@@ -78,7 +78,7 @@ export function MessageComposer({
           ))}
         </div>
       ) : null}
-      <div className={styles.composer}>
+      <div className={styles.composer} data-testid="dm-composer">
         <label className={styles.attachButton} aria-label="Lampirkan gambar">
           <ImagePlus aria-hidden="true" />
           <input

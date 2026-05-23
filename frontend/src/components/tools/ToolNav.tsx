@@ -1,10 +1,9 @@
 'use client';
 
-import Link from 'next/link';
-import { usePathname } from 'next/navigation';
 import { PUBLISHED_TOOLS } from '@/lib/tools/catalog';
 import styles from './ToolShell.module.css';
 import { useToolsLanguage } from './useToolsLanguage';
+import { useToolsSpa } from './ToolsSpaContext';
 
 const navCopy = {
   id: {
@@ -18,28 +17,30 @@ const navCopy = {
 } as const;
 
 export function ToolNav() {
-  const pathname = usePathname();
+  const { activeTool, openHub, openTool } = useToolsSpa();
   const { language } = useToolsLanguage();
   const copy = navCopy[language];
 
   return (
     <nav className={styles.toolNav} aria-label={copy.aria}>
-      <Link
-        href="/tools"
-        className={pathname === '/tools' ? styles.toolNavActive : styles.toolNavHome}
-        aria-current={pathname === '/tools' ? 'page' : undefined}
+      <button
+        type="button"
+        className={activeTool === null ? styles.toolNavActive : styles.toolNavHome}
+        aria-current={activeTool === null ? 'page' : undefined}
+        onClick={openHub}
       >
         {copy.allTools}
-      </Link>
+      </button>
       {PUBLISHED_TOOLS.map((tool) => (
-        <Link
-          key={tool.href}
-          href={tool.href}
-          className={pathname === tool.href ? styles.toolNavActive : undefined}
-          aria-current={pathname === tool.href ? 'page' : undefined}
+        <button
+          key={tool.slug}
+          type="button"
+          className={activeTool === tool.slug ? styles.toolNavActive : undefined}
+          aria-current={activeTool === tool.slug ? 'page' : undefined}
+          onClick={() => openTool(tool.slug)}
         >
           {language === 'id' ? tool.labelId : tool.labelEn}
-        </Link>
+        </button>
       ))}
     </nav>
   );

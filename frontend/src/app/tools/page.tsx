@@ -1,15 +1,14 @@
 import type { Metadata } from 'next';
-import { ToolsHub } from '@/components/tools/ToolsHub';
 
 export const metadata: Metadata = {
   title: 'Tools',
-  description:
-    'Kumpulan tool market Horizon: CFTC COT viewer dan referensi suite HorizonFX.',
+  description: 'Kalkulator dan tracker trading Horizon — pivot, profitability, challenge, Elliott wave.',
   alternates: {
     canonical: '/tools',
   },
 };
 
+/** Body rendered by ToolsLayoutChrome SPA; this route only anchors /tools. */
 export default function ToolsPage() {
-  return <ToolsHub />;
+  return null;
 }

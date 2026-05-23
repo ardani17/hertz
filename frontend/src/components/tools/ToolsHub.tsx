@@ -1,9 +1,9 @@
 'use client';
 
-import Link from 'next/link';
 import styles from '@/app/tools/tools.module.css';
 import { PUBLISHED_TOOLS } from '@/lib/tools/catalog';
 import { useToolsLanguage, type ToolsLanguage } from './useToolsLanguage';
+import { useToolsSpa } from './ToolsSpaContext';
 
 const copy = {
   id: {
@@ -39,6 +39,7 @@ const copy = {
 
 export function ToolsHub() {
   const { language, setLanguage } = useToolsLanguage();
+  const { openTool } = useToolsSpa();
   const current = copy[language];
 
   return (
@@ -73,7 +74,7 @@ export function ToolsHub() {
 
       <section className={styles.grid} aria-label="Daftar tools">
         {PUBLISHED_TOOLS.map((tool) => (
-          <Link key={tool.href} href={tool.href} className={styles.toolCard}>
+          <button key={tool.slug} type="button" className={styles.toolCard} onClick={() => openTool(tool.slug)}>
             <span className={styles.toolLabel}>{language === 'id' ? tool.hubLabelId : tool.hubLabelEn}</span>
             <h2>{language === 'id' ? tool.cardLabelId : tool.cardLabelEn}</h2>
             <p>{language === 'id' ? tool.summaryId : tool.summaryEn}</p>
@@ -82,7 +83,7 @@ export function ToolsHub() {
                 <li key={point}>{point}</li>
               ))}
             </ul>
-          </Link>
+          </button>
         ))}
       </section>
     </div>

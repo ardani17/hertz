@@ -73,7 +73,7 @@ export function ElliottWaveToolPage() {
   const copy = pageCopy[language];
 
   return (
-    <section className={styles.shell}>
+    <section className={`${styles.shell} ${styles.wideShell}`}>
       <section className={styles.header}>
         <p className={styles.eyebrow}>{copy.eyebrow}</p>
         <h1>{copy.title}</h1>

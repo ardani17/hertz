@@ -1,4 +1,7 @@
 export const LEFT_RAIL_STORAGE_KEY = 'horizon.leftRail.collapsed';
+export const TOOLS_HUB_PATH = '/tools';
+export const TOOLS_ACTIVE_STORAGE_KEY = 'horizon.tools.active';
+export const TOOLS_PENDING_STORAGE_KEY = 'horizon.tools.pending';
 
 export const LEFT_RAIL_WIDTH_EXPANDED = '256px';
 export const LEFT_RAIL_WIDTH_COLLAPSED = '72px';
@@ -101,6 +104,10 @@ export function isPublishedToolPath(pathname: string): boolean {
 
 export function getPublishedToolByPath(pathname: string): ToolCatalogEntry | undefined {
   return PUBLISHED_TOOLS.find((tool) => tool.href === pathname);
+}
+
+export function getPublishedToolBySlug(slug: string): ToolCatalogEntry | undefined {
+  return PUBLISHED_TOOLS.find((tool) => tool.slug === slug);
 }
 
 export function readLeftRailCollapsed(): boolean {

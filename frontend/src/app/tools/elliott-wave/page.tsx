@@ -1,16 +1,5 @@
-import type { Metadata } from 'next';
-import dynamic from 'next/dynamic';
+import { LegacyToolRedirect } from '@/components/tools/LegacyToolRedirect';
 
-const ElliottWaveToolPage = dynamic(
-  () => import('@/components/tools/ElliottWaveToolPage').then((mod) => mod.ElliottWaveToolPage),
-  { loading: () => <p role="status">Memuat kalkulator Elliott…</p> },
-);
-
-export const metadata: Metadata = {
-  title: 'Elliott Wave Calculator',
-  description: 'Kalkulator gelombang Elliott untuk analisis struktur pasar.',
-};
-
-export default function ElliottWavePage() {
-  return <ElliottWaveToolPage />;
+export default function ElliottWaveLegacyPage() {
+  return <LegacyToolRedirect slug="elliott-wave" />;
 }

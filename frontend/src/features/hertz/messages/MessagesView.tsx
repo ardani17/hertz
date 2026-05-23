@@ -35,15 +35,22 @@ export function MessagesView() {
       fillViewport
     >
       {dm.authState !== 'member' ? (
-        <section className={styles.guestPanel}>
-          <span>{dm.authState === 'loading' ? 'Memuat sesi...' : 'Mode tamu'}</span>
-          <h2>{accessState.title}</h2>
-          <p>{accessState.body}</p>
-          {dm.authState === 'guest' ? <HertzTelegramLogin /> : null}
-        </section>
+        <div className={styles.dmPageShell}>
+          <section className={styles.guestPanel}>
+            <span>{dm.authState === 'loading' ? 'Memuat sesi...' : 'Mode tamu'}</span>
+            <h2>{accessState.title}</h2>
+            <p>{accessState.body}</p>
+            {dm.authState === 'guest' ? <HertzTelegramLogin /> : null}
+          </section>
+        </div>
       ) : (
-        <div data-testid="dm-layout" className={`${styles.dmLayout} ${dm.mobileThreadOpen ? styles.threadOpen : ''}`}>
-          <ConversationList
+        <div className={styles.dmPageShell}>
+          <div
+            data-testid="dm-layout"
+            data-mobile-thread-open={dm.mobileThreadOpen ? 'true' : undefined}
+            className={`${styles.dmLayout} ${dm.mobileThreadOpen ? styles.threadOpen : ''}`}
+          >
+            <ConversationList
             conversations={dm.conversations}
             members={dm.members}
             activeId={dm.activeId}
@@ -57,8 +64,8 @@ export function MessagesView() {
               dm.setMobileThreadOpen(true);
             }}
             onStartConversation={(id) => void dm.startConversation(id)}
-          />
-          <MessageThread
+            />
+            <MessageThread
             activeId={dm.activeId}
             activeConversation={dm.activeConversation}
             messages={dm.messages}
@@ -94,7 +101,8 @@ export function MessagesView() {
                 }
               />
             }
-          />
+            />
+          </div>
         </div>
       )}
     </HertzLayout>
