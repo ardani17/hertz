@@ -7,8 +7,8 @@
 .container {
   max-width: 720px;
   margin: 0 auto;
-  border-left: 1px solid rgba(75, 118, 92, 0.28);
-  border-right: 1px solid rgba(75, 118, 92, 0.28);
+  border-left: 1px solid var(--horizon-border);
+  border-right: 1px solid var(--horizon-border);
   min-height: 100vh;
 }
 

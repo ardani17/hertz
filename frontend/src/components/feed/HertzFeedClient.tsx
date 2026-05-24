@@ -5,6 +5,7 @@ import type { MemberSessionUser, HertzPostCategory } from '@shared/types';
 import { hasHertzFeedQueryParams, parseHertzFeedCategory, type HertzFeedFilterPatch, type HertzFeedFilters } from '@/lib/hertzFeedFilters';
 import { useLegacyQueryCleanup } from '@/lib/spa/useLegacyQueryCleanup';
 import { HertzComposer } from './HertzComposer';
+import { HertzFeedTopBar } from './HertzFeedTopBar';
 import { HertzHeader } from './HertzHeader';
 import { HertzPostCard } from './HertzPost';
 import { HertzPostCardSkeleton } from './HertzPostCardSkeleton';
@@ -75,6 +76,7 @@ export function HertzFeedClient({
 
   return (
     <>
+      <HertzFeedTopBar filters={filters} onFilterChange={updateFilters} currentUser={currentUser} />
       <HertzHeader filters={filters} onFilterChange={updateFilters} />
       <HertzComposer currentUser={currentUser} filters={filters} onFilterChange={updateFilters} />
       <div className={styles.feed}>

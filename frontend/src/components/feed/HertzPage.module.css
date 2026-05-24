@@ -36,8 +36,8 @@
   gap: 1rem;
   min-height: 76px;
   padding: 1rem 1.25rem;
-  background: rgba(2, 6, 4, 0.88);
-  border-bottom: 1px solid rgba(75, 118, 92, 0.28);
+  background: var(--horizon-bg-base);
+  border-bottom: 1px solid var(--horizon-border);
   backdrop-filter: blur(14px);
 }
 
@@ -63,9 +63,9 @@
 .iconButton {
   min-height: 36px;
   padding: 0 0.75rem;
-  border: 1px solid rgba(52, 211, 153, 0.35);
+  border: 1px solid var(--horizon-border);
   border-radius: 999px;
-  background: rgba(10, 25, 18, 0.82);
+  background: var(--horizon-nav-track-bg);
   color: #cde8d8;
   font-weight: 700;
 }
@@ -81,7 +81,7 @@
 
 .empty {
   background: rgba(2, 9, 6, 0.62);
-  border: 1px solid rgba(19, 210, 123, 0.26);
+  border: 1px solid var(--horizon-border);
   border-radius: 8px;
   color: #9ab5a5;
   margin: 16px;

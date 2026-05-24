@@ -1,6 +1,6 @@
 .wrap {
-  border-bottom: 1px solid rgba(75, 118, 92, 0.28);
-  border-top: 1px solid rgba(75, 118, 92, 0.28);
+  border-bottom: 1px solid var(--horizon-border);
+  border-top: 1px solid var(--horizon-border);
 }
 
 .actions {
@@ -118,7 +118,7 @@
 .shareTargets a {
   align-items: center;
   background: rgba(19, 210, 123, 0.07);
-  border: 1px solid rgba(19, 210, 123, 0.24);
+  border: 1px solid var(--horizon-border);
   color: #dfffee;
   display: inline-flex;
   font-size: 0.86rem;
@@ -130,12 +130,12 @@
 
 .shareTargets button:hover,
 .shareTargets a:hover {
-  border-color: rgba(19, 210, 123, 0.58);
+  border-color: var(--horizon-border-active);
   color: #13d27b;
 }
 
 .section {
-  border-top: 1px solid rgba(75, 118, 92, 0.28);
+  border-top: 1px solid var(--horizon-border);
   padding: 1.1rem 1.25rem 1.25rem;
 }
 
@@ -178,7 +178,7 @@
 
 .guestCta {
   background: rgba(5, 18, 11, 0.72);
-  border: 1px solid rgba(19, 210, 123, 0.28);
+  border: 1px solid var(--horizon-border);
   border-radius: 8px;
   display: grid;
   gap: 0.55rem;
@@ -204,7 +204,7 @@
 
 .form textarea,
 .form input {
-  background: #020604;
+  background: var(--horizon-bg-base);
   border: 1px solid rgba(76, 118, 94, 0.42);
   border-radius: 7px;
   color: #eef8f1;
@@ -223,8 +223,8 @@
 
 .form textarea:focus,
 .form input:focus {
-  border-color: rgba(19, 210, 123, 0.72);
-  outline: 2px solid rgba(19, 210, 123, 0.18);
+  border-color: var(--horizon-border-active);
+  outline: 2px solid var(--horizon-border);
 }
 
 .formFooter {

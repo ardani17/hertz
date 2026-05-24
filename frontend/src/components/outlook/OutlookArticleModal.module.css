@@ -17,7 +17,7 @@
   background: rgba(1, 10, 6, 0.98);
   border: 1px solid rgba(19, 210, 123, 0.32);
   border-radius: 12px;
-  box-shadow: 0 24px 90px rgba(0, 0, 0, 0.58), 0 0 38px rgba(19, 210, 123, 0.1);
+  box-shadow: 0 24px 90px rgba(0, 0, 0, 0.58), 0 0 38px var(--horizon-bg-active);
   color: #f3fff8;
   max-height: 92vh;
   max-width: 920px;

@@ -20,8 +20,8 @@
 }
 
 .tabNav {
-  background: rgba(10, 25, 18, 0.82);
-  border: 1px solid rgba(52, 211, 153, 0.22);
+  background: var(--horizon-nav-track-bg);
+  border: 1px solid var(--horizon-nav-track-border);
   border-radius: 8px;
   display: flex;
   flex-wrap: wrap;
@@ -39,9 +39,9 @@
 
 .tabNav button:hover,
 .tabNav .tabActive {
-  background: rgba(19, 210, 123, 0.08);
-  border-color: rgba(19, 210, 123, 0.42);
-  color: var(--color-accent);
+  background: var(--horizon-bg-active);
+  border-color: var(--horizon-border-active);
+  color: var(--horizon-accent);
 }
 
 .progressGrid {
@@ -52,8 +52,8 @@
 }
 
 .progressItem {
-  background: rgba(0, 0, 0, 0.28);
-  border: 1px solid rgba(19, 210, 123, 0.18);
+  background: var(--horizon-bg-base);
+  border: 1px solid var(--horizon-border);
   border-radius: 8px;
   display: grid;
   gap: var(--space-2);
@@ -110,7 +110,7 @@
 .checkPill {
   align-items: center;
   background: rgba(0, 0, 0, 0.24);
-  border: 1px solid rgba(19, 210, 123, 0.2);
+  border: 1px solid var(--horizon-border);
   border-radius: 999px;
   color: var(--color-text-muted);
   display: inline-flex;
@@ -224,8 +224,8 @@
 }
 
 .chatBubbleUser {
-  background: rgba(19, 210, 123, 0.14);
-  border: 1px solid rgba(19, 210, 123, 0.42);
+  background: var(--horizon-bg-selected);
+  border: 1px solid var(--horizon-border-active);
   border-bottom-right-radius: 4px;
   justify-self: end;
 }
@@ -281,7 +281,7 @@
 }
 
 .chatInputRow textarea {
-  border-color: rgba(75, 118, 92, 0.3);
+  border-color: var(--horizon-border);
   min-height: 54px;
   resize: vertical;
   width: 100%;
@@ -354,7 +354,7 @@
 }
 
 .formSection {
-  border-top: 1px solid rgba(19, 210, 123, 0.16);
+  border-top: 1px solid var(--horizon-border);
   display: grid;
   gap: var(--space-3);
   margin-top: var(--space-4);
@@ -377,7 +377,7 @@
 
 .journalBlock {
   background: rgba(0, 0, 0, 0.18);
-  border: 1px solid rgba(19, 210, 123, 0.2);
+  border: 1px solid var(--horizon-border);
   border-radius: 8px;
   margin-top: var(--space-4);
 }
@@ -397,7 +397,7 @@
 }
 
 .journalBlock[open] summary {
-  border-bottom: 1px solid rgba(19, 210, 123, 0.18);
+  border-bottom: 1px solid var(--horizon-border);
 }
 
 .journalBlock > :not(summary) {
@@ -444,7 +444,7 @@
 
 .metricsToggle {
   background: transparent;
-  border: 1px solid rgba(19, 210, 123, 0.35);
+  border: 1px solid var(--horizon-border-active);
   border-radius: 8px;
   color: var(--color-accent);
   cursor: pointer;

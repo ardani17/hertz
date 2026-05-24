@@ -5,8 +5,8 @@
 @media (max-width: 1024px) {
   .mobileNav {
     align-items: stretch;
-    background: rgba(2, 6, 4, 0.94);
-    border-top: 1px solid rgba(76, 118, 94, 0.34);
+    background: var(--horizon-bg-base);
+    border-top: 1px solid var(--horizon-border);
     bottom: 0;
     box-shadow: 0 -18px 34px rgba(0, 0, 0, 0.34);
     display: grid;
@@ -50,7 +50,7 @@
   }
 
   .active {
-    background: rgba(16, 185, 129, 0.12);
+    background: var(--horizon-bg-selected);
     color: var(--horizon-accent) !important;
   }
 

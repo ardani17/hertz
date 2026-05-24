@@ -1,0 +1,134 @@
+.topBar {
+  align-items: center;
+  background: var(--horizon-bg-base);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+  display: flex;
+  gap: 0.75rem;
+  justify-content: space-between;
+  padding: 0.65rem 1rem;
+  position: sticky;
+  top: 0;
+  z-index: 6;
+}
+
+.mobileBrand {
+  display: none;
+}
+
+.sortNav {
+  flex: 1;
+  min-width: 0;
+}
+
+.sortTabs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.85rem;
+  justify-content: center;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  width: 100%;
+}
+
+.sortTab {
+  display: inline-flex;
+}
+
+.sortTabButton {
+  background: transparent;
+  border: 1px solid transparent;
+  border-radius: 999px;
+  color: #8ea897;
+  cursor: pointer;
+  font: inherit;
+  font-size: 0.82rem;
+  font-weight: 600;
+  padding: 0.4rem 1.1rem;
+  transition: background 0.15s ease, color 0.15s ease, border-color 0.15s ease;
+}
+
+.sortTabButton:hover {
+  background: var(--horizon-bg-active);
+  color: #cde8d8;
+}
+
+.sortTabButtonActive {
+  background: var(--horizon-bg-selected);
+  border-color: var(--horizon-border-active);
+  color: var(--horizon-accent);
+}
+
+.sortTabButton:focus-visible {
+  outline: 2px solid var(--horizon-accent);
+  outline-offset: 2px;
+}
+
+.notificationBell {
+  display: inline-flex;
+  flex: 0 0 auto;
+}
+
+@media (max-width: 1024px) {
+  .topBar {
+    gap: 0.5rem;
+    padding: 0.7rem 0.9rem 0.65rem;
+  }
+
+  .mobileBrand {
+    align-items: center;
+    color: inherit;
+    display: inline-flex;
+    flex: 0 0 auto;
+    gap: 0.55rem;
+    text-decoration: none;
+  }
+
+  .mobileBrand img {
+    display: block;
+    flex: 0 0 auto;
+    height: 34px;
+    object-fit: contain;
+    width: 34px;
+  }
+
+  .mobileBrandTitle {
+    color: var(--horizon-text);
+    font-size: 1.35rem;
+    font-weight: 850;
+    letter-spacing: 0.01em;
+    line-height: 1;
+  }
+
+  .sortTabs {
+    gap: 0;
+  }
+
+  .sortTab {
+    flex: 1 1 0;
+    min-width: 0;
+  }
+
+  .sortTabButton {
+    border: 0;
+    border-radius: 0;
+    box-shadow: inset 0 -2px 0 0 transparent;
+    font-size: 0.92rem;
+    font-weight: 700;
+    min-height: 48px;
+    padding: 0.65rem 0.5rem 0.5rem;
+    text-align: center;
+    width: 100%;
+  }
+
+  .sortTabButton:hover {
+    background: transparent;
+    color: #d1fae5;
+  }
+
+  .sortTabButtonActive {
+    background: transparent;
+    box-shadow: inset 0 -2px 0 0 #13d27b;
+    color: #f4fff8;
+  }
+}

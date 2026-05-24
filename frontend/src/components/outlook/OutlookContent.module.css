@@ -33,8 +33,8 @@
 }
 
 .content blockquote {
-  background: var(--horizon-accent-soft, rgba(19, 210, 123, 0.1));
-  border: 1px solid rgba(19, 210, 123, 0.2);
+  background: var(--horizon-accent-soft, var(--horizon-bg-active));
+  border: 1px solid var(--horizon-border);
   border-radius: 0 var(--border-radius) var(--border-radius) 0;
   padding-left: var(--space-4);
   margin: var(--space-6) 0;

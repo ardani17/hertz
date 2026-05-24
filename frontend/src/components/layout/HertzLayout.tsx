@@ -73,22 +73,26 @@ export function HertzLayout(props: HertzLayoutProps) {
       <div className={shellClass}>
         <HertzLeftRail currentUser={currentUser} active={active} />
         <section className={contentClass} aria-label={props.variant === 'feed' ? 'HERTZ timeline' : undefined}>
-          <header className={styles.desktopHeader}>
-            <NotificationBell currentUser={currentUser} className={styles.desktopNotificationBell} />
-          </header>
-          <header className={styles.mobileHeader}>
-            <Link className={styles.mobileBrand} href="/hertz" aria-label="Horizon Home" prefetch>
-              <Image
-                src="/images/logo/Logo-Horizon-Atom-Online-White_8.png"
-                alt=""
-                width={34}
-                height={34}
-                priority
-              />
-              <span className={styles.mobileBrandTitle}>HERTZ</span>
-            </Link>
-            <NotificationBell currentUser={currentUser} className={styles.mobileNotificationBell} />
-          </header>
+          {props.variant !== 'feed' ? (
+            <>
+              <header className={styles.desktopHeader}>
+                <NotificationBell currentUser={currentUser} className={styles.desktopNotificationBell} />
+              </header>
+              <header className={styles.mobileHeader}>
+                <Link className={styles.mobileBrand} href="/hertz" aria-label="Horizon Home" prefetch>
+                  <Image
+                    src="/images/logo/Logo-Horizon-Atom-Online-White_8.png"
+                    alt=""
+                    width={34}
+                    height={34}
+                    priority
+                  />
+                  <span className={styles.mobileBrandTitle}>HERTZ</span>
+                </Link>
+                <NotificationBell currentUser={currentUser} className={styles.mobileNotificationBell} />
+              </header>
+            </>
+          ) : null}
           {props.variant === 'page' && !fillViewport && !hidePageHeader ? (
             <header className={styles.pageHeader}>
               <h1>{props.title}</h1>

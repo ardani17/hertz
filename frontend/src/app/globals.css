@@ -1,6 +1,7 @@
 @import "tailwindcss";
 @import "tw-animate-css";
 @import "shadcn/tailwind.css";
+@import "../styles/horizon-surfaces.css";
 
 @custom-variant dark (&:is(.dark *));
 
@@ -55,10 +56,19 @@
   --horizon-accent: #13d27b;
   --horizon-surface: rgba(15, 19, 18, 0.78);
   --horizon-surface-strong: rgba(20, 28, 24, 0.94);
-  --horizon-border: rgba(19, 210, 123, 0.24);
+  --horizon-border: var(--horizon-border);
   --horizon-text: #f3fff8;
   --horizon-text-muted: #91a79a;
-  --horizon-accent-soft: rgba(19, 210, 123, 0.14);
+  --horizon-accent-soft: var(--horizon-bg-selected);
+  --horizon-bg-hover: rgba(255, 255, 255, 0.02);
+  --horizon-border-hover: rgba(19, 210, 123, 0.52);
+  --horizon-bg-active: var(--horizon-bg-active);
+  --horizon-border-active: var(--horizon-border-active);
+  --horizon-bg-selected: var(--horizon-accent-soft);
+  --horizon-border-muted: var(--horizon-border);
+  --horizon-nav-track-bg: var(--horizon-bg-base);
+  --horizon-nav-track-border: var(--horizon-border);
+  --horizon-surface-transition: background-color 0.15s ease, border-color 0.15s ease;
   --horizon-success: #13d27b;
   --horizon-success-muted: #10b981;
   --horizon-shell-offset: 2rem;
@@ -157,7 +167,7 @@
   --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.3);
   --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.4);
   --shadow-lg: 0 8px 24px rgba(0, 0, 0, 0.5);
-  --shadow-glow: 0 0 8px rgba(16, 185, 129, 0.15);
+  --shadow-glow: 0 0 8px rgba(19, 210, 123, 0.15);
 }
 
 /* --- Light Theme Tokens --- */
@@ -179,7 +189,7 @@
   --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.08);
   --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.1);
   --shadow-lg: 0 8px 24px rgba(0, 0, 0, 0.15);
-  --shadow-glow: 0 0 8px rgba(16, 185, 129, 0.2);
+  --shadow-glow: 0 0 8px rgba(19, 210, 123, 0.2);
 }
 
 /* --- Reset & Base --- */

@@ -58,7 +58,7 @@ export function NotificationBell({
         aria-expanded={open}
         onClick={() => setOpen((value) => !value)}
       >
-        <Bell size={20} />
+        <Bell size={24} />
         {unread > 0 ? <span className={styles.badge}>{unread > 99 ? '99+' : unread}</span> : null}
       </button>
       {open ? <Dropdown onClose={() => setOpen(false)} /> : null}

@@ -33,13 +33,13 @@
 }
 
 .tabLink:hover {
-  background: rgba(16, 185, 129, 0.08);
+  background: var(--horizon-bg-active);
   color: #cde8d8;
 }
 
 .tabLinkActive {
-  background: rgba(16, 185, 129, 0.14);
-  border-color: rgba(52, 211, 153, 0.35);
+  background: var(--horizon-bg-selected);
+  border-color: var(--horizon-border-active);
   color: var(--horizon-accent);
 }
 

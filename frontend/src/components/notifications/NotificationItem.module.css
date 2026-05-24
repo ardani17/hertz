@@ -8,7 +8,7 @@
 }
 
 .rowUnread {
-  background: rgba(19, 210, 123, 0.06);
+  background: var(--horizon-bg-active);
 }
 
 .row strong {

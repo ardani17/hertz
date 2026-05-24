@@ -45,7 +45,7 @@
 .titleInput,
 .textarea {
   background: #050a07;
-  border: 1px solid rgba(75, 118, 92, 0.42);
+  border: 1px solid var(--horizon-border-active);
   border-radius: 8px;
   color: #f3fff8;
   font: inherit;
@@ -87,7 +87,7 @@
 
 .toolbar button {
   background: #00140d;
-  border: 1px solid rgba(75, 118, 92, 0.44);
+  border: 1px solid var(--horizon-border-active);
   color: #cde8d8;
   justify-content: center;
   padding: 0;

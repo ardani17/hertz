@@ -13,11 +13,6 @@ export function HertzHeader({
   filters: HertzFeedFilters;
   onFilterChange: (patch: HertzFeedFilterPatch) => void;
 }) {
-  const sortItems = [
-    { id: 'latest' as const, label: 'Untuk Anda', active: filters.sort === 'latest' },
-    { id: 'trending' as const, label: 'Trending', active: filters.sort === 'trending' },
-  ];
-
   function handleSearchSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
     const formData = new FormData(event.currentTarget);
@@ -25,27 +20,10 @@ export function HertzHeader({
     onFilterChange({ search: nextSearch || null });
   }
 
+  const hasSearchUi = filters.search;
+
   return (
     <div className={styles.header}>
-      <div className={styles.navRow}>
-        <nav aria-label="Urutan feed HERTZ">
-          <ul className={`${styles.sortTabs} ${styles.sortTabsCenter}`} role="tablist">
-            {sortItems.map((item) => (
-              <li key={item.id} className={styles.sortTab} role="presentation">
-                <button
-                  type="button"
-                  className={item.active ? `${styles.sortTabButton} ${styles.sortTabButtonActive}` : styles.sortTabButton}
-                  role="tab"
-                  aria-selected={item.active}
-                  onClick={() => onFilterChange({ sort: item.id })}
-                >
-                  {item.label}
-                </button>
-              </li>
-            ))}
-          </ul>
-        </nav>
-      </div>
       <form className={styles.mobileSearch} onSubmit={handleSearchSubmit} role="search">
         <label className={styles.mobileSearchLabel} htmlFor="hertz-mobile-search">
           <SearchIcon />
@@ -62,7 +40,7 @@ export function HertzHeader({
           enterKeyHint="search"
         />
       </form>
-      {filters.search ? (
+      {hasSearchUi ? (
         <div className={styles.searchChip}>
           <span>Pencarian: {filters.search}</span>
           <Button type="button" variant="ghost" onClick={() => onFilterChange({ search: null })}>

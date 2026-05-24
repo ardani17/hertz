@@ -21,7 +21,7 @@
 }
 
 .success {
-  box-shadow: var(--shadow-lg), inset 0 0 0 1px rgba(19, 210, 123, 0.28);
+  box-shadow: var(--shadow-lg), inset 0 0 0 1px var(--horizon-border);
 }
 
 .error {

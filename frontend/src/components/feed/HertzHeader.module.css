@@ -16,21 +16,6 @@
 
 .header {
   background: var(--hertz-shell-bg, var(--horizon-bg-base));
-  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
-  position: sticky;
-  top: 0;
-  z-index: 5;
-}
-
-.navRow {
-  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
-  display: flex;
-  justify-content: center;
-  margin: 0 auto;
-  max-width: 42rem;
-  padding-block: 0;
-  padding-inline: 1.25rem;
-  width: 100%;
 }
 
 .feedTitle,
@@ -99,100 +84,16 @@
 }
 
 .activeTab {
-  background: rgba(16, 185, 129, 0.05);
+  background: var(--horizon-bg-hover);
   border: 2px solid #00d67a !important;
   border-radius: 8px;
   color: #00f58a !important;
   font-weight: 700;
 }
 
-.sortTabs {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0.35rem;
-  list-style: none;
-  margin: 0;
-  padding: 0.75rem 0;
-}
-
-.sortTabsCenter {
-  gap: 0.85rem;
-  justify-content: center;
-  width: 100%;
-}
-
-.sortTab {
-  display: inline-flex;
-}
-
-.sortTabButton {
-  background: transparent;
-  border: 1px solid transparent;
-  border-radius: 999px;
-  color: #8ea897;
-  cursor: pointer;
-  font: inherit;
-  font-size: 0.82rem;
-  font-weight: 600;
-  padding: 0.4rem 1.1rem;
-  transition: background 0.15s ease, color 0.15s ease, border-color 0.15s ease;
-}
-
-.sortTabButton:hover {
-  background: rgba(16, 185, 129, 0.08);
-  color: #cde8d8;
-}
-
-.sortTabButtonActive {
-  background: rgba(16, 185, 129, 0.14);
-  border-color: rgba(52, 211, 153, 0.35);
-  color: var(--horizon-accent);
-}
-
-.sortTabButton:focus-visible {
-  outline: 2px solid var(--horizon-accent);
-  outline-offset: 2px;
-}
-
-@media (max-width: 1024px) {
-  .sortTabs {
-    gap: 0;
-    padding: 0;
-    width: 100%;
-  }
-
-  .sortTab {
-    flex: 1 1 0;
-    min-width: 0;
-  }
-
-  .sortTabButton {
-    border: 0;
-    border-radius: 0;
-    box-shadow: inset 0 -2px 0 0 transparent;
-    font-size: 0.92rem;
-    font-weight: 700;
-    min-height: 48px;
-    padding: 0.65rem 0.5rem 0.5rem;
-    text-align: center;
-    width: 100%;
-  }
-
-  .sortTabButton:hover {
-    background: transparent;
-    color: #d1fae5;
-  }
-
-  .sortTabButtonActive {
-    background: transparent;
-    box-shadow: inset 0 -2px 0 0 #13d27b;
-    color: #f4fff8;
-  }
-}
-
 .searchChip {
   align-items: center;
-  border: 1px solid rgba(19, 210, 123, 0.24);
+  border: 1px solid var(--horizon-border);
   border-radius: 8px;
   color: #9fb4aa;
   display: flex;
@@ -218,7 +119,7 @@
 @media (max-width: 1023px) {
   .mobileSearch {
     align-items: center;
-    border: 1px solid rgba(19, 210, 123, 0.22);
+    border: 1px solid var(--horizon-border);
     border-radius: 8px;
     display: grid;
     gap: 0.5rem;
@@ -256,10 +157,6 @@
 @media (max-width: 768px) {
   .header {
     overflow: hidden;
-  }
-
-  .navRow {
-    padding-inline: 0.9rem;
   }
 
   .tabs {

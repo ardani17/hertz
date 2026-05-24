@@ -10,7 +10,7 @@
 }
 
 .badge {
-  border: 1px solid rgba(19, 210, 123, 0.42);
+  border: 1px solid var(--horizon-border-active);
   border-radius: 6px;
   color: #13d27b;
   font-size: 0.72rem;

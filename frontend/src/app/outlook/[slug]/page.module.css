@@ -8,8 +8,8 @@
 
   border-radius: var(--border-radius);
   box-shadow:
-    inset 1px 0 0 rgba(75, 118, 92, 0.14),
-    inset -1px 0 0 rgba(75, 118, 92, 0.14);
+    inset 1px 0 0 var(--horizon-border),
+    inset -1px 0 0 var(--horizon-border);
   margin: 0 auto;
   max-width: 720px;
   min-height: 100vh;
@@ -32,8 +32,8 @@
 }
 
 .article {
-  border-bottom: 1px solid rgba(75, 118, 92, 0.28);
-  border-top: 1px solid rgba(75, 118, 92, 0.28);
+  border-bottom: 1px solid var(--horizon-border);
+  border-top: 1px solid var(--horizon-border);
   margin: 0;
   padding: 1.25rem;
 }
@@ -47,7 +47,7 @@
 
 .spineNode {
   align-self: start;
-  background: rgba(16, 185, 129, 0.1);
+  background: var(--horizon-bg-active);
   border: 1.5px solid var(--horizon-accent-strong);
   border-radius: 50%;
   color: var(--horizon-accent-strong);
@@ -140,7 +140,7 @@
 
 .primaryMedia {
   background: #050d09;
-  border: 1px solid rgba(75, 118, 92, 0.32);
+  border: 1px solid var(--horizon-border);
   border-radius: 12px;
   margin: 0.9rem 0;
   overflow: hidden;
@@ -207,7 +207,7 @@
 
 .mediaItem {
   background: #050d09;
-  border: 1px solid rgba(75, 118, 92, 0.32);
+  border: 1px solid var(--horizon-border);
   border-radius: 12px;
   overflow: hidden;
 }

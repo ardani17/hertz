@@ -50,7 +50,7 @@
 
 .hobbyList li {
   background: rgba(19, 210, 123, 0.12);
-  border: 1px solid rgba(19, 210, 123, 0.35);
+  border: 1px solid var(--horizon-border-active);
   border-radius: 999px;
   color: #d7fbe9;
   font-size: 0.78rem;

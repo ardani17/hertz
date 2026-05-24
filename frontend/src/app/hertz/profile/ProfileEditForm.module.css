@@ -90,7 +90,7 @@
 .chipList li {
   align-items: center;
   background: rgba(19, 210, 123, 0.12);
-  border: 1px solid rgba(19, 210, 123, 0.35);
+  border: 1px solid var(--horizon-border-active);
   border-radius: 999px;
   color: #d7fbe9;
   display: inline-flex;

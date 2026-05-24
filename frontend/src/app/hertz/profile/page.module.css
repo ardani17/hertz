@@ -30,7 +30,7 @@
 }
 
 .badge {
-  border: 1px solid rgba(19, 210, 123, 0.42);
+  border: 1px solid var(--horizon-border-active);
   border-radius: 999px;
   color: #13d27b;
   font-size: 0.68rem;
@@ -106,7 +106,7 @@
 }
 
 .stats div {
-  background: rgba(0, 0, 0, 0.22);
+  background: var(--horizon-bg-base);
   border: 1px solid rgba(76, 118, 94, 0.22);
   border-radius: 8px;
   display: grid;
@@ -141,7 +141,7 @@
 .sessionActions a,
 .sessionActions button {
   align-items: center;
-  background: rgba(19, 210, 123, 0.08);
+  background: var(--horizon-bg-active);
   border: 1px solid rgba(19, 210, 123, 0.32);
   border-radius: 8px;
   color: #dfffee;
@@ -159,7 +159,7 @@
 
 .sessionActions a:hover,
 .sessionActions button:hover {
-  border-color: rgba(19, 210, 123, 0.58);
+  border-color: var(--horizon-border-active);
   color: #13d27b;
 }
 
@@ -314,7 +314,7 @@
 .activeTab {
   align-items: center;
   background: transparent;
-  border: 1px solid rgba(19, 210, 123, 0.28);
+  border: 1px solid var(--horizon-border);
   border-radius: 999px;
   color: #b7d4c2;
   cursor: pointer;
@@ -328,8 +328,8 @@
 }
 
 .activeTab {
-  background: rgba(19, 210, 123, 0.14);
-  border-color: rgba(19, 210, 123, 0.58);
+  background: var(--horizon-bg-selected);
+  border-color: var(--horizon-border-active);
   color: #f3fff8;
 }
 

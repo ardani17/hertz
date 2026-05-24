@@ -159,7 +159,7 @@
 }
 
 .positive {
-  background: rgba(16, 185, 129, 0.16);
+  background: var(--horizon-bg-selected);
   color: #45f3a1;
 }
 

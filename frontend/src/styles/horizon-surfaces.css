@@ -1,0 +1,42 @@
+/* Shared interactive surface utilities — canonical HERTZ post pattern */
+
+.hz-surface {
+  background: var(--horizon-bg-base);
+  border: 1px solid var(--horizon-border);
+  transition: var(--horizon-surface-transition);
+}
+
+.hz-surface:hover,
+.hz-surface:focus-visible {
+  background: var(--horizon-bg-hover);
+  border-color: var(--horizon-border-hover);
+}
+
+.hz-surface--active {
+  background: var(--horizon-bg-active);
+  border-color: var(--horizon-border-active);
+}
+
+.hz-nav-track {
+  background: var(--horizon-nav-track-bg);
+  border: 1px solid var(--horizon-nav-track-border);
+}
+
+.hz-nav-item {
+  background: transparent;
+  border: 1px solid transparent;
+  transition: var(--horizon-surface-transition);
+}
+
+.hz-nav-item:hover,
+.hz-nav-item:focus-visible {
+  background: var(--horizon-bg-active);
+  border-color: transparent;
+  color: var(--horizon-accent);
+}
+
+.hz-nav-item--active {
+  background: var(--horizon-bg-active);
+  border-color: var(--horizon-border-active);
+  color: var(--horizon-accent);
+}

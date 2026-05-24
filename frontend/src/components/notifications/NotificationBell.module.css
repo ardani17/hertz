@@ -6,10 +6,15 @@
   color: var(--horizon-text);
   cursor: pointer;
   display: inline-flex;
-  height: 40px;
+  height: 48px;
   justify-content: center;
   position: relative;
-  width: 40px;
+  width: 48px;
+}
+
+.bell svg {
+  height: 24px;
+  width: 24px;
 }
 
 .bell:hover {
@@ -29,6 +34,6 @@
   min-width: 1.1rem;
   padding: 0 0.25rem;
   position: absolute;
-  right: 0.1rem;
-  top: 0.1rem;
+  right: 0.35rem;
+  top: 0.35rem;
 }
