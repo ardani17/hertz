@@ -87,6 +87,49 @@
   margin: 0.15rem 0 0;
 }
 
+.heroActions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.45rem;
+  margin-top: 0.15rem;
+}
+
+.heroActionPrimary,
+.heroActionSecondary {
+  align-items: center;
+  border-radius: 999px;
+  display: inline-flex;
+  font-size: 0.8rem;
+  font-weight: 750;
+  justify-content: center;
+  min-height: 36px;
+  padding: 0.35rem 0.85rem;
+  text-decoration: none;
+  transition: background 0.15s ease, border-color 0.15s ease, color 0.15s ease;
+}
+
+.heroActionPrimary {
+  background: var(--horizon-accent);
+  border: 0;
+  color: #04140c;
+}
+
+.heroActionPrimary:hover {
+  background: #2af590;
+  color: #04140c;
+}
+
+.heroActionSecondary {
+  background: transparent;
+  border: 1px solid var(--horizon-border);
+  color: #d7fbe9;
+}
+
+.heroActionSecondary:hover {
+  border-color: var(--horizon-border-active);
+  color: var(--horizon-accent);
+}
+
 .publicLink {
   color: #13d27b;
   font-size: 0.82rem;

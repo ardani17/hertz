@@ -3,12 +3,18 @@
   border: 1px solid var(--horizon-border);
   border-radius: 12px;
   display: grid;
-  gap: 0.85rem;
+  gap: 1rem;
   padding: 1rem;
+  scroll-margin-top: 5.5rem;
+}
+
+.panelHeader {
+  display: grid;
+  gap: 0.35rem;
 }
 
 .panelLabel {
-  color: #13d27b;
+  color: var(--horizon-accent);
   font-size: 0.68rem;
   font-weight: 850;
   letter-spacing: 0.06em;
@@ -25,24 +31,70 @@
 
 .form {
   display: grid;
-  gap: 1rem;
+  gap: 0.65rem;
 }
 
 .section {
+  background: rgba(255, 255, 255, 0.015);
   border: 1px solid var(--horizon-border);
   border-radius: 10px;
-  display: grid;
-  gap: 0.75rem;
-  margin: 0;
-  min-width: 0;
-  padding: 0.85rem;
+  overflow: hidden;
 }
 
-.section legend {
-  color: #f3fff8;
-  font-size: 0.9rem;
+.sectionSummary {
+  align-items: center;
+  cursor: pointer;
+  display: flex;
+  gap: 0.65rem;
+  justify-content: space-between;
+  list-style: none;
+  min-height: 48px;
+  padding: 0.75rem 0.85rem;
+  transition: background 0.15s ease;
+}
+
+.sectionSummary::-webkit-details-marker {
+  display: none;
+}
+
+.sectionSummary::after {
+  color: #8ea897;
+  content: '+';
+  flex: 0 0 auto;
+  font-size: 1.1rem;
   font-weight: 700;
-  padding: 0 0.25rem;
+  line-height: 1;
+}
+
+.section[open] .sectionSummary::after {
+  content: '−';
+}
+
+.sectionSummary:hover {
+  background: var(--horizon-bg-hover);
+}
+
+.sectionSummary span {
+  color: #f3fff8;
+  font-size: 0.92rem;
+  font-weight: 750;
+}
+
+.sectionSummary em {
+  color: #8ea897;
+  font-size: 0.72rem;
+  font-style: normal;
+  font-weight: 650;
+  margin-left: auto;
+  padding-right: 0.35rem;
+  text-align: right;
+}
+
+.sectionBody {
+  border-top: 1px solid rgba(255, 255, 255, 0.05);
+  display: grid;
+  gap: 0.75rem;
+  padding: 0.85rem;
 }
 
 .field {
@@ -59,17 +111,40 @@
 .field input,
 .field textarea,
 .field select {
-  background: #07140f;
+  background: rgba(7, 20, 15, 0.92);
   border: 1px solid var(--horizon-border);
   border-radius: 8px;
+  box-sizing: border-box;
   color: #f3fff8;
   font: inherit;
+  min-height: 42px;
   padding: 0.55rem 0.65rem;
+  transition: border-color 0.15s ease;
   width: 100%;
 }
 
 .field textarea {
+  min-height: 96px;
   resize: vertical;
+}
+
+.field input:focus-visible,
+.field textarea:focus-visible,
+.field select:focus-visible {
+  border-color: var(--horizon-border-hover);
+  outline: none;
+}
+
+.charCount {
+  color: #8ea897;
+  font-size: 0.72rem;
+  justify-self: end;
+}
+
+.inlineHint {
+  color: #8ea897;
+  font-size: 0.8rem;
+  margin: 0;
 }
 
 .hobbyInputRow {
@@ -89,23 +164,28 @@
 
 .chipList li {
   align-items: center;
-  background: rgba(19, 210, 123, 0.12);
+  background: var(--horizon-bg-selected);
   border: 1px solid var(--horizon-border-active);
   border-radius: 999px;
   color: #d7fbe9;
   display: inline-flex;
   font-size: 0.78rem;
   gap: 0.35rem;
-  padding: 0.2rem 0.55rem;
+  padding: 0.28rem 0.55rem;
 }
 
 .chipList button {
+  align-items: center;
   background: transparent;
   border: 0;
   color: #9eb8a9;
   cursor: pointer;
+  display: inline-flex;
   font-size: 1rem;
+  justify-content: center;
   line-height: 1;
+  min-height: 20px;
+  min-width: 20px;
   padding: 0;
 }
 
@@ -115,34 +195,106 @@
   grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
 }
 
-.marketGrid {
+.inputPrefix {
+  align-items: center;
+  background: rgba(7, 20, 15, 0.92);
+  border: 1px solid var(--horizon-border);
+  border-radius: 8px;
   display: grid;
-  gap: 0.45rem;
-  grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+  gap: 0.35rem;
+  grid-template-columns: auto minmax(0, 1fr);
+  min-height: 42px;
+  padding: 0 0.65rem;
+  transition: border-color 0.15s ease;
 }
 
-.checkLabel {
-  align-items: center;
-  color: #c8ddd2;
-  display: inline-flex;
+.inputPrefix:focus-within {
+  border-color: var(--horizon-border-hover);
+}
+
+.inputPrefix > span {
+  color: #8ea897;
   font-size: 0.82rem;
-  gap: 0.4rem;
+  font-weight: 700;
+}
+
+.inputPrefix input {
+  background: transparent;
+  border: 0;
+  min-height: 40px;
+  padding: 0;
+}
+
+.inputPrefix input:focus-visible {
+  outline: none;
+}
+
+.marketGrid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.45rem;
+}
+
+.marketChip {
+  background: transparent;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 999px;
+  color: #8ea897;
+  cursor: pointer;
+  font: inherit;
+  font-size: 0.76rem;
+  font-weight: 650;
+  line-height: 1;
+  min-height: 34px;
+  padding: 0.35rem 0.75rem;
+  transition: background 0.15s ease, border-color 0.15s ease, color 0.15s ease;
+}
+
+.marketChip:hover {
+  background: var(--horizon-bg-active);
+  color: #d7fbe9;
+}
+
+.marketChipActive {
+  background: var(--horizon-bg-selected);
+  border-color: var(--horizon-border-active);
+  color: var(--horizon-accent);
+}
+
+.inlineFields {
+  display: grid;
+  gap: 0.75rem;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.formFooter {
+  background: linear-gradient(180deg, transparent, rgba(10, 10, 15, 0.92) 24%);
+  bottom: calc(66px + env(safe-area-inset-bottom));
+  margin: 0.25rem -1rem -1rem;
+  padding: 0.85rem 1rem 1rem;
+  position: sticky;
+  z-index: 4;
 }
 
 .primaryButton,
 .secondaryButton {
+  align-items: center;
   border-radius: 999px;
   cursor: pointer;
+  display: inline-flex;
   font: inherit;
-  font-weight: 700;
-  padding: 0.6rem 1rem;
+  font-weight: 750;
+  justify-content: center;
+  line-height: 1.2;
+  min-height: 42px;
+  padding: 0.55rem 1rem;
 }
 
 .primaryButton {
   background: var(--horizon-accent);
   border: 0;
   color: #04140c;
-  justify-self: start;
+  width: 100%;
 }
 
 .primaryButton:disabled {
@@ -154,10 +306,26 @@
   background: transparent;
   border: 1px solid var(--horizon-border);
   color: #d7fbe9;
+  white-space: nowrap;
+}
+
+@media (min-width: 1025px) {
+  .formFooter {
+    background: transparent;
+    bottom: auto;
+    margin: 0.35rem 0 0;
+    padding: 0;
+    position: static;
+  }
+
+  .primaryButton {
+    width: auto;
+  }
 }
 
 @media (max-width: 640px) {
-  .hobbyInputRow {
+  .hobbyInputRow,
+  .inlineFields {
     grid-template-columns: 1fr;
   }
 }

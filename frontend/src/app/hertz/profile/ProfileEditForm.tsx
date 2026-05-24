@@ -26,7 +26,9 @@ const EMPTY_TRADING = {
   style: '',
 };
 
-export function ProfileEditForm() {
+const BIO_MAX = 280;
+
+export function ProfileEditForm({ username }: { username?: string | null }) {
   const { showToast } = useToast();
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
@@ -140,168 +142,212 @@ export function ProfileEditForm() {
     }
   }
 
+  const handleLabel = username ? `@${username.replace(/^@/, '')}` : 'profil publik';
+
   if (loading) {
     return (
       <section id="profile-edit" className={styles.panel}>
-        <p className={styles.panelLabel}>Profil publik</p>
-        <p className={styles.hint}>Memuat data profil...</p>
+        <div className={styles.panelHeader}>
+          <p className={styles.panelLabel}>Edit profil publik</p>
+          <p className={styles.hint}>Memuat data profil...</p>
+        </div>
       </section>
     );
   }
 
   return (
     <section id="profile-edit" className={styles.panel}>
-      <p className={styles.panelLabel}>Profil publik</p>
-      <p className={styles.hint}>
-        Informasi ini tampil di halaman publik @{/* username shown on page */} kamu. Nama dan avatar tetap dari Telegram.
-      </p>
+      <div className={styles.panelHeader}>
+        <div>
+          <p className={styles.panelLabel}>Edit profil publik</p>
+          <p className={styles.hint}>
+            Tampil di halaman {handleLabel}. Nama dan avatar tetap dari Telegram.
+          </p>
+        </div>
+      </div>
 
       <form className={styles.form} onSubmit={handleSubmit}>
-        <fieldset className={styles.section}>
-          <legend>Profil dasar</legend>
-          <label className={styles.field}>
-            <span>Bio</span>
-            <textarea
-              value={bio}
-              onChange={(event) => setBio(event.target.value)}
-              maxLength={280}
-              rows={3}
-              placeholder="Ceritakan sedikit tentang dirimu..."
-            />
-          </label>
-          <label className={styles.field}>
-            <span>Lokasi</span>
-            <input
-              value={location}
-              onChange={(event) => setLocation(event.target.value)}
-              maxLength={80}
-              placeholder="Kota atau negara"
-            />
-          </label>
-        </fieldset>
-
-        <fieldset className={styles.section}>
-          <legend>Hobi</legend>
-          <div className={styles.hobbyInputRow}>
-            <input
-              value={hobbyDraft}
-              onChange={(event) => setHobbyDraft(event.target.value)}
-              maxLength={40}
-              placeholder="Contoh: hiking, fotografi"
-              onKeyDown={(event) => {
-                if (event.key === 'Enter') {
-                  event.preventDefault();
-                  addHobby();
-                }
-              }}
-            />
-            <button type="button" className={styles.secondaryButton} onClick={addHobby}>
-              Tambah
-            </button>
+        <details className={styles.section} open>
+          <summary className={styles.sectionSummary}>
+            <span>Profil dasar</span>
+            <em>Bio & lokasi</em>
+          </summary>
+          <div className={styles.sectionBody}>
+            <label className={styles.field}>
+              <span>Bio</span>
+              <textarea
+                value={bio}
+                onChange={(event) => setBio(event.target.value)}
+                maxLength={BIO_MAX}
+                rows={4}
+                placeholder="Ceritakan sedikit tentang dirimu, fokus trading, atau minat di komunitas..."
+              />
+              <small className={styles.charCount}>
+                {bio.length}/{BIO_MAX}
+              </small>
+            </label>
+            <label className={styles.field}>
+              <span>Lokasi</span>
+              <input
+                value={location}
+                onChange={(event) => setLocation(event.target.value)}
+                maxLength={80}
+                placeholder="Jakarta, Surabaya, Singapore..."
+              />
+            </label>
           </div>
-          {hobbies.length > 0 ? (
-            <ul className={styles.chipList}>
-              {hobbies.map((hobby, index) => (
-                <li key={`${hobby}-${index}`}>
-                  <span>{hobby}</span>
-                  <button type="button" aria-label={`Hapus ${hobby}`} onClick={() => removeHobby(index)}>
-                    ×
-                  </button>
-                </li>
-              ))}
-            </ul>
-          ) : (
-            <p className={styles.hint}>Belum ada hobi ditambahkan.</p>
-          )}
-        </fieldset>
+        </details>
 
-        <fieldset className={styles.section}>
-          <legend>Sosial media</legend>
-          <p className={styles.hint}>Isi username/handle saja, tanpa URL penuh.</p>
-          <div className={styles.socialGrid}>
-            {SOCIAL_PLATFORMS.map((platform) => (
-              <label key={platform} className={styles.field}>
-                <span>{SOCIAL_PLATFORM_LABELS[platform]}</span>
-                <input
-                  value={socialLinks[platform] ?? ''}
-                  onChange={(event) =>
-                    setSocialLinks((current) => ({
-                      ...current,
-                      [platform]: event.target.value.replace(/^@+/, ''),
-                    }))
+        <details className={styles.section}>
+          <summary className={styles.sectionSummary}>
+            <span>Hobi</span>
+            <em>{hobbies.length > 0 ? `${hobbies.length} ditambahkan` : 'Opsional'}</em>
+          </summary>
+          <div className={styles.sectionBody}>
+            <div className={styles.hobbyInputRow}>
+              <input
+                value={hobbyDraft}
+                onChange={(event) => setHobbyDraft(event.target.value)}
+                maxLength={40}
+                placeholder="Contoh: hiking, fotografi"
+                onKeyDown={(event) => {
+                  if (event.key === 'Enter') {
+                    event.preventDefault();
+                    addHobby();
                   }
-                  maxLength={50}
-                  placeholder={`@${platform}`}
-                />
-              </label>
-            ))}
+                }}
+              />
+              <button type="button" className={styles.secondaryButton} onClick={addHobby}>
+                Tambah
+              </button>
+            </div>
+            {hobbies.length > 0 ? (
+              <ul className={styles.chipList}>
+                {hobbies.map((hobby, index) => (
+                  <li key={`${hobby}-${index}`}>
+                    <span>{hobby}</span>
+                    <button type="button" aria-label={`Hapus ${hobby}`} onClick={() => removeHobby(index)}>
+                      ×
+                    </button>
+                  </li>
+                ))}
+              </ul>
+            ) : (
+              <p className={styles.inlineHint}>Belum ada hobi. Tambahkan maksimal 8.</p>
+            )}
           </div>
-        </fieldset>
+        </details>
 
-        <fieldset className={styles.section}>
-          <legend>Pengalaman trading</legend>
-          <label className={styles.field}>
-            <span>Level</span>
-            <select
-              value={trading.experienceLevel ?? ''}
-              onChange={(event) =>
-                setTrading((current) => ({
-                  ...current,
-                  experienceLevel: (event.target.value || null) as TradingExperienceLevel | null,
-                }))
-              }
-            >
-              <option value="">— Pilih level —</option>
-              {TRADING_LEVELS.map((level) => (
-                <option key={level} value={level}>
-                  {TRADING_LEVEL_LABELS[level]}
-                </option>
-              ))}
-            </select>
-          </label>
-
-          <div className={styles.field}>
-            <span>Pasar yang difokuskan</span>
-            <div className={styles.marketGrid}>
-              {TRADING_MARKETS.map((market) => (
-                <label key={market} className={styles.checkLabel}>
-                  <input
-                    type="checkbox"
-                    checked={trading.markets.includes(market)}
-                    onChange={() => toggleMarket(market)}
-                  />
-                  {TRADING_MARKET_LABELS[market]}
+        <details className={styles.section}>
+          <summary className={styles.sectionSummary}>
+            <span>Sosial media</span>
+            <em>Username saja</em>
+          </summary>
+          <div className={styles.sectionBody}>
+            <div className={styles.socialGrid}>
+              {SOCIAL_PLATFORMS.map((platform) => (
+                <label key={platform} className={styles.field}>
+                  <span>{SOCIAL_PLATFORM_LABELS[platform]}</span>
+                  <div className={styles.inputPrefix}>
+                    <span aria-hidden="true">@</span>
+                    <input
+                      value={socialLinks[platform] ?? ''}
+                      onChange={(event) =>
+                        setSocialLinks((current) => ({
+                          ...current,
+                          [platform]: event.target.value.replace(/^@+/, ''),
+                        }))
+                      }
+                      maxLength={50}
+                      placeholder={platform}
+                    />
+                  </div>
                 </label>
               ))}
             </div>
           </div>
+        </details>
 
-          <label className={styles.field}>
-            <span>Mulai trading sejak</span>
-            <input
-              type="number"
-              min={1990}
-              max={new Date().getFullYear()}
-              value={trading.sinceYear}
-              onChange={(event) => setTrading((current) => ({ ...current, sinceYear: event.target.value }))}
-              placeholder="2020"
-            />
-          </label>
+        <details className={styles.section}>
+          <summary className={styles.sectionSummary}>
+            <span>Pengalaman trading</span>
+            <em>
+              {trading.experienceLevel
+                ? TRADING_LEVEL_LABELS[trading.experienceLevel]
+                : 'Level & pasar'}
+            </em>
+          </summary>
+          <div className={styles.sectionBody}>
+            <label className={styles.field}>
+              <span>Level</span>
+              <select
+                value={trading.experienceLevel ?? ''}
+                onChange={(event) =>
+                  setTrading((current) => ({
+                    ...current,
+                    experienceLevel: (event.target.value || null) as TradingExperienceLevel | null,
+                  }))
+                }
+              >
+                <option value="">Pilih level</option>
+                {TRADING_LEVELS.map((level) => (
+                  <option key={level} value={level}>
+                    {TRADING_LEVEL_LABELS[level]}
+                  </option>
+                ))}
+              </select>
+            </label>
 
-          <label className={styles.field}>
-            <span>Gaya trading</span>
-            <input
-              value={trading.style}
-              onChange={(event) => setTrading((current) => ({ ...current, style: event.target.value }))}
-              maxLength={120}
-              placeholder="Scalping, swing, long-term, dll."
-            />
-          </label>
-        </fieldset>
+            <div className={styles.field}>
+              <span>Pasar yang difokuskan</span>
+              <div className={styles.marketGrid}>
+                {TRADING_MARKETS.map((market) => {
+                  const active = trading.markets.includes(market);
+                  return (
+                    <button
+                      key={market}
+                      type="button"
+                      className={active ? `${styles.marketChip} ${styles.marketChipActive}` : styles.marketChip}
+                      aria-pressed={active}
+                      onClick={() => toggleMarket(market)}
+                    >
+                      {TRADING_MARKET_LABELS[market]}
+                    </button>
+                  );
+                })}
+              </div>
+            </div>
 
-        <button type="submit" className={styles.primaryButton} disabled={saving}>
-          {saving ? 'Menyimpan...' : 'Simpan profil publik'}
-        </button>
+            <div className={styles.inlineFields}>
+              <label className={styles.field}>
+                <span>Mulai sejak</span>
+                <input
+                  type="number"
+                  min={1990}
+                  max={new Date().getFullYear()}
+                  value={trading.sinceYear}
+                  onChange={(event) => setTrading((current) => ({ ...current, sinceYear: event.target.value }))}
+                  placeholder="2020"
+                />
+              </label>
+              <label className={styles.field}>
+                <span>Gaya trading</span>
+                <input
+                  value={trading.style}
+                  onChange={(event) => setTrading((current) => ({ ...current, style: event.target.value }))}
+                  maxLength={120}
+                  placeholder="Scalping, swing, long-term..."
+                />
+              </label>
+            </div>
+          </div>
+        </details>
+
+        <div className={styles.formFooter}>
+          <button type="submit" className={styles.primaryButton} disabled={saving}>
+            {saving ? 'Menyimpan...' : 'Simpan profil publik'}
+          </button>
+        </div>
       </form>
     </section>
   );

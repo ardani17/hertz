@@ -23,7 +23,7 @@ export function ProfileSessionActions() {
   return (
     <div className={styles.sessionActions}>
       <Link href="/hertz">HERTZ</Link>
-      <Link href="/hertz/notifications">Notifikasi</Link>
+      <Link href="#profile-edit">Edit profil</Link>
       <button type="button" onClick={logout} disabled={loggingOut}>
         {loggingOut ? 'Keluar...' : 'Keluar'}
       </button>
