@@ -259,7 +259,8 @@
 }
 
 .itemActive {
-  background: var(--horizon-bg-base);
+  background: var(--horizon-bg-selected);
+  box-shadow: inset 0 0 0 1px var(--horizon-border-active);
 }
 
 .itemUnread .itemPreview {
@@ -542,19 +543,27 @@
 }
 
 .threadIntroProfileBtn {
-  background: #f3fff8;
+  align-items: center;
+  background: var(--horizon-accent, #13d27b);
+  border: 0;
   border-radius: 999px;
-  color: #02100a;
+  box-sizing: border-box;
+  color: #04140b;
+  display: inline-flex;
   font-size: 0.82rem;
   font-weight: 800;
+  justify-content: center;
+  line-height: 1.2;
   margin-top: 0.35rem;
   min-height: 34px;
-  padding: 0 1rem;
+  padding: 0.45rem 1rem;
   text-decoration: none;
 }
 
 .threadIntroProfileBtn:hover {
-  background: #e7f4ec;
+  background: #2af590;
+  color: #04140b;
+  text-decoration: none;
 }
 
 .messageDayGroup {

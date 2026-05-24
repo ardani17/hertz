@@ -54,16 +54,19 @@
 
 .fallbackButton {
   align-items: center;
-  background: #229ed9;
+  background: var(--horizon-accent, #13d27b);
   border: 0;
   border-radius: 8px;
-  color: #fff;
+  box-sizing: border-box;
+  color: #04140b;
   display: inline-flex;
-  font-weight: 900;
+  font-weight: 800;
   gap: 0.55rem;
   justify-content: center;
+  line-height: 1.2;
   min-height: 46px;
-  padding: 0 1rem;
+  padding: 0.55rem 1rem;
+  text-decoration: none;
   width: fit-content;
 }
 

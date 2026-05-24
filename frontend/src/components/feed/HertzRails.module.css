@@ -150,6 +150,7 @@
 .adminLink,
 .adminNav {
   align-items: center;
+  border: 1px solid transparent;
   display: flex;
   gap: 0.72rem;
   min-height: 48px;
@@ -157,7 +158,7 @@
   color: #9ca3af;
   text-decoration: none;
   border-radius: 8px;
-  transition: background 160ms ease, color 160ms ease, transform 160ms ease;
+  transition: background 160ms ease, border-color 160ms ease, color 160ms ease, transform 160ms ease;
 }
 
 .nav a {
@@ -180,20 +181,9 @@
 }
 
 .activeNav {
-  background: var(--horizon-bg-hover);
-  border: 0;
-  color: #13d27b !important;
-}
-
-.activeNav::before {
-  background: #13d27b;
-  border-radius: 0 999px 999px 0;
-  bottom: 8px;
-  content: "";
-  left: 0;
-  position: absolute;
-  top: 8px;
-  width: 4px;
+  background: var(--horizon-bg-selected);
+  border-color: var(--horizon-border-active);
+  color: var(--horizon-accent) !important;
 }
 
 .profile,

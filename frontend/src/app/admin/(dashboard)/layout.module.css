@@ -96,10 +96,11 @@
   text-decoration: none;
   font-size: 0.875rem;
   font-weight: 600;
+  border: 1px solid transparent;
   border-radius: 8px;
   margin: 0 0.5rem;
   position: relative;
-  transition: background 160ms ease, color 160ms ease;
+  transition: background 160ms ease, border-color 160ms ease, color 160ms ease;
 }
 
 .navLink:hover {
@@ -113,20 +114,10 @@
 }
 
 .navLinkActive {
-  background-color: rgba(16, 185, 129, 0.05);
+  background-color: var(--horizon-bg-selected);
+  border: 1px solid var(--horizon-border-active);
   color: #13d27b;
   font-weight: 700;
-}
-
-.navLinkActive::before {
-  background: #13d27b;
-  border-radius: 0 999px 999px 0;
-  bottom: 8px;
-  content: "";
-  left: 0;
-  position: absolute;
-  top: 8px;
-  width: 4px;
 }
 
 .navIcon {
