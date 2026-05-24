@@ -68,6 +68,7 @@ export function MessageThread({
   const messagesEndRef = useRef<HTMLDivElement | null>(null);
   const listRef = useRef<HTMLDivElement | null>(null);
   const prevCountRef = useRef(0);
+  const initialLoadRef = useRef(true);
   const [newMessagesCount, setNewMessagesCount] = useState(0);
   const threadActions = getDmThreadMenuActions({ active: Boolean(activeId), archived: filter === 'archived' });
   const messageGroups = groupDmMessagesByDate(messages);
@@ -81,8 +82,13 @@ export function MessageThread({
   useEffect(() => {
     if (!activeId) {
       prevCountRef.current = 0;
+      initialLoadRef.current = true;
       setNewMessagesCount(0);
+      return;
     }
+    prevCountRef.current = 0;
+    initialLoadRef.current = true;
+    setNewMessagesCount(0);
   }, [activeId]);
 
   useEffect(() => {
@@ -104,9 +110,19 @@ export function MessageThread({
     const previous = prevCountRef.current;
     const grew = messages.length > previous;
     prevCountRef.current = messages.length;
+
+    if (initialLoadRef.current) {
+      initialLoadRef.current = false;
+      setNewMessagesCount(0);
+      requestAnimationFrame(() => scrollToBottom('auto'));
+      return;
+    }
+
     if (!grew) return;
+
     if (!list || isNearBottom(list)) {
-      scrollToBottom(previous === 0 ? 'auto' : 'smooth');
+      setNewMessagesCount(0);
+      scrollToBottom('smooth');
       return;
     }
     setNewMessagesCount((value) => value + (messages.length - previous));

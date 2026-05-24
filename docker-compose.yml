@@ -15,7 +15,7 @@ services:
       - ./db/migrations:/docker-entrypoint-initdb.d/migrations:ro
     networks:
       horizon-net:
-        ipv4_address: 172.20.0.2
+        ipv4_address: 172.20.0.10
     expose:
       - "${POSTGRES_PORT:-5432}"
     extra_hosts:
@@ -51,8 +51,6 @@ services:
         BOT_PORT: ${BOT_PORT:-4000}
     container_name: horizon-bot
     restart: unless-stopped
-    extra_hosts:
-      - "db:172.20.0.2"
     environment:
       NODE_ENV: ${NODE_ENV:-production}
       BOT_PORT: ${BOT_PORT:-4000}
@@ -92,7 +90,6 @@ services:
     container_name: horizon-frontend
     restart: unless-stopped
     extra_hosts:
-      - "db:172.20.0.2"
       - "host.docker.internal:host-gateway"
     environment:
       NODE_ENV: ${NODE_ENV:-production}

@@ -38,11 +38,17 @@ export function useMessages() {
   const [members, setMembers] = useState<MemberResult[]>([]);
 
   const inbox = useDmInbox<InboxPayload>(filter, authState === 'member');
-  const conversations = inbox.data?.conversations ?? [];
+  const { data: inboxData, mutate: mutateInbox } = inbox;
+  const conversations = inboxData?.conversations ?? [];
   const thread = useDmThread(activeId);
   const messages = thread.messages;
 
   const activeConversation = conversations.find((item) => item.id === activeId) ?? null;
+
+  useEffect(() => {
+    if (!activeId || thread.isLoading) return;
+    void mutateInbox();
+  }, [activeId, thread.isLoading, mutateInbox]);
 
   useEffect(() => {
     if (authState !== 'member' || conversations.length === 0) return;

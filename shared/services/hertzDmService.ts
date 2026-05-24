@@ -60,6 +60,7 @@ export class HertzDmService {
 
   async threadAfter(user: MemberSessionUser, conversationId: string, afterMessageId: string) {
     const messages = await this.repo.listMessagesAfter(conversationId, user.id, afterMessageId);
+    await this.repo.markRead(conversationId, user.id);
     const mapped = await this.mapThreadMessages(user, messages);
     return { isPartial: true, messages: mapped };
   }
