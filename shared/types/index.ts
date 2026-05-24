@@ -364,6 +364,7 @@ export const ERROR_CODE_TO_HTTP_STATUS: Record<ErrorCode, number> = {
 
 export type * from './feed';
 export type * from './hertz';
+export type * from './memberProfile';
 export type * from './membership';
 export type * from './communityNote';
 export type * from './challengeTracker';

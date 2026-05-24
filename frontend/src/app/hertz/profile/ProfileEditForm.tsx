@@ -1,0 +1,308 @@
+'use client';
+
+import { useEffect, useState, type FormEvent } from 'react';
+import {
+  SOCIAL_PLATFORMS,
+  TRADING_LEVELS,
+  TRADING_MARKETS,
+  TRADING_LEVEL_LABELS,
+  TRADING_MARKET_LABELS,
+  type MemberPublicProfileDto,
+  type MemberSocialLinks,
+  type TradingExperienceLevel,
+  type TradingMarket,
+} from '@shared/types/memberProfile';
+import { SOCIAL_PLATFORM_LABELS } from '@shared/lib/socialLinks';
+import { useToast } from '@/components/ui/Toast';
+import styles from './ProfileEditForm.module.css';
+
+type ApiProfileResponse = { success: true; data: { profile: MemberPublicProfileDto } };
+type ApiErrorResponse = { success: false; error: { message: string } };
+
+const EMPTY_TRADING = {
+  experienceLevel: null as TradingExperienceLevel | null,
+  markets: [] as TradingMarket[],
+  sinceYear: '' as string,
+  style: '',
+};
+
+export function ProfileEditForm() {
+  const { showToast } = useToast();
+  const [loading, setLoading] = useState(true);
+  const [saving, setSaving] = useState(false);
+  const [bio, setBio] = useState('');
+  const [location, setLocation] = useState('');
+  const [hobbies, setHobbies] = useState<string[]>([]);
+  const [hobbyDraft, setHobbyDraft] = useState('');
+  const [socialLinks, setSocialLinks] = useState<MemberSocialLinks>({});
+  const [trading, setTrading] = useState(EMPTY_TRADING);
+
+  useEffect(() => {
+    let cancelled = false;
+    async function loadProfile() {
+      try {
+        const response = await fetch('/api/hertz/profile/me', { cache: 'no-store' });
+        const payload = (await response.json()) as ApiProfileResponse | ApiErrorResponse;
+        if (!response.ok || !payload.success) {
+          throw new Error(!payload.success ? payload.error.message : 'Gagal memuat profil');
+        }
+        if (cancelled) return;
+        const profile = payload.data.profile;
+        setBio(profile.bio ?? '');
+        setLocation(profile.location ?? '');
+        setHobbies(profile.hobbies);
+        setSocialLinks(profile.socialLinks);
+        setTrading({
+          experienceLevel: profile.trading.experienceLevel,
+          markets: profile.trading.markets,
+          sinceYear: profile.trading.sinceYear ? String(profile.trading.sinceYear) : '',
+          style: profile.trading.style ?? '',
+        });
+      } catch (error) {
+        if (!cancelled) {
+          showToast(error instanceof Error ? error.message : 'Gagal memuat profil', 'error');
+        }
+      } finally {
+        if (!cancelled) setLoading(false);
+      }
+    }
+    void loadProfile();
+    return () => {
+      cancelled = true;
+    };
+  }, [showToast]);
+
+  function addHobby() {
+    const trimmed = hobbyDraft.trim();
+    if (!trimmed) return;
+    if (hobbies.length >= 8) {
+      showToast('Maksimal 8 hobi', 'warning');
+      return;
+    }
+    if (hobbies.some((item) => item.toLowerCase() === trimmed.toLowerCase())) {
+      setHobbyDraft('');
+      return;
+    }
+    setHobbies((current) => [...current, trimmed]);
+    setHobbyDraft('');
+  }
+
+  function removeHobby(index: number) {
+    setHobbies((current) => current.filter((_, i) => i !== index));
+  }
+
+  function toggleMarket(market: TradingMarket) {
+    setTrading((current) => {
+      const exists = current.markets.includes(market);
+      if (exists) {
+        return { ...current, markets: current.markets.filter((item) => item !== market) };
+      }
+      if (current.markets.length >= 5) {
+        showToast('Maksimal 5 pasar trading', 'warning');
+        return current;
+      }
+      return { ...current, markets: [...current.markets, market] };
+    });
+  }
+
+  async function handleSubmit(event: FormEvent<HTMLFormElement>) {
+    event.preventDefault();
+    setSaving(true);
+    try {
+      const response = await fetch('/api/hertz/profile/me', {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          bio: bio.trim() || null,
+          location: location.trim() || null,
+          hobbies,
+          socialLinks: Object.fromEntries(
+            SOCIAL_PLATFORMS.map((platform) => [
+              platform,
+              (socialLinks[platform] ?? '').trim().replace(/^@+/, ''),
+            ]),
+          ),
+          tradingExperienceLevel: trading.experienceLevel,
+          tradingMarkets: trading.markets,
+          tradingSinceYear: trading.sinceYear ? Number(trading.sinceYear) : null,
+          tradingStyle: trading.style.trim() || null,
+        }),
+      });
+      const payload = (await response.json()) as ApiProfileResponse | ApiErrorResponse;
+      if (!response.ok || !payload.success) {
+        throw new Error(!payload.success ? payload.error.message : 'Gagal menyimpan profil');
+      }
+      showToast('Profil publik berhasil disimpan', 'success');
+    } catch (error) {
+      showToast(error instanceof Error ? error.message : 'Gagal menyimpan profil', 'error');
+    } finally {
+      setSaving(false);
+    }
+  }
+
+  if (loading) {
+    return (
+      <section id="profile-edit" className={styles.panel}>
+        <p className={styles.panelLabel}>Profil publik</p>
+        <p className={styles.hint}>Memuat data profil...</p>
+      </section>
+    );
+  }
+
+  return (
+    <section id="profile-edit" className={styles.panel}>
+      <p className={styles.panelLabel}>Profil publik</p>
+      <p className={styles.hint}>
+        Informasi ini tampil di halaman publik @{/* username shown on page */} kamu. Nama dan avatar tetap dari Telegram.
+      </p>
+
+      <form className={styles.form} onSubmit={handleSubmit}>
+        <fieldset className={styles.section}>
+          <legend>Profil dasar</legend>
+          <label className={styles.field}>
+            <span>Bio</span>
+            <textarea
+              value={bio}
+              onChange={(event) => setBio(event.target.value)}
+              maxLength={280}
+              rows={3}
+              placeholder="Ceritakan sedikit tentang dirimu..."
+            />
+          </label>
+          <label className={styles.field}>
+            <span>Lokasi</span>
+            <input
+              value={location}
+              onChange={(event) => setLocation(event.target.value)}
+              maxLength={80}
+              placeholder="Kota atau negara"
+            />
+          </label>
+        </fieldset>
+
+        <fieldset className={styles.section}>
+          <legend>Hobi</legend>
+          <div className={styles.hobbyInputRow}>
+            <input
+              value={hobbyDraft}
+              onChange={(event) => setHobbyDraft(event.target.value)}
+              maxLength={40}
+              placeholder="Contoh: hiking, fotografi"
+              onKeyDown={(event) => {
+                if (event.key === 'Enter') {
+                  event.preventDefault();
+                  addHobby();
+                }
+              }}
+            />
+            <button type="button" className={styles.secondaryButton} onClick={addHobby}>
+              Tambah
+            </button>
+          </div>
+          {hobbies.length > 0 ? (
+            <ul className={styles.chipList}>
+              {hobbies.map((hobby, index) => (
+                <li key={`${hobby}-${index}`}>
+                  <span>{hobby}</span>
+                  <button type="button" aria-label={`Hapus ${hobby}`} onClick={() => removeHobby(index)}>
+                    ×
+                  </button>
+                </li>
+              ))}
+            </ul>
+          ) : (
+            <p className={styles.hint}>Belum ada hobi ditambahkan.</p>
+          )}
+        </fieldset>
+
+        <fieldset className={styles.section}>
+          <legend>Sosial media</legend>
+          <p className={styles.hint}>Isi username/handle saja, tanpa URL penuh.</p>
+          <div className={styles.socialGrid}>
+            {SOCIAL_PLATFORMS.map((platform) => (
+              <label key={platform} className={styles.field}>
+                <span>{SOCIAL_PLATFORM_LABELS[platform]}</span>
+                <input
+                  value={socialLinks[platform] ?? ''}
+                  onChange={(event) =>
+                    setSocialLinks((current) => ({
+                      ...current,
+                      [platform]: event.target.value.replace(/^@+/, ''),
+                    }))
+                  }
+                  maxLength={50}
+                  placeholder={`@${platform}`}
+                />
+              </label>
+            ))}
+          </div>
+        </fieldset>
+
+        <fieldset className={styles.section}>
+          <legend>Pengalaman trading</legend>
+          <label className={styles.field}>
+            <span>Level</span>
+            <select
+              value={trading.experienceLevel ?? ''}
+              onChange={(event) =>
+                setTrading((current) => ({
+                  ...current,
+                  experienceLevel: (event.target.value || null) as TradingExperienceLevel | null,
+                }))
+              }
+            >
+              <option value="">— Pilih level —</option>
+              {TRADING_LEVELS.map((level) => (
+                <option key={level} value={level}>
+                  {TRADING_LEVEL_LABELS[level]}
+                </option>
+              ))}
+            </select>
+          </label>
+
+          <div className={styles.field}>
+            <span>Pasar yang difokuskan</span>
+            <div className={styles.marketGrid}>
+              {TRADING_MARKETS.map((market) => (
+                <label key={market} className={styles.checkLabel}>
+                  <input
+                    type="checkbox"
+                    checked={trading.markets.includes(market)}
+                    onChange={() => toggleMarket(market)}
+                  />
+                  {TRADING_MARKET_LABELS[market]}
+                </label>
+              ))}
+            </div>
+          </div>
+
+          <label className={styles.field}>
+            <span>Mulai trading sejak</span>
+            <input
+              type="number"
+              min={1990}
+              max={new Date().getFullYear()}
+              value={trading.sinceYear}
+              onChange={(event) => setTrading((current) => ({ ...current, sinceYear: event.target.value }))}
+              placeholder="2020"
+            />
+          </label>
+
+          <label className={styles.field}>
+            <span>Gaya trading</span>
+            <input
+              value={trading.style}
+              onChange={(event) => setTrading((current) => ({ ...current, style: event.target.value }))}
+              maxLength={120}
+              placeholder="Scalping, swing, long-term, dll."
+            />
+          </label>
+        </fieldset>
+
+        <button type="submit" className={styles.primaryButton} disabled={saving}>
+          {saving ? 'Menyimpan...' : 'Simpan profil publik'}
+        </button>
+      </form>
+    </section>
+  );
+}

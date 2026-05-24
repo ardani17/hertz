@@ -23,6 +23,40 @@
   margin: 0.35rem 0 0;
 }
 
+.location {
+  color: var(--horizon-text-muted);
+  font-size: 0.85rem;
+  margin: 0.2rem 0 0;
+}
+
+.hobbiesSection {
+  display: grid;
+  gap: 0.55rem;
+}
+
+.hobbiesSection h3 {
+  font-size: 0.95rem;
+  margin: 0;
+}
+
+.hobbyList {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.45rem;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.hobbyList li {
+  background: rgba(19, 210, 123, 0.12);
+  border: 1px solid rgba(19, 210, 123, 0.35);
+  border-radius: 999px;
+  color: #d7fbe9;
+  font-size: 0.78rem;
+  padding: 0.25rem 0.65rem;
+}
+
 .counters {
   background: var(--horizon-bg-base);
   border: 1px solid var(--horizon-border);

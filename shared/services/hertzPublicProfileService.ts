@@ -1,4 +1,5 @@
 import { query, queryOne } from '../db';
+import { mapProfileRowToDto, type MemberPublicProfileDto, type MemberTradingProfile } from '../types/memberProfile';
 import type { MemberSessionUser } from '../types/membership';
 
 export type PublicProfilePostPreview = {
@@ -13,6 +14,10 @@ export type PublicProfileDto = {
   displayName: string;
   avatarUrl: string | null;
   bio: string | null;
+  location: string | null;
+  hobbies: string[];
+  socialLinks: MemberPublicProfileDto['socialLinks'];
+  trading: MemberTradingProfile;
   publicCounters: { posts: number; pulses: number; repostsReceived: number };
   joinedAt: string;
   isSelf: boolean;
@@ -29,8 +34,15 @@ export class HertzPublicProfileService {
       display_name: string | null;
       avatar_url: string | null;
       created_at: Date;
+      profile_bio: string | null;
+      profile_location: string | null;
+      profile_hobbies: unknown;
+      profile_social_links: unknown;
+      profile_trading: unknown;
+      profile_updated_at: Date | null;
     }>(
-      `SELECT id, username, display_name, avatar_url, created_at
+      `SELECT id, username, display_name, avatar_url, created_at,
+              profile_bio, profile_location, profile_hobbies, profile_social_links, profile_trading, profile_updated_at
        FROM users
        WHERE LOWER(username) = $1 AND verified_member_at IS NOT NULL
        LIMIT 1`,
@@ -78,13 +90,18 @@ export class HertzPublicProfileService {
     );
 
     const stripHtml = (html: string) => html.replace(/<[^>]+>/g, ' ').replace(/\s+/g, ' ').trim();
+    const profile = mapProfileRowToDto(row);
 
     return {
       id: row.id,
       username: row.username,
       displayName: row.display_name ?? row.username,
       avatarUrl: row.avatar_url,
-      bio: null,
+      bio: profile.bio,
+      location: profile.location,
+      hobbies: profile.hobbies,
+      socialLinks: profile.socialLinks,
+      trading: profile.trading,
       publicCounters: counters,
       joinedAt: row.created_at.toISOString(),
       isSelf: viewer?.id === row.id,

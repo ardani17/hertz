@@ -1,0 +1,60 @@
+.section {
+  display: grid;
+  gap: 0.65rem;
+}
+
+.section h3 {
+  font-size: 0.95rem;
+  margin: 0;
+}
+
+.card {
+  background: var(--horizon-bg-base);
+  border: 1px solid var(--horizon-border);
+  border-radius: 12px;
+  display: grid;
+  gap: 0.55rem;
+  padding: 0.85rem 1rem;
+}
+
+.level {
+  background: rgba(19, 210, 123, 0.12);
+  border: 1px solid rgba(19, 210, 123, 0.35);
+  border-radius: 999px;
+  color: #13d27b;
+  font-size: 0.78rem;
+  font-weight: 750;
+  margin: 0;
+  padding: 0.25rem 0.65rem;
+  width: fit-content;
+}
+
+.markets {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.markets li {
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid var(--horizon-border);
+  border-radius: 999px;
+  color: var(--horizon-text-muted);
+  font-size: 0.75rem;
+  padding: 0.2rem 0.55rem;
+}
+
+.meta,
+.style {
+  color: var(--horizon-text-muted);
+  font-size: 0.85rem;
+  line-height: 1.45;
+  margin: 0;
+}
+
+.style {
+  color: #d7fbe9;
+}

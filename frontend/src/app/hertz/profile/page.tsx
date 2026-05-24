@@ -9,6 +9,7 @@ import { HertzTelegramLogin } from '@/components/feed/HertzTelegramLogin';
 import { getCurrentMember } from '@/lib/memberAuth';
 import type { ProfileActivityTab } from '@/lib/hertzProfileActivity';
 import { ProfileActivityTabs } from './ProfileActivityTabs';
+import { ProfileEditForm } from './ProfileEditForm';
 import { ProfileSessionActions } from './ProfileSessionActions';
 import styles from './page.module.css';
 
@@ -142,6 +143,8 @@ export default async function HertzProfilePage() {
               <ProfileSessionActions />
             </div>
           </section>
+
+          <ProfileEditForm />
 
           <div className={styles.grid}>
             <section className={`${styles.panel} ${styles.creditPanel}`}>
