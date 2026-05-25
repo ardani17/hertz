@@ -2,9 +2,9 @@
 
 ## Introduction
 
-Prepare the Horizon backend for native Android and iPhone applications while keeping the current web application on the same backend. The existing backend is already suitable for web and has strong foundations for mobile: RESTful JSON routes, cursor-based feed pagination, consistent response envelopes, repository/service layering, and shared TypeScript types. The main gaps are mobile-friendly authentication and push notification infrastructure.
+Prepare the Hertz backend for native Android and iPhone applications while keeping the current web application on the same backend. The existing backend is already suitable for web and has strong foundations for mobile: RESTful JSON routes, cursor-based feed pagination, consistent response envelopes, repository/service layering, and shared TypeScript types. The main gaps are mobile-friendly authentication and push notification infrastructure.
 
-This spec does not split the backend into a separate mobile service. Mobile apps will consume the same Horizon backend through a stable mobile API layer.
+This spec does not split the backend into a separate mobile service. Mobile apps will consume the same Hertz backend through a stable mobile API layer.
 
 ## Glossary
 
@@ -36,7 +36,7 @@ This spec does not split the backend into a separate mobile service. Mobile apps
 
 #### Acceptance Criteria
 
-1. THE Mobile API SHALL be implemented in the existing Horizon backend project.
+1. THE Mobile API SHALL be implemented in the existing Hertz backend project.
 2. THE Mobile API SHALL reuse existing service and repository layers where possible.
 3. THE implementation SHALL NOT create a separate database for mobile.
 4. THE implementation SHALL NOT fork HERTZ, Blog, Outlook, Gallery, or DM business logic for mobile.

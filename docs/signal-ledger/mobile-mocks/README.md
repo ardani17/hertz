@@ -14,9 +14,9 @@ Mock ini adalah acuan visual mobile yang sudah disetujui untuk implementasi Sign
 ## Prinsip Yang Harus Dijaga
 
 - Mobile tidak memakai sidebar desktop atau right rail.
-- Header mobile compact: logo Horizon, judul Signal Ledger, search/profile action.
+- Header mobile compact: logo Hertz, judul Signal Ledger, search/profile action.
 - Bottom navigation mobile: Signal, Tools, Gallery, Profile/Login.
 - Feed post tetap punya signal spine dengan ikon.
 - Guest composer ringkas, member composer lengkap.
 - Trading post menonjolkan chart upload, market setup, community note, dan action row.
-- Warna tetap Horizon: dark surface, emerald accent, thin border, bukan clone X/Twitter 100%.
+- Warna tetap Hertz: dark surface, emerald accent, thin border, bukan clone X/Twitter 100%.

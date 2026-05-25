@@ -2,7 +2,7 @@
 
 ## Overview
 
-Prepare the existing Horizon backend for native mobile clients while preserving current web behavior. The implementation should be additive: bearer auth as a fallback to cookies, stable `/api/mobile/v1/*` endpoints, device token registration, and push notification infrastructure.
+Prepare the existing Hertz backend for native mobile clients while preserving current web behavior. The implementation should be additive: bearer auth as a fallback to cookies, stable `/api/mobile/v1/*` endpoints, device token registration, and push notification infrastructure.
 
 ## Tasks
 

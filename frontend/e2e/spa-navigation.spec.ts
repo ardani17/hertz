@@ -1,6 +1,6 @@
 import { expect, test } from '@playwright/test';
 
-// Feature: horizon-social-ux-uplift, E2E: SPA navigation
+// Feature: hertz-social-ux-uplift, E2E: SPA navigation
 
 test('shell navigation changes URL without document replacement', async ({ page }) => {
   await page.goto('/hertz');

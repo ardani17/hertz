@@ -7,14 +7,14 @@ Acuan visual: `docs/signal-ledger/signal-ledger-mock-03.png`
 
 ## 1. Ringkasan
 
-Signal Ledger adalah refactor feed Horizon dari model artikel/blog-card menjadi timeline sosial komunitas trading. Refactor ini bukan hanya perubahan UI. Sistem baru harus membangun domain feed yang mendukung post dari Telegram dan web, interaksi member, repost, quote repost, bookmark, community notes, view insight, dan metadata trading.
+Signal Ledger adalah refactor feed Hertz dari model artikel/blog-card menjadi timeline sosial komunitas trading. Refactor ini bukan hanya perubahan UI. Sistem baru harus membangun domain feed yang mendukung post dari Telegram dan web, interaksi member, repost, quote repost, bookmark, community notes, view insight, dan metadata trading.
 
 Keputusan utama:
 
 - Signal Ledger mengambil pola timeline X/Twitter, tetapi tidak menjadi clone 100%.
-- Identitas Horizon tetap hijau/emerald, trading-community, dan Telegram-first.
+- Identitas Hertz tetap hijau/emerald, trading-community, dan Telegram-first.
 - Guest hanya read-only.
-- Write action hanya untuk user login Telegram yang terverifikasi sebagai member grup Horizon.
+- Write action hanya untuk user login Telegram yang terverifikasi sebagai member grup Hertz.
 - Post dari web oleh verified member langsung published.
 - Post dari Telegram member tetap mengikuti flow lama: draft/pending sampai admin `/publish`.
 - Post dari Telegram admin boleh auto publish.
@@ -106,7 +106,7 @@ Backend harus menolak semua mutasi guest dengan `401 UNAUTHENTICATED`.
 Verified member adalah user yang:
 
 - berhasil validasi Telegram Login signature,
-- membership check ke grup Horizon return `{"isMember": true}`,
+- membership check ke grup Hertz return `{"isMember": true}`,
 - memiliki session member aktif.
 
 Boleh:
@@ -152,7 +152,7 @@ Tambahkan env:
 SIGNAL_LEDGER_ENABLED=true
 MEMBERSHIP_CHECK_URL=https://satpam.cloudnexify.com/api/membership/check
 MEMBERSHIP_CHECK_TOKEN=
-HORIZON_TELEGRAM_GROUP_ID=-1001916607651
+HERTZ_MEMBERSHIP_GROUP_ID=-1001916607651
 TELEGRAM_BOT_TOKEN=
 MEMBER_SESSION_SECRET=
 ```
@@ -166,7 +166,7 @@ Token yang pernah dibagikan di chat harus di-rotate sebelum production.
 Login member harus dua lapis:
 
 1. Validasi Telegram Login Widget signature memakai bot token.
-2. Cek membership grup Horizon lewat endpoint membership.
+2. Cek membership grup Hertz lewat endpoint membership.
 
 Request internal:
 
@@ -191,7 +191,7 @@ Jika membership false:
 {
   "error": {
     "code": "NOT_GROUP_MEMBER",
-    "message": "Akun Telegram Anda belum terdaftar sebagai member grup Horizon."
+    "message": "Akun Telegram Anda belum terdaftar sebagai member grup Hertz."
   }
 }
 ```
@@ -268,7 +268,7 @@ CREATE INDEX idx_member_sessions_expires_at ON member_sessions(expires_at);
 
 Cookie:
 
-- name: `horizon_member_session`
+- name: `hertz_member_session`
 - httpOnly: true
 - sameSite: lax
 - secure: true di production
@@ -1013,7 +1013,7 @@ Target dari mock 03:
 - Background: deep green-black.
 - Surface: graphite green.
 - Border: green-tinted border.
-- Accent: Horizon emerald.
+- Accent: Hertz emerald.
 - Danger/down: red.
 - Warning: amber.
 - Success/up: emerald.
@@ -1411,7 +1411,7 @@ Catatan: jika test existing punya failure lama yang tidak terkait, audit harus m
 ### 18.8 UI
 
 - UI desktop mengikuti mock 03: left rail, center timeline, right rail.
-- Tema hijau Horizon terasa dominan.
+- Tema hijau Hertz terasa dominan.
 - Tidak terlihat seperti clone X 100%.
 - Right rail Market Pulse berlabel `Data sementara`.
 - Telegram draft count hanya admin.

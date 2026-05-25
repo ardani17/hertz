@@ -26,7 +26,7 @@ proxy/
 ├── nginx.conf                  # Main Nginx config (shared settings, rate limit zones)
 ├── sites/
 │   ├── _default.conf           # Default server block (health check + 444 for unknown domains)
-│   ├── horizon.conf            # Horizon Trader Platform site config
+│   ├── hertz.conf              # Hertz site config
 │   └── example-template.conf   # Template for adding new apps
 ├── deploy.sh                   # Deploy and management script
 └── README.md                   # This file

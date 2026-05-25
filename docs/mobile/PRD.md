@@ -12,7 +12,7 @@
 
 ## 1. Ringkasan Eksekutif
 
-Hertz adalah platform sosial trader Indonesia dengan inti komunitas HERTZ feed, analisa Outlook, blog, gallery, dan tools trading. Backend sudah menyediakan **`/api/mobile/v1/*`** dengan auth bearer, feed cursor pagination, content endpoints, dan registrasi push FCM (spec `docs/spec/mobile-readiness/` sudah ✅).
+Hertz adalah platform sosial trader Indonesia dengan inti komunitas HERTZ feed, analisa Outlook, gallery, dan tools trading. Backend sudah menyediakan **`/api/mobile/v1/*`** dengan auth bearer, feed cursor pagination, content endpoints, dan registrasi push FCM (spec `docs/spec/mobile-readiness/` sudah ✅).
 
 PRD ini mendefinisikan **aplikasi mobile Android pertama** untuk Hertz menggunakan **Expo managed workflow + EAS Build**. Tujuannya: rilis APK MVP yang feel-native, ringan dipakai sesi malam (mobile-first user), dan reuse semua kontrak backend yang sudah stabil tanpa fork business logic.
 
@@ -496,7 +496,6 @@ Setiap layar yang fetch data SHALL punya 4 state: `loading skeleton`, `data`, `e
 | DM inbox | `GET /api/mobile/v1/messages/inbox` | ❌ Belum |
 | DM thread | `GET/POST /api/mobile/v1/messages/conversations/:id` | ❌ Belum |
 | In-app notifications | `GET /api/mobile/v1/hertz/notifications` | ❌ Belum |
-| Blog list/detail (jika diaktifkan) | `GET /api/mobile/v1/blog` | ❌ Dokumentasi ada, kode tidak |
 
 ---
 
@@ -705,13 +704,12 @@ Backend Hertz di VPS — TIDAK perlu build Android di VPS. EAS Build berjalan di
 ## 23. Open Questions (perlu jawaban sebelum design final)
 
 1. **Telegram login mekanisme**: web bridge dengan deep link atau bot one-time code? (preferensi tim backend?)
-2. **Apakah Blog mobile akan diaktifkan lagi?** (Saat ini kontrak ada di dokumentasi, route tidak ada di kode.)
-3. **Apakah Tools subset akan masuk MVP?** (PRD ini menahan di v2.0 — confirm.)
-4. **Apakah perlu support guest browsing penuh atau wajib login dari awal?** (PRD asumsi: guest bisa baca feed publik + Outlook + Gallery.)
-5. **Refresh token policy**: rotate per refresh atau pakai token yang sama? Implementasi saat ini me-return token yang sama → cukup untuk MVP.
-6. **Brand identity APK**: nama paket (`com.hertz.app`?), nama display ("Hertz" / "Horizon Hertz"?), icon final.
-7. **Privacy policy URL** untuk Play Console.
-8. **Akun developer Play Console**: sudah ada?
+2. **Apakah Tools subset akan masuk MVP?** (PRD ini menahan di v2.0 — confirm.)
+3. **Apakah perlu support guest browsing penuh atau wajib login dari awal?** (PRD asumsi: guest bisa baca feed publik + Outlook + Gallery.)
+4. **Refresh token policy**: rotate per refresh atau pakai token yang sama? Implementasi saat ini me-return token yang sama → cukup untuk MVP.
+5. **Brand identity APK**: nama paket `com.hertz.app`, nama display `Hertz`, icon final.
+6. **Privacy policy URL** untuk Play Console.
+7. **Akun developer Play Console**: sudah ada?
 
 ---
 

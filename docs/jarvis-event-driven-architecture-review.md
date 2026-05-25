@@ -4,6 +4,8 @@ Tanggal review: 2026-05-23 19:21 WIB
 Reviewer: Jarvis  
 Project: `/www/dk_project/horizon`
 
+> Catatan: review ini mendokumentasikan sibling project `/www/dk_project/horizon`, bukan codebase Hertz aktif. Disimpan sebagai referensi arsitektur lintas project.
+
 ## Kesimpulan Singkat
 
 Horizon **belum menerapkan event-driven architecture secara penuh**.

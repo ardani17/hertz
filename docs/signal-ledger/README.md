@@ -1,6 +1,6 @@
 # Signal Ledger Design Reference
 
-This folder keeps the visual reference for the Horizon feed refactor.
+This folder keeps the visual reference for the Hertz feed refactor.
 
 ## Primary Mock
 
@@ -18,9 +18,9 @@ This folder keeps the visual reference for the Horizon feed refactor.
 Use mock 03 as the implementation reference for the new Signal Ledger feed:
 
 - Dark green trading-community identity, not a direct X/Twitter clone.
-- Center timeline with a Horizon-specific signal spine.
+- Center timeline with a Hertz-specific signal spine.
 - Telegram-origin posts remain a first-class source.
-- Web posting is supported for verified Horizon Telegram group members.
+- Web posting is supported for verified Hertz Telegram group members.
 - Trading posts should show market context such as pair, risk, source, and time.
 - Chart/media previews are important for Trading Room posts.
 - `Signal` replaces generic like behavior.

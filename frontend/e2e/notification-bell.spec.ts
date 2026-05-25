@@ -1,6 +1,6 @@
 import { expect, test } from '@playwright/test';
 
-// Feature: horizon-social-ux-uplift, E2E: Notification bell
+// Feature: hertz-social-ux-uplift, E2E: Notification bell
 
 test('notification bell opens and closes', async ({ page }) => {
   await page.goto('/hertz');

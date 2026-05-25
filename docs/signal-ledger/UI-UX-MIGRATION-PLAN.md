@@ -2,7 +2,7 @@
 
 ## Tujuan
 
-Migrasi UI Horizon ke fondasi `Tailwind CSS v4` dan `shadcn/ui` dilakukan bertahap agar feed tetap stabil, mudah dirawat, dan tetap punya ciri khas Horizon. Arah visual tetap mengikuti mock ketiga dan mobile mocks yang sudah disimpan di folder ini.
+Migrasi UI Hertz ke fondasi `Tailwind CSS v4` dan `shadcn/ui` dilakukan bertahap agar feed tetap stabil, mudah dirawat, dan tetap punya ciri khas Hertz. Arah visual tetap mengikuti mock ketiga dan mobile mocks yang sudah disimpan di folder ini.
 
 ## Status Fondasi
 
@@ -10,7 +10,7 @@ Migrasi UI Horizon ke fondasi `Tailwind CSS v4` dan `shadcn/ui` dilakukan bertah
 - CSS Modules masih menjadi sumber styling UI yang sedang aktif.
 - Tailwind CSS v4 sudah dipasang untuk utility-first styling baru.
 - shadcn/ui sudah dikonfigurasi dengan alias `@/components/ui`.
-- Token shadcn dihubungkan ke token Horizon: background, foreground, border, ring, accent hijau, dan sidebar.
+- Token shadcn dihubungkan ke token Hertz: background, foreground, border, ring, accent hijau, dan sidebar.
 - Theme lama `data-theme` disinkronkan dengan class `.dark` / `.light` agar shadcn dark mode kompatibel.
 - Komponen dasar tersedia: `Button`, `Input`, `Textarea`, `Badge`, `Card`, dan `Separator`.
 
@@ -35,7 +35,7 @@ Jika nanti ada file Figma:
 2. **Feed Surface**
    - Refactor action bar, composer, login Telegram, post menu, community note, dan detail interactions.
    - Pakai shadcn primitive untuk interactive states dan accessibility.
-   - Pertahankan garis timeline/signal spine, rail kiri, rail kanan, dan avatar square khas Horizon.
+   - Pertahankan garis timeline/signal spine, rail kiri, rail kanan, dan avatar square khas Hertz.
 
 3. **Admin Surface**
    - Refactor halaman admin Signal Ledger ke table/list yang lebih padat.
@@ -56,5 +56,5 @@ Jika nanti ada file Figma:
 
 - Jangan mengubah flow backend saat migrasi UI kecuali ada bug wiring.
 - Jangan memindahkan Blog dan Outlook ke Signal Ledger.
-- Jangan memakai warna default shadcn mentah; semua harus lewat token Horizon.
+- Jangan memakai warna default shadcn mentah; semua harus lewat token Hertz.
 - Jangan menghapus mock yang sudah disimpan karena itu acuan implementasi.

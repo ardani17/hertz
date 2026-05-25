@@ -1,6 +1,6 @@
 import { expect, test } from '@playwright/test';
 
-// Feature: horizon-social-ux-uplift, E2E: DM fixed-height layout
+// Feature: hertz-social-ux-uplift, E2E: DM fixed-height layout
 
 test('DM composer stays visible on mobile thread view', async ({ page }) => {
   await page.setViewportSize({ width: 390, height: 844 });

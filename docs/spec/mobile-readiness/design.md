@@ -2,7 +2,7 @@
 
 ## Overview
 
-The mobile readiness work prepares Horizon for Android and iPhone clients without splitting the backend. The mobile apps will consume the same backend and database as the web app, but through a stable mobile API layer under `/api/mobile/v1/*`.
+The mobile readiness work prepares Hertz for Android and iPhone clients without splitting the backend. The mobile apps will consume the same backend and database as the web app, but through a stable mobile API layer under `/api/mobile/v1/*`.
 
 The backend already has strong primitives for mobile: cursor-based HERTZ feed pagination, RESTful JSON route handlers, consistent response envelopes, shared service/repository layers, and reusable TypeScript types. The major missing pieces are bearer-token auth and push notification infrastructure.
 
@@ -37,7 +37,7 @@ The backend already has strong primitives for mobile: cursor-based HERTZ feed pa
 
 ```mermaid
 graph TD
-    A[Next.js Web] --> D[Horizon Backend]
+    A[Next.js Web] --> D[Hertz Backend]
     B[Android App] --> C[/api/mobile/v1/*]
     E[iPhone App] --> C
     C --> D

@@ -27,7 +27,7 @@ Tidak ada keputusan produk utama dari diskusi yang sengaja diubah di spec.
 
 | Area | Keputusan Diskusi | Status Spec |
 | --- | --- | --- |
-| Identitas produk | Signal Ledger bukan clone X/Twitter 100%, tetap Horizon emerald/trading | OK |
+| Identitas produk | Signal Ledger bukan clone X/Twitter 100%, tetap Hertz emerald/trading | OK |
 | Mock visual | Mock ketiga menjadi acuan implementasi | OK |
 | Feature flag | Gunakan `SIGNAL_LEDGER_ENABLED` | OK |
 | Route detail | Gunakan `/post/[id]` | OK |
@@ -36,8 +36,8 @@ Tidak ada keputusan produk utama dari diskusi yang sengaja diubah di spec.
 | Guest | Read-only, action button tetap terlihat dan memunculkan login prompt | OK |
 | Guest backend | Semua mutasi guest ditolak server-side | OK |
 | Login Telegram | Signature Telegram harus valid | OK |
-| Membership | Login harus cek endpoint membership grup Horizon | OK |
-| Non-member copy | `Akun Telegram Anda belum terdaftar sebagai member grup Horizon.` | OK |
+| Membership | Login harus cek endpoint membership grup Hertz | OK |
+| Non-member copy | `Akun Telegram Anda belum terdaftar sebagai member grup Hertz.` | OK |
 | Badge member | Semua verified member mendapat badge Verified Member | OK, diperjelas saat audit |
 | Badge admin | Admin mendapat badge admin | OK, diperjelas saat audit |
 | Pro Member | Tidak ada Pro Member phase awal | OK, ditambahkan saat audit |

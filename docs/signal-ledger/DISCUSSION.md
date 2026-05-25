@@ -1,12 +1,12 @@
-# Diskusi Refactor Feed Horizon Menjadi Signal Ledger
+# Diskusi Refactor Feed Hertz Menjadi Signal Ledger
 
 Tanggal: 2026-05-08
 
 ## Tujuan
 
-Refactor feed Horizon bukan hanya mengganti UI menjadi mirip timeline sosial, tetapi membangun domain baru bernama **Signal Ledger**.
+Refactor feed Hertz bukan hanya mengganti UI menjadi mirip timeline sosial, tetapi membangun domain baru bernama **Signal Ledger**.
 
-Signal Ledger adalah feed komunitas trading Horizon yang menyatukan:
+Signal Ledger adalah feed komunitas trading Hertz yang menyatukan:
 
 - posting dari Telegram seperti fitur sekarang,
 - posting dari web untuk member terverifikasi,
@@ -35,7 +35,7 @@ Yang diambil dari X/Twitter:
 - repost/quote pattern,
 - right rail informatif.
 
-Yang harus tetap menjadi ciri Horizon:
+Yang harus tetap menjadi ciri Hertz:
 
 - tema hijau/emerald,
 - nuansa trading community,
@@ -44,7 +44,7 @@ Yang harus tetap menjadi ciri Horizon:
 - metadata market,
 - istilah `Signal` sebagai pengganti like,
 - right rail berisi market pulse, kalender ekonomi, tools cepat, dan topik komunitas,
-- identitas Horizon yang terasa jelas.
+- identitas Hertz yang terasa jelas.
 
 ## Definisi Composer
 
@@ -59,7 +59,7 @@ Dalam implementasi, composer berarti fitur **buat post dari web**.
 Composer tidak mengganti fitur Telegram. Keduanya harus berjalan:
 
 - user tetap bisa membuat post dari Telegram,
-- user juga bisa membuat post dari web jika sudah login dan terverifikasi sebagai member grup Horizon.
+- user juga bisa membuat post dari web jika sudah login dan terverifikasi sebagai member grup Hertz.
 
 ## Flow Posting Telegram Saat Ini
 
@@ -92,14 +92,14 @@ Telegram hashtag post
 
 ## Flow Posting Web
 
-Posting web hanya untuk user yang sudah login Telegram dan terverifikasi sebagai member grup Horizon.
+Posting web hanya untuk user yang sudah login Telegram dan terverifikasi sebagai member grup Hertz.
 
 Alur target:
 
 ```txt
 User login Telegram
   -> validasi Telegram auth
-  -> cek membership grup Horizon
+  -> cek membership grup Hertz
   -> user menulis post dari web
   -> articles
   -> media optional
@@ -113,7 +113,7 @@ Posting web harus disimpan dengan source `web` atau `dashboard`, berbeda dari so
 
 Login Telegram tidak boleh dianggap valid hanya karena Telegram widget berhasil.
 
-Setelah Telegram identity diterima, backend harus memeriksa apakah user benar-benar member grup Horizon.
+Setelah Telegram identity diterima, backend harus memeriksa apakah user benar-benar member grup Hertz.
 
 Endpoint membership yang disediakan:
 
@@ -141,7 +141,7 @@ Env yang disarankan:
 ```env
 MEMBERSHIP_CHECK_URL=https://satpam.cloudnexify.com/api/membership/check
 MEMBERSHIP_CHECK_TOKEN=...
-HORIZON_TELEGRAM_GROUP_ID=-1001916607651
+HERTZ_MEMBERSHIP_GROUP_ID=-1001916607651
 ```
 
 Catatan keamanan:
@@ -466,7 +466,7 @@ Mengacu ke docs\signal-ledger\signal-ledger-mock-03.png:
 - nama feed: `Signal Ledger`,
 - dark green trading terminal feel,
 - center timeline dengan signal spine,
-- left rail Horizon,
+- left rail Hertz,
 - right rail market intelligence,
 - post menampilkan metadata source/pair/risk/time,
 - media chart tampil inline,
@@ -499,7 +499,7 @@ Env baru yang kemungkinan dibutuhkan:
 ```env
 MEMBERSHIP_CHECK_URL=
 MEMBERSHIP_CHECK_TOKEN=
-HORIZON_TELEGRAM_GROUP_ID=-1001916607651
+HERTZ_MEMBERSHIP_GROUP_ID=-1001916607651
 ```
 
 Jika web posting memakai upload media ke R2, env R2 existing tetap dipakai.
@@ -680,7 +680,7 @@ Membership check saja tidak cukup.
 Login harus dua lapis:
 
 1. validasi signature Telegram Login Widget agar `telegram_id` tidak bisa dipalsukan,
-2. cek membership grup Horizon lewat endpoint `membership/check`.
+2. cek membership grup Hertz lewat endpoint `membership/check`.
 
 Jika salah satu gagal, user tidak boleh dianggap verified member.
 
@@ -813,7 +813,7 @@ Hal yang perlu diputuskan:
 Rekomendasi awal:
 
 - jangan campur cookie admin dan member,
-- gunakan cookie member berbeda, misalnya `horizon_member_session`,
+- gunakan cookie member berbeda, misalnya `hertz_member_session`,
 - session member tetap mengarah ke `users.id`,
 - status membership terbaru dibaca dari `telegram_memberships`.
 
@@ -1213,7 +1213,7 @@ Rekomendasi:
 - jangan buat follow/following di phase awal,
 - feed tetap community-wide,
 - tab `Following` tidak digunakan dulu,
-- jika perlu tab, gunakan kategori Horizon seperti `Semua`, `Trading Room`, `Life & Coffee`, `General`.
+- jika perlu tab, gunakan kategori Hertz seperti `Semua`, `Trading Room`, `Life & Coffee`, `General`.
 
 Ini menjaga scope tetap sesuai komunitas grup, bukan membangun social network penuh.
 
@@ -1393,7 +1393,7 @@ Jangan membuat angka market palsu tanpa label demo/fallback.
 
 ### 42. Hashtag / Topic Model
 
-Feed Horizon akan lebih kuat jika topik seperti `#gold`, `#riskmanagement`, dan `#journal` bisa muncul.
+Feed Hertz akan lebih kuat jika topik seperti `#gold`, `#riskmanagement`, dan `#journal` bisa muncul.
 
 Target model konseptual:
 
@@ -1730,7 +1730,7 @@ Aturan:
 
 ### 60. Trading Content Policy
 
-Karena Horizon adalah komunitas trading, perlu aturan konten khusus.
+Karena Hertz adalah komunitas trading, perlu aturan konten khusus.
 
 Prinsip:
 
@@ -1921,7 +1921,7 @@ Spec perlu menjelaskan:
 
 Rekomendasi awal:
 
-- spine menjadi elemen visual khas Horizon,
+- spine menjadi elemen visual khas Hertz,
 - node mewakili tipe/kategori post,
 - node tidak perlu clickable phase awal,
 - mobile bisa menyederhanakan spine menjadi garis tipis atau disembunyikan jika terlalu sempit.
@@ -2024,14 +2024,14 @@ Spec perlu menentukan:
 
 - apakah semua verified Telegram group member mendapat badge,
 - apakah admin punya badge berbeda,
-- apakah badge berwarna biru atau Horizon emerald,
+- apakah badge berwarna biru atau Hertz emerald,
 - apakah badge bisa muncul untuk non-member lama.
 
 Rekomendasi awal:
 
 - verified group member mendapat badge kecil,
 - admin badge berbeda atau label admin,
-- gunakan visual Horizon/emerald agar tidak terlalu mirip X/Twitter.
+- gunakan visual Hertz/emerald agar tidak terlalu mirip X/Twitter.
 
 ### 74. Post Overflow Menu
 
@@ -2204,7 +2204,7 @@ Token yang perlu ditetapkan di spec:
 background: deep green-black
 surface: graphite green
 border: green-tinted border
-accent: Horizon emerald
+accent: Hertz emerald
 muted text: green-gray
 danger/down: red
 warning: amber
@@ -2712,12 +2712,12 @@ Keputusan:
 
 Copy awal:
 
-`Akun Telegram Anda belum terdaftar sebagai member grup Horizon.`
+`Akun Telegram Anda belum terdaftar sebagai member grup Hertz.`
 
 Implikasi:
 
 - jangan menyebut detail token/API,
-- UI perlu memberi arah singkat bahwa user harus bergabung/terverifikasi di grup Horizon,
+- UI perlu memberi arah singkat bahwa user harus bergabung/terverifikasi di grup Hertz,
 - backend tetap mengembalikan error code yang konsisten.
 
 ### 120. Ban/Mute

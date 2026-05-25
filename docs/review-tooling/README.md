@@ -1,7 +1,7 @@
 # Frontend Review Tooling
 
 Tanggal: 16 Mei 2026  
-Status: installed untuk audit frontend Horizon/HERTZ di VPS.
+Status: installed untuk audit frontend Hertz di VPS.
 
 ## Installed Stack
 
@@ -23,13 +23,13 @@ Semua command review memakai `REVIEW_BASE_URL`.
 Default fallback saat env tidak diisi:
 
 ```bash
-https://horizon.cloudnexify.com
+https://hertz.cloudnexify.com
 ```
 
 Contoh override:
 
 ```bash
-REVIEW_BASE_URL=https://horizon.cloudnexify.com npm run review:a11y
+REVIEW_BASE_URL=https://hertz.cloudnexify.com npm run review:a11y
 ```
 
 Jangan menjalankan dev server di VPS untuk review ini. Pakai web live setelah build/deploy.
@@ -45,13 +45,13 @@ npm run review:install-browsers
 Generate atau update baseline screenshot:
 
 ```bash
-REVIEW_BASE_URL=https://horizon.cloudnexify.com npm run review:visual:update
+REVIEW_BASE_URL=https://hertz.cloudnexify.com npm run review:visual:update
 ```
 
 Bandingkan UI saat ini dengan baseline:
 
 ```bash
-REVIEW_BASE_URL=https://horizon.cloudnexify.com npm run review:visual
+REVIEW_BASE_URL=https://hertz.cloudnexify.com npm run review:visual
 ```
 
 Artifacts:
@@ -63,7 +63,7 @@ Artifacts:
 ## Accessibility Audit
 
 ```bash
-REVIEW_BASE_URL=https://horizon.cloudnexify.com npm run review:a11y
+REVIEW_BASE_URL=https://hertz.cloudnexify.com npm run review:a11y
 ```
 
 Default audit memakai tag:
@@ -81,7 +81,7 @@ Default failure impact:
 Override jika perlu audit yang lebih longgar/ketat:
 
 ```bash
-REVIEW_A11Y_FAIL_IMPACTS=critical REVIEW_BASE_URL=https://horizon.cloudnexify.com npm run review:a11y
+REVIEW_A11Y_FAIL_IMPACTS=critical REVIEW_BASE_URL=https://hertz.cloudnexify.com npm run review:a11y
 ```
 
 ## Snapshot + DOM Diff
@@ -89,13 +89,13 @@ REVIEW_A11Y_FAIL_IMPACTS=critical REVIEW_BASE_URL=https://horizon.cloudnexify.co
 Update baseline DOM outline:
 
 ```bash
-REVIEW_BASE_URL=https://horizon.cloudnexify.com npm run review:dom:update
+REVIEW_BASE_URL=https://hertz.cloudnexify.com npm run review:dom:update
 ```
 
 Bandingkan DOM sekarang dengan baseline:
 
 ```bash
-REVIEW_BASE_URL=https://horizon.cloudnexify.com npm run review:dom
+REVIEW_BASE_URL=https://hertz.cloudnexify.com npm run review:dom
 ```
 
 Artifacts:
@@ -139,7 +139,7 @@ MCP menyediakan browser actions seperti navigate, click, form fill, accessibilit
 Record audit session dengan rrweb injection sementara:
 
 ```bash
-REVIEW_BASE_URL=https://horizon.cloudnexify.com REVIEW_REPLAY_ROUTE=/hertz REVIEW_REPLAY_SECONDS=30 npm run review:replay
+REVIEW_BASE_URL=https://hertz.cloudnexify.com REVIEW_REPLAY_ROUTE=/hertz REVIEW_REPLAY_SECONDS=30 npm run review:replay
 ```
 
 Untuk manual headed review, jika environment punya display:
@@ -193,14 +193,14 @@ Stories: `frontend/src/**/*.stories.tsx` (UI Button, SkeletonLoader, ErrorPage).
 CHROMATIC_PROJECT_TOKEN=xxx npm run review:chromatic
 
 # Halaman (CI)
-PERCY_TOKEN=xxx REVIEW_BASE_URL=https://horizon.cloudnexify.com npm run review:percy
+PERCY_TOKEN=xxx REVIEW_BASE_URL=https://hertz.cloudnexify.com npm run review:percy
 ```
 
 ## Semua review lokal
 
 ```bash
 npm run review:install-browsers
-REVIEW_BASE_URL=https://horizon.cloudnexify.com npm run review:all
+REVIEW_BASE_URL=https://hertz.cloudnexify.com npm run review:all
 ```
 
 ## Workflow Review yang Disarankan
