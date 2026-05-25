@@ -15,7 +15,7 @@ services:
       - ./db/migrations:/docker-entrypoint-initdb.d/migrations:ro
     networks:
       hertz-net:
-        ipv4_address: 172.21.0.10
+        ipv4_address: 172.29.0.10
     expose:
       - "${POSTGRES_PORT:-5432}"
     extra_hosts:
@@ -34,7 +34,7 @@ services:
     command: ["redis-server", "--save", "", "--appendonly", "no"]
     networks:
       hertz-net:
-        ipv4_address: 172.21.0.5
+        ipv4_address: 172.29.0.5
     expose:
       - "6379"
     healthcheck:
@@ -144,4 +144,4 @@ networks:
     driver: bridge
     ipam:
       config:
-        - subnet: 172.21.0.0/16
+        - subnet: 172.29.0.0/16
