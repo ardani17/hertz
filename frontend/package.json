@@ -3,9 +3,9 @@
   "version": "1.0.0",
   "private": true,
   "scripts": {
-    "dev": "CFTC_VIEWER_ROOT=../docs/tools/cftc-export next dev",
+    "dev": "next dev",
     "build": "next build",
-    "start": "CFTC_VIEWER_ROOT=../docs/tools/cftc-export next start",
+    "start": "next start",
     "lint": "eslint .",
     "test": "vitest --run --config vitest.config.ts",
     "test:run": "vitest --run --config vitest.config.ts",

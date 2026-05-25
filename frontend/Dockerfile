@@ -43,7 +43,6 @@ WORKDIR /app
 ENV NODE_ENV=production
 ENV NEXT_TELEMETRY_DISABLED=1
 ENV HOSTNAME=0.0.0.0
-ENV CFTC_VIEWER_ROOT=../docs/tools/cftc-export
 
 ARG FRONTEND_PORT=3000
 ENV PORT=${FRONTEND_PORT}
@@ -58,7 +57,6 @@ COPY --from=builder /app/shared ./shared
 COPY --from=builder /app/package.json ./
 COPY --from=builder /app/.npmrc ./
 COPY --from=builder /app/tsconfig.base.json ./
-COPY docs/tools/cftc-export ./docs/tools/cftc-export
 
 RUN chown -R nextjs:nodejs /app
 

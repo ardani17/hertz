@@ -179,33 +179,8 @@ setup_directories() {
 # ── 6. validate_deploy_assets ───────────────
 
 validate_deploy_assets() {
-    info "Memvalidasi asset deploy tools ..."
-
-    if [ ! -d docs/tools/cftc-export ]; then
-        err "Folder docs/tools/cftc-export tidak ditemukan."
-        echo "  Folder ini diperlukan agar /tools/cftc-viewer tersedia di Docker."
-        exit 1
-    fi
-
-    if [ ! -f docs/tools/cftc-export/index.html ]; then
-        err "File docs/tools/cftc-export/index.html tidak ditemukan."
-        echo "  CFTC viewer membutuhkan static export yang sudah dikomit."
-        exit 1
-    fi
-
-    if [ ! -d docs/tools/cftc-export/futures ]; then
-        err "Folder docs/tools/cftc-export/futures tidak ditemukan."
-        echo "  Halaman kategori CFTC tidak akan bisa dibuka tanpa folder ini."
-        exit 1
-    fi
-
-    if grep -Eq '(^|/|[[:space:]])docs($|/|[[:space:]])|docs/tools|cftc-export' .dockerignore 2>/dev/null; then
-        err ".dockerignore mengecualikan docs/tools/cftc-export dari build context."
-        echo "  Hapus rule ignore tersebut agar Dockerfile frontend bisa COPY asset CFTC."
-        exit 1
-    fi
-
-    ok "Asset CFTC viewer siap masuk Docker build context."
+    info "Memvalidasi asset deploy ..."
+    ok "Tidak ada asset tools statis tambahan yang wajib masuk Docker build context."
 }
 
 # ── 7. build_and_start ──────────────────────
