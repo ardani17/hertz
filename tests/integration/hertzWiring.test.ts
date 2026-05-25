@@ -89,27 +89,27 @@ describe('HERTZ implementation wiring', () => {
     expect(interactions).toContain('hertz_views');
   });
 
-  it('ships DM and Blog completion route surfaces', () => {
+  it('ships DM route surfaces without Blog APIs', () => {
     for (const path of [
       'frontend/src/app/api/hertz/messages/conversations/route.ts',
       'frontend/src/app/api/hertz/messages/conversations/[conversationId]/route.ts',
       'frontend/src/app/api/hertz/messages/messages/[messageId]/route.ts',
       'frontend/src/app/api/hertz/messages/blocks/[userId]/route.ts',
-      'frontend/src/app/api/blog/[id]/route.ts',
     ]) {
       expect(existsSync(join(root, path))).toBe(true);
     }
+
+    expect(existsSync(join(root, 'frontend/src/app/api/blog/route.ts'))).toBe(false);
+    expect(existsSync(join(root, 'frontend/src/app/api/wordpress-import/route.ts'))).toBe(false);
   });
 
-  it('keeps Blog and Outlook separate from HERTZ feed routes', () => {
+  it('redirects root to HERTZ and removes public Blog routes', () => {
     const home = read('frontend/src/app/page.tsx');
-    const nav = read('frontend/src/features/marketing/sections/LandingNav.tsx');
     const blog = existsSync(join(root, 'frontend/src/app/blog/page.tsx'));
     const outlook = existsSync(join(root, 'frontend/src/app/outlook/page.tsx'));
 
-    expect(home).toContain('HorizonLandingView');
-    expect(nav).toContain('/hertz');
-    expect(blog).toBe(true);
+    expect(home).toContain("redirect('/hertz')");
+    expect(blog).toBe(false);
     expect(outlook).toBe(true);
   });
 });

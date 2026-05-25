@@ -7,8 +7,6 @@ describe('public pages ISR policy', () => {
   it('does not force dynamic rendering on public pages', () => {
     const pages = [
       'frontend/src/app/page.tsx',
-      'frontend/src/app/blog/page.tsx',
-      'frontend/src/app/blog/[slug]/page.tsx',
       'frontend/src/app/outlook/page.tsx',
       'frontend/src/app/outlook/[slug]/page.tsx',
       'frontend/src/app/gallery/page.tsx',

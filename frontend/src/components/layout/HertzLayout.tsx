@@ -14,7 +14,6 @@ import styles from './HertzLayout.module.css';
 export type HertzActiveNav =
   | 'home'
   | 'outlook'
-  | 'blog'
   | 'gallery'
   | 'tools'
   | 'notifications'

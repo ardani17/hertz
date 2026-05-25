@@ -6,7 +6,6 @@ const categories = [
   { label: 'Trading Room', href: '/?category=trading' },
   { label: 'Life & Coffee', href: '/?category=life_story' },
   { label: 'Outlook', href: '/outlook' },
-  { label: 'Blog', href: '/blog' },
 ] as const;
 
 const links = [

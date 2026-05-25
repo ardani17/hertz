@@ -9,8 +9,7 @@ interface SitemapArticleRow {
 
 /**
  * Dynamic sitemap generator for Next.js App Router.
- * Queries the database for all published articles and outlook articles,
- * generating URLs with lastmod dates.
+ * Queries the database for published outlook articles and generates URLs with lastmod dates.
  *
  * Validates: Requirements 21.4
  */
@@ -40,15 +39,15 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     },
   ];
 
-  // Fetch all published articles from the database
+  // Fetch all published outlook articles from the database
   let articlePages: MetadataRoute.Sitemap = [];
   try {
     const result = await query<SitemapArticleRow>(
       `SELECT slug, category, created_at
        FROM articles
-       WHERE status = $1
+       WHERE status = $1 AND category = $2
        ORDER BY created_at DESC`,
-      ['published']
+      ['published', 'outlook']
     );
 
     articlePages = result.rows.map((row) => {
@@ -57,14 +56,8 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
           ? row.created_at
           : new Date(String(row.created_at));
 
-      // Outlook articles use /outlook/[slug], others use /artikel/[slug]
-      const path =
-        row.category === 'outlook'
-          ? `/outlook/${row.slug}`
-          : `/artikel/${row.slug}`;
-
       return {
-        url: `${baseUrl}${path}`,
+        url: `${baseUrl}/outlook/${row.slug}`,
         lastModified,
         changeFrequency: 'weekly' as const,
         priority: 0.6,

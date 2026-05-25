@@ -5,7 +5,6 @@ import { usePathname } from 'next/navigation';
 import {
   ArrowLeft,
   BarChart3,
-  BookOpen,
   Compass,
   CreditCard,
   FileText,
@@ -31,7 +30,6 @@ const navSections: {
       { label: 'HERTZ', href: '/admin/hertz', Icon: Hexagon },
       { label: 'Artikel', href: '/admin/articles', Icon: FileText },
       { label: 'Outlook', href: '/admin/outlook', Icon: Compass },
-      { label: 'Blog', href: '/admin/blog', Icon: BookOpen },
     ],
   },
   {

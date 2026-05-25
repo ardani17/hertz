@@ -1,6 +1,6 @@
 #!/bin/bash
 # ============================================
-# Horizon Trader Platform — Docker Deploy Script
+# HERTZ Platform — Docker Deploy Script
 #
 # Deploy seluruh stack di bare server yang hanya
 # membutuhkan Docker dan Docker Compose.
@@ -26,7 +26,7 @@ err()   { echo -e "${RED}[ERROR]${NC} $1"; }
 banner() {
     echo ""
     echo "=========================================="
-    echo "  Horizon Trader Platform — Docker Deploy"
+    echo "  HERTZ Platform — Docker Deploy"
     echo "=========================================="
     echo ""
 }
@@ -158,7 +158,7 @@ set_defaults() {
     export BOT_PORT="${BOT_PORT:-4000}"
     export HERTZ_PLATFORM_ENABLED="${HERTZ_PLATFORM_ENABLED:-true}"
 
-    export DB_DATA_DIR="${DB_DATA_DIR:-./data/postgres}"
+    export DB_DATA_DIR="${DB_DATA_DIR:-/www/dk_project/horizon/data/postgres}"
 
     ok "Defaults: FRONTEND_PORT=${FRONTEND_PORT}, BOT_PORT=${BOT_PORT}"
     ok "Defaults: HERTZ_PLATFORM_ENABLED=${HERTZ_PLATFORM_ENABLED}"
@@ -219,16 +219,16 @@ build_and_start() {
 
     ok "Build selesai."
 
-    info "Membersihkan container Horizon lama ..."
-    local horizon_containers=(horizon-frontend horizon-bot horizon-db horizon-redis)
-    for ctr in "${horizon_containers[@]}"; do
+    info "Membersihkan container HERTZ lama ..."
+    local hertz_containers=(hertz-frontend hertz-bot hertz-db hertz-redis)
+    for ctr in "${hertz_containers[@]}"; do
         docker rm -f "$ctr" 2>/dev/null || true
     done
     $COMPOSE down --remove-orphans 2>/dev/null || true
 
     info "Menjalankan semua service ..."
     if ! $COMPOSE up -d; then
-        err "Gagal memulai container. Cek: docker ps -a && docker network inspect horizon-net"
+        err "Gagal memulai container. Cek: docker ps -a && docker network inspect hertz-net"
         exit 1
     fi
 
@@ -244,7 +244,7 @@ run_migrations() {
     local max_wait=30
     for i in $(seq 1 "$max_wait"); do
         local status
-        status=$(docker inspect --format='{{.State.Health.Status}}' horizon-db 2>/dev/null || echo "unknown")
+        status=$(docker inspect --format='{{.State.Health.Status}}' hertz-db 2>/dev/null || echo "unknown")
         if [ "$status" = "healthy" ]; then
             break
         fi
@@ -258,7 +258,7 @@ run_migrations() {
         -e ADMIN_USERNAME="${ADMIN_USERNAME}" \
         -e ADMIN_PASSWORD="${ADMIN_PASSWORD}" \
         -e MIGRATIONS_DIR="/docker-entrypoint-initdb.d/migrations" \
-        horizon-db bash /docker-entrypoint-initdb.d/init.sh; then
+        hertz-db bash /docker-entrypoint-initdb.d/init.sh; then
         ok "Migrations selesai."
     else
         warn "Migration gagal — periksa log di atas."
@@ -273,7 +273,7 @@ health_check() {
     echo ""
 
     local services=("db" "redis" "bot" "frontend")
-    local containers=("horizon-db" "horizon-redis" "horizon-bot" "horizon-frontend")
+    local containers=("hertz-db" "hertz-redis" "hertz-bot" "hertz-frontend")
     local max_retries=30
     local all_healthy=true
 

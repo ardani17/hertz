@@ -41,11 +41,11 @@ describe('share link helpers', () => {
     const showToast = vi.fn();
     vi.stubGlobal('navigator', { clipboard: { writeText } });
 
-    await expect(copyShareLinkWithFeedback('https://example.com/blog/post', showToast)).resolves.toBe(true);
+    await expect(copyShareLinkWithFeedback('https://example.com/hertz/post/hz_abc', showToast)).resolves.toBe(true);
     expect(showToast).toHaveBeenCalledWith(SHARE_LINK_SUCCESS_MESSAGE, 'success');
 
     writeText.mockRejectedValueOnce(new Error('denied'));
-    await expect(copyShareLinkWithFeedback('https://example.com/blog/post', showToast)).resolves.toBe(false);
+    await expect(copyShareLinkWithFeedback('https://example.com/hertz/post/hz_abc', showToast)).resolves.toBe(false);
     expect(showToast).toHaveBeenCalledWith(SHARE_LINK_ERROR_MESSAGE, 'error');
 
     vi.unstubAllGlobals();

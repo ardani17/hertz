@@ -2,7 +2,7 @@
 
 import Image from 'next/image';
 import Link from 'next/link';
-import { Compass, FileText, Hexagon, Home, MessageCircle, PanelLeft, PanelLeftClose, SlidersVertical } from 'lucide-react';
+import { Compass, Hexagon, Home, MessageCircle, PanelLeft, PanelLeftClose, SlidersVertical } from 'lucide-react';
 import { useEffect, useState } from 'react';
 import type { MemberSessionUser } from '@shared/types';
 import { canShowNavItem, getAccessRole } from '@/lib/accessRole';
@@ -15,12 +15,11 @@ import {
 import { HertzAvatar } from './HertzAvatar';
 import styles from './HertzRails.module.css';
 
-type ActiveNav = 'home' | 'outlook' | 'blog' | 'gallery' | 'tools' | 'notifications' | 'messages' | 'profile';
+type ActiveNav = 'home' | 'outlook' | 'gallery' | 'tools' | 'notifications' | 'messages' | 'profile';
 
 const navItems = [
   { key: 'home', href: '/hertz', label: 'Home', Icon: Home },
   { key: 'outlook', href: '/outlook', label: 'Outlook', Icon: Compass },
-  { key: 'blog', href: '/blog', label: 'Blog', Icon: FileText },
   { key: 'tools', href: '/tools', label: 'Tools', Icon: SlidersVertical },
   { key: 'messages', href: '/hertz/messages', label: 'Direct Message', Icon: MessageCircle },
 ] as const;

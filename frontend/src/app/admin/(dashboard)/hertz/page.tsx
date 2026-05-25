@@ -116,7 +116,7 @@ export default function AdminHertzPage() {
       <section className={styles.panel}>
         <div className={styles.panelHeader}>
           <h2>Report Terbuka</h2>
-          <p>Post, komentar, Blog, dan DM yang perlu ditinjau admin.</p>
+          <p>Post, komentar, report, dan DM yang perlu ditinjau admin.</p>
         </div>
 
         {!loading && data?.reports.length === 0 ? (

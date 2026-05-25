@@ -5,7 +5,6 @@ export type HertzAccessRole = 'guest' | 'member' | 'admin';
 export type HertzNavItem =
   | 'home'
   | 'outlook'
-  | 'blog'
   | 'gallery'
   | 'tools'
   | 'notifications'

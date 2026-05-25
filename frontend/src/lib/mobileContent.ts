@@ -105,7 +105,7 @@ function mapArticle(row: ArticleRow, includeContent = false, media: OutlookMedia
 }
 
 export async function listMobileArticles(params: {
-  category: 'blog' | 'outlook';
+  category: 'outlook';
   source?: string | null;
   limit?: string | null;
   offset?: string | null;
@@ -150,7 +150,7 @@ export async function listMobileArticles(params: {
 }
 
 export async function getMobileArticle(params: {
-  category: 'blog' | 'outlook';
+  category: 'outlook';
   source?: string | null;
   slug: string;
 }) {

@@ -1,7 +1,7 @@
 services:
   db:
     image: postgres:16-alpine
-    container_name: horizon-db
+    container_name: hertz-db
     restart: unless-stopped
     environment:
       POSTGRES_DB: ${POSTGRES_DB}
@@ -14,8 +14,8 @@ services:
       - ./db/init.sh:/docker-entrypoint-initdb.d/init.sh:ro
       - ./db/migrations:/docker-entrypoint-initdb.d/migrations:ro
     networks:
-      horizon-net:
-        ipv4_address: 172.20.0.10
+      hertz-net:
+        ipv4_address: 172.21.0.10
     expose:
       - "${POSTGRES_PORT:-5432}"
     extra_hosts:
@@ -29,12 +29,12 @@ services:
 
   redis:
     image: redis:7-alpine
-    container_name: horizon-redis
+    container_name: hertz-redis
     restart: unless-stopped
     command: ["redis-server", "--save", "", "--appendonly", "no"]
     networks:
-      horizon-net:
-        ipv4_address: 172.20.0.5
+      hertz-net:
+        ipv4_address: 172.21.0.5
     expose:
       - "6379"
     healthcheck:
@@ -49,7 +49,7 @@ services:
       dockerfile: bot/Dockerfile
       args:
         BOT_PORT: ${BOT_PORT:-4000}
-    container_name: horizon-bot
+    container_name: hertz-bot
     restart: unless-stopped
     environment:
       NODE_ENV: ${NODE_ENV:-production}
@@ -69,7 +69,7 @@ services:
       db:
         condition: service_healthy
     networks:
-      - horizon-net
+      - hertz-net
     ports:
       - "127.0.0.1:${BOT_HOST_PORT:-4888}:${BOT_PORT:-4000}"
     healthcheck:
@@ -87,7 +87,7 @@ services:
         FRONTEND_PORT: ${FRONTEND_PORT:-3000}
         NEXT_PUBLIC_TELEGRAM_BOT_NAME: ${TELEGRAM_BOT_NAME:-}
         NEXT_PUBLIC_SITE_URL: "https://${DOMAIN}"
-    container_name: horizon-frontend
+    container_name: hertz-frontend
     restart: unless-stopped
     extra_hosts:
       - "host.docker.internal:host-gateway"
@@ -120,7 +120,7 @@ services:
       CHALLENGE_AI_API_KEY: ${CHALLENGE_AI_API_KEY:-}
       CHALLENGE_AI_MODEL: ${CHALLENGE_AI_MODEL:-glm-5-turbo}
       CHALLENGE_AI_TIMEOUT_MS: ${CHALLENGE_AI_TIMEOUT_MS:-45000}
-      # Pakai service `redis` di horizon-net; jangan host.docker.internal (aaPanel Redis hanya 127.0.0.1).
+      # Pakai service `redis` di hertz-net; jangan host.docker.internal (aaPanel Redis hanya 127.0.0.1).
       REDIS_URL: redis://redis:6379
     depends_on:
       db:
@@ -128,7 +128,7 @@ services:
       redis:
         condition: service_healthy
     networks:
-      - horizon-net
+      - hertz-net
     ports:
       - "127.0.0.1:${FRONTEND_HOST_PORT:-3888}:${FRONTEND_PORT:-3000}"
     healthcheck:
@@ -139,9 +139,9 @@ services:
       start_period: 30s
 
 networks:
-  horizon-net:
-    name: horizon-net
+  hertz-net:
+    name: hertz-net
     driver: bridge
     ipam:
       config:
-        - subnet: 172.20.0.0/16
+        - subnet: 172.21.0.0/16
