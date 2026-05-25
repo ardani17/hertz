@@ -1,7 +1,7 @@
 'use client';
 
 import { useCallback, useEffect, useRef, useState } from 'react';
-import type { MemberSessionUser, HertzPostCategory } from '@shared/types';
+import type { MemberSessionUser, HertzPost, HertzPostCategory } from '@shared/types';
 import { hasHertzFeedQueryParams, parseHertzFeedCategory, type HertzFeedFilterPatch, type HertzFeedFilters } from '@/lib/hertzFeedFilters';
 import { useLegacyQueryCleanup } from '@/lib/spa/useLegacyQueryCleanup';
 import { HertzComposer } from './HertzComposer';
@@ -50,24 +50,39 @@ export function HertzFeedClient({
     setFilters((current) => ({ ...current, ...patch }));
   }, []);
 
-  const { posts, error, isLoadingInitialData, isLoadingMore, hasReachedEnd, loadMore, retry } = useHertzFeed({
+  const { posts, error, isLoadingInitialData, isLoadingMore, hasReachedEnd, loadMore, retry, mutate } = useHertzFeed({
     category: filters.category,
     search: filters.search,
     sort: filters.sort,
   });
 
+  const handlePosted = useCallback((post: HertzPost) => {
+    void mutate((pages) => {
+      if (!pages?.length) return [{ items: [post], nextCursor: null }];
+      const [firstPage, ...rest] = pages;
+      const firstItems = firstPage.items.filter((item) => item.id !== post.id);
+      return [
+        {
+          ...firstPage,
+          items: [post, ...firstItems],
+        },
+        ...rest,
+      ];
+    }, { revalidate: true });
+  }, [mutate]);
+
   useEffect(() => {
     const node = sentinelRef.current;
-    if (!node || hasReachedEnd) return undefined;
+    if (!node || hasReachedEnd || isLoadingMore) return undefined;
     const observer = new IntersectionObserver(
       (entries) => {
-        if (entries.some((entry) => entry.isIntersecting)) loadMore();
+        if (!isLoadingMore && entries.some((entry) => entry.isIntersecting)) loadMore();
       },
       { rootMargin: '600px 0px' },
     );
     observer.observe(node);
     return () => observer.disconnect();
-  }, [hasReachedEnd, loadMore]);
+  }, [hasReachedEnd, isLoadingMore, loadMore]);
 
   const emptyCopy = getHertzFeedEmptyState({
     activeCategory: filters.category,
@@ -78,7 +93,7 @@ export function HertzFeedClient({
     <>
       <HertzFeedTopBar filters={filters} onFilterChange={updateFilters} currentUser={currentUser} />
       <HertzHeader filters={filters} onFilterChange={updateFilters} />
-      <HertzComposer currentUser={currentUser} filters={filters} onFilterChange={updateFilters} />
+      <HertzComposer currentUser={currentUser} filters={filters} onFilterChange={updateFilters} onPosted={handlePosted} />
       <div className={styles.feed}>
         {isLoadingInitialData ? (
           Array.from({ length: 3 }).map((_, index) => <HertzPostCardSkeleton key={index} />)

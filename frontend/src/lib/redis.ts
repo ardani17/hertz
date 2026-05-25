@@ -19,31 +19,13 @@ function typingKey(conversationId: string, userId: string) {
   return `typing:${conversationId}:${userId}`;
 }
 
-function useRedisFromEnv(): boolean {
+function shouldUseRedisFromEnv(): boolean {
   return Boolean(process.env.REDIS_URL?.trim()) && !redisUnavailable;
 }
 
 export function isRedisConfigured(): boolean {
   return Boolean(process.env.REDIS_URL?.trim());
 }
-
-// #region agent log
-function debugLog(message: string, data: Record<string, unknown>, hypothesisId: string) {
-  fetch('http://127.0.0.1:7626/ingest/0e68ac60-4b93-4daf-93a7-baf0152c1922', {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json', 'X-Debug-Session-Id': '621627' },
-    body: JSON.stringify({
-      sessionId: '621627',
-      location: 'redis.ts',
-      message,
-      data,
-      hypothesisId,
-      timestamp: Date.now(),
-      runId: 'post-fix',
-    }),
-  }).catch(() => {});
-}
-// #endregion
 
 function attachErrorHandler(client: RedisClient) {
   client.on('error', () => {
@@ -69,16 +51,10 @@ async function loadRedisClient(): Promise<RedisClient | null> {
         await client.connect();
         await client.ping();
         redisClient = client;
-        // #region agent log
-        debugLog('redis_connect_ok', { urlHost: url.split('@').pop()?.split('/')[0] ?? 'hidden' }, 'H1');
-        // #endregion
         return client;
-      } catch (error) {
+      } catch {
         redisUnavailable = true;
         redisClient = null;
-        // #region agent log
-        debugLog('redis_connect_fail', { error: error instanceof Error ? error.message : 'unknown' }, 'H1');
-        // #endregion
         return null;
       } finally {
         redisInit = null;
@@ -100,7 +76,7 @@ export async function setTypingStatus(input: {
   userId: string;
   displayName: string;
 }): Promise<void> {
-  if (!useRedisFromEnv()) {
+  if (!shouldUseRedisFromEnv()) {
     return setTypingStatusMemory(input);
   }
   const redis = await requireRedisClient();
@@ -114,7 +90,7 @@ export async function setTypingStatus(input: {
 }
 
 export async function clearTypingStatus(conversationId: string, userId: string): Promise<void> {
-  if (!useRedisFromEnv()) {
+  if (!shouldUseRedisFromEnv()) {
     return clearTypingStatusMemory(conversationId, userId);
   }
   const redis = await requireRedisClient();
@@ -127,7 +103,7 @@ export async function clearTypingStatus(conversationId: string, userId: string):
 }
 
 export async function listTypingStatuses(conversationId: string, selfUserId: string): Promise<TypingStatus[]> {
-  if (!useRedisFromEnv()) {
+  if (!shouldUseRedisFromEnv()) {
     return listTypingStatusesMemory(conversationId, selfUserId);
   }
   const redis = await loadRedisClient();

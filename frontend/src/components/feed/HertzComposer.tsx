@@ -2,14 +2,12 @@
 
 import { useEffect, useState } from 'react';
 import { Plus, X } from 'lucide-react';
-import { useRouter } from 'next/navigation';
-import type { MarketContext, MemberSessionUser, HertzPostCategory } from '@shared/types';
+import type { MarketContext, MemberSessionUser, HertzPost, HertzPostCategory } from '@shared/types';
 import { ComposerMarketFields } from '@/features/hertz/composer/ComposerMarketFields';
 import { Button } from '@/components/ui/button';
 import { useToast } from '@/components/ui/Toast';
 import type { HertzFeedFilterPatch, HertzFeedFilters } from '@/lib/hertzFeedFilters';
 import { hertzCategoryTabs } from '@/lib/hertzFeedNav';
-import { refreshPreserveScroll } from '@/lib/hertzRefresh';
 import { HertzAvatar } from './HertzAvatar';
 import { HertzTelegramLogin } from './HertzTelegramLogin';
 import styles from './HertzComposer.module.css';
@@ -21,6 +19,10 @@ interface QueuedMedia {
   name: string;
   url: string;
 }
+
+type CreatePostResponse =
+  | { success: true; data: { post: HertzPost } }
+  | { success: false; error?: { message?: string } };
 
 function resolveComposerCategory(activeCategory?: HertzPostCategory | string | null): ComposerCategory {
   if (activeCategory === 'trading_room' || activeCategory === 'trading') return 'trading_room';
@@ -66,9 +68,8 @@ function ComposerForm({
   category: ComposerCategory;
   filters: HertzFeedFilters;
   onFilterChange: (patch: HertzFeedFilterPatch) => void;
-  onPosted?: () => void;
+  onPosted?: (post: HertzPost) => void;
 }) {
-  const router = useRouter();
   const { showToast } = useToast();
   const isTradingPost = category === 'trading_room';
   const [content, setContent] = useState('');
@@ -178,9 +179,9 @@ function ComposerForm({
       }),
     });
     setSubmitting(false);
-    if (!response.ok) {
-      const data = await response.json().catch(() => null);
-      showToast(data?.error?.message ?? 'Gagal mengirim post.', 'error');
+    const payload = (await response.json().catch(() => null)) as CreatePostResponse | null;
+    if (!response.ok || !payload?.success) {
+      showToast(payload && !payload.success ? payload.error?.message ?? 'Gagal mengirim post.' : 'Gagal mengirim post.', 'error');
       return;
     }
     setContent('');
@@ -196,8 +197,7 @@ function ComposerForm({
     });
     setMediaItems([]);
     showToast('Postingan terkirim.', 'success');
-    onPosted?.();
-    refreshPreserveScroll(router);
+    onPosted?.(payload.data.post);
   }
 
   return (
@@ -258,10 +258,12 @@ export function HertzComposer({
   currentUser,
   filters,
   onFilterChange,
+  onPosted,
 }: {
   currentUser: MemberSessionUser | null;
   filters: HertzFeedFilters;
   onFilterChange: (patch: HertzFeedFilterPatch) => void;
+  onPosted?: (post: HertzPost) => void;
 }) {
   const category = resolveComposerCategory(filters.category);
   const [composeOpen, setComposeOpen] = useState(false);
@@ -349,7 +351,7 @@ export function HertzComposer({
         username={currentUser.username}
       />
       <div className={styles.body}>
-        <ComposerForm category={category} filters={filters} onFilterChange={onFilterChange} />
+        <ComposerForm category={category} filters={filters} onFilterChange={onFilterChange} onPosted={onPosted} />
       </div>
     </section>
   );
@@ -403,7 +405,10 @@ export function HertzComposer({
                   category={category}
                   filters={filters}
                   onFilterChange={onFilterChange}
-                  onPosted={() => setComposeOpen(false)}
+                  onPosted={(post) => {
+                    onPosted?.(post);
+                    setComposeOpen(false);
+                  }}
                 />
               </div>
             </div>
