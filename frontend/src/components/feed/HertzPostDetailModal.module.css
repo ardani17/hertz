@@ -1,29 +1,12 @@
 .backdrop {
-  align-items: start;
-  background: rgba(0, 0, 0, 0.62);
-  bottom: 0;
-  display: flex;
-  justify-content: center;
-  left: 0;
-  overflow-y: auto;
-  padding: 4vh 1rem;
-  position: fixed;
-  right: 0;
-  top: 0;
-  z-index: 90;
+  composes: backdrop from '../../styles/horizon-modal.module.css';
 }
 
 .modal {
-  background: rgba(1, 10, 6, 0.98);
-  border: 1px solid rgba(19, 210, 123, 0.32);
-  border-radius: 12px;
-  box-shadow: 0 24px 90px rgba(0, 0, 0, 0.58), 0 0 38px var(--horizon-bg-active);
-  color: #f3fff8;
+  composes: panel from '../../styles/horizon-modal.module.css';
   display: grid;
   gap: 0.9rem;
-  max-height: 92vh;
   max-width: 760px;
-  overflow-y: auto;
   padding: 1rem;
   width: min(100%, 760px);
 }
@@ -36,10 +19,11 @@
   position: sticky;
   top: 0;
   z-index: 2;
+  background: var(--horizon-surface-strong);
 }
 
 .header span {
-  color: #13d27b;
+  color: var(--horizon-accent);
   font-size: 0.72rem;
   font-weight: 850;
   text-transform: uppercase;
@@ -54,7 +38,7 @@
 .error {
   border: 1px solid var(--horizon-border);
   border-radius: 8px;
-  color: #9eb8a9;
+  color: var(--horizon-text-muted);
   margin: 0;
   padding: 1rem;
 }
@@ -70,6 +54,7 @@
 }
 
 .post {
+  background: var(--horizon-bg-base);
   border: 1px solid var(--horizon-border);
   border-radius: 8px;
   display: grid;
@@ -90,7 +75,7 @@
 }
 
 .text {
-  color: #f3fff8;
+  color: var(--horizon-text);
   line-height: 1.55;
   margin: 0;
   overflow-wrap: anywhere;

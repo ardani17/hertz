@@ -578,11 +578,6 @@
   border-color: var(--horizon-border-active);
 }
 
-.toolNavHome {
-  color: #13d27b !important;
-}
-
-
 @media (max-width: 700px) {
   .toolNav {
     border-radius: 8px;

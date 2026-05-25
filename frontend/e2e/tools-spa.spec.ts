@@ -20,10 +20,14 @@ test('tools stay on /tools URL when switching tools', async ({ page }) => {
   await page.getByRole('button', { name: 'Elliott Wave', exact: true }).click();
   await expect(page).toHaveURL(/\/tools\/?$/);
   await expect(page.getByRole('heading', { name: 'Elliott Wave Calculator' })).toBeVisible();
+  await expect(page.getByRole('button', { name: /^(All tools|Semua tools)$/ })).not.toHaveAttribute('aria-current', 'page');
+  await expect(page.getByRole('button', { name: 'Elliott Wave', exact: true })).toHaveAttribute('aria-current', 'page');
 
   await page.getByRole('button', { name: /^(All tools|Semua tools)$/ }).click();
   await expect(page).toHaveURL(/\/tools\/?$/);
   await expect(page.getByRole('heading', { name: /Kalkulator dan tracker|Trading calculators and trackers/ })).toBeVisible();
+  await expect(page.getByRole('button', { name: /^(All tools|Semua tools)$/ })).toHaveAttribute('aria-current', 'page');
+  await expect(page.getByRole('button', { name: 'Elliott Wave', exact: true })).not.toHaveAttribute('aria-current', 'page');
 });
 
 test('legacy tool URLs redirect to /tools', async ({ page }) => {

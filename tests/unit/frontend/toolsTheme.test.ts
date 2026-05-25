@@ -32,4 +32,13 @@ describe('Tools HERTZ theme contract', () => {
     expect(headerRule).toContain('border: 1px solid rgba(19, 210, 123, 0.26)');
     expect(panelRule).toContain('background: rgba(2, 12, 7, 0.82)');
   });
+
+  it('highlights only the active tools tab without forcing Semua tools green', () => {
+    const css = read('frontend/src/components/tools/ToolShell.module.css');
+    const nav = read('frontend/src/components/tools/ToolNav.tsx');
+
+    expect(css).not.toContain('.toolNavHome');
+    expect(nav).not.toContain('toolNavHome');
+    expect(nav).toContain('activeTool === null ? styles.toolNavActive : undefined');
+  });
 });

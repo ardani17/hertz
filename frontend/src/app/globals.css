@@ -56,6 +56,7 @@
   --horizon-accent: #13d27b;
   --horizon-surface: rgba(15, 19, 18, 0.78);
   --horizon-surface-strong: rgba(20, 28, 24, 0.94);
+  --horizon-overlay-backdrop: color-mix(in srgb, var(--horizon-bg-base) 72%, transparent);
   --horizon-border: var(--horizon-border);
   --horizon-text: #f3fff8;
   --horizon-text-muted: #91a79a;

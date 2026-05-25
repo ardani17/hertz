@@ -1,27 +1,10 @@
 .backdrop {
-  align-items: start;
-  background: rgba(0, 0, 0, 0.62);
-  bottom: 0;
-  display: flex;
-  justify-content: center;
-  left: 0;
-  overflow-y: auto;
-  padding: 4vh 1rem;
-  position: fixed;
-  right: 0;
-  top: 0;
-  z-index: 90;
+  composes: backdrop from '../../styles/horizon-modal.module.css';
 }
 
 .modal {
-  background: rgba(1, 10, 6, 0.98);
-  border: 1px solid rgba(19, 210, 123, 0.32);
-  border-radius: 12px;
-  box-shadow: 0 24px 90px rgba(0, 0, 0, 0.58), 0 0 38px var(--horizon-bg-active);
-  color: #f3fff8;
-  max-height: 92vh;
+  composes: panel from '../../styles/horizon-modal.module.css';
   max-width: 920px;
-  overflow-y: auto;
   padding: 1rem 1.25rem 1.5rem;
   width: min(100%, 920px);
 }
@@ -34,13 +17,13 @@
   position: sticky;
   top: 0;
   z-index: 2;
-  background: rgba(1, 10, 6, 0.98);
+  background: var(--horizon-surface-strong);
   padding-bottom: 0.75rem;
   margin-bottom: 0.5rem;
 }
 
 .header span {
-  color: rgba(243, 255, 248, 0.65);
+  color: var(--horizon-text-muted);
   font-size: 0.75rem;
   letter-spacing: 0.08em;
   text-transform: uppercase;
@@ -53,6 +36,6 @@
 
 .error,
 .loading {
-  color: rgba(243, 255, 248, 0.75);
+  color: var(--horizon-text-muted);
   padding: 1rem 0;
 }

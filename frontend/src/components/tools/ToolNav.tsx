@@ -25,7 +25,7 @@ export function ToolNav() {
     <nav className={styles.toolNav} aria-label={copy.aria}>
       <button
         type="button"
-        className={activeTool === null ? styles.toolNavActive : styles.toolNavHome}
+        className={activeTool === null ? styles.toolNavActive : undefined}
         aria-current={activeTool === null ? 'page' : undefined}
         onClick={openHub}
       >

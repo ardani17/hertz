@@ -13,6 +13,7 @@ import {
   type HertzNotificationDto,
   type HertzNotificationType,
 } from '@/lib/hertzNotifications';
+import { markAllNotificationsRead, markNotificationRead } from '@/lib/swr/hooks/useNotifications';
 import styles from './notifications.module.css';
 
 type NotifFilter = 'all' | 'unread';
@@ -65,11 +66,7 @@ export function NotificationsView() {
     if (unreadCount === 0) return;
     setMarkingAll(true);
     try {
-      await fetch('/api/hertz/notifications/read', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: '{}',
-      });
+      await markAllNotificationsRead();
       const now = new Date().toISOString();
       setItems((next) => next.map((item) => ({ ...item, readAt: item.readAt ?? now })));
       setUnreadCount(0);
@@ -81,15 +78,15 @@ export function NotificationsView() {
   async function markItemRead(id: string) {
     const target = items.find((item) => item.id === id);
     if (!target || target.readAt) return;
-    await fetch('/api/hertz/notifications/read', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ id }),
-    });
-    setItems((next) =>
-      next.map((item) => (item.id === id ? { ...item, readAt: new Date().toISOString() } : item)),
-    );
-    setUnreadCount((count) => Math.max(0, count - 1));
+    try {
+      await markNotificationRead(id);
+      setItems((next) =>
+        next.map((item) => (item.id === id ? { ...item, readAt: new Date().toISOString() } : item)),
+      );
+      setUnreadCount((count) => Math.max(0, count - 1));
+    } catch {
+      return;
+    }
   }
 
   useEffect(() => {
