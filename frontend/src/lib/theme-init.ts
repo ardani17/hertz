@@ -16,10 +16,8 @@ export const themeInitScript = `(function() {
     document.documentElement.classList.toggle('light', t === 'light');
   }
   try {
-    var t = localStorage.getItem('hertz-theme') || localStorage.getItem('horizon-theme');
+    var t = localStorage.getItem('hertz-theme');
     if (t === 'light' || t === 'dark') {
-      localStorage.setItem('hertz-theme', t);
-      localStorage.removeItem('horizon-theme');
       applyTheme(t);
     } else {
       applyTheme('dark');

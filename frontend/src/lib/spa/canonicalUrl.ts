@@ -1,6 +1,5 @@
 /** Session key for opening a DM conversation without query params in the URL bar. */
 export const DM_CONVERSATION_SESSION_KEY = 'hertz:dm-conversation';
-export const LEGACY_DM_CONVERSATION_SESSION_KEY = 'horizon:dm-conversation';
 
 export function replaceCanonicalPath(path: string): void {
   if (typeof window === 'undefined') return;
@@ -13,15 +12,7 @@ export function replaceCanonicalPath(path: string): void {
 
 export function readSessionValue(key: string): string | null {
   try {
-    const value = sessionStorage.getItem(key);
-    if (value !== null) return value;
-    if (key !== DM_CONVERSATION_SESSION_KEY) return null;
-    const legacyValue = sessionStorage.getItem(LEGACY_DM_CONVERSATION_SESSION_KEY);
-    if (legacyValue !== null) {
-      sessionStorage.setItem(DM_CONVERSATION_SESSION_KEY, legacyValue);
-      sessionStorage.removeItem(LEGACY_DM_CONVERSATION_SESSION_KEY);
-    }
-    return legacyValue;
+    return sessionStorage.getItem(key);
   } catch {
     return null;
   }
@@ -32,9 +23,6 @@ export function consumeSessionValue(key: string): string | null {
   if (value !== null) {
     try {
       sessionStorage.removeItem(key);
-      if (key === DM_CONVERSATION_SESSION_KEY) {
-        sessionStorage.removeItem(LEGACY_DM_CONVERSATION_SESSION_KEY);
-      }
     } catch {
       /* ignore */
     }
@@ -45,9 +33,6 @@ export function consumeSessionValue(key: string): string | null {
 export function setSessionValue(key: string, value: string): void {
   try {
     sessionStorage.setItem(key, value);
-    if (key === DM_CONVERSATION_SESSION_KEY) {
-      sessionStorage.removeItem(LEGACY_DM_CONVERSATION_SESSION_KEY);
-    }
   } catch {
     /* ignore */
   }

@@ -1,16 +1,14 @@
 import { cookies } from 'next/headers';
 import type { NextRequest } from 'next/server';
 import { MemberSessionService } from '@shared/services/memberSessionService';
-import { LEGACY_MEMBER_SESSION_COOKIE, MEMBER_SESSION_COOKIE } from '@shared/types/membership';
+import { MEMBER_SESSION_COOKIE } from '@shared/types/membership';
 import type { MemberSessionUser } from '@shared/types/membership';
 
 const sessionService = new MemberSessionService();
 
 export async function getMemberSessionToken(): Promise<string | null> {
   const cookieStore = await cookies();
-  return cookieStore.get(MEMBER_SESSION_COOKIE)?.value
-    ?? cookieStore.get(LEGACY_MEMBER_SESSION_COOKIE)?.value
-    ?? null;
+  return cookieStore.get(MEMBER_SESSION_COOKIE)?.value ?? null;
 }
 
 async function validateMemberSession(
@@ -60,9 +58,7 @@ export async function resolveCurrentMemberFromRequest(
 ): Promise<MemberAuthResult> {
   const allowCookie = options.allowCookie ?? true;
   if (allowCookie) {
-    const cookieToken = request.cookies.get(MEMBER_SESSION_COOKIE)?.value
-      ?? request.cookies.get(LEGACY_MEMBER_SESSION_COOKIE)?.value
-      ?? null;
+    const cookieToken = request.cookies.get(MEMBER_SESSION_COOKIE)?.value ?? null;
     const cookieUser = await validateMemberSession(cookieToken, { refreshCookie: true });
     if (cookieUser) {
       return { user: cookieUser, token: cookieToken, source: 'cookie' };
@@ -96,25 +92,11 @@ export async function setMemberSessionCookie(token: string, expiresAt: Date): Pr
     path: '/',
     expires: expiresAt,
   });
-  cookieStore.set(LEGACY_MEMBER_SESSION_COOKIE, '', {
-    httpOnly: true,
-    secure: process.env.NODE_ENV === 'production',
-    sameSite: 'lax',
-    path: '/',
-    maxAge: 0,
-  });
 }
 
 export async function clearMemberSessionCookie(): Promise<void> {
   const cookieStore = await cookies();
   cookieStore.set(MEMBER_SESSION_COOKIE, '', {
-    httpOnly: true,
-    secure: process.env.NODE_ENV === 'production',
-    sameSite: 'lax',
-    path: '/',
-    maxAge: 0,
-  });
-  cookieStore.set(LEGACY_MEMBER_SESSION_COOKIE, '', {
     httpOnly: true,
     secure: process.env.NODE_ENV === 'production',
     sameSite: 'lax',

@@ -43,7 +43,6 @@ const DEFAULT_MEMBERSHIP_GROUP_ID = -1001916607651;
 export function getMembershipGroupId(): number {
   return Number(
     process.env.HERTZ_MEMBERSHIP_GROUP_ID
-      || process.env.HORIZON_TELEGRAM_GROUP_ID
       || DEFAULT_MEMBERSHIP_GROUP_ID,
   );
 }

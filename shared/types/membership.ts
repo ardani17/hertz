@@ -1,7 +1,6 @@
 import type { UserRole } from './index';
 
 export const MEMBER_SESSION_COOKIE = 'hertz_member_session';
-export const LEGACY_MEMBER_SESSION_COOKIE = 'horizon_member_session';
 
 export interface TelegramAuthData {
   id: number;

@@ -1,10 +1,7 @@
 export const LEFT_RAIL_STORAGE_KEY = 'hertz.leftRail.collapsed';
-export const LEGACY_LEFT_RAIL_STORAGE_KEY = 'horizon.leftRail.collapsed';
 export const TOOLS_HUB_PATH = '/tools';
 export const TOOLS_ACTIVE_STORAGE_KEY = 'hertz.tools.active';
 export const TOOLS_PENDING_STORAGE_KEY = 'hertz.tools.pending';
-export const LEGACY_TOOLS_ACTIVE_STORAGE_KEY = 'horizon.tools.active';
-export const LEGACY_TOOLS_PENDING_STORAGE_KEY = 'horizon.tools.pending';
 
 export const LEFT_RAIL_WIDTH_EXPANDED = '256px';
 export const LEFT_RAIL_WIDTH_COLLAPSED = '72px';
@@ -117,12 +114,6 @@ export function readLeftRailCollapsed(): boolean {
   if (typeof window === 'undefined') return false;
   try {
     const current = window.localStorage.getItem(LEFT_RAIL_STORAGE_KEY);
-    const legacy = window.localStorage.getItem(LEGACY_LEFT_RAIL_STORAGE_KEY);
-    if (current === null && legacy !== null) {
-      window.localStorage.setItem(LEFT_RAIL_STORAGE_KEY, legacy);
-      window.localStorage.removeItem(LEGACY_LEFT_RAIL_STORAGE_KEY);
-      return legacy === '1';
-    }
     return current === '1';
   } catch {
     return false;
@@ -133,7 +124,6 @@ export function writeLeftRailCollapsed(collapsed: boolean): void {
   if (typeof window === 'undefined') return;
   try {
     window.localStorage.setItem(LEFT_RAIL_STORAGE_KEY, collapsed ? '1' : '0');
-    window.localStorage.removeItem(LEGACY_LEFT_RAIL_STORAGE_KEY);
   } catch {
     /* ignore quota errors */
   }

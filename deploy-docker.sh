@@ -123,8 +123,8 @@ check_required_vars() {
         exit 1
     fi
 
-    if [ -z "${HERTZ_MEMBERSHIP_GROUP_ID:-${HORIZON_TELEGRAM_GROUP_ID:-${TELEGRAM_GROUP_ID}}}" ]; then
-        err "HERTZ membutuhkan HERTZ_MEMBERSHIP_GROUP_ID, HORIZON_TELEGRAM_GROUP_ID, atau TELEGRAM_GROUP_ID."
+    if [ -z "${HERTZ_MEMBERSHIP_GROUP_ID:-${TELEGRAM_GROUP_ID}}" ]; then
+        err "HERTZ membutuhkan HERTZ_MEMBERSHIP_GROUP_ID atau TELEGRAM_GROUP_ID."
         exit 1
     fi
 
@@ -140,8 +140,7 @@ auto_construct_vars() {
     export TELEGRAM_WEBHOOK_URL="https://${DOMAIN}/webhook/telegram"
     export FRONTEND_URL="https://${DOMAIN}"
     export NEXT_PUBLIC_SITE_URL="https://${DOMAIN}"
-    export HERTZ_MEMBERSHIP_GROUP_ID="${HERTZ_MEMBERSHIP_GROUP_ID:-${HORIZON_TELEGRAM_GROUP_ID:-${TELEGRAM_GROUP_ID}}}"
-    export HORIZON_TELEGRAM_GROUP_ID="${HORIZON_TELEGRAM_GROUP_ID:-${HERTZ_MEMBERSHIP_GROUP_ID}}"
+    export HERTZ_MEMBERSHIP_GROUP_ID="${HERTZ_MEMBERSHIP_GROUP_ID:-${TELEGRAM_GROUP_ID}}"
 
     ok "DATABASE_URL       = postgresql://${POSTGRES_USER}:****@${POSTGRES_HOST:-db}:${POSTGRES_PORT:-5432}/${POSTGRES_DB}"
     ok "TELEGRAM_WEBHOOK_URL = ${TELEGRAM_WEBHOOK_URL}"

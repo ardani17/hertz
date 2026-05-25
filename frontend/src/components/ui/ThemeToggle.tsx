@@ -8,7 +8,6 @@ interface ThemeToggleProps {
 }
 
 const STORAGE_KEY = 'hertz-theme';
-const LEGACY_STORAGE_KEY = 'horizon-theme';
 
 /**
  * Theme toggle button that switches between dark and light modes.
@@ -37,7 +36,6 @@ export function ThemeToggle({ className }: ThemeToggleProps) {
 
     try {
       localStorage.setItem(STORAGE_KEY, newTheme);
-      localStorage.removeItem(LEGACY_STORAGE_KEY);
     } catch {
       // localStorage may be unavailable in private browsing
     }
