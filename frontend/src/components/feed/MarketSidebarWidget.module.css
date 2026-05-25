@@ -1,6 +1,7 @@
 .widget {
   display: grid;
   gap: 14px;
+  margin-top: 14px;
   min-width: 0;
 }
 
