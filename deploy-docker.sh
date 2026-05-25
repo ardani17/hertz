@@ -128,6 +128,11 @@ check_required_vars() {
         exit 1
     fi
 
+    if [ -n "${HORIZON_TELEGRAM_GROUP_ID:-}" ]; then
+        err "HORIZON_TELEGRAM_GROUP_ID sudah tidak didukung. Gunakan HERTZ_MEMBERSHIP_GROUP_ID."
+        exit 1
+    fi
+
     ok "Semua variabel wajib tervalidasi."
 }
 
@@ -147,6 +152,13 @@ auto_construct_vars() {
     ok "FRONTEND_URL       = ${FRONTEND_URL}"
     ok "NEXT_PUBLIC_SITE_URL = ${NEXT_PUBLIC_SITE_URL}"
     ok "HERTZ_MEMBERSHIP_GROUP_ID = ${HERTZ_MEMBERSHIP_GROUP_ID}"
+}
+
+# ── 3b. wave4_logout_notice ──────────────────
+
+wave4_logout_notice() {
+    warn "Wave 4 sunset legacy session aktif: cookie horizon_* tidak lagi berlaku."
+    warn "Deploy disarankan pada low-traffic window karena user lama akan login ulang."
 }
 
 # ── 4. set_defaults ─────────────────────────
@@ -309,6 +321,7 @@ main() {
     validate_env
     check_required_vars
     auto_construct_vars
+    wave4_logout_notice
     set_defaults
     setup_directories
     validate_deploy_assets
