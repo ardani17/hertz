@@ -173,12 +173,19 @@ export class HertzPostRepository {
     cursorId?: string | null;
     category?: string | null;
     search?: string | null;
+    authorId?: string | null;
     sort?: 'latest' | 'trending';
     viewerId?: string | null;
   }, client?: DbClient): Promise<HertzPostRow[]> {
     const conditions = ['hp.status = $1', 'hp.deleted_at IS NULL'];
     const values: unknown[] = ['published'];
     let idx = 2;
+
+    if (params.authorId) {
+      conditions.push(`hp.author_id = $${idx}`);
+      values.push(params.authorId);
+      idx++;
+    }
 
     if (params.category) {
       conditions.push(`hp.category = $${idx}`);

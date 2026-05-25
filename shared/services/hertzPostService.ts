@@ -1,5 +1,5 @@
 import { createHash, randomBytes } from 'crypto';
-import { execute, query, withTransaction, type DbClient } from '../db';
+import { execute, query, queryOne, withTransaction, type DbClient } from '../db';
 import { HertzCommentRepository, type HertzCommentRow } from '../repositories/hertzCommentRepository';
 import { HertzPostRepository, type HertzPostRow } from '../repositories/hertzPostRepository';
 import { ActivityLogService } from './activityLog';
@@ -219,6 +219,39 @@ export class HertzPostService {
       items: await this.mapPosts(pageRows, params.viewer ?? null),
       nextCursor: rows.length > limit ? encodeCursor(rows[limit]) : null,
     };
+  }
+
+  async listAuthorFeed(params: {
+    authorId: string;
+    cursor?: string | null;
+    limit?: number;
+    viewer?: MemberSessionUser | null;
+  }): Promise<CursorFeedResult> {
+    const limit = Math.min(Math.max(params.limit ?? 20, 1), 50);
+    const decoded = decodeCursor(params.cursor ?? null);
+    const rows = await this.posts.listPublished({
+      limit: limit + 1,
+      cursorCreatedAt: decoded?.createdAt ?? null,
+      cursorId: decoded?.id ?? null,
+      authorId: params.authorId,
+      sort: 'latest',
+      viewerId: params.viewer?.id ?? null,
+    });
+    const pageRows = rows.slice(0, limit);
+    return {
+      items: await this.mapPosts(pageRows, params.viewer ?? null),
+      nextCursor: rows.length > limit ? encodeCursor(rows[limit]) : null,
+    };
+  }
+
+  async resolvePublishedAuthorId(username: string): Promise<string | null> {
+    const normalized = username.trim().toLowerCase();
+    if (!normalized) return null;
+    const row = await queryOne<{ id: string }>(
+      `SELECT id FROM users WHERE LOWER(username) = $1 AND verified_member_at IS NOT NULL LIMIT 1`,
+      [normalized],
+    );
+    return row?.id ?? null;
   }
 
   async getPostDetail(postId: string, viewer?: MemberSessionUser | null): Promise<HertzPostDetail> {

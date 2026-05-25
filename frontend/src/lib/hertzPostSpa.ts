@@ -9,6 +9,15 @@ export function buildHertzPostPath(shortId: string): string {
   return `/hertz/post/${shortId}`;
 }
 
+export function getPublicProfileBasePath(username: string): string {
+  return `/@${username}`;
+}
+
+export function buildPublicProfilePostUrl(username: string, shortId: string): string {
+  const params = new URLSearchParams({ post: shortId });
+  return `${getPublicProfileBasePath(username)}?${params.toString()}`;
+}
+
 export function hasLegacyHertzPostQuery(search: string): boolean {
   const params = new URLSearchParams(search.startsWith('?') ? search.slice(1) : search);
   const post = params.get('post')?.trim();
@@ -18,4 +27,11 @@ export function hasLegacyHertzPostQuery(search: string): boolean {
 export function parseLegacyHertzPostQuery(search: string): string | null {
   const params = new URLSearchParams(search.startsWith('?') ? search.slice(1) : search);
   return params.get('post')?.trim() || null;
+}
+
+export function stripLegacyHertzPostQuery(search: string): string {
+  const params = new URLSearchParams(search.startsWith('?') ? search.slice(1) : search);
+  params.delete('post');
+  const next = params.toString();
+  return next ? `?${next}` : '';
 }

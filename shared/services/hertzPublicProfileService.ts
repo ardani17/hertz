@@ -1,12 +1,6 @@
-import { query, queryOne } from '../db';
+import { queryOne } from '../db';
 import { mapProfileRowToDto, type MemberPublicProfileDto, type MemberTradingProfile } from '../types/memberProfile';
 import type { MemberSessionUser } from '../types/membership';
-
-export type PublicProfilePostPreview = {
-  shortId: string;
-  excerpt: string;
-  createdAt: string;
-};
 
 export type PublicProfileDto = {
   id: string;
@@ -22,7 +16,6 @@ export type PublicProfileDto = {
   joinedAt: string;
   isSelf: boolean;
   hasExistingDm: boolean;
-  recentPosts: PublicProfilePostPreview[];
 };
 
 export class HertzPublicProfileService {
@@ -76,20 +69,6 @@ export class HertzPublicProfileService {
       hasExistingDm = Boolean(existing?.id);
     }
 
-    const recentRows = await query<{
-      short_id: string;
-      content: string | null;
-      created_at: Date;
-    }>(
-      `SELECT short_id, content, created_at
-       FROM hertz_posts
-       WHERE author_id = $1 AND status = 'published' AND deleted_at IS NULL
-       ORDER BY created_at DESC
-       LIMIT 12`,
-      [row.id],
-    );
-
-    const stripHtml = (html: string) => html.replace(/<[^>]+>/g, ' ').replace(/\s+/g, ' ').trim();
     const profile = mapProfileRowToDto(row);
 
     return {
@@ -106,14 +85,6 @@ export class HertzPublicProfileService {
       joinedAt: row.created_at.toISOString(),
       isSelf: viewer?.id === row.id,
       hasExistingDm,
-      recentPosts: recentRows.rows.map((post) => {
-        const plain = stripHtml(post.content ?? '');
-        return {
-          shortId: post.short_id,
-          excerpt: plain.length > 160 ? `${plain.slice(0, 160).trim()}…` : plain || 'Postingan tanpa teks',
-          createdAt: post.created_at.toISOString(),
-        };
-      }),
     };
   }
 }

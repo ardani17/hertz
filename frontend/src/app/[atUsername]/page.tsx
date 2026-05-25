@@ -4,6 +4,7 @@ import { PublicProfileView } from '@/components/profile/PublicProfileView';
 import { parsePublicProfileSegment } from '@/lib/public-profile/public-profile';
 import { getCurrentMember } from '@/lib/memberAuth';
 import { HertzPublicProfileService } from '@shared/services/hertzPublicProfileService';
+import { HertzPostService } from '@shared/services/hertzPostService';
 
 export const dynamic = 'force-dynamic';
 
@@ -32,5 +33,19 @@ export default async function PublicProfilePage({ params }: PageProps) {
     redirect(`/@${dto.username}`);
   }
 
-  return <PublicProfileView dto={dto} viewerId={viewer?.id ?? null} currentUser={viewer} />;
+  const postsFeed = await new HertzPostService().listAuthorFeed({
+    authorId: dto.id,
+    viewer,
+    limit: 20,
+  });
+
+  return (
+    <PublicProfileView
+      dto={dto}
+      viewerId={viewer?.id ?? null}
+      currentUser={viewer}
+      initialPosts={postsFeed.items}
+      initialNextCursor={postsFeed.nextCursor}
+    />
+  );
 }

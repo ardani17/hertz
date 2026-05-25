@@ -78,6 +78,8 @@ describe('HERTZ implementation wiring', () => {
     const interactions = read('shared/repositories/hertzInteractionRepository.ts');
 
     expect(postsRoute).toContain('HertzPostService');
+    expect(postsRoute).toContain('listAuthorFeed');
+    expect(postsRoute).toContain('author');
     expect(postRepo).toContain('FROM hertz_posts');
     expect(postRepo).toContain('INSERT INTO hertz_posts');
     expect(postRepo).toContain('hertz_post_media');

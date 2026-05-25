@@ -12,6 +12,23 @@ export async function GET(request: NextRequest) {
   try {
     const params = request.nextUrl.searchParams;
     const viewer = await getCurrentMember();
+    const author = params.get('author')?.trim();
+    const authorId = params.get('authorId')?.trim();
+
+    if (author || authorId) {
+      const resolvedAuthorId = authorId || (author ? await feed.resolvePublishedAuthorId(author) : null);
+      if (!resolvedAuthorId) {
+        return apiSuccess({ items: [], nextCursor: null });
+      }
+      const result = await feed.listAuthorFeed({
+        authorId: resolvedAuthorId,
+        cursor: params.get('cursor'),
+        limit: Number(params.get('limit') || 20),
+        viewer,
+      });
+      return apiSuccess(result);
+    }
+
     const result = await feed.listFeed({
       cursor: params.get('cursor'),
       limit: Number(params.get('limit') || 20),

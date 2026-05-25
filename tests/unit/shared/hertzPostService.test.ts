@@ -180,3 +180,24 @@ describe('HertzPostService owner post permissions', () => {
     expect(upsertMarketContext).not.toHaveBeenCalled();
   });
 });
+
+describe('HertzPostService listAuthorFeed', () => {
+  it('filters published posts by author id', async () => {
+    const listPublished = vi.fn().mockResolvedValue([]);
+    const listMedia = vi.fn().mockResolvedValue([]);
+    const service = new HertzPostService();
+    (service as unknown as { posts: { listPublished: typeof listPublished; listMedia: typeof listMedia } }).posts = {
+      listPublished,
+      listMedia,
+    };
+
+    const result = await service.listAuthorFeed({ authorId: owner.id, viewer: null, limit: 20 });
+
+    expect(listPublished).toHaveBeenCalledWith(expect.objectContaining({
+      authorId: owner.id,
+      sort: 'latest',
+      limit: 21,
+    }));
+    expect(result).toEqual({ items: [], nextCursor: null });
+  });
+});
