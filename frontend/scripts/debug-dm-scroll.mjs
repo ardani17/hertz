@@ -3,7 +3,7 @@ import { chromium, devices } from '@playwright/test';
 const browser = await chromium.launch();
 const context = await browser.newContext({ ...devices['iPhone 13'] });
 const page = await context.newPage();
-await page.goto('https://horizon.cloudnexify.com/hertz/messages', { waitUntil: 'networkidle' });
+await page.goto('https://hertz.cloudnexify.com/hertz/messages', { waitUntil: 'networkidle' });
 
 const metrics = await page.evaluate(() => {
   const q = (sel) => document.querySelector(sel);

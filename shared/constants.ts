@@ -37,8 +37,6 @@ export const SESSION_IDLE_MS = 24 * 60 * 60 * 1000;
 export const SESSION = {
   /** Session cookie name */
   COOKIE_NAME: 'hertz_session',
-  /** Legacy session cookie name kept for transition reads. */
-  LEGACY_COOKIE_NAME: 'horizon_session',
   /** Session duration in milliseconds (24 hours) */
   DURATION_MS: SESSION_IDLE_MS,
 } as const;

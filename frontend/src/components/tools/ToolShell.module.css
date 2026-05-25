@@ -42,31 +42,6 @@
   color: var(--color-text-muted);
 }
 
-.cftcHeader {
-  grid-template-columns: minmax(0, 1.1fr) minmax(320px, 0.9fr);
-  align-items: start;
-}
-
-.cftcHeader .helpDetails,
-.cftcHeader .actions,
-.cftcHeader .note {
-  grid-column: 1 / -1;
-}
-
-.cftcSummary {
-  display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: var(--space-3);
-}
-
-.cftcSummary .metric {
-  min-height: 112px;
-}
-
-.cftcSummary .metric strong {
-  font-size: var(--text-lg);
-}
-
 .helpDetails {
   max-width: 960px;
   margin-top: var(--space-2);
@@ -310,19 +285,6 @@
   margin: 0;
   color: var(--color-text-muted);
   font-size: var(--text-sm);
-}
-
-.cftcQuickLinks {
-  display: grid;
-  gap: var(--space-3);
-  margin: var(--space-5) 0;
-}
-
-.cftcQuickLinks > h3 {
-  margin: 0;
-  color: var(--color-text-muted);
-  font-size: var(--text-sm);
-  font-weight: 700;
 }
 
 .error {
@@ -708,11 +670,6 @@
   .sectionHeader {
     align-items: flex-start;
     flex-direction: column;
-  }
-
-  .cftcHeader,
-  .cftcSummary {
-    grid-template-columns: 1fr;
   }
 
   .signalCard dl {

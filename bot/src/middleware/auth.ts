@@ -10,7 +10,7 @@ import type { MiddlewareFn } from './types';
 export interface AuthMiddlewareOptions {
   /**
    * The Telegram group/supergroup chat ID that members must belong to.
-   * Typically set from the HORIZON_GROUP_CHAT_ID environment variable.
+   * Typically set from the TELEGRAM_GROUP_ID environment variable.
    */
   groupChatId: number;
   /**

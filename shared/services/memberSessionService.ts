@@ -13,7 +13,7 @@ export type ValidatedMemberSession = {
 export function hashMemberSessionToken(token: string): string {
   const secret = process.env.MEMBER_SESSION_SECRET
     || process.env.TELEGRAM_BOT_TOKEN
-    || 'horizon-member-session-dev';
+    || 'hertz-member-session-dev';
   return createHmac('sha256', secret).update(token).digest('hex');
 }
 

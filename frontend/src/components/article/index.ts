@@ -1,1 +1,1 @@
-export { ArticleMeta, estimateReadTime, formatDate } from './ArticleMeta';
+export { estimateReadTime, formatDate } from './ArticleMeta';

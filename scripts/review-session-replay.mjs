@@ -9,7 +9,7 @@ const outputDir = path.join(rootDir, 'docs', 'review-replays');
 const baseURL =
   process.env.REVIEW_BASE_URL ||
   process.env.NEXT_PUBLIC_SITE_URL ||
-  (process.env.DOMAIN ? `https://${process.env.DOMAIN}` : 'https://horizon.cloudnexify.com');
+  (process.env.DOMAIN ? `https://${process.env.DOMAIN}` : 'https://hertz.cloudnexify.com');
 const route = process.env.REVIEW_REPLAY_ROUTE || '/hertz';
 const seconds = Number(process.env.REVIEW_REPLAY_SECONDS || '30');
 const headed = process.env.REVIEW_REPLAY_HEADED === '1';
@@ -25,7 +25,7 @@ function replayHTML(jsonFileName) {
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Horizon Review Replay</title>
+  <title>Hertz Review Replay</title>
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/rrweb@2.0.0-alpha.4/dist/rrweb.min.css" />
   <style>
     body { margin: 0; background: #080808; color: #f5f5f5; font-family: system-ui, sans-serif; }
@@ -34,7 +34,7 @@ function replayHTML(jsonFileName) {
   </style>
 </head>
 <body>
-  <header>Horizon review replay: ${jsonFileName}</header>
+  <header>Hertz review replay: ${jsonFileName}</header>
   <div id="player"></div>
   <script src="https://cdn.jsdelivr.net/npm/rrweb@2.0.0-alpha.4/dist/rrweb.min.js"></script>
   <script>

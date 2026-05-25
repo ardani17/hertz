@@ -23,7 +23,7 @@ if ! pg_isready -h "${POSTGRES_HOST:-localhost}" -p "${POSTGRES_PORT:-5432}" >/d
   exit 1
 fi
 
-echo "==> Horizon: menjalankan migrasi..."
+echo "==> Hertz: menjalankan migrasi..."
 
 "${PSQL[@]}" -c 'CREATE EXTENSION IF NOT EXISTS pgcrypto;' 2>/dev/null || true
 "${PSQL[@]}" -c 'CREATE TABLE IF NOT EXISTS schema_migrations (

@@ -88,7 +88,6 @@ export default defineConfig([
     'bot/dist/**',
     'coverage/**',
     'data/**',
-    'docs/tools/**',
     'storybook-static/**',
     'node_modules/**',
     'frontend/node_modules/**',

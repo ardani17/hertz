@@ -9,7 +9,7 @@ const rootDir = path.resolve(__dirname, '..');
 const defaultBaseURL =
   process.env.REVIEW_BASE_URL ||
   process.env.NEXT_PUBLIC_SITE_URL ||
-  (process.env.DOMAIN ? `https://${process.env.DOMAIN}` : 'https://horizon.cloudnexify.com');
+  (process.env.DOMAIN ? `https://${process.env.DOMAIN}` : 'https://hertz.cloudnexify.com');
 
 const defaultPages = [
   ['landing', '/'],
@@ -17,7 +17,6 @@ const defaultPages = [
   ['hertz-profile', '/hertz/profile'],
   ['hertz-messages', '/hertz/messages'],
   ['outlook', '/outlook'],
-  ['blog', '/blog'],
   ['tools', '/tools'],
 ];
 

@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# Jalankan Horizon tanpa Docker (dev mode, hot reload).
+# Jalankan Hertz tanpa Docker (dev mode, hot reload).
 set -euo pipefail
 
 ROOT="$(cd "$(dirname "$0")/.." && pwd)"
