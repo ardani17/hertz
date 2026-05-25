@@ -779,6 +779,21 @@
   grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
 }
 
+.attachmentButton {
+  background: transparent;
+  border: 0;
+  cursor: zoom-in;
+  display: block;
+  padding: 0;
+  width: 100%;
+}
+
+.attachmentButton:focus-visible {
+  outline: 2px solid var(--horizon-accent, #13d27b);
+  outline-offset: 2px;
+  border-radius: 10px;
+}
+
 .attachments img {
   background: var(--horizon-bg-base);
   border: 1px solid var(--horizon-border);
@@ -786,7 +801,14 @@
   display: block;
   max-height: 200px;
   object-fit: contain;
+  pointer-events: none;
+  transition: border-color 0.15s ease, transform 0.15s ease;
   width: 100%;
+}
+
+.attachmentButton:hover img {
+  border-color: var(--horizon-border-active);
+  transform: scale(1.01);
 }
 
 .pendingAttachments {

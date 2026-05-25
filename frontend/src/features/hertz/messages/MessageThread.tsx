@@ -13,6 +13,7 @@ import {
   getDmThreadMenuActions,
   groupDmMessagesByDate,
 } from './dm-utils';
+import { DmAttachmentLightbox } from './DmAttachmentLightbox';
 import { MessageThreadSkeleton } from './MessageThreadSkeleton';
 import type { ReactNode } from 'react';
 import type { Conversation, Message } from './types';
@@ -70,6 +71,7 @@ export function MessageThread({
   const prevCountRef = useRef(0);
   const initialLoadRef = useRef(true);
   const [newMessagesCount, setNewMessagesCount] = useState(0);
+  const [lightboxUrl, setLightboxUrl] = useState<string | null>(null);
   const threadActions = getDmThreadMenuActions({ active: Boolean(activeId), archived: filter === 'archived' });
   const messageGroups = groupDmMessagesByDate(messages);
   const profileHref = getDmProfileHref(activeConversation?.peer?.username);
@@ -84,11 +86,13 @@ export function MessageThread({
       prevCountRef.current = 0;
       initialLoadRef.current = true;
       setNewMessagesCount(0);
+      setLightboxUrl(null);
       return;
     }
     prevCountRef.current = 0;
     initialLoadRef.current = true;
     setNewMessagesCount(0);
+    setLightboxUrl(null);
   }, [activeId]);
 
   useEffect(() => {
@@ -271,15 +275,22 @@ export function MessageThread({
                             {item.attachments.length > 0 ? (
                               <div className={styles.attachments}>
                                 {item.attachments.map((attachment) => (
-                                  <img
+                                  <button
                                     key={attachment.id}
-                                    src={attachment.url}
-                                    alt="Lampiran pesan"
-                                    loading="lazy"
-                                    decoding="async"
-                                    width={280}
-                                    height={200}
-                                  />
+                                    type="button"
+                                    className={styles.attachmentButton}
+                                    onClick={() => setLightboxUrl(attachment.url)}
+                                    aria-label="Buka gambar ukuran penuh"
+                                  >
+                                    <img
+                                      src={attachment.url}
+                                      alt="Lampiran pesan"
+                                      loading="lazy"
+                                      decoding="async"
+                                      width={280}
+                                      height={200}
+                                    />
+                                  </button>
                                 ))}
                               </div>
                             ) : null}
@@ -327,6 +338,7 @@ export function MessageThread({
       </footer>
 
       {typeof document !== 'undefined' && threadMenu ? createPortal(threadMenu, document.body) : null}
+      {lightboxUrl ? <DmAttachmentLightbox url={lightboxUrl} onClose={() => setLightboxUrl(null)} /> : null}
     </section>
   );
 }
