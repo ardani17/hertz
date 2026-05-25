@@ -1,5 +1,5 @@
 // ============================================
-// Horizon Trader Platform — Media Type Validation
+// Hertz Trader Platform — Media Type Validation
 // ============================================
 
 import { MediaTypeInvalidError } from './errors';

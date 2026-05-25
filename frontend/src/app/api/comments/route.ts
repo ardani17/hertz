@@ -198,7 +198,7 @@ export async function POST(request: NextRequest) {
 
     const commentDisplayName = member.username
       ? `@${member.username}`
-      : member.displayName || 'Member Horizon';
+      : member.displayName || 'Member Hertz';
 
     const result = await query<CommentRow>(
       `INSERT INTO comments (article_id, user_id, display_name, content, is_anonymous, status)

@@ -2,7 +2,13 @@
 
 import { createContext, useCallback, useContext, useEffect, useMemo, useState, type ReactNode } from 'react';
 import type { PublishedToolSlug } from '@/lib/tools/catalog';
-import { getPublishedToolBySlug, TOOLS_ACTIVE_STORAGE_KEY, TOOLS_PENDING_STORAGE_KEY } from '@/lib/tools/catalog';
+import {
+  getPublishedToolBySlug,
+  LEGACY_TOOLS_ACTIVE_STORAGE_KEY,
+  LEGACY_TOOLS_PENDING_STORAGE_KEY,
+  TOOLS_ACTIVE_STORAGE_KEY,
+  TOOLS_PENDING_STORAGE_KEY,
+} from '@/lib/tools/catalog';
 
 type ToolsSpaContextValue = {
   activeTool: PublishedToolSlug | null;
@@ -15,14 +21,19 @@ const ToolsSpaContext = createContext<ToolsSpaContextValue | null>(null);
 function readStoredTool(): PublishedToolSlug | null {
   if (typeof window === 'undefined') return null;
   try {
-    const pending = window.sessionStorage.getItem(TOOLS_PENDING_STORAGE_KEY);
+    const pending = window.sessionStorage.getItem(TOOLS_PENDING_STORAGE_KEY)
+      ?? window.sessionStorage.getItem(LEGACY_TOOLS_PENDING_STORAGE_KEY);
     if (pending) {
       window.sessionStorage.removeItem(TOOLS_PENDING_STORAGE_KEY);
+      window.sessionStorage.removeItem(LEGACY_TOOLS_PENDING_STORAGE_KEY);
       const tool = getPublishedToolBySlug(pending);
       if (tool) return tool.slug;
     }
-    const stored = window.sessionStorage.getItem(TOOLS_ACTIVE_STORAGE_KEY);
+    const stored = window.sessionStorage.getItem(TOOLS_ACTIVE_STORAGE_KEY)
+      ?? window.sessionStorage.getItem(LEGACY_TOOLS_ACTIVE_STORAGE_KEY);
     if (!stored) return null;
+    window.sessionStorage.setItem(TOOLS_ACTIVE_STORAGE_KEY, stored);
+    window.sessionStorage.removeItem(LEGACY_TOOLS_ACTIVE_STORAGE_KEY);
     return getPublishedToolBySlug(stored)?.slug ?? null;
   } catch {
     return null;
@@ -34,8 +45,10 @@ function writeStoredTool(slug: PublishedToolSlug | null) {
   try {
     if (slug) {
       window.sessionStorage.setItem(TOOLS_ACTIVE_STORAGE_KEY, slug);
+      window.sessionStorage.removeItem(LEGACY_TOOLS_ACTIVE_STORAGE_KEY);
     } else {
       window.sessionStorage.removeItem(TOOLS_ACTIVE_STORAGE_KEY);
+      window.sessionStorage.removeItem(LEGACY_TOOLS_ACTIVE_STORAGE_KEY);
     }
   } catch {
     /* ignore */

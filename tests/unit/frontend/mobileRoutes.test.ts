@@ -159,8 +159,8 @@ describe('mobile route contracts', () => {
         created_at: new Date('2026-05-17T09:00:00.000Z'),
         updated_at: new Date('2026-05-17T09:00:00.000Z'),
         author_id: 'admin-1',
-        author_username: 'horizon',
-        author_display_name: 'Horizon',
+        author_username: 'hertz',
+        author_display_name: 'Hertz',
         author_avatar_url: null,
         cover_image: null,
         outlook_metadata: {

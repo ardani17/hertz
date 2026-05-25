@@ -8,22 +8,22 @@
 }
 
 .rowUnread {
-  background: var(--horizon-bg-active);
+  background: var(--hertz-bg-active);
 }
 
 .row strong {
-  color: var(--horizon-text);
+  color: var(--hertz-text);
   font-size: 0.82rem;
 }
 
 .row p {
-  color: var(--horizon-text-muted);
+  color: var(--hertz-text-muted);
   font-size: 0.76rem;
   margin: 0;
 }
 
 .row time {
-  color: var(--horizon-text-muted);
+  color: var(--hertz-text-muted);
   font-size: 0.68rem;
 }
 

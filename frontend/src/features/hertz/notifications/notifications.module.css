@@ -1,6 +1,6 @@
 .panel {
-  background: var(--horizon-surface);
-  border: 1px solid var(--horizon-border);
+  background: var(--hertz-surface);
+  border: 1px solid var(--hertz-border);
   border-radius: 12px;
   display: flex;
   flex: 1;
@@ -24,8 +24,8 @@
 }
 
 .guestPanel {
-  background: var(--horizon-bg-base);
-  border: 1px solid var(--horizon-border);
+  background: var(--hertz-bg-base);
+  border: 1px solid var(--hertz-border);
   border-radius: 12px;
   display: grid;
   gap: 0.75rem;
@@ -57,7 +57,7 @@
 
 .header {
   align-items: center;
-  border-bottom: 1px solid var(--horizon-border);
+  border-bottom: 1px solid var(--hertz-border);
   display: flex;
   gap: 0.75rem;
   justify-content: space-between;
@@ -71,8 +71,8 @@
 }
 
 .unreadPill {
-  background: var(--horizon-bg-selected);
-  border: 1px solid var(--horizon-border-active);
+  background: var(--hertz-bg-selected);
+  border: 1px solid var(--hertz-border-active);
   border-radius: 999px;
   color: #13d27b;
   flex: 0 0 auto;
@@ -84,7 +84,7 @@
 
 .toolbar {
   align-items: center;
-  border-bottom: 1px solid var(--horizon-border);
+  border-bottom: 1px solid var(--hertz-border);
   display: flex;
   flex-wrap: wrap;
   gap: 0.65rem;
@@ -104,7 +104,7 @@
 .filterActive {
   align-items: center;
   background: transparent;
-  border: 1px solid var(--horizon-border-active);
+  border: 1px solid var(--hertz-border-active);
   border-radius: 999px;
   color: #9fb4aa;
   cursor: pointer;
@@ -118,7 +118,7 @@
 }
 
 .filterActive {
-  background: var(--horizon-bg-selected);
+  background: var(--hertz-bg-selected);
   border-color: #13d27b;
   color: #f3fff8;
 }
@@ -136,8 +136,8 @@
 }
 
 .markAllButton {
-  background: var(--horizon-bg-active);
-  border: 1px solid var(--horizon-border-active);
+  background: var(--hertz-bg-active);
+  border: 1px solid var(--hertz-border-active);
   border-radius: 999px;
   color: #13d27b;
   cursor: pointer;
@@ -166,8 +166,8 @@
 }
 
 .stateBox button {
-  background: var(--horizon-bg-active);
-  border: 1px solid var(--horizon-border-active);
+  background: var(--hertz-bg-active);
+  border: 1px solid var(--hertz-border-active);
   border-radius: 8px;
   color: #13d27b;
   cursor: pointer;
@@ -186,7 +186,7 @@
 
 .item {
   align-items: center;
-  border-bottom: 1px solid var(--horizon-border);
+  border-bottom: 1px solid var(--hertz-border);
   color: inherit;
   display: grid;
   gap: 0.75rem;
@@ -197,11 +197,11 @@
 }
 
 .item:hover {
-  background: var(--horizon-bg-active);
+  background: var(--hertz-bg-active);
 }
 
 .itemUnread {
-  background: var(--horizon-bg-base);
+  background: var(--hertz-bg-base);
 }
 
 .avatarWrap {
@@ -215,8 +215,8 @@
 
 .typeBadge {
   align-items: center;
-  background: var(--horizon-bg-base);
-  border: 1px solid var(--horizon-border-active);
+  background: var(--hertz-bg-base);
+  border: 1px solid var(--hertz-border-active);
   border-radius: 999px;
   bottom: -2px;
   color: #13d27b;

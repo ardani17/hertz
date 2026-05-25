@@ -1,4 +1,4 @@
-# Horizon Frontend — Implementasi Design
+# Hertz Frontend — Implementasi Design
 
 Dokumen kanonik desain: **`/DESIGN.md`** (root) + **`/PRODUCT.md`**.
 
@@ -6,17 +6,17 @@ Dokumen kanonik desain: **`/DESIGN.md`** (root) + **`/PRODUCT.md`**.
 
 - Tema: **dark-first**, aksen **emerald** `#13d27b`
 - Font: **DM Sans** (`--font-dm-sans` di `layout.tsx`)
-- Token utama di `src/app/globals.css` (`--horizon-*`)
+- Token utama di `src/app/globals.css` (`--hertz-*`)
 
 ## Token
 
 | Token | Usage |
 |-------|--------|
-| `--horizon-bg-base` | Halaman |
-| `--horizon-surface` | Kartu, panel |
-| `--horizon-text` / `--horizon-text-muted` | Copy |
-| `--horizon-accent` | CTA, aktif |
-| `--horizon-accent-soft` | Row terpilih (DM, notifikasi) |
+| `--hertz-bg-base` | Halaman |
+| `--hertz-surface` | Kartu, panel |
+| `--hertz-text` / `--hertz-text-muted` | Copy |
+| `--hertz-accent` | CTA, aktif |
+| `--hertz-accent-soft` | Row terpilih (DM, notifikasi) |
 
 ## Breakpoint
 
@@ -25,7 +25,7 @@ Gunakan [`src/lib/breakpoints.ts`](src/lib/breakpoints.ts).
 ## Copy
 
 - UI: **Bahasa Indonesia**
-- Nama produk: HERTZ, Outlook, Horizon (tidak diterjemahkan)
+- Nama produk: HERTZ dan Outlook (tidak diterjemahkan)
 
 ## Impor
 

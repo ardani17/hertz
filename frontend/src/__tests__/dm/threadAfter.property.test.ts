@@ -2,7 +2,7 @@ import fc from 'fast-check';
 import { describe, expect, it } from 'vitest';
 import { appendIncrementalMessages, listMessagesAfterId } from '@/lib/dm/incremental-thread';
 
-// Feature: horizon-social-ux-uplift, Property 7: Incremental DM poll is monotonic and append-only
+// Feature: hertz-social-ux-uplift, Property 7: Incremental DM poll is monotonic and append-only
 
 describe('incremental DM thread', () => {
   it('returns messages after id and appends without duplicates', () => {

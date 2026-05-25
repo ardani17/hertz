@@ -3,7 +3,7 @@
   background: transparent;
   border: 0;
   border-radius: 999px;
-  color: var(--horizon-text);
+  color: var(--hertz-text);
   cursor: pointer;
   display: inline-flex;
   height: 48px;
@@ -18,12 +18,12 @@
 }
 
 .bell:hover {
-  background: var(--horizon-accent-soft);
+  background: var(--hertz-accent-soft);
 }
 
 .badge {
   align-items: center;
-  background: var(--horizon-accent);
+  background: var(--hertz-accent);
   border-radius: 999px;
   color: #04140c;
   display: inline-flex;

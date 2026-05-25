@@ -1,5 +1,5 @@
 // ============================================
-// Horizon Trader Platform — Command Registry Tests
+// Hertz Trader Platform — Command Registry Tests
 // ============================================
 
 import { describe, it, expect, vi } from 'vitest';
@@ -134,7 +134,7 @@ describe('CommandRegistry — resolve slash commands', () => {
     const handler = createHandler({ name: '/publish' });
     registry.register(handler);
 
-    const message = createTestMessage({ text: '/publish@HorizonBot My story' });
+    const message = createTestMessage({ text: '/publish@HertzBot My story' });
     expect(registry.resolve(message)).toBe(handler);
   });
 

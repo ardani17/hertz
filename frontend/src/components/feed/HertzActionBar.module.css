@@ -42,7 +42,7 @@
 .actions button:hover,
 .actions a:hover,
 .actions .active {
-  color: var(--horizon-accent);
+  color: var(--hertz-accent);
 }
 
 .actions button:disabled {

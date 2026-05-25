@@ -1,5 +1,5 @@
 // ============================================
-// Horizon Trader Platform — Help Handler (/help)
+// HERTZ Platform — Help Handler (/help)
 // ============================================
 
 import type { CommandHandler } from '../commands/types';

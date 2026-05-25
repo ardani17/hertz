@@ -57,7 +57,7 @@ export function OutlookArticleModal({
     return () => window.removeEventListener('keydown', handleKeyDown);
   }, [onClose]);
 
-  const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://horizon.cloudnexify.com';
+  const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://hertz.cloudnexify.com';
   const outlookUrl = `${baseUrl}${buildOutlookArticlePath(slug)}`;
   const title = article?.title || 'Outlook';
 

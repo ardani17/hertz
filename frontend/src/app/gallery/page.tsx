@@ -6,7 +6,7 @@ import styles from './page.module.css';
 
 export const metadata: Metadata = {
   title: 'Gallery sementara tidak aktif',
-  description: 'Gallery Horizon belum dibuka untuk publik.',
+  description: 'Gallery Hertz belum dibuka untuk publik.',
   alternates: {
     canonical: '/gallery',
   },

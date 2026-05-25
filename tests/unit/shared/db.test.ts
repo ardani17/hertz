@@ -28,8 +28,8 @@ describe('Database Connection', () => {
 
     expect(config.host).toBe('localhost');
     expect(config.port).toBe(5432);
-    expect(config.database).toBe('horizon');
-    expect(config.user).toBe('horizon_user');
+    expect(config.database).toBe('hertz');
+    expect(config.user).toBe('hertz_app');
     expect(config.password).toBe('');
     expect(config.maxConnections).toBe(20);
     expect(config.idleTimeoutMs).toBe(30000);

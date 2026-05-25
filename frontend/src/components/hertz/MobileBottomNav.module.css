@@ -5,8 +5,8 @@
 @media (max-width: 1024px) {
   .mobileNav {
     align-items: stretch;
-    background: var(--horizon-bg-base);
-    border-top: 1px solid var(--horizon-border);
+    background: var(--hertz-bg-base);
+    border-top: 1px solid var(--hertz-border);
     bottom: 0;
     box-shadow: 0 -18px 34px rgba(0, 0, 0, 0.34);
     display: grid;
@@ -50,8 +50,8 @@
   }
 
   .active {
-    background: var(--horizon-bg-selected);
-    color: var(--horizon-accent) !important;
+    background: var(--hertz-bg-selected);
+    color: var(--hertz-accent) !important;
   }
 
   .badge {

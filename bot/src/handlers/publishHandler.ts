@@ -1,5 +1,5 @@
 // ============================================
-// Horizon Trader Platform — Publish Handler (/publish)
+// HERTZ Platform — Publish Handler (/publish)
 // ============================================
 
 import type { CommandHandler } from '../commands/types';

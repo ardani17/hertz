@@ -18,7 +18,7 @@ describe('Tools HERTZ theme contract', () => {
 
     expect(mainRule).toContain('max-width: 760px');
     expect(gridRule).toContain('grid-template-columns: 1fr');
-    expect(cardRule).toContain('background: rgba(2, 12, 7, 0.82)');
+    expect(cardRule).toContain('background: var(--hertz-bg-base)');
     expect(hoverRule).not.toContain('transform');
   });
 
@@ -29,8 +29,8 @@ describe('Tools HERTZ theme contract', () => {
     const panelRule = css.match(/\.panel \{(?<body>[^}]+)\}/)?.groups?.body ?? '';
 
     expect(shellRule).toContain('max-width: 860px');
-    expect(headerRule).toContain('border: 1px solid rgba(19, 210, 123, 0.26)');
-    expect(panelRule).toContain('background: rgba(2, 12, 7, 0.82)');
+    expect(headerRule).toContain('border: 1px solid var(--hertz-border)');
+    expect(panelRule).toContain('background: var(--hertz-bg-base)');
   });
 
   it('highlights only the active tools tab without forcing Semua tools green', () => {

@@ -1,5 +1,5 @@
 // ============================================
-// Horizon Trader Platform — Admin Logout API
+// Hertz Trader Platform — Admin Logout API
 // ============================================
 
 import { NextResponse } from 'next/server';

@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vitest';
 import { readFileSync } from 'node:fs';
 
-// Feature: horizon-social-ux-uplift, Smoke: force-dynamic public pages
+// Feature: hertz-social-ux-uplift, Smoke: force-dynamic public pages
 
 describe('public pages ISR policy', () => {
   it('does not force dynamic rendering on public pages', () => {

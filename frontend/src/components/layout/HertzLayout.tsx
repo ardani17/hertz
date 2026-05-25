@@ -78,9 +78,9 @@ export function HertzLayout(props: HertzLayoutProps) {
                 <NotificationBell currentUser={currentUser} className={styles.desktopNotificationBell} />
               </header>
               <header className={styles.mobileHeader}>
-                <Link className={styles.mobileBrand} href="/hertz" aria-label="Horizon Home" prefetch>
+                <Link className={styles.mobileBrand} href="/hertz" aria-label="Hertz Home" prefetch>
                   <Image
-                    src="/images/logo/Logo-Horizon-Atom-Online-White_8.png"
+                    src="/images/logo/Logo-Hertz-Atom-Online-White_8.png"
                     alt=""
                     width={34}
                     height={34}

@@ -7,8 +7,8 @@
 }
 
 .header {
-  background: var(--horizon-bg-base);
-  border: 1px solid var(--horizon-border);
+  background: var(--hertz-bg-base);
+  border: 1px solid var(--hertz-border);
   border-radius: 8px;
   box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.035);
   display: grid;
@@ -70,8 +70,8 @@
 .helpDetails {
   max-width: 960px;
   margin-top: var(--space-2);
-  background: var(--horizon-bg-base);
-  border: 1px solid var(--horizon-border);
+  background: var(--hertz-bg-base);
+  border: 1px solid var(--hertz-border);
   border-radius: 8px;
 }
 
@@ -100,7 +100,7 @@
 }
 
 .helpDetails[open] summary {
-  border-bottom: 1px solid var(--horizon-border);
+  border-bottom: 1px solid var(--hertz-border);
 }
 
 .helpDetails[open] summary::after {
@@ -126,8 +126,8 @@
 
 .helpItem {
   padding: var(--space-4);
-  background: var(--horizon-bg-base);
-  border: 1px solid var(--horizon-border);
+  background: var(--hertz-bg-base);
+  border: 1px solid var(--hertz-border);
   border-radius: 8px;
 }
 
@@ -161,8 +161,8 @@
 }
 
 .linkPanel {
-  background: var(--horizon-bg-base);
-  border: 1px solid var(--horizon-border);
+  background: var(--hertz-bg-base);
+  border: 1px solid var(--hertz-border);
   border-radius: 8px;
   display: grid;
   gap: var(--space-3);
@@ -174,9 +174,9 @@
 }
 
 .linkPanel:hover {
-  background: var(--horizon-bg-hover);
+  background: var(--hertz-bg-hover);
   color: var(--color-text);
-  border-color: var(--horizon-border-hover);
+  border-color: var(--hertz-border-hover);
   text-decoration: none;
 }
 
@@ -192,9 +192,9 @@
 }
 
 .panel {
-  background: var(--horizon-bg-base);
+  background: var(--hertz-bg-base);
   padding: var(--space-5);
-  border: 1px solid var(--horizon-border);
+  border: 1px solid var(--hertz-border);
   border-radius: 8px;
 }
 
@@ -256,15 +256,15 @@
 
 .metric {
   padding: var(--space-4);
-  background: var(--horizon-bg-base);
-  border: 1px solid var(--horizon-border);
+  background: var(--hertz-bg-base);
+  border: 1px solid var(--hertz-border);
   border-radius: 8px;
   font-variant-numeric: tabular-nums;
 }
 
 .metricPrimary {
-  border-color: var(--horizon-border-active);
-  box-shadow: inset 0 0 0 1px var(--horizon-bg-selected);
+  border-color: var(--hertz-border-active);
+  box-shadow: inset 0 0 0 1px var(--hertz-bg-selected);
 }
 
 .metric span {
@@ -337,7 +337,7 @@
 .tableWrap {
   margin-top: var(--space-5);
   overflow-x: auto;
-  border: 1px solid var(--horizon-border);
+  border: 1px solid var(--hertz-border);
   border-radius: 8px;
 }
 
@@ -356,7 +356,7 @@
 .table td {
   padding: var(--space-3);
   border: 0;
-  border-bottom: 1px solid var(--horizon-border);
+  border-bottom: 1px solid var(--hertz-border);
   text-align: left;
   font-size: var(--text-sm);
   font-variant-numeric: tabular-nums;
@@ -364,7 +364,7 @@
 
 .table th {
   color: var(--color-text-muted);
-  background: var(--horizon-bg-base);
+  background: var(--hertz-bg-base);
   font-size: var(--text-xs);
   letter-spacing: 0.05em;
   text-transform: uppercase;
@@ -524,8 +524,8 @@
 }
 
 .toolNav {
-  background: var(--horizon-nav-track-bg);
-  border: 1px solid var(--horizon-nav-track-border);
+  background: var(--hertz-nav-track-bg);
+  border: 1px solid var(--hertz-nav-track-border);
   border-radius: 999px;
   display: flex;
   flex-wrap: wrap;
@@ -560,22 +560,22 @@
 .toolNav button:hover,
 .toolNav a:focus-visible,
 .toolNav button:focus-visible {
-  color: var(--horizon-accent);
-  background: var(--horizon-bg-active);
+  color: var(--hertz-accent);
+  background: var(--hertz-bg-active);
   text-decoration: none;
 }
 
 .toolNav button:focus-visible {
-  outline: 2px solid var(--horizon-border-active);
+  outline: 2px solid var(--hertz-border-active);
   outline-offset: 1px;
 }
 
 .toolNavActive,
 .toolNav a.toolNavActive:hover,
 .toolNav button.toolNavActive:hover {
-  color: var(--horizon-accent);
-  background: var(--horizon-bg-active);
-  border-color: var(--horizon-border-active);
+  color: var(--hertz-accent);
+  background: var(--hertz-bg-active);
+  border-color: var(--hertz-border-active);
 }
 
 @media (max-width: 700px) {
@@ -608,9 +608,9 @@
 }
 
 .badge {
-  color: var(--horizon-accent);
-  background: var(--horizon-bg-active);
-  border: 1px solid var(--horizon-border-active);
+  color: var(--hertz-accent);
+  background: var(--hertz-bg-active);
+  border: 1px solid var(--hertz-border-active);
 }
 
 .badgeMuted {
@@ -638,8 +638,8 @@
   display: grid;
   gap: var(--space-3);
   padding: var(--space-3);
-  background: var(--horizon-bg-base);
-  border: 1px solid var(--horizon-border);
+  background: var(--hertz-bg-base);
+  border: 1px solid var(--hertz-border);
   border-radius: 8px;
 }
 
@@ -764,19 +764,19 @@
   min-height: 72px;
   padding: var(--space-3);
   color: var(--color-text-muted);
-  background: var(--horizon-bg-base);
-  border: 1px solid var(--horizon-border);
+  background: var(--hertz-bg-base);
+  border: 1px solid var(--hertz-border);
   border-radius: 8px;
   text-align: left;
   cursor: pointer;
-  transition: var(--horizon-surface-transition), color 0.15s ease;
+  transition: var(--hertz-surface-transition), color 0.15s ease;
 }
 
 .presetButton:hover,
 .presetActive {
   color: var(--color-text);
-  background: var(--horizon-bg-active);
-  border-color: var(--horizon-border-active);
+  background: var(--hertz-bg-active);
+  border-color: var(--hertz-border-active);
 }
 
 .presetButton strong {
@@ -795,13 +795,13 @@
   gap: var(--space-4);
   margin-top: var(--space-5);
   padding: var(--space-5);
-  background: var(--horizon-bg-base);
-  border: 1px solid var(--horizon-border);
+  background: var(--hertz-bg-base);
+  border: 1px solid var(--hertz-border);
   border-radius: 10px;
 }
 
 .risk-safe {
-  border-color: var(--horizon-border-hover);
+  border-color: var(--hertz-border-hover);
 }
 
 .risk-moderate {
@@ -828,8 +828,8 @@
 
 .gradeBadge {
   align-items: center;
-  background: var(--horizon-bg-active);
-  border: 1px solid var(--horizon-border-active);
+  background: var(--hertz-bg-active);
+  border: 1px solid var(--hertz-border-active);
   border-radius: 999px;
   color: var(--color-accent);
   display: inline-flex;
@@ -861,8 +861,8 @@
 
 .insightGrid > div {
   padding: var(--space-3);
-  background: var(--horizon-bg-base);
-  border: 1px solid var(--horizon-border);
+  background: var(--hertz-bg-base);
+  border: 1px solid var(--hertz-border);
   border-radius: 8px;
 }
 
@@ -890,8 +890,8 @@
 
 .insightLists > div {
   padding: var(--space-4);
-  background: var(--horizon-bg-base);
-  border: 1px solid var(--horizon-border);
+  background: var(--hertz-bg-base);
+  border: 1px solid var(--hertz-border);
   border-radius: 8px;
 }
 
@@ -921,8 +921,8 @@
   gap: var(--space-3);
   min-height: 170px;
   padding: var(--space-4);
-  background: var(--horizon-bg-base);
-  border: 1px solid var(--horizon-border);
+  background: var(--hertz-bg-base);
+  border: 1px solid var(--hertz-border);
   border-radius: 8px;
 }
 
@@ -936,8 +936,8 @@
   width: 100%;
   height: 96px;
   color: var(--color-accent);
-  background: var(--horizon-bg-base);
-  border: 1px solid var(--horizon-border);
+  background: var(--hertz-bg-base);
+  border: 1px solid var(--hertz-border);
   border-radius: 8px;
   overflow: visible;
 }
@@ -953,8 +953,8 @@
   gap: var(--space-1);
   height: 96px;
   padding: var(--space-2);
-  background: var(--horizon-bg-base);
-  border: 1px solid var(--horizon-border);
+  background: var(--hertz-bg-base);
+  border: 1px solid var(--hertz-border);
   border-radius: 8px;
 }
 

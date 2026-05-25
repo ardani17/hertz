@@ -278,7 +278,7 @@ describe('Outlook detail model', () => {
     const detail = buildOutlookDetailModel({
       title: 'NASDAQ session prep',
       content_html: '',
-      author_name: 'horizon',
+      author_name: 'hertz',
       outlook_metadata: {
         contentType: 'video',
         videoUrl: 'https://example.com/session.mp4',

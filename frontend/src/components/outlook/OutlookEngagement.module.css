@@ -1,6 +1,6 @@
 .wrap {
-  border-bottom: 1px solid var(--horizon-border);
-  border-top: 1px solid var(--horizon-border);
+  border-bottom: 1px solid var(--hertz-border);
+  border-top: 1px solid var(--hertz-border);
 }
 
 .actions {
@@ -40,7 +40,7 @@
 .actions button:hover,
 .actions a:hover,
 .actions .active {
-  color: var(--horizon-accent);
+  color: var(--hertz-accent);
 }
 
 .actions .active svg {
@@ -67,7 +67,7 @@
 }
 
 .section {
-  border-top: 1px solid var(--horizon-border);
+  border-top: 1px solid var(--hertz-border);
   padding: 1.1rem 1.25rem 1.25rem;
 }
 
@@ -110,7 +110,7 @@
 
 .guestCta {
   background: rgba(5, 18, 11, 0.72);
-  border: 1px solid var(--horizon-border);
+  border: 1px solid var(--hertz-border);
   border-radius: 8px;
   display: grid;
   gap: 0.55rem;
@@ -136,7 +136,7 @@
 
 .form textarea,
 .form input {
-  background: var(--horizon-bg-base);
+  background: var(--hertz-bg-base);
   border: 1px solid rgba(76, 118, 94, 0.42);
   border-radius: 7px;
   color: #eef8f1;
@@ -155,8 +155,8 @@
 
 .form textarea:focus,
 .form input:focus {
-  border-color: var(--horizon-border-active);
-  outline: 2px solid var(--horizon-border);
+  border-color: var(--hertz-border-active);
+  outline: 2px solid var(--hertz-border);
 }
 
 .formFooter {

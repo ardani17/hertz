@@ -5,7 +5,7 @@
 .adminLayout {
   display: flex;
   min-height: 100vh;
-  background: var(--horizon-bg-base);
+  background: var(--hertz-bg-base);
   color: #e7f4ec;
 }
 
@@ -114,8 +114,8 @@
 }
 
 .navLinkActive {
-  background-color: var(--horizon-bg-selected);
-  border: 1px solid var(--horizon-border-active);
+  background-color: var(--hertz-bg-selected);
+  border: 1px solid var(--hertz-border-active);
   color: #13d27b;
   font-weight: 700;
 }

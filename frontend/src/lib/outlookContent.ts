@@ -154,7 +154,7 @@ export function isArticleContentBodyAllowed(input: {
 
 function buildAuthorHandle(authorName: string | null | undefined): string {
   const clean = authorName?.trim();
-  if (!clean) return '@horizon';
+  if (!clean) return '@hertz';
   return clean.startsWith('@') ? clean : `@${clean}`;
 }
 

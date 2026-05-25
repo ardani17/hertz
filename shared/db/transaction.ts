@@ -1,5 +1,5 @@
 // ============================================
-// Horizon Trader Platform — Transaction Helper
+// Hertz Trader Platform — Transaction Helper
 // ============================================
 
 import { PoolClient } from 'pg';

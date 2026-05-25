@@ -1,5 +1,5 @@
 // ============================================
-// Horizon Trader Platform — Media Handling Service
+// HERTZ Platform — Media Handling Service
 // ============================================
 
 import type { S3Client, PutObjectCommandInput } from '@aws-sdk/client-s3';

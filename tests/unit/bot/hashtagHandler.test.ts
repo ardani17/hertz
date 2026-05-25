@@ -1,5 +1,5 @@
 // ============================================
-// Horizon Trader Platform — Hashtag Handler Tests
+// Hertz Trader Platform — Hashtag Handler Tests
 // ============================================
 
 import { describe, it, expect, vi, beforeEach } from 'vitest';

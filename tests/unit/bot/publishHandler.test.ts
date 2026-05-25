@@ -1,5 +1,5 @@
 // ============================================
-// Horizon Trader Platform — Publish Handler Tests
+// Hertz Trader Platform — Publish Handler Tests
 // Updated for the draft-approval flow (publish-approval-flow spec)
 // ============================================
 

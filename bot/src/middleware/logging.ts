@@ -1,5 +1,5 @@
 // ============================================
-// Horizon Trader Platform — Logging Middleware
+// HERTZ Platform — Logging Middleware
 // ============================================
 
 import type { ActivityLogInput } from '../../../shared/services/activityLog';

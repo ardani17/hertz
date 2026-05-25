@@ -1,5 +1,5 @@
 // ============================================
-// Horizon Trader Platform — Auth Utilities
+// Hertz Trader Platform — Auth Utilities
 // ============================================
 
 import { createHash, randomUUID } from 'crypto';
@@ -9,7 +9,8 @@ import { SESSION_IDLE_MS } from '@shared/constants';
 import type { User, AdminSession } from '@shared/types';
 
 /** Cookie name for the admin session token */
-export const SESSION_COOKIE_NAME = 'horizon_admin_session';
+export const SESSION_COOKIE_NAME = 'hertz_admin_session';
+export const LEGACY_SESSION_COOKIE_NAME = 'horizon_admin_session';
 
 /**
  * Hash a session token using SHA-256.
@@ -59,6 +60,13 @@ export async function setSessionCookie(token: string, expiresAt: Date): Promise<
     path: '/',
     expires: expiresAt,
   });
+  cookieStore.set(LEGACY_SESSION_COOKIE_NAME, '', {
+    httpOnly: true,
+    secure: process.env.NODE_ENV === 'production',
+    sameSite: 'strict',
+    path: '/',
+    maxAge: 0,
+  });
 }
 
 /**
@@ -73,6 +81,13 @@ export async function clearSessionCookie(): Promise<void> {
     path: '/',
     maxAge: 0,
   });
+  cookieStore.set(LEGACY_SESSION_COOKIE_NAME, '', {
+    httpOnly: true,
+    secure: process.env.NODE_ENV === 'production',
+    sameSite: 'strict',
+    path: '/',
+    maxAge: 0,
+  });
 }
 
 /**
@@ -80,7 +95,7 @@ export async function clearSessionCookie(): Promise<void> {
  */
 export async function getSessionToken(): Promise<string | null> {
   const cookieStore = await cookies();
-  const cookie = cookieStore.get(SESSION_COOKIE_NAME);
+  const cookie = cookieStore.get(SESSION_COOKIE_NAME) ?? cookieStore.get(LEGACY_SESSION_COOKIE_NAME);
   return cookie?.value ?? null;
 }
 

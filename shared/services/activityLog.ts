@@ -1,5 +1,5 @@
 // ============================================
-// Horizon Trader Platform — Activity Log Service
+// Hertz Trader Platform — Activity Log Service
 // ============================================
 
 import { execute, type DbClient } from '../db/query';

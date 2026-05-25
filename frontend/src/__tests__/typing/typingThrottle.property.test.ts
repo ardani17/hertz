@@ -2,8 +2,8 @@ import fc from 'fast-check';
 import { describe, expect, it } from 'vitest';
 import { createTypingThrottleSchedule, filterActiveTypingStatuses, TYPING_TTL_MS } from '@/lib/typing/typing-utils';
 
-// Feature: horizon-social-ux-uplift, Property 4: Typing throttle bound
-// Feature: horizon-social-ux-uplift, Property 5: Typing TTL filter
+// Feature: hertz-social-ux-uplift, Property 4: Typing throttle bound
+// Feature: hertz-social-ux-uplift, Property 5: Typing TTL filter
 
 describe('typing throttle and TTL', () => {
   it('emits no more often than 1.5s and no less often than 2s while active', () => {

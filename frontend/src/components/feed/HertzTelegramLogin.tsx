@@ -99,7 +99,7 @@ function HertzTelegramWidgetLogin({ compact = false }: { compact?: boolean }) {
   async function handleAuth(user: TelegramUser) {
     if (isVerifying) return;
     setIsVerifying(true);
-    setStatus('Memverifikasi member grup Horizon...');
+    setStatus('Memverifikasi member grup Hertz...');
 
     const timeout = window.setTimeout(() => {
       setStatus('Verifikasi terlalu lama. Coba lagi.');
@@ -159,7 +159,7 @@ function HertzTelegramWidgetLogin({ compact = false }: { compact?: boolean }) {
         <div>
           <strong>Login Telegram</strong>
           {!compact ? (
-            <span>Verifikasi member grup Horizon untuk publish, Pulse, komentar, dan repost.</span>
+            <span>Verifikasi member grup Hertz untuk publish, Pulse, komentar, dan repost.</span>
           ) : null}
         </div>
       </div>

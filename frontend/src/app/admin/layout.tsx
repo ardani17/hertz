@@ -10,8 +10,8 @@
  */
 export const metadata = {
   title: {
-    default: 'Admin | Horizon',
-    template: '%s | Admin | Horizon',
+    default: 'Admin | Hertz',
+    template: '%s | Admin | Hertz',
   },
 };
 

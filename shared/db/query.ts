@@ -1,5 +1,5 @@
 // ============================================
-// Horizon Trader Platform — Typed Query Helpers
+// Hertz Trader Platform — Typed Query Helpers
 // ============================================
 
 import { Pool, PoolClient, QueryResult, QueryResultRow } from 'pg';

@@ -1,5 +1,5 @@
 // ============================================
-// Horizon Trader Platform — Bot Middleware Types
+// HERTZ Platform — Bot Middleware Types
 // ============================================
 
 import type { User } from '../../../shared/types/index';

@@ -2,7 +2,7 @@ import fc from 'fast-check';
 import { describe, expect, it } from 'vitest';
 import { applyCounterEvents } from '@shared/repositories/hertzPostStatsRepository';
 
-// Feature: horizon-social-ux-uplift, Property 8: Counter cache idempotency and correctness
+// Feature: hertz-social-ux-uplift, Property 8: Counter cache idempotency and correctness
 
 describe('counter cache event reducer', () => {
   it('is idempotent by event id and clamps non-negative counters', () => {

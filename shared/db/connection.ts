@@ -1,5 +1,5 @@
 // ============================================
-// Horizon Trader Platform — Database Connection Pool
+// HERTZ Platform — Database Connection Pool
 // ============================================
 
 import { Pool, PoolConfig } from 'pg';
@@ -38,8 +38,8 @@ export function getDbConfig(): DbConfig {
   return {
     host: process.env.POSTGRES_HOST ?? 'localhost',
     port: parseInt(process.env.POSTGRES_PORT ?? '5432', 10),
-    database: process.env.POSTGRES_DB ?? 'horizon',
-    user: process.env.POSTGRES_USER ?? 'horizon_user',
+    database: process.env.POSTGRES_DB ?? 'hertz',
+    user: process.env.POSTGRES_USER ?? 'hertz_app',
     password: process.env.POSTGRES_PASSWORD ?? '',
     maxConnections: parseInt(process.env.DB_MAX_CONNECTIONS ?? '20', 10),
     idleTimeoutMs: parseInt(process.env.DB_IDLE_TIMEOUT_MS ?? '30000', 10),

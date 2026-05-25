@@ -1,7 +1,7 @@
 .main {
   min-height: 100vh;
   overflow-x: hidden;
-  background: var(--horizon-bg-base);
+  background: var(--hertz-bg-base);
   color: #e7f4ec;
 }
 
@@ -36,8 +36,8 @@
   gap: 1rem;
   min-height: 76px;
   padding: 1rem 1.25rem;
-  background: var(--horizon-bg-base);
-  border-bottom: 1px solid var(--horizon-border);
+  background: var(--hertz-bg-base);
+  border-bottom: 1px solid var(--hertz-border);
   backdrop-filter: blur(14px);
 }
 
@@ -50,7 +50,7 @@
 
 .kicker {
   margin: 0 0 0.2rem;
-  color: var(--horizon-accent);
+  color: var(--hertz-accent);
   font-size: 0.78rem;
   font-weight: 700;
 }
@@ -63,9 +63,9 @@
 .iconButton {
   min-height: 36px;
   padding: 0 0.75rem;
-  border: 1px solid var(--horizon-border);
+  border: 1px solid var(--hertz-border);
   border-radius: 999px;
-  background: var(--horizon-nav-track-bg);
+  background: var(--hertz-nav-track-bg);
   color: #cde8d8;
   font-weight: 700;
 }
@@ -81,7 +81,7 @@
 
 .empty {
   background: rgba(2, 9, 6, 0.62);
-  border: 1px solid var(--horizon-border);
+  border: 1px solid var(--hertz-border);
   border-radius: 8px;
   color: #9ab5a5;
   margin: 16px;
@@ -126,7 +126,7 @@
   .main {
     min-height: 100svh;
     padding-bottom: calc(78px + env(safe-area-inset-bottom));
-    background: var(--horizon-bg-base);
+    background: var(--hertz-bg-base);
   }
 
   .shell {

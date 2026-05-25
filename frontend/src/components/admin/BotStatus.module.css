@@ -45,7 +45,7 @@
 }
 
 .retryBtn:hover {
-  background-color: var(--horizon-success-muted);
+  background-color: var(--hertz-success-muted);
 }
 
 /* Status row */
@@ -209,7 +209,7 @@
 }
 
 .notifyBtn:hover:not(:disabled) {
-  background-color: var(--horizon-success-muted);
+  background-color: var(--hertz-success-muted);
 }
 
 .notifyBtn:disabled {

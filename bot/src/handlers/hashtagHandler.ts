@@ -1,5 +1,5 @@
 // ============================================
-// Horizon Trader Platform — Hashtag Handler
+// HERTZ Platform — Hashtag Handler
 // ============================================
 
 import type { CommandHandler } from '../commands/types';

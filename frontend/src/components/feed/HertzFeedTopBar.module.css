@@ -1,6 +1,6 @@
 .topBar {
   align-items: center;
-  background: var(--horizon-bg-base);
+  background: var(--hertz-bg-base);
   border-bottom: 1px solid rgba(255, 255, 255, 0.06);
   display: flex;
   gap: 0.75rem;
@@ -49,18 +49,18 @@
 }
 
 .sortTabButton:hover {
-  background: var(--horizon-bg-active);
+  background: var(--hertz-bg-active);
   color: #cde8d8;
 }
 
 .sortTabButtonActive {
-  background: var(--horizon-bg-selected);
-  border-color: var(--horizon-border-active);
-  color: var(--horizon-accent);
+  background: var(--hertz-bg-selected);
+  border-color: var(--hertz-border-active);
+  color: var(--hertz-accent);
 }
 
 .sortTabButton:focus-visible {
-  outline: 2px solid var(--horizon-accent);
+  outline: 2px solid var(--hertz-accent);
   outline-offset: 2px;
 }
 
@@ -93,7 +93,7 @@
   }
 
   .mobileBrandTitle {
-    color: var(--horizon-text);
+    color: var(--hertz-text);
     font-size: 1.35rem;
     font-weight: 850;
     letter-spacing: 0.01em;

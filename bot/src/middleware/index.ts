@@ -1,5 +1,5 @@
 // ============================================
-// Horizon Trader Platform — Middleware Barrel Export
+// HERTZ Platform — Middleware Barrel Export
 // ============================================
 
 export type { BotContext, MiddlewareFn, TelegramMessage } from './types';

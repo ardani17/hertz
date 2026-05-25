@@ -131,7 +131,7 @@ export async function POST(request: NextRequest) {
     const body = await request.json();
     const { title, content_html, category, status } = body;
 
-    const validCategories = ['trading', 'life_story', 'general', 'outlook', 'blog'];
+    const validCategories = ['trading', 'life_story', 'general', 'outlook'];
     if (!validCategories.includes(category)) {
       return NextResponse.json(
         { success: false, error: { error_code: 'VALIDATION_ERROR', message: 'Kategori tidak valid', details: { valid: validCategories }, timestamp: new Date().toISOString() } },

@@ -140,7 +140,7 @@ function mapNotificationRow(row: HertzNotificationRow): HertzInAppNotificationIt
     actor: row.actor_user_id ? {
       id: row.actor_user_id,
       username: row.actor_username,
-      displayName: row.actor_display_name ?? row.actor_username ?? 'Member Horizon',
+      displayName: row.actor_display_name ?? row.actor_username ?? 'Member Hertz',
       avatarUrl: row.actor_avatar_url,
       role: row.actor_role,
     } : null,

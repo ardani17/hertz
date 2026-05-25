@@ -11,7 +11,7 @@ export class MembershipCheckUnavailableError extends Error {
 }
 
 export class NotGroupMemberError extends Error {
-  constructor(message = 'Akun Telegram Anda belum terdaftar sebagai member grup Horizon.') {
+  constructor(message = 'Akun Telegram Anda belum terdaftar sebagai member grup Hertz.') {
     super(message);
     this.name = 'NotGroupMemberError';
   }
@@ -38,6 +38,15 @@ export function isDevTelegramLoginEnabled(): boolean {
 }
 
 const MEMBERSHIP_CACHE_MS = 24 * 60 * 60 * 1000;
+const DEFAULT_MEMBERSHIP_GROUP_ID = -1001916607651;
+
+export function getMembershipGroupId(): number {
+  return Number(
+    process.env.HERTZ_MEMBERSHIP_GROUP_ID
+      || process.env.HORIZON_TELEGRAM_GROUP_ID
+      || DEFAULT_MEMBERSHIP_GROUP_ID,
+  );
+}
 
 export function verifyTelegramAuthData(authData: TelegramAuthData, botToken = process.env.TELEGRAM_BOT_TOKEN): boolean {
   if (!botToken || !authData.hash) return false;
@@ -77,7 +86,7 @@ export function toMemberSessionUser(user: {
   const displayName = user.display_name
     || [user.telegram_first_name, user.telegram_last_name].filter(Boolean).join(' ')
     || user.username
-    || 'Member Horizon';
+    || 'Member Hertz';
   return {
     id: user.id,
     telegramId: user.telegram_id,
@@ -100,7 +109,7 @@ export class MembershipService {
       throw new TelegramAuthInvalidError();
     }
 
-    const groupId = Number(process.env.HORIZON_TELEGRAM_GROUP_ID || '-1001916607651');
+    const groupId = getMembershipGroupId();
     const isMember = await this.checkGroupMembership(authData.id, groupId);
     if (!isMember) {
       throw new NotGroupMemberError();
@@ -121,7 +130,7 @@ export class MembershipService {
       throw new TelegramAuthInvalidError('Telegram ID tidak valid');
     }
 
-    const groupId = Number(process.env.HORIZON_TELEGRAM_GROUP_ID || '-1001916607651');
+    const groupId = getMembershipGroupId();
     const skipMembership = process.env.DEV_SKIP_MEMBERSHIP_CHECK === 'true';
     let isMember = skipMembership;
     if (!skipMembership) {
@@ -163,7 +172,7 @@ export class MembershipService {
 
   async ensureMembershipFresh(user: { id: string; telegram_id: number | null }, failClosed = true): Promise<boolean> {
     if (!user.telegram_id) return false;
-    const groupId = Number(process.env.HORIZON_TELEGRAM_GROUP_ID || '-1001916607651');
+    const groupId = getMembershipGroupId();
     const cached = await this.repo.findRecentMembership(user.telegram_id, groupId, MEMBERSHIP_CACHE_MS);
     if (cached) return cached.is_member;
 

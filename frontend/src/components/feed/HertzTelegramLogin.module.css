@@ -54,7 +54,7 @@
 
 .fallbackButton {
   align-items: center;
-  background: var(--horizon-accent, #13d27b);
+  background: var(--hertz-accent, #13d27b);
   border: 0;
   border-radius: 8px;
   box-sizing: border-box;

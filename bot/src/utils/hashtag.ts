@@ -1,5 +1,5 @@
 // ============================================
-// Horizon Trader Platform — Hashtag Parser & Category Mapper
+// HERTZ Platform — Hashtag Parser & Category Mapper
 // ============================================
 
 import type { HertzPostCategory } from '../../../shared/types/feed';

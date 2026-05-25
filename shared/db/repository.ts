@@ -1,5 +1,5 @@
 // ============================================
-// Horizon Trader Platform — Base Repository Pattern
+// Hertz Trader Platform — Base Repository Pattern
 // ============================================
 
 import { QueryResultRow } from 'pg';

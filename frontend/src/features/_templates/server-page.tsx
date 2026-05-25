@@ -5,7 +5,7 @@
 import type { Metadata } from 'next';
 
 export const metadata: Metadata = {
-  title: 'Page Title | Horizon',
+  title: 'Page Title | Hertz',
   description: 'Description',
 };
 

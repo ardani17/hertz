@@ -5,8 +5,8 @@
 
 .header {
   align-items: center;
-  background: var(--horizon-bg-base);
-  border: 1px solid var(--horizon-border);
+  background: var(--hertz-bg-base);
+  border: 1px solid var(--hertz-border);
   border-radius: 12px;
   display: flex;
   gap: 1rem;
@@ -19,12 +19,12 @@
 }
 
 .bio {
-  color: var(--horizon-text-muted);
+  color: var(--hertz-text-muted);
   margin: 0.35rem 0 0;
 }
 
 .location {
-  color: var(--horizon-text-muted);
+  color: var(--hertz-text-muted);
   font-size: 0.85rem;
   margin: 0.2rem 0 0;
 }
@@ -50,7 +50,7 @@
 
 .hobbyList li {
   background: rgba(19, 210, 123, 0.12);
-  border: 1px solid var(--horizon-border-active);
+  border: 1px solid var(--hertz-border-active);
   border-radius: 999px;
   color: #d7fbe9;
   font-size: 0.78rem;
@@ -58,8 +58,8 @@
 }
 
 .counters {
-  background: var(--horizon-bg-base);
-  border: 1px solid var(--horizon-border);
+  background: var(--hertz-bg-base);
+  border: 1px solid var(--hertz-border);
   border-radius: 12px;
   display: grid;
   gap: 0.75rem;
@@ -68,18 +68,18 @@
 }
 
 .counters strong {
-  color: var(--horizon-text);
+  color: var(--hertz-text);
   display: block;
   font-size: 1.2rem;
 }
 
 .counters span {
-  color: var(--horizon-text-muted);
+  color: var(--hertz-text-muted);
   font-size: 0.75rem;
 }
 
 .cta {
-  background: var(--horizon-accent);
+  background: var(--hertz-accent);
   border: 0;
   border-radius: 999px;
   color: #04140c;
@@ -93,7 +93,7 @@
 }
 
 .postsSection {
-  border-top: 1px solid var(--horizon-border);
+  border-top: 1px solid var(--hertz-border);
   display: grid;
   gap: 0.75rem;
   padding-top: 1rem;
@@ -105,6 +105,6 @@
 }
 
 .emptyPosts {
-  color: var(--horizon-text-muted);
+  color: var(--hertz-text-muted);
   margin: 0;
 }

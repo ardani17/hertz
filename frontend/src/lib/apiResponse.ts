@@ -3,8 +3,6 @@ import {
   FeedForbiddenError,
   FeedNotFoundError,
   FeedValidationError,
-} from '@shared/services/feedService';
-import {
   HertzForbiddenError,
   HertzNotFoundError,
   HertzValidationError,

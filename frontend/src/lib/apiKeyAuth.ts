@@ -1,5 +1,5 @@
 // ============================================
-// Horizon Trader Platform — API Key Authentication
+// Hertz Trader Platform — API Key Authentication
 // ============================================
 
 import bcrypt from 'bcryptjs';

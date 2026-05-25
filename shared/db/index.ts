@@ -1,5 +1,5 @@
 // ============================================
-// Horizon Trader Platform — Database Utilities
+// Hertz Trader Platform — Database Utilities
 // ============================================
 
 export { createPool, getPool, closePool, resetPool, getDbConfig } from './connection';

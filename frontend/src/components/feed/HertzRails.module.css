@@ -8,7 +8,7 @@
 }
 
 .left {
-  background: var(--horizon-bg-base);
+  background: var(--hertz-bg-base);
   border-right: 1px solid rgba(255, 255, 255, 0.05);
   display: flex;
   flex-direction: column;
@@ -20,7 +20,7 @@
 }
 
 .right {
-  background: var(--horizon-bg-base);
+  background: var(--hertz-bg-base);
   border-left: 1px solid rgba(255, 255, 255, 0.05);
   position: fixed;
   right: var(--left-rail-offset, 0);
@@ -73,8 +73,8 @@
 
 .railToggle {
   align-items: center;
-  background: var(--horizon-bg-base);
-  border: 1px solid var(--horizon-border);
+  background: var(--hertz-bg-base);
+  border: 1px solid var(--hertz-border);
   border-radius: 8px;
   color: #9ca3af;
   cursor: pointer;
@@ -120,7 +120,7 @@
 }
 
 .leftCollapsed .activeNav {
-  border: 1px solid var(--horizon-border-active);
+  border: 1px solid var(--hertz-border-active);
 }
 
 .leftCollapsed .profile {
@@ -181,25 +181,25 @@
 }
 
 .activeNav {
-  background: var(--horizon-bg-selected);
-  border-color: var(--horizon-border-active);
-  color: var(--horizon-accent) !important;
+  background: var(--hertz-bg-selected);
+  border-color: var(--hertz-border-active);
+  color: var(--hertz-accent) !important;
 }
 
 .profile,
 .panel {
   margin-top: 1rem;
   padding: 1rem;
-  border: 1px solid var(--horizon-border);
+  border: 1px solid var(--hertz-border);
   border-radius: 8px;
-  background: var(--horizon-bg-base);
+  background: var(--hertz-bg-base);
   box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.04);
 }
 
 .profile {
   align-items: flex-start;
-  background: var(--horizon-bg-base);
-  border: 1px solid var(--horizon-border);
+  background: var(--hertz-bg-base);
+  border: 1px solid var(--hertz-border);
   box-shadow: none;
   display: flex;
   gap: 12px;
@@ -210,8 +210,8 @@
 }
 
 .profile:hover {
-  background: var(--horizon-bg-base);
-  border-color: var(--horizon-border);
+  background: var(--hertz-bg-base);
+  border-color: var(--hertz-border);
   transform: translateY(-1px);
   text-decoration: none;
 }
@@ -246,8 +246,8 @@
   width: 52px;
   height: 52px;
   border-radius: 7px;
-  border: 1px solid var(--horizon-border);
-  background: var(--horizon-bg-base);
+  border: 1px solid var(--hertz-border);
+  background: var(--hertz-bg-base);
   color: #a7f3d0;
   font-size: 19px;
   font-weight: 800;
@@ -284,7 +284,7 @@
 .syncDot {
   background: #13d27b;
   border-radius: 999px;
-  box-shadow: 0 0 0 4px var(--horizon-bg-active);
+  box-shadow: 0 0 0 4px var(--hertz-bg-active);
   height: 9px;
   left: 0.9rem;
   position: absolute;
@@ -326,8 +326,8 @@
 }
 
 .searchResults {
-  background: var(--horizon-bg-base);
-  border: 1px solid var(--horizon-border);
+  background: var(--hertz-bg-base);
+  border: 1px solid var(--hertz-border);
   border-radius: 8px;
   display: grid;
   gap: 0.45rem;
@@ -347,7 +347,7 @@
 }
 
 .searchResults a:hover {
-  border-color: var(--horizon-border-active);
+  border-color: var(--hertz-border-active);
 }
 
 .searchResults span,
@@ -378,7 +378,7 @@
 }
 
 .marketPanel {
-  background: var(--horizon-bg-base);
+  background: var(--hertz-bg-base);
   border: 1px solid rgba(255, 255, 255, 0.05);
   border-radius: 8px;
   margin-top: 12px;
@@ -403,7 +403,7 @@
 }
 
 .marketTitle svg {
-  color: var(--horizon-accent-strong);
+  color: var(--hertz-accent-strong);
   height: 14px;
   width: 14px;
 }
@@ -517,7 +517,7 @@
 }
 
 .up {
-  color: var(--horizon-accent);
+  color: var(--hertz-accent);
 }
 
 .down {
@@ -526,7 +526,7 @@
 
 .eventRow {
   align-items: center;
-  border-top: 1px solid var(--horizon-border);
+  border-top: 1px solid var(--hertz-border);
   display: grid;
   gap: 0.7rem;
   grid-template-columns: 48px 1fr auto;
@@ -548,7 +548,7 @@
 
 .topicRow {
   align-items: center;
-  border-top: 1px solid var(--horizon-border);
+  border-top: 1px solid var(--hertz-border);
   display: grid;
   grid-template-columns: 1fr 96px;
   min-height: 48px;
@@ -585,8 +585,8 @@
   }
 
   .mobileMarket {
-    background: var(--horizon-bg-base);
-    border: 1px solid var(--horizon-border);
+    background: var(--hertz-bg-base);
+    border: 1px solid var(--hertz-border);
     border-radius: 8px;
     display: grid;
     gap: 0.7rem;

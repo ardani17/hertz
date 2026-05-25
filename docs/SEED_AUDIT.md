@@ -1,11 +1,11 @@
-# Panduan Seed Data Horizon (Audit & Testing)
+# Panduan Seed Data Hertz (Audit & Testing)
 
-Seed data demo untuk menguji dan mengaudit seluruh permukaan produk Horizon tanpa mengisi data manual.
+Seed data demo untuk menguji dan mengaudit seluruh permukaan produk Hertz tanpa mengisi data manual.
 
 ## Jalankan seed
 
 ```bash
-cd /www/dk_project/horizon
+cd /www/dk_project/hertz
 
 # Lengkap: migrasi + admin dari .env + seed SQL
 npm run db:seed:all
@@ -14,13 +14,13 @@ npm run db:seed:all
 npm run db:seed
 
 # Satu file via docker
-docker exec -i horizon-db psql -U horizon_admin -d horizon -v ON_ERROR_STOP=1 -f - < db/seeds/001_horizon_demo_seed.sql
+docker exec -i hertz-db psql -U hertz_app -d horizon -v ON_ERROR_STOP=1 -f - < db/seeds/001_horizon_demo_seed.sql
 
 # Satu file via node
 node scripts/run-db-seeds.js db/seeds/001_horizon_demo_seed.sql
 ```
 
-**Prasyarat:** PostgreSQL jalan (`horizon-db` docker atau `POSTGRES_*` di `.env`), migrasi termasuk `016_member_public_profile.sql`, dan `ADMIN_USERNAME` / `ADMIN_PASSWORD` untuk login admin web.
+**Prasyarat:** PostgreSQL jalan (`hertz-db` docker atau `POSTGRES_*` di `.env`), migrasi termasuk `016_member_public_profile.sql`, dan `ADMIN_USERNAME` / `ADMIN_PASSWORD` untuk login admin web.
 
 ---
 
@@ -157,7 +157,7 @@ Edge cases (`011` pending, `013` banned) sengaja tanpa bio lengkap untuk audit e
 | `hzx_demo08` | **pending_review** | admin_hertz | Admin queue |
 | `hzx_demo09`–`16` | published | various | NAS100, WTI, macro, tools |
 
-URL contoh: `https://horizon.cloudnexify.com/hertz/post/hzx_demo01`
+URL contoh: `https://hertz.cloudnexify.com/hertz/post/hzx_demo01`
 
 ---
 
@@ -175,7 +175,7 @@ URL contoh: `https://horizon.cloudnexify.com/hertz/post/hzx_demo01`
 ## Reset / ulang seed
 
 ```bash
-docker exec -i horizon-db psql -U horizon_admin -d horizon -v ON_ERROR_STOP=1 -f - < db/seeds/001_horizon_demo_seed.sql
+docker exec -i hertz-db psql -U hertz_app -d horizon -v ON_ERROR_STOP=1 -f - < db/seeds/001_horizon_demo_seed.sql
 # atau
 npm run db:seed
 ```
@@ -189,7 +189,7 @@ Tidak menghapus admin dari `.env` atau user produksi di luar prefix seed / renta
 | Error | Solusi |
 |-------|--------|
 | `relation does not exist` | Jalankan migrasi dulu: `bash scripts/run-migrations-local.sh` |
-| `connection refused` | Pastikan docker `horizon-db` jalan |
+| `connection refused` | Pastikan docker `hertz-db` jalan |
 | `column profile_bio does not exist` | Jalankan migrasi `016_member_public_profile.sql` |
 | Feed kosong | Cek output seed — harus `COMMIT` tanpa error |
 | Login Telegram gagal | Pastikan Telegram ID demo terdaftar / dev auth enabled di `.env` |

@@ -1,5 +1,5 @@
 // ============================================
-// Horizon Trader Platform — Commands Barrel Export
+// HERTZ Platform — Commands Barrel Export
 // ============================================
 
 export type { CommandHandler, ICommandRegistry } from './types';

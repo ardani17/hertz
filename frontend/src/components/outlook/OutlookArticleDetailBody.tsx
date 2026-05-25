@@ -33,7 +33,7 @@ function isDirectVideoUrl(url: string): boolean {
 
 function buildAuthorHandle(authorName: string | null): string {
   const clean = authorName?.trim();
-  if (!clean) return '@horizon';
+  if (!clean) return '@hertz';
   return clean.startsWith('@') ? clean : `@${clean}`;
 }
 
@@ -66,7 +66,7 @@ export function OutlookArticleDetailBody({
           </div>
           <div className={styles.headerBody}>
             <div className={styles.authorLine}>
-              <strong>{article.author_name || 'Horizon'}</strong>
+              <strong>{article.author_name || 'Hertz'}</strong>
               <span>{authorHandle}</span>
               <span>{formatDate(article.created_at)}</span>
             </div>

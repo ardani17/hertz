@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
-import { CommunityNoteService } from '../../../shared/services/communityNoteService';
-import { FeedService, FeedValidationError } from '../../../shared/services/feedService';
+import { HertzCommunityNoteService } from '../../../shared/services/hertzCommunityNoteService';
+import { HertzPostService, HertzValidationError } from '../../../shared/services/hertzPostService';
 import type { MemberSessionUser } from '../../../shared/types/membership';
 
 const member: MemberSessionUser = {
@@ -16,7 +16,7 @@ const member: MemberSessionUser = {
 
 describe('HERTZ validation guards', () => {
   it('requires at least one source URL for community notes before touching storage', async () => {
-    const service = new CommunityNoteService();
+    const service = new HertzCommunityNoteService();
 
     await expect(service.create('post-1', member, {
       content: 'Perlu konteks tambahan.',
@@ -25,7 +25,7 @@ describe('HERTZ validation guards', () => {
   });
 
   it('requires http or https community note sources', async () => {
-    const service = new CommunityNoteService();
+    const service = new HertzCommunityNoteService();
 
     await expect(service.create('post-1', member, {
       content: 'Perlu konteks tambahan.',
@@ -34,17 +34,17 @@ describe('HERTZ validation guards', () => {
   });
 
   it('limits web post media to four files before touching storage', async () => {
-    const service = new FeedService();
+    const service = new HertzPostService();
 
     await expect(service.createWebPost(member, {
       category: 'general',
-      content: 'Update komunitas Horizon.',
+      content: 'Update komunitas Hertz.',
       mediaIds: ['1', '2', '3', '4', '5'],
-    })).rejects.toThrow(FeedValidationError);
+    })).rejects.toThrow(HertzValidationError);
   });
 
   it('rejects unsupported feed categories before touching storage', async () => {
-    const service = new FeedService();
+    const service = new HertzPostService();
 
     await expect(service.createWebPost(member, {
       category: 'outlook' as never,

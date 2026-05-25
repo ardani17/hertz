@@ -34,7 +34,7 @@ export function Sidebar() {
       <div className={styles.section}>
         <h3 className={styles.sectionTitle}>Komunitas</h3>
         <p className={styles.communityText}>
-          Horizon adalah komunitas trader yang berbagi jurnal trading, cerita kehidupan, dan analisa market.
+          Hertz adalah komunitas trader yang berbagi jurnal trading, cerita kehidupan, dan analisa market.
         </p>
         <div className={styles.communityStats}>
           <div className={styles.statItem}>

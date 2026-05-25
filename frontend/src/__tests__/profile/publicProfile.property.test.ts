@@ -2,8 +2,8 @@ import fc from 'fast-check';
 import { describe, expect, it } from 'vitest';
 import { mapPublicProfileDto, parsePublicProfileSegment } from '@/lib/public-profile/public-profile';
 
-// Feature: horizon-social-ux-uplift, Property 9: Public profile DTO whitelist
-// Feature: horizon-social-ux-uplift, Property 10: Segment parser
+// Feature: hertz-social-ux-uplift, Property 9: Public profile DTO whitelist
+// Feature: hertz-social-ux-uplift, Property 10: Segment parser
 
 describe('public profile helpers', () => {
   it('accepts @username segments and rejects unsafe segments', () => {

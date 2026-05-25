@@ -15,6 +15,25 @@ interface SearchResult {
   href: string;
 }
 
+export function getHertzActivityIndicatorCopy({
+  unreadCount,
+  unreadDmCount,
+}: {
+  unreadCount: number;
+  unreadDmCount: number;
+}) {
+  if (unreadCount > 0 || unreadDmCount > 0) {
+    return {
+      title: 'Aktivitas baru',
+      body: `${unreadCount + unreadDmCount} update belum dibaca.`,
+    };
+  }
+  return {
+    title: 'Aktivitas',
+    body: 'Belum ada aktivitas baru.',
+  };
+}
+
 export function HertzRightRail({ activeSearch }: { activeSearch?: string | null }) {
   const [groups, setGroups] = useState<MarketRailGroup[]>([]);
   const [status, setStatus] = useState<'loading' | 'ready' | 'error'>('loading');

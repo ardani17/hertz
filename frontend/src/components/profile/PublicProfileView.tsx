@@ -27,7 +27,7 @@ export function PublicProfileView({
 }) {
   return (
     <PublicProfilePostShell username={dto.username} currentUser={currentUser}>
-      <HertzLayout variant="page" active="profile" title={`@${dto.username}`} description="Profil publik Horizon" currentUser={currentUser}>
+      <HertzLayout variant="page" active="profile" title={`@${dto.username}`} description="Profil publik Hertz" currentUser={currentUser}>
         <section className={styles.profile}>
           <div className={styles.header}>
             <HertzAvatar className={styles.avatar} src={dto.avatarUrl} name={dto.displayName} username={dto.username} />

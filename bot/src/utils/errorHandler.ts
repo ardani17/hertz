@@ -1,5 +1,5 @@
 // ============================================
-// Horizon Trader Platform — Bot Error Handling
+// HERTZ Platform — Bot Error Handling
 // ============================================
 
 import { toAppError } from '../../../shared/utils/errors';

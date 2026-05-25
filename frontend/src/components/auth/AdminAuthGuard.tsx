@@ -1,5 +1,5 @@
 // ============================================
-// Horizon Trader Platform — Admin Auth Guard
+// Hertz Trader Platform — Admin Auth Guard
 // ============================================
 
 import { redirect } from 'next/navigation';

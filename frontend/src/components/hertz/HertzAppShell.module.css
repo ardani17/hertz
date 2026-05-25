@@ -1,14 +1,14 @@
 .main {
   min-height: 100vh;
   overflow-x: hidden;
-  background: var(--horizon-bg-base);
-  color: var(--horizon-text);
+  background: var(--hertz-bg-base);
+  color: var(--hertz-text);
 }
 
 .shell,
 .shellCompact {
-  border-left: 1px solid var(--horizon-border);
-  border-right: 1px solid var(--horizon-border);
+  border-left: 1px solid var(--hertz-border);
+  border-right: 1px solid var(--hertz-border);
   display: grid;
   margin: 0 auto;
   min-height: 100vh;
@@ -41,13 +41,13 @@
 }
 
 .header h1 {
-  color: var(--horizon-text);
+  color: var(--hertz-text);
   font-size: 1.25rem;
   margin: 0;
 }
 
 .header p {
-  color: var(--horizon-text-muted);
+  color: var(--hertz-text-muted);
   font-size: 0.84rem;
   margin: 0.3rem 0 0;
 }

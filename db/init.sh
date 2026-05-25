@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # ============================================
-# Horizon Trader Platform â€” Database Initialization & Migration
+# HERTZ Platform â€” Database Initialization & Migration
 #
 # Handles all scenarios:
 #   1. Fresh database â€” runs all migrations from scratch
@@ -13,8 +13,8 @@
 # ============================================
 
 MIGRATIONS_DIR="${MIGRATIONS_DIR:-/docker-entrypoint-initdb.d/migrations}"
-DB_USER="${POSTGRES_USER:-horizon_user}"
-DB_NAME="${POSTGRES_DB:-horizon}"
+DB_USER="${POSTGRES_USER:-hertz_app}"
+DB_NAME="${POSTGRES_DB:-hertz}"
 
 run_sql() {
     psql -v ON_ERROR_STOP=1 --username "$DB_USER" --dbname "$DB_NAME" "$@"
@@ -25,7 +25,7 @@ query_val() {
     run_sql -t -A -c "$1" | tr -d '[:space:]'
 }
 
-echo "=== Horizon DB: Starting migration runner ==="
+echo "=== HERTZ DB: Starting migration runner ==="
 
 # ----------------------------------------
 # 1. Enable pgcrypto extension
@@ -47,7 +47,7 @@ echo "  Migration tracking entries: ${tracked}"
 echo "  Users table exists: ${has_users}"
 
 if [ "${tracked}" = "0" ] && [ "${has_users}" = "1" ]; then
-    echo "=== Horizon DB: Existing database detected â€” seeding migration history ==="
+    echo "=== HERTZ DB: Existing database detected â€” seeding migration history ==="
 
     # Mark all existing migrations as applied by checking what already exists
     # 001: schema â€” users table exists, so this was applied
@@ -72,7 +72,7 @@ fi
 # ----------------------------------------
 # 4. Run pending migrations in order
 # ----------------------------------------
-echo "=== Horizon DB: Checking for pending migrations ==="
+echo "=== HERTZ DB: Checking for pending migrations ==="
 
 applied=0
 
@@ -100,23 +100,23 @@ for migration_file in "$MIGRATIONS_DIR"/*.sql; do
 done
 
 if [ "$applied" -eq 0 ]; then
-    echo "=== Horizon DB: All migrations up to date ==="
+    echo "=== HERTZ DB: All migrations up to date ==="
 else
-    echo "=== Horizon DB: Applied ${applied} migration(s) ==="
+    echo "=== HERTZ DB: Applied ${applied} migration(s) ==="
 fi
 
 # ----------------------------------------
 # 5. Update admin credentials if env vars set
 # ----------------------------------------
 if [ -n "${ADMIN_USERNAME}" ]; then
-    echo "=== Horizon DB: Updating admin username ==="
+    echo "=== HERTZ DB: Updating admin username ==="
     run_sql -v admin_user="'${ADMIN_USERNAME}'" <<-'EOSQL'
         UPDATE users SET username = :admin_user WHERE telegram_id = 0 AND role = 'admin';
 EOSQL
 fi
 
 if [ -n "${ADMIN_PASSWORD}" ]; then
-    echo "=== Horizon DB: Updating admin password ==="
+    echo "=== HERTZ DB: Updating admin password ==="
     run_sql -v admin_pass="'${ADMIN_PASSWORD}'" <<-'EOSQL'
         UPDATE users
         SET password_hash = crypt(:admin_pass, gen_salt('bf', 10))
@@ -124,4 +124,4 @@ if [ -n "${ADMIN_PASSWORD}" ]; then
 EOSQL
 fi
 
-echo "=== Horizon DB: Complete ==="
+echo "=== HERTZ DB: Complete ==="

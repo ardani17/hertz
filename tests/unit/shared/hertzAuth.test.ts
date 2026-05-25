@@ -7,9 +7,9 @@ import type { TelegramAuthData } from '../../../shared/types/membership';
 function signedTelegramPayload(botToken: string, overrides: Partial<TelegramAuthData> = {}): TelegramAuthData {
   const payload: Omit<TelegramAuthData, 'hash'> = {
     id: 5963323428,
-    first_name: 'Horizon',
+    first_name: 'Hertz',
     last_name: 'Member',
-    username: 'horizon_member',
+    username: 'hertz_member',
     photo_url: 'https://example.com/avatar.jpg',
     auth_date: 1_800_000_000,
     ...overrides,

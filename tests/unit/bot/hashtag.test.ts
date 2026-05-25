@@ -1,5 +1,5 @@
 // ============================================
-// Horizon Trader Platform — Hashtag Parser & Category Mapper Tests
+// Hertz Trader Platform — Hashtag Parser & Category Mapper Tests
 // ============================================
 
 import { describe, it, expect } from 'vitest';

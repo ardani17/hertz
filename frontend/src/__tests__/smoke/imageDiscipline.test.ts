@@ -2,7 +2,7 @@ import { describe, expect, it } from 'vitest';
 import { readFileSync } from 'node:fs';
 import { globSync } from 'glob';
 
-// Feature: horizon-social-ux-uplift, Smoke: image discipline
+// Feature: hertz-social-ux-uplift, Smoke: image discipline
 
 describe('raw image discipline', () => {
   it('raw img tags include lazy loading and async decoding outside explicit framework exceptions', () => {

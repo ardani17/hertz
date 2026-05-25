@@ -1,9 +1,9 @@
 .backdrop {
-  composes: backdrop from '../../styles/horizon-modal.module.css';
+  composes: backdrop from '../../styles/hertz-modal.module.css';
 }
 
 .modal {
-  composes: panel from '../../styles/horizon-modal.module.css';
+  composes: panel from '../../styles/hertz-modal.module.css';
   max-width: 920px;
   padding: 1rem 1.25rem 1.5rem;
   width: min(100%, 920px);
@@ -17,13 +17,13 @@
   position: sticky;
   top: 0;
   z-index: 2;
-  background: var(--horizon-surface-strong);
+  background: var(--hertz-surface-strong);
   padding-bottom: 0.75rem;
   margin-bottom: 0.5rem;
 }
 
 .header span {
-  color: var(--horizon-text-muted);
+  color: var(--hertz-text-muted);
   font-size: 0.75rem;
   letter-spacing: 0.08em;
   text-transform: uppercase;
@@ -36,6 +36,6 @@
 
 .error,
 .loading {
-  color: var(--horizon-text-muted);
+  color: var(--hertz-text-muted);
   padding: 1rem 0;
 }

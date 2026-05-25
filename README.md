@@ -1,4 +1,4 @@
-# Horizon Trader Platform
+# Hertz Trader Platform
 
 Platform komunitas trader dengan integrasi Telegram Bot dan website bergaya retro blogger. Anggota grup Telegram bisa mempublikasikan artikel langsung ke website melalui hashtag atau command bot, dan mendapatkan kredit sebagai reward.
 
@@ -115,7 +115,7 @@ Nilai kredit bisa diubah oleh admin melalui dashboard.
 
 ```bash
 git clone <repository-url>
-cd horizon-trader-platform
+cd hertz-platform
 
 cp .env.example .env
 ```
@@ -130,8 +130,8 @@ DOMAIN=yourdomain.com
 SSL_EMAIL=admin@yourdomain.com
 
 # Database
-POSTGRES_DB=horizon
-POSTGRES_USER=horizon_user
+POSTGRES_DB=hertz
+POSTGRES_USER=hertz_app
 POSTGRES_PASSWORD=password_aman_anda
 
 # Telegram
@@ -140,7 +140,7 @@ TELEGRAM_BOT_TOKEN=123456:ABC-DEF...
 # Cloudflare R2
 R2_ACCESS_KEY_ID=your_access_key
 R2_SECRET_ACCESS_KEY=your_secret_key
-R2_BUCKET_NAME=horizon-media
+R2_BUCKET_NAME=hertz-media
 
 # Admin
 ADMIN_USERNAME=admin
@@ -180,7 +180,7 @@ Platform ini menggunakan **2 port** yang perlu di-reverse-proxy oleh aaPanel Ngi
 
 **Langkah setup di aaPanel:**
 
-1. Buka aaPanel → **Website** → **Add Site** → masukkan domain (misal `horizon.cloudnexify.com`)
+1. Buka aaPanel → **Website** → **Add Site** → masukkan domain (misal `hertz.cloudnexify.com`)
 2. Buka site config → **Config** (ikon Nginx)
 3. Paste location blocks berikut di dalam `server {}` block:
 
@@ -322,7 +322,7 @@ Data PostgreSQL disimpan di host directory (default: `./data/postgres`). Untuk b
 cp -r ./data/postgres /path/to/backup/
 
 # Atau gunakan pg_dump via container
-docker exec horizon-db pg_dump -U horizon_user horizon > backup.sql
+docker exec hertz-db pg_dump -U horizon_user horizon > backup.sql
 ```
 
 ## Development
@@ -426,4 +426,4 @@ horizon-trader-platform/
 
 ## Lisensi
 
-Private — Horizon Trader Platform.
+Private — Hertz Trader Platform.

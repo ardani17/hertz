@@ -2,7 +2,7 @@
  * Exploratory AI browser review (Stagehand v3).
  *
  * Usage:
- *   REVIEW_BASE_URL=https://horizon.cloudnexify.com npm run review:stagehand
+ *   REVIEW_BASE_URL=https://hertz.cloudnexify.com npm run review:stagehand
  *
  * Optional: BROWSERBASE_API_KEY + BROWSERBASE_PROJECT_ID, OPENAI_API_KEY
  */
@@ -14,7 +14,7 @@ loadEnv({ path: resolve(process.cwd(), '.env') });
 const baseURL =
   process.env.REVIEW_BASE_URL ||
   process.env.NEXT_PUBLIC_SITE_URL ||
-  (process.env.DOMAIN ? `https://${process.env.DOMAIN}` : 'https://horizon.cloudnexify.com');
+  (process.env.DOMAIN ? `https://${process.env.DOMAIN}` : 'https://hertz.cloudnexify.com');
 
 async function main() {
   const { Stagehand } = await import('@browserbasehq/stagehand');

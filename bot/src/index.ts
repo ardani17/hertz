@@ -1,5 +1,5 @@
 // ============================================
-// Horizon Trader Platform — Bot Service Entry Point
+// HERTZ Platform — Bot Service Entry Point
 // ============================================
 
 import { config as loadEnv } from 'dotenv';
@@ -80,12 +80,12 @@ async function createShortId(client: DbClient): Promise<string> {
 const r2Endpoint = process.env.R2_ENDPOINT || '';
 const r2AccessKeyId = process.env.R2_ACCESS_KEY_ID || '';
 const r2SecretAccessKey = process.env.R2_SECRET_ACCESS_KEY || '';
-const r2BucketName = process.env.R2_BUCKET_NAME || 'horizon-media';
+const r2BucketName = process.env.R2_BUCKET_NAME || '';
 const r2PublicUrl = process.env.R2_PUBLIC_URL || '';
 
 let mediaService: MediaService | null = null;
 
-if (r2Endpoint && r2AccessKeyId && r2SecretAccessKey && r2PublicUrl) {
+if (r2Endpoint && r2AccessKeyId && r2SecretAccessKey && r2BucketName && r2PublicUrl) {
   const s3Client = new S3Client({
     region: 'auto',
     endpoint: r2Endpoint,
@@ -351,7 +351,7 @@ console.log(`[Bot] Registered ${commandRegistry.listCommands().length} command/h
  */
 const pipeline = new MiddlewarePipeline();
 
-// 1. Auth: validate sender is member of Horizon group
+// 1. Auth: validate sender is member of Hertz group
 pipeline.use(createAuthMiddleware({
   groupChatId: GROUP_CHAT_ID,
   checkMembership: async (chatId, userId) => {

@@ -7,7 +7,7 @@ import { useToolsSpa } from './ToolsSpaContext';
 
 const copy = {
   id: {
-    eyebrow: 'Horizon Tools',
+    eyebrow: 'Hertz Tools',
     title: 'Kalkulator dan tracker trading untuk riset harian.',
     lede: 'Empat tool aktif untuk pivot, simulasi profit, challenge tracker, dan level Elliott.',
     languageLabel: 'Bahasa tools',
@@ -16,7 +16,7 @@ const copy = {
     aria: 'Pilih bahasa tools',
   },
   en: {
-    eyebrow: 'Horizon Tools',
+    eyebrow: 'Hertz Tools',
     title: 'Trading calculators and trackers for daily research.',
     lede: 'Four active tools for pivot levels, profit simulation, challenge tracking, and Elliott levels.',
     languageLabel: 'Tools language',

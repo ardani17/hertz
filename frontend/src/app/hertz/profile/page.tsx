@@ -153,7 +153,7 @@ export default async function HertzProfilePage() {
             <section className={`${styles.panel} ${styles.creditPanel}`}>
               <p className={styles.panelLabel}>Saldo credit</p>
               <p className={styles.creditValue}>{formatCredit(credit.balance)}</p>
-              <p className={styles.panelHint}>Credit dipakai untuk fitur premium di Horizon.</p>
+              <p className={styles.panelHint}>Credit dipakai untuk fitur premium di Hertz.</p>
               <div className={styles.quickLinks}>
                 <Link href="/tools">Buka tools</Link>
                 <Link href="/hertz">Ke feed</Link>

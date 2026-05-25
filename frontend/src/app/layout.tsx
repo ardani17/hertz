@@ -2,7 +2,7 @@ import type { Metadata, Viewport } from 'next';
 import { DM_Sans } from 'next/font/google';
 import Script from 'next/script';
 import { ToastProvider } from '@/components/ui/Toast';
-import { HorizonSWRProvider } from '@/lib/swr/config';
+import { HertzSWRProvider } from '@/lib/swr/config';
 import { themeInitScript } from '@/lib/theme-init';
 import './globals.css';
 
@@ -16,8 +16,8 @@ const dmSans = DM_Sans({
 
 export const metadata: Metadata = {
   title: {
-    default: 'Horizon Trader Platform',
-    template: '%s | Horizon',
+    default: 'Hertz Trader Platform',
+    template: '%s | Hertz',
   },
   description:
     'Komunitas trader — jurnal trading, cerita kehidupan, dan analisa market.',
@@ -30,15 +30,15 @@ export const metadata: Metadata = {
   openGraph: {
     type: 'website',
     locale: 'id_ID',
-    siteName: 'Horizon Trader Platform',
-    title: 'Horizon Trader Platform',
+    siteName: 'Hertz Trader Platform',
+    title: 'Hertz Trader Platform',
     description:
       'Komunitas trader — jurnal trading, cerita kehidupan, dan analisa market.',
     images: [{ url: '/images/og-default.svg' }],
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'Horizon Trader Platform',
+    title: 'Hertz Trader Platform',
     description:
       'Komunitas trader — jurnal trading, cerita kehidupan, dan analisa market.',
     images: ['/images/og-default.svg'],
@@ -59,8 +59,8 @@ export default function RootLayout({
   return (
     <html lang="id" className={`${dmSans.variable} dark`} data-theme="dark">
       <head>
-        <link rel="icon" href="/images/logo/Logo-Horizon-Atom-Online-Black_7.png" media="(prefers-color-scheme: light)" />
-        <link rel="icon" href="/images/logo/Logo-Horizon-Atom-Online-White_8.png" media="(prefers-color-scheme: dark)" />
+        <link rel="icon" href="/images/logo/Logo-Hertz-Atom-Online-Black_7.png" media="(prefers-color-scheme: light)" />
+        <link rel="icon" href="/images/logo/Logo-Hertz-Atom-Online-White_8.png" media="(prefers-color-scheme: dark)" />
         <Script
           id="theme-init"
           strategy="beforeInteractive"
@@ -72,9 +72,9 @@ export default function RootLayout({
           Langsung ke konten
         </a>
         <ToastProvider>
-          <HorizonSWRProvider>
+          <HertzSWRProvider>
             <div id="main-content">{children}</div>
-          </HorizonSWRProvider>
+          </HertzSWRProvider>
         </ToastProvider>
       </body>
     </html>

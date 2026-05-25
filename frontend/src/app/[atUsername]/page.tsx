@@ -15,7 +15,7 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
   const username = parsePublicProfileSegment(atUsername);
   if (!username) return { title: 'Profil tidak ditemukan' };
   return {
-    title: `@${username} | Horizon`,
+    title: `@${username} | Hertz`,
     alternates: { canonical: `/@${username}` },
   };
 }

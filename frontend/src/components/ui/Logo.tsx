@@ -16,28 +16,28 @@ interface LogoProps {
 
 const logoMap = {
   full: {
-    dark: '/images/logo/Logo-Horizon-Big-white-04-02.png',
-    light: '/images/logo/Logo-Horizon-Big-black-04.png',
+    dark: '/images/logo/Logo-Hertz-Big-white-04-02.png',
+    light: '/images/logo/Logo-Hertz-Big-black-04.png',
   },
   compact: {
-    dark: '/images/logo/Logo-Horizon-big-No-tag-line-white_10.png',
-    light: '/images/logo/Logo-Horizon-big-No-tag-line_9.png',
+    dark: '/images/logo/Logo-Hertz-big-No-tag-line-white_10.png',
+    light: '/images/logo/Logo-Hertz-big-No-tag-line_9.png',
   },
   standard: {
-    dark: '/images/logo/Logo-Horizon-White-05-05.png',
-    light: '/images/logo/Logo-Horizon-Black-06.png',
+    dark: '/images/logo/Logo-Hertz-White-05-05.png',
+    light: '/images/logo/Logo-Hertz-Black-06.png',
   },
   atom: {
-    dark: '/images/logo/Logo-Horizon-Atom-Online-White_8.png',
-    light: '/images/logo/Logo-Horizon-Atom-Online-Black_7.png',
+    dark: '/images/logo/Logo-Hertz-Atom-Online-White_8.png',
+    light: '/images/logo/Logo-Hertz-Atom-Online-Black_7.png',
   },
 } as const;
 
 /**
- * Theme-aware Horizon logo component.
+ * Theme-aware Hertz logo component.
  * Automatically switches between dark/light variants based on the current theme.
  */
-export function Logo({ height = 32, className, alt = 'Horizon', variant = 'compact' }: LogoProps) {
+export function Logo({ height = 32, className, alt = 'Hertz', variant = 'compact' }: LogoProps) {
   const [theme, setTheme] = useState<'dark' | 'light'>('dark');
 
   useEffect(() => {

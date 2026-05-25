@@ -7,7 +7,7 @@
   align-items: center;
   justify-content: center;
   min-height: 100vh;
-  background: var(--horizon-bg-base);
+  background: var(--hertz-bg-base);
   padding: var(--space-4);
 }
 
@@ -98,7 +98,7 @@
 }
 
 .submitButton:hover {
-  background-color: var(--horizon-accent);
+  background-color: var(--hertz-accent);
 }
 
 .submitButton:focus-visible {

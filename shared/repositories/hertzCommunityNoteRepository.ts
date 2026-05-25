@@ -1,6 +1,10 @@
 import { execute, query, queryOne, type DbClient } from '../db';
-import type { CommunityNoteRatingValue, CommunityNoteSourceInput } from '../types/communityNote';
-import type { CommunityNoteRow, CommunityNoteSourceRow } from './communityNoteRepository';
+import type {
+  CommunityNoteRatingValue,
+  CommunityNoteRow,
+  CommunityNoteSourceInput,
+  CommunityNoteSourceRow,
+} from '../types/communityNote';
 
 export class HertzCommunityNoteRepository {
   async listByPost(postId: string, viewerId?: string | null, client?: DbClient): Promise<CommunityNoteRow[]> {

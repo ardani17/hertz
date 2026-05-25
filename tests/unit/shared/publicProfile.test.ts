@@ -7,7 +7,7 @@ describe('public profile dto mapping', () => {
       profile_bio: 'Fokus edukasi pasar.',
       profile_location: 'Surabaya',
       profile_hobbies: ['travel', 'coding'],
-      profile_social_links: { tradingview: 'horizon_chart' },
+      profile_social_links: { tradingview: 'hertz_chart' },
       profile_trading: {
         experienceLevel: 'professional',
         markets: ['forex', 'indices'],
@@ -21,7 +21,7 @@ describe('public profile dto mapping', () => {
       bio: 'Fokus edukasi pasar.',
       location: 'Surabaya',
       hobbies: ['travel', 'coding'],
-      socialLinks: { tradingview: 'horizon_chart' },
+      socialLinks: { tradingview: 'hertz_chart' },
       trading: {
         experienceLevel: 'professional',
         markets: ['forex', 'indices'],

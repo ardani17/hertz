@@ -18,8 +18,8 @@
 
 .list a {
   align-items: center;
-  background: var(--horizon-bg-base);
-  border: 1px solid var(--horizon-border);
+  background: var(--hertz-bg-base);
+  border: 1px solid var(--hertz-border);
   border-radius: 10px;
   color: inherit;
   display: flex;
@@ -30,7 +30,7 @@
 }
 
 .list a:hover {
-  border-color: var(--horizon-accent);
+  border-color: var(--hertz-accent);
 }
 
 .list span {
@@ -39,7 +39,7 @@
 }
 
 .list em {
-  color: var(--horizon-text-muted);
+  color: var(--hertz-text-muted);
   font-size: 0.82rem;
   font-style: normal;
 }

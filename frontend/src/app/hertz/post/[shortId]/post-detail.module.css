@@ -1,14 +1,14 @@
 .main {
   min-height: 100vh;
-  background: var(--hertz-shell-bg, var(--horizon-bg-base));
+  background: var(--hertz-shell-bg, var(--hertz-bg-base));
   color: #e7f4ec;
 }
 
 .container {
   max-width: 720px;
   margin: 0 auto;
-  border-left: 1px solid var(--horizon-border);
-  border-right: 1px solid var(--horizon-border);
+  border-left: 1px solid var(--hertz-border);
+  border-right: 1px solid var(--hertz-border);
   min-height: 100vh;
 }
 
@@ -17,6 +17,6 @@
   align-items: center;
   min-height: 44px;
   padding: 0.75rem 1.25rem;
-  color: var(--horizon-accent);
+  color: var(--hertz-accent);
   text-decoration: none;
 }

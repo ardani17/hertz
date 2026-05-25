@@ -1,6 +1,6 @@
 .panel {
-  background: var(--horizon-bg-base);
-  border: 1px solid var(--horizon-border);
+  background: var(--hertz-bg-base);
+  border: 1px solid var(--hertz-border);
   border-radius: 12px;
   display: grid;
   gap: 1rem;
@@ -14,7 +14,7 @@
 }
 
 .panelLabel {
-  color: var(--horizon-accent);
+  color: var(--hertz-accent);
   font-size: 0.68rem;
   font-weight: 850;
   letter-spacing: 0.06em;
@@ -36,7 +36,7 @@
 
 .section {
   background: rgba(255, 255, 255, 0.015);
-  border: 1px solid var(--horizon-border);
+  border: 1px solid var(--hertz-border);
   border-radius: 10px;
   overflow: hidden;
 }
@@ -71,7 +71,7 @@
 }
 
 .sectionSummary:hover {
-  background: var(--horizon-bg-hover);
+  background: var(--hertz-bg-hover);
 }
 
 .sectionSummary span {
@@ -112,7 +112,7 @@
 .field textarea,
 .field select {
   background: rgba(7, 20, 15, 0.92);
-  border: 1px solid var(--horizon-border);
+  border: 1px solid var(--hertz-border);
   border-radius: 8px;
   box-sizing: border-box;
   color: #f3fff8;
@@ -131,7 +131,7 @@
 .field input:focus-visible,
 .field textarea:focus-visible,
 .field select:focus-visible {
-  border-color: var(--horizon-border-hover);
+  border-color: var(--hertz-border-hover);
   outline: none;
 }
 
@@ -164,8 +164,8 @@
 
 .chipList li {
   align-items: center;
-  background: var(--horizon-bg-selected);
-  border: 1px solid var(--horizon-border-active);
+  background: var(--hertz-bg-selected);
+  border: 1px solid var(--hertz-border-active);
   border-radius: 999px;
   color: #d7fbe9;
   display: inline-flex;
@@ -198,7 +198,7 @@
 .inputPrefix {
   align-items: center;
   background: rgba(7, 20, 15, 0.92);
-  border: 1px solid var(--horizon-border);
+  border: 1px solid var(--hertz-border);
   border-radius: 8px;
   display: grid;
   gap: 0.35rem;
@@ -209,7 +209,7 @@
 }
 
 .inputPrefix:focus-within {
-  border-color: var(--horizon-border-hover);
+  border-color: var(--hertz-border-hover);
 }
 
 .inputPrefix > span {
@@ -251,14 +251,14 @@
 }
 
 .marketChip:hover {
-  background: var(--horizon-bg-active);
+  background: var(--hertz-bg-active);
   color: #d7fbe9;
 }
 
 .marketChipActive {
-  background: var(--horizon-bg-selected);
-  border-color: var(--horizon-border-active);
-  color: var(--horizon-accent);
+  background: var(--hertz-bg-selected);
+  border-color: var(--hertz-border-active);
+  color: var(--hertz-accent);
 }
 
 .inlineFields {
@@ -291,7 +291,7 @@
 }
 
 .primaryButton {
-  background: var(--horizon-accent);
+  background: var(--hertz-accent);
   border: 0;
   color: #04140c;
   width: 100%;
@@ -304,7 +304,7 @@
 
 .secondaryButton {
   background: transparent;
-  border: 1px solid var(--horizon-border);
+  border: 1px solid var(--hertz-border);
   color: #d7fbe9;
   white-space: nowrap;
 }

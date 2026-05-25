@@ -1,9 +1,9 @@
 .backdrop {
-  composes: backdrop from '../../styles/horizon-modal.module.css';
+  composes: backdrop from '../../styles/hertz-modal.module.css';
 }
 
 .modal {
-  composes: panel from '../../styles/horizon-modal.module.css';
+  composes: panel from '../../styles/hertz-modal.module.css';
   display: grid;
   gap: 0.9rem;
   max-width: 760px;
@@ -19,11 +19,11 @@
   position: sticky;
   top: 0;
   z-index: 2;
-  background: var(--horizon-surface-strong);
+  background: var(--hertz-surface-strong);
 }
 
 .header span {
-  color: var(--horizon-accent);
+  color: var(--hertz-accent);
   font-size: 0.72rem;
   font-weight: 850;
   text-transform: uppercase;
@@ -36,9 +36,9 @@
 
 .loading,
 .error {
-  border: 1px solid var(--horizon-border);
+  border: 1px solid var(--hertz-border);
   border-radius: 8px;
-  color: var(--horizon-text-muted);
+  color: var(--hertz-text-muted);
   margin: 0;
   padding: 1rem;
 }
@@ -54,8 +54,8 @@
 }
 
 .post {
-  background: var(--horizon-bg-base);
-  border: 1px solid var(--horizon-border);
+  background: var(--hertz-bg-base);
+  border: 1px solid var(--hertz-border);
   border-radius: 8px;
   display: grid;
   gap: 0.75rem;
@@ -75,7 +75,7 @@
 }
 
 .text {
-  color: var(--horizon-text);
+  color: var(--hertz-text);
   line-height: 1.55;
   margin: 0;
   overflow-wrap: anywhere;

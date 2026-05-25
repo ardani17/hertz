@@ -1,7 +1,7 @@
 @import "tailwindcss";
 @import "tw-animate-css";
 @import "shadcn/tailwind.css";
-@import "../styles/horizon-surfaces.css";
+@import "../styles/hertz-surfaces.css";
 
 @custom-variant dark (&:is(.dark *));
 
@@ -44,36 +44,36 @@
 }
 
 /* ============================================
-   Horizon Trader Platform — Modern Dark/Light Theme
+   HERTZ Platform — Modern Dark/Light Theme
    ============================================ */
 
 /* --- CSS Custom Properties (Non-Color Tokens) --- */
 :root {
 
-  /* Horizon Social UX Uplift locked identity tokens */
-  --horizon-bg-base: #0a0a0f;
+  /* HERTZ Social UX Uplift locked identity tokens */
+  --hertz-bg-base: #0a0a0f;
   --hertz-left-rail-width: 256px;
-  --horizon-accent: #13d27b;
-  --horizon-surface: rgba(15, 19, 18, 0.78);
-  --horizon-surface-strong: rgba(20, 28, 24, 0.94);
-  --horizon-overlay-backdrop: color-mix(in srgb, var(--horizon-bg-base) 72%, transparent);
-  --horizon-border: var(--horizon-border);
-  --horizon-text: #f3fff8;
-  --horizon-text-muted: #91a79a;
-  --horizon-accent-soft: var(--horizon-bg-selected);
-  --horizon-bg-hover: rgba(255, 255, 255, 0.02);
-  --horizon-border-hover: rgba(19, 210, 123, 0.52);
-  --horizon-bg-active: var(--horizon-bg-active);
-  --horizon-border-active: var(--horizon-border-active);
-  --horizon-bg-selected: var(--horizon-accent-soft);
-  --horizon-border-muted: var(--horizon-border);
-  --horizon-nav-track-bg: var(--horizon-bg-base);
-  --horizon-nav-track-border: var(--horizon-border);
-  --horizon-surface-transition: background-color 0.15s ease, border-color 0.15s ease;
-  --horizon-success: #13d27b;
-  --horizon-success-muted: #10b981;
-  --horizon-shell-offset: 2rem;
-  --horizon-mobile-offset: 7.25rem;
+  --hertz-accent: #13d27b;
+  --hertz-surface: rgba(15, 19, 18, 0.78);
+  --hertz-surface-strong: rgba(20, 28, 24, 0.94);
+  --hertz-overlay-backdrop: color-mix(in srgb, var(--hertz-bg-base) 72%, transparent);
+  --hertz-border: var(--hertz-border);
+  --hertz-text: #f3fff8;
+  --hertz-text-muted: #91a79a;
+  --hertz-accent-soft: var(--hertz-bg-selected);
+  --hertz-bg-hover: rgba(255, 255, 255, 0.02);
+  --hertz-border-hover: rgba(19, 210, 123, 0.52);
+  --hertz-bg-active: var(--hertz-bg-active);
+  --hertz-border-active: var(--hertz-border-active);
+  --hertz-bg-selected: var(--hertz-accent-soft);
+  --hertz-border-muted: var(--hertz-border);
+  --hertz-nav-track-bg: var(--hertz-bg-base);
+  --hertz-nav-track-border: var(--hertz-border);
+  --hertz-surface-transition: background-color 0.15s ease, border-color 0.15s ease;
+  --hertz-success: #13d27b;
+  --hertz-success-muted: #10b981;
+  --hertz-shell-offset: 2rem;
+  --hertz-mobile-offset: 7.25rem;
 
   /* Typography */
   --font-body: var(--font-dm-sans), 'Segoe UI', system-ui, sans-serif;
@@ -109,7 +109,7 @@
   --border-radius: 10px;
   --border-width: 1px;
 
-  /* shadcn/ui token bridge. Values resolve from the active Horizon theme. */
+  /* shadcn/ui token bridge. Values resolve from the active HERTZ theme. */
   --radius: 0.625rem;
   --background: var(--color-bg);
   --foreground: var(--color-text);
@@ -147,17 +147,17 @@
 /* --- Dark Theme Tokens --- */
 [data-theme="dark"] {
   /* Core Colors */
-  --color-bg: var(--horizon-bg-base);
-  --color-surface: var(--horizon-surface-strong);
-  --hertz-shell-bg: var(--horizon-bg-base);
-  --hertz-accent-bright: var(--horizon-accent);
-  --hertz-muted-text: var(--horizon-text-muted);
-  --hertz-surface: var(--horizon-surface);
-  --hertz-border: var(--horizon-border);
-  --color-text: var(--horizon-text);
-  --color-text-muted: var(--horizon-text-muted);
-  --color-border: var(--horizon-border);
-  --color-accent: var(--horizon-accent);
+  --color-bg: var(--hertz-bg-base);
+  --color-surface: var(--hertz-surface-strong);
+  --hertz-shell-bg: var(--hertz-bg-base);
+  --hertz-accent-bright: var(--hertz-accent);
+  --hertz-muted-text: var(--hertz-text-muted);
+  --hertz-surface: var(--hertz-surface);
+  --hertz-border: var(--hertz-border);
+  --color-text: var(--hertz-text);
+  --color-text-muted: var(--hertz-text-muted);
+  --color-border: var(--hertz-border);
+  --color-accent: var(--hertz-accent);
 
   /* Utility Colors */
   --color-danger: #ef4444;
@@ -179,7 +179,7 @@
   --color-text: #1a1a1a;
   --color-text-muted: #6b7280;
   --color-border: #d1d5db;
-  --color-accent: var(--horizon-accent);
+  --color-accent: var(--hertz-accent);
 
   /* Utility Colors */
   --color-danger: #ef4444;
@@ -214,7 +214,7 @@ body {
   font-size: var(--text-base);
   line-height: 1.6;
   color: var(--color-text);
-  background: var(--horizon-bg-base);
+  background: var(--hertz-bg-base);
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   min-height: 100vh;

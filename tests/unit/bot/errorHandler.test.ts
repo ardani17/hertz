@@ -1,5 +1,5 @@
 // ============================================
-// Horizon Trader Platform — Bot Error Handler Tests
+// Hertz Trader Platform — Bot Error Handler Tests
 // ============================================
 
 import { describe, it, expect, vi } from 'vitest';

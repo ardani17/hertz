@@ -1,5 +1,5 @@
 // ============================================
-// Horizon Trader Platform — Credit API Rate Limiter
+// Hertz Trader Platform — Credit API Rate Limiter
 // ============================================
 
 /**

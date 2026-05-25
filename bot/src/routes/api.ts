@@ -1,5 +1,5 @@
 // ============================================
-// Horizon Trader Platform — Bot REST API Routes
+// HERTZ Platform — Bot REST API Routes
 // ============================================
 
 import { Router, Request, Response } from 'express';

@@ -1,5 +1,5 @@
 // ============================================
-// Horizon Trader Platform — Middleware Pipeline
+// HERTZ Platform — Middleware Pipeline
 // ============================================
 
 import type { BotContext, MiddlewareFn } from './types';

@@ -22,7 +22,7 @@ export class HertzDmService {
       peer: row.peer_id ? {
         id: row.peer_id,
         username: row.peer_username,
-        displayName: row.peer_display_name ?? row.peer_username ?? 'Member Horizon',
+        displayName: row.peer_display_name ?? row.peer_username ?? 'Member Hertz',
         avatarUrl: row.peer_avatar_url,
         role: row.peer_role,
       } : null,
@@ -84,7 +84,7 @@ export class HertzDmService {
       sender: {
         id: message.sender_id,
         username: message.sender_username,
-        displayName: message.sender_display_name ?? message.sender_username ?? 'Member Horizon',
+        displayName: message.sender_display_name ?? message.sender_username ?? 'Member Hertz',
         avatarUrl: message.sender_avatar_url,
         role: message.sender_role,
       },

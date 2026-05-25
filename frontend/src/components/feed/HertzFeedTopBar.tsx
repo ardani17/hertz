@@ -23,9 +23,9 @@ export function HertzFeedTopBar({
 
   return (
     <header className={styles.topBar}>
-      <Link className={styles.mobileBrand} href="/hertz" aria-label="Horizon Home" prefetch>
+      <Link className={styles.mobileBrand} href="/hertz" aria-label="Hertz Home" prefetch>
         <Image
-          src="/images/logo/Logo-Horizon-Atom-Online-White_8.png"
+          src="/images/logo/Logo-Hertz-Atom-Online-White_8.png"
           alt=""
           width={34}
           height={34}

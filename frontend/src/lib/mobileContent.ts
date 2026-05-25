@@ -90,7 +90,7 @@ function mapArticle(row: ArticleRow, includeContent = false, media: OutlookMedia
     author: {
       id: row.author_id,
       username: row.author_username,
-      displayName: row.author_display_name ?? row.author_username ?? 'Horizon',
+      displayName: row.author_display_name ?? row.author_username ?? 'Hertz',
       avatarUrl: row.author_avatar_url,
     },
     counts: {

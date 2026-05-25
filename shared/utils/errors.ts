@@ -1,5 +1,5 @@
 // ============================================
-// Horizon Trader Platform — Unified Error Handling
+// Hertz Trader Platform — Unified Error Handling
 // ============================================
 
 import {

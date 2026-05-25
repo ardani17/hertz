@@ -2,7 +2,7 @@ import fc from 'fast-check';
 import { describe, expect, it } from 'vitest';
 import { resolveVisibilityRefreshInterval } from '@/lib/swr/visibility';
 
-// Feature: horizon-social-ux-uplift, Property 3: Visibility-pause invariant
+// Feature: hertz-social-ux-uplift, Property 3: Visibility-pause invariant
 
 describe('visibility refresh interval', () => {
   it('pauses interval while hidden and restores configured interval while visible', () => {

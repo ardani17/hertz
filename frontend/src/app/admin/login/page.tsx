@@ -57,7 +57,7 @@ export default function AdminLoginPage() {
           </div>
           <h1 className={styles.loginTitle}>Admin</h1>
           <p className={styles.loginSubtitle}>
-            Masuk ke dashboard Horizon Trader
+            Masuk ke dashboard Hertz Trader
           </p>
         </div>
 

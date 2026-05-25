@@ -9,12 +9,12 @@ function read(relativePath: string) {
 }
 
 describe('HERTZ mobile brand', () => {
-  it('renders the Horizon atom logo in the HERTZ layout shell', () => {
+  it('renders the Hertz atom logo in the HERTZ layout shell', () => {
     const source = read('frontend/src/components/layout/HertzLayout.tsx');
 
     expect(source).toContain('mobileBrand');
-    expect(source).toContain('Logo-Horizon-Atom-Online-White_8.png');
-    expect(source).toContain('aria-label="Horizon Home"');
+    expect(source).toContain('Logo-Hertz-Atom-Online-White_8.png');
+    expect(source).toContain('aria-label="Hertz Home"');
   });
 
   it('keeps the mobile brand hidden on desktop and visible on mobile', () => {

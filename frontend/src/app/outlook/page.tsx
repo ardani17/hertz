@@ -4,7 +4,7 @@ import { OutlookListClient } from '@/components/outlook/OutlookListClient';
 
 export const metadata: Metadata = {
   title: 'Outlook',
-  description: 'Analisa market mendalam dari komunitas trader Horizon.',
+  description: 'Analisa market mendalam dari komunitas trader Hertz.',
   alternates: { canonical: '/outlook' },
 };
 

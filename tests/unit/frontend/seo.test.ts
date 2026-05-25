@@ -8,13 +8,13 @@ describe('HERTZ post social metadata', () => {
       authorName: 'ARDANI | vastara.id',
       contentText: 'Setup XAUUSD pullback area London session dengan risk ketat.',
       imageUrl: '/uploads/chart.png',
-      siteUrl: 'https://horizon.cloudnexify.com',
+      siteUrl: 'https://hertz.cloudnexify.com',
     });
 
     expect(metadata.title).toContain('ARDANI | vastara.id');
     expect(metadata.description).toBe('Setup XAUUSD pullback area London session dengan risk ketat.');
-    expect(metadata.alternates).toEqual({ canonical: 'https://horizon.cloudnexify.com/hertz/post/hz_123' });
-    expect(metadata.openGraph?.url).toBe('https://horizon.cloudnexify.com/hertz/post/hz_123');
+    expect(metadata.alternates).toEqual({ canonical: 'https://hertz.cloudnexify.com/hertz/post/hz_123' });
+    expect(metadata.openGraph?.url).toBe('https://hertz.cloudnexify.com/hertz/post/hz_123');
     expect(metadata.twitter?.card).toBe('summary_large_image');
   });
 

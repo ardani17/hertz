@@ -1,5 +1,5 @@
 // ============================================
-// Horizon Trader Platform — Credit API Middleware
+// Hertz Trader Platform — Credit API Middleware
 // ============================================
 
 import { NextRequest, NextResponse } from 'next/server';

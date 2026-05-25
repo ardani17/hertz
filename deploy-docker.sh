@@ -123,8 +123,8 @@ check_required_vars() {
         exit 1
     fi
 
-    if [ -z "${HORIZON_TELEGRAM_GROUP_ID:-${TELEGRAM_GROUP_ID}}" ]; then
-        err "HERTZ membutuhkan HORIZON_TELEGRAM_GROUP_ID atau TELEGRAM_GROUP_ID."
+    if [ -z "${HERTZ_MEMBERSHIP_GROUP_ID:-${HORIZON_TELEGRAM_GROUP_ID:-${TELEGRAM_GROUP_ID}}}" ]; then
+        err "HERTZ membutuhkan HERTZ_MEMBERSHIP_GROUP_ID, HORIZON_TELEGRAM_GROUP_ID, atau TELEGRAM_GROUP_ID."
         exit 1
     fi
 
@@ -140,13 +140,14 @@ auto_construct_vars() {
     export TELEGRAM_WEBHOOK_URL="https://${DOMAIN}/webhook/telegram"
     export FRONTEND_URL="https://${DOMAIN}"
     export NEXT_PUBLIC_SITE_URL="https://${DOMAIN}"
-    export HORIZON_TELEGRAM_GROUP_ID="${HORIZON_TELEGRAM_GROUP_ID:-${TELEGRAM_GROUP_ID}}"
+    export HERTZ_MEMBERSHIP_GROUP_ID="${HERTZ_MEMBERSHIP_GROUP_ID:-${HORIZON_TELEGRAM_GROUP_ID:-${TELEGRAM_GROUP_ID}}}"
+    export HORIZON_TELEGRAM_GROUP_ID="${HORIZON_TELEGRAM_GROUP_ID:-${HERTZ_MEMBERSHIP_GROUP_ID}}"
 
     ok "DATABASE_URL       = postgresql://${POSTGRES_USER}:****@${POSTGRES_HOST:-db}:${POSTGRES_PORT:-5432}/${POSTGRES_DB}"
     ok "TELEGRAM_WEBHOOK_URL = ${TELEGRAM_WEBHOOK_URL}"
     ok "FRONTEND_URL       = ${FRONTEND_URL}"
     ok "NEXT_PUBLIC_SITE_URL = ${NEXT_PUBLIC_SITE_URL}"
-    ok "HORIZON_TELEGRAM_GROUP_ID = ${HORIZON_TELEGRAM_GROUP_ID}"
+    ok "HERTZ_MEMBERSHIP_GROUP_ID = ${HERTZ_MEMBERSHIP_GROUP_ID}"
 }
 
 # ── 4. set_defaults ─────────────────────────
@@ -158,7 +159,7 @@ set_defaults() {
     export BOT_PORT="${BOT_PORT:-4000}"
     export HERTZ_PLATFORM_ENABLED="${HERTZ_PLATFORM_ENABLED:-true}"
 
-    export DB_DATA_DIR="${DB_DATA_DIR:-/www/dk_project/horizon/data/postgres}"
+    export DB_DATA_DIR="${DB_DATA_DIR:-/www/dk_project/hertz/data/postgres}"
 
     ok "Defaults: FRONTEND_PORT=${FRONTEND_PORT}, BOT_PORT=${BOT_PORT}"
     ok "Defaults: HERTZ_PLATFORM_ENABLED=${HERTZ_PLATFORM_ENABLED}"
@@ -261,7 +262,8 @@ run_migrations() {
         hertz-db bash /docker-entrypoint-initdb.d/init.sh; then
         ok "Migrations selesai."
     else
-        warn "Migration gagal — periksa log di atas."
+        err "Migration gagal — periksa log di atas."
+        exit 1
     fi
 }
 

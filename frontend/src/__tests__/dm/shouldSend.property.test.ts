@@ -2,7 +2,7 @@ import fc from 'fast-check';
 import { describe, expect, it } from 'vitest';
 import { shouldSendMessage } from '@/features/hertz/messages/messageComposerRules';
 
-// Feature: horizon-social-ux-uplift, Property 6: Composer send predicate
+// Feature: hertz-social-ux-uplift, Property 6: Composer send predicate
 
 describe('shouldSendMessage', () => {
   it('sends only when Enter has content/attachments and no upload is active', () => {

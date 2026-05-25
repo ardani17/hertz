@@ -1,8 +1,8 @@
-# Horizon — Design System
+# Hertz — Design System
 
 ## Meta
 
-- **Product**: Horizon Trader Platform
+- **Product**: Hertz Trader Platform
 - **Register default**: product (HERTZ, admin, tools); landing `/` treated as **brand** surface
 - **Theme**: dark-first
 - **Locale**: `id` UI copy
@@ -13,7 +13,7 @@
 
 | Role | Value | Usage |
 |------|-------|--------|
-| Background | `#0a0a0f` | Page base (`--horizon-bg-base`) |
+| Background | `#0a0a0f` | Page base (`--hertz-bg-base`) |
 | Surface | `rgba(15, 19, 18, 0.78)` | Panels, cards |
 | Surface strong | `rgba(20, 28, 24, 0.94)` | Modals, dropdowns |
 | Text | `#f3fff8` | Primary copy |
@@ -37,7 +37,7 @@ Scale: modular from `--text-xs` … `--text-4xl`. Body line length cap ~70ch in 
 
 ## Spacing & layout
 
-- Base unit 4px; shell padding `--horizon-shell-offset` (2rem desktop).
+- Base unit 4px; shell padding `--hertz-shell-offset` (2rem desktop).
 - Breakpoints: `frontend/src/lib/breakpoints.ts` only — no ad-hoc px.
 - HERTZ: 3-column shell (rail | feed | market) ≥1024px; single column + bottom nav on mobile.
 

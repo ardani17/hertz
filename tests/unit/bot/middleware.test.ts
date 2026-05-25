@@ -1,5 +1,5 @@
 // ============================================
-// Horizon Trader Platform — Middleware Pipeline Tests
+// Hertz Trader Platform — Middleware Pipeline Tests
 // ============================================
 
 import { describe, it, expect, vi } from 'vitest';

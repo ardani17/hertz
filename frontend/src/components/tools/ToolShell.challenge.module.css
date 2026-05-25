@@ -6,8 +6,8 @@
 
 .challengeToolbar {
   align-items: end;
-  background: var(--horizon-bg-base);
-  border: 1px solid var(--horizon-border);
+  background: var(--hertz-bg-base);
+  border: 1px solid var(--hertz-border);
   border-radius: 8px;
   display: flex;
   flex-wrap: wrap;
@@ -20,8 +20,8 @@
 }
 
 .tabNav {
-  background: var(--horizon-nav-track-bg);
-  border: 1px solid var(--horizon-nav-track-border);
+  background: var(--hertz-nav-track-bg);
+  border: 1px solid var(--hertz-nav-track-border);
   border-radius: 8px;
   display: flex;
   flex-wrap: wrap;
@@ -39,9 +39,9 @@
 
 .tabNav button:hover,
 .tabNav .tabActive {
-  background: var(--horizon-bg-active);
-  border-color: var(--horizon-border-active);
-  color: var(--horizon-accent);
+  background: var(--hertz-bg-active);
+  border-color: var(--hertz-border-active);
+  color: var(--hertz-accent);
 }
 
 .progressGrid {
@@ -52,8 +52,8 @@
 }
 
 .progressItem {
-  background: var(--horizon-bg-base);
-  border: 1px solid var(--horizon-border);
+  background: var(--hertz-bg-base);
+  border: 1px solid var(--hertz-border);
   border-radius: 8px;
   display: grid;
   gap: var(--space-2);
@@ -110,7 +110,7 @@
 .checkPill {
   align-items: center;
   background: rgba(0, 0, 0, 0.24);
-  border: 1px solid var(--horizon-border);
+  border: 1px solid var(--hertz-border);
   border-radius: 999px;
   color: var(--color-text-muted);
   display: inline-flex;
@@ -200,8 +200,8 @@
 
 .chatWindow {
   align-content: start;
-  background: var(--horizon-bg-base);
-  border: 1px solid var(--horizon-border);
+  background: var(--hertz-bg-base);
+  border: 1px solid var(--hertz-border);
   border-radius: 12px;
   box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.035);
   display: grid;
@@ -224,8 +224,8 @@
 }
 
 .chatBubbleUser {
-  background: var(--horizon-bg-selected);
-  border: 1px solid var(--horizon-border-active);
+  background: var(--hertz-bg-selected);
+  border: 1px solid var(--hertz-border-active);
   border-bottom-right-radius: 4px;
   justify-self: end;
 }
@@ -268,8 +268,8 @@
 
 .chatInputRow {
   align-items: stretch;
-  background: var(--horizon-bg-base);
-  border: 1px solid var(--horizon-border);
+  background: var(--hertz-bg-base);
+  border: 1px solid var(--hertz-border);
   border-radius: 12px;
   display: grid;
   gap: var(--space-3);
@@ -281,7 +281,7 @@
 }
 
 .chatInputRow textarea {
-  border-color: var(--horizon-border);
+  border-color: var(--hertz-border);
   min-height: 54px;
   resize: vertical;
   width: 100%;
@@ -354,7 +354,7 @@
 }
 
 .formSection {
-  border-top: 1px solid var(--horizon-border);
+  border-top: 1px solid var(--hertz-border);
   display: grid;
   gap: var(--space-3);
   margin-top: var(--space-4);
@@ -377,7 +377,7 @@
 
 .journalBlock {
   background: rgba(0, 0, 0, 0.18);
-  border: 1px solid var(--horizon-border);
+  border: 1px solid var(--hertz-border);
   border-radius: 8px;
   margin-top: var(--space-4);
 }
@@ -397,7 +397,7 @@
 }
 
 .journalBlock[open] summary {
-  border-bottom: 1px solid var(--horizon-border);
+  border-bottom: 1px solid var(--hertz-border);
 }
 
 .journalBlock > :not(summary) {
@@ -444,7 +444,7 @@
 
 .metricsToggle {
   background: transparent;
-  border: 1px solid var(--horizon-border-active);
+  border: 1px solid var(--hertz-border-active);
   border-radius: 8px;
   color: var(--color-accent);
   cursor: pointer;

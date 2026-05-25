@@ -27,9 +27,9 @@
   margin: 16px;
   min-height: 132px;
   padding: 24px;
-  border: 1px solid var(--horizon-border);
+  border: 1px solid var(--hertz-border);
   border-radius: 8px;
-  background: var(--horizon-bg-base);
+  background: var(--hertz-bg-base);
   cursor: pointer;
   overflow: visible;
   z-index: 1;
@@ -39,8 +39,8 @@
   z-index: 20;
 }
 .post:hover {
-  background: var(--horizon-bg-hover);
-  border-color: var(--horizon-border-hover);
+  background: var(--hertz-bg-hover);
+  border-color: var(--hertz-border-hover);
 }
 .spineNode {
   position: static;
@@ -51,9 +51,9 @@
   width: 40px;
   height: 40px;
   border-radius: 50%;
-  border: 1.5px solid var(--horizon-accent-strong, #00e38a);
-  background: var(--horizon-bg-active);
-  color: var(--horizon-accent-strong, #00e38a);
+  border: 1.5px solid var(--hertz-accent-strong, #00e38a);
+  background: var(--hertz-bg-active);
+  color: var(--hertz-accent-strong, #00e38a);
   box-shadow: none;
 }
 .spineNode svg {
@@ -213,18 +213,18 @@
   z-index: 2;
   display: inline-block;
   margin-top: 0.3rem;
-  color: var(--horizon-accent);
+  color: var(--hertz-accent);
   font-weight: 700;
   text-decoration: none;
 }
 .mediaGrid {
   position: relative;
-  background: var(--horizon-bg-base);
+  background: var(--hertz-bg-base);
   display: grid;
   gap: 0.35rem;
   margin-top: 12px;
   overflow: hidden;
-  border: 1px solid var(--horizon-border);
+  border: 1px solid var(--hertz-border);
   border-radius: 12px;
 }
 .mediaGrid[data-count="1"] { grid-template-columns: 1fr; }
@@ -235,7 +235,7 @@
   min-height: 150px;
   max-height: 150px;
   object-fit: contain;
-  background: var(--horizon-bg-base);
+  background: var(--hertz-bg-base);
 }
 
 .mediaGrid[data-count="1"] img,
@@ -251,7 +251,7 @@
   padding: 14px 15px 13px;
   border: 1px solid #13d27b;
   border-radius: 8px;
-  background: var(--horizon-bg-base);
+  background: var(--hertz-bg-base);
 }
 .noteSpineNode {
   position: absolute;
@@ -263,10 +263,10 @@
   width: 36px;
   height: 36px;
   border-radius: 50%;
-  border: 1.5px solid var(--horizon-accent-strong, #00e38a);
+  border: 1.5px solid var(--hertz-accent-strong, #00e38a);
   background: #063b25;
-  color: var(--horizon-accent-strong, #00e38a);
-  box-shadow: 0 0 0 4px var(--horizon-bg-base), 0 0 18px rgba(0, 227, 138, 0.22);
+  color: var(--hertz-accent-strong, #00e38a);
+  box-shadow: 0 0 0 4px var(--hertz-bg-base), 0 0 18px rgba(0, 227, 138, 0.22);
 }
 .noteSpineNode svg {
   width: 16px;
@@ -412,7 +412,7 @@
 }
 
 .quoteCard:hover {
-  border-color: var(--horizon-border-hover);
+  border-color: var(--hertz-border-hover);
 }
 
 .quoteAuthor { display: none; }
@@ -445,7 +445,7 @@
     gap: 0.62rem;
     margin: 0.65rem;
     padding: 0.78rem 0.75rem 0.7rem;
-    border-color: var(--horizon-border);
+    border-color: var(--hertz-border);
     background: rgba(255, 255, 255, 0.015);
     overflow: visible;
   }

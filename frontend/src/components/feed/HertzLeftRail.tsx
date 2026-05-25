@@ -55,12 +55,12 @@ export function HertzLeftRail({
   const asideClass = collapsed ? `${styles.left} ${styles.leftCollapsed}` : styles.left;
 
   return (
-    <aside className={asideClass} aria-label="Horizon navigation">
+    <aside className={asideClass} aria-label="Hertz navigation">
       <div className={styles.brand}>
         <Image
           className={styles.brandLogo}
-          src="/images/logo/Logo-Horizon-Atom-Online-White_8.png"
-          alt="Horizon"
+          src="/images/logo/Logo-Hertz-Atom-Online-White_8.png"
+          alt="Hertz"
           width={42}
           height={42}
           priority

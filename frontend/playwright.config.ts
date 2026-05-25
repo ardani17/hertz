@@ -3,7 +3,7 @@ import { defineConfig, devices } from '@playwright/test';
 const baseURL =
   process.env.REVIEW_BASE_URL ||
   process.env.NEXT_PUBLIC_SITE_URL ||
-  (process.env.DOMAIN ? `https://${process.env.DOMAIN}` : 'https://horizon.cloudnexify.com');
+  (process.env.DOMAIN ? `https://${process.env.DOMAIN}` : 'https://hertz.cloudnexify.com');
 
 export default defineConfig({
   testDir: './e2e',

@@ -9,11 +9,11 @@ import {
 
 describe('share link helpers', () => {
   it('builds canonical HERTZ post URLs', () => {
-    expect(buildCanonicalPostUrl('hz_abc', 'https://horizon.cloudnexify.com')).toBe(
-      'https://horizon.cloudnexify.com/hertz/post/hz_abc',
+    expect(buildCanonicalPostUrl('hz_abc', 'https://hertz.cloudnexify.com')).toBe(
+      'https://hertz.cloudnexify.com/hertz/post/hz_abc',
     );
-    expect(buildCanonicalPostUrl('hz_abc', 'https://horizon.cloudnexify.com/')).toBe(
-      'https://horizon.cloudnexify.com/hertz/post/hz_abc',
+    expect(buildCanonicalPostUrl('hz_abc', 'https://hertz.cloudnexify.com/')).toBe(
+      'https://hertz.cloudnexify.com/hertz/post/hz_abc',
     );
   });
 

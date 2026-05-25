@@ -33,18 +33,18 @@
 }
 
 .tabLink:hover {
-  background: var(--horizon-bg-active);
+  background: var(--hertz-bg-active);
   color: #cde8d8;
 }
 
 .tabLinkActive {
-  background: var(--horizon-bg-selected);
-  border-color: var(--horizon-border-active);
-  color: var(--horizon-accent);
+  background: var(--hertz-bg-selected);
+  border-color: var(--hertz-border-active);
+  color: var(--hertz-accent);
 }
 
 .tabLink:focus-visible {
-  outline: 2px solid var(--horizon-accent);
+  outline: 2px solid var(--hertz-accent);
   outline-offset: 2px;
 }
 
@@ -81,7 +81,7 @@
 
   .tabListFeedSort .tabLinkActive {
     background: transparent;
-    box-shadow: inset 0 -2px 0 0 var(--horizon-accent, #13d27b);
+    box-shadow: inset 0 -2px 0 0 var(--hertz-accent, #13d27b);
     color: #f4fff8;
   }
 }

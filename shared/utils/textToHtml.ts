@@ -1,5 +1,5 @@
 // ============================================
-// Horizon Trader Platform — Text-to-HTML Conversion
+// Hertz Trader Platform — Text-to-HTML Conversion
 // ============================================
 
 /**

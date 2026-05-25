@@ -1,5 +1,5 @@
 // ============================================
-// Horizon Trader Platform — Auto-Register Middleware
+// HERTZ Platform — Auto-Register Middleware
 // ============================================
 
 import type { User } from '../../../shared/types/index';

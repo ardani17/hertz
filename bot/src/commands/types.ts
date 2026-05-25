@@ -1,5 +1,5 @@
 // ============================================
-// Horizon Trader Platform — Command Types
+// HERTZ Platform — Command Types
 // ============================================
 
 import type { BotContext } from '../middleware/types';

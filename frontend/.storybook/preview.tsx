@@ -6,10 +6,10 @@ const preview: Preview = {
   parameters: {
     layout: 'centered',
     backgrounds: {
-      default: 'horizon-dark',
+      default: 'hertz-dark',
       values: [
-        { name: 'horizon-dark', value: '#0f0f14' },
-        { name: 'horizon-surface', value: '#141414' },
+        { name: 'hertz-dark', value: '#0f0f14' },
+        { name: 'hertz-surface', value: '#141414' },
       ],
     },
     controls: {

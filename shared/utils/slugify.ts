@@ -1,5 +1,5 @@
 // ============================================
-// Horizon Trader Platform — Slug Generation
+// Hertz Trader Platform — Slug Generation
 // ============================================
 
 const MAX_SLUG_LENGTH = 60;

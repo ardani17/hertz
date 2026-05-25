@@ -39,7 +39,7 @@ export function DmAttachmentLightbox({ url, onClose }: { url: string; onClose: (
         <button type="button" className={styles.closeButton} onClick={onClose} aria-label="Tutup pratinjau">
           <X aria-hidden="true" size={20} />
         </button>
-        <img src={url} alt="Lampiran pesan ukuran penuh" className={styles.image} decoding="async" />
+        <img src={url} alt="Lampiran pesan ukuran penuh" className={styles.image} loading="lazy" decoding="async" />
       </div>
     </div>,
     document.body,

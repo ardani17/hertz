@@ -19,7 +19,7 @@
 }
 
 .content a:hover {
-  color: var(--horizon-success-muted);
+  color: var(--hertz-success-muted);
 }
 
 /* Inline images for charts and analysis graphics */
@@ -33,8 +33,8 @@
 }
 
 .content blockquote {
-  background: var(--horizon-accent-soft, var(--horizon-bg-active));
-  border: 1px solid var(--horizon-border);
+  background: var(--hertz-accent-soft, var(--hertz-bg-active));
+  border: 1px solid var(--hertz-border);
   border-radius: 0 var(--border-radius) var(--border-radius) 0;
   padding-left: var(--space-4);
   margin: var(--space-6) 0;

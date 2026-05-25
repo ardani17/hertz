@@ -6,8 +6,8 @@ import { getCurrentMember } from '@/lib/memberAuth';
 export const dynamic = 'force-dynamic';
 
 export const metadata: Metadata = {
-  title: 'HERTZ | Horizon',
-  description: 'Social trading room Horizon untuk jurnal dan chart setup komunitas.',
+  title: 'HERTZ | Hertz',
+  description: 'Social trading room Hertz untuk jurnal dan chart setup komunitas.',
   alternates: { canonical: '/hertz' },
 };
 

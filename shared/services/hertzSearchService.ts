@@ -92,7 +92,7 @@ export class HertzSearchService {
         ...members.rows.map((member) => ({
           type: 'member' as const,
           id: member.id,
-          label: member.display_name ?? member.username ?? 'Member Horizon',
+          label: member.display_name ?? member.username ?? 'Member Hertz',
           description: member.username ? `@${member.username}` : 'Member HERTZ',
           href: `/hertz?q=${encodeURIComponent(member.username ?? member.display_name ?? '')}`,
         })),

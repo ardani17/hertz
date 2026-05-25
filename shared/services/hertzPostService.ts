@@ -22,7 +22,7 @@ import type {
 const EXCERPT_LIMIT = 420;
 const SHORT_ID_ALPHABET = 'abcdefghijklmnopqrstuvwxyz0123456789';
 const VALID_CATEGORIES: HertzPostCategory[] = ['trading_room', 'life_coffee', 'general'];
-const DEFAULT_SITE_URL = 'https://horizon.cloudnexify.com';
+const DEFAULT_SITE_URL = 'https://hertz.cloudnexify.com';
 
 function truncateMetadataText(text: string, maxLength: number) {
   const cleaned = text.replace(/\s+/g, ' ').trim();
@@ -181,7 +181,7 @@ function numberOrNull(value: string | number | null): number | null {
 function authorFromRow(row: HertzPostRow): HertzAuthor {
   return {
     id: row.author_id,
-    name: row.author_display_name ?? row.author_username ?? 'Member Horizon',
+    name: row.author_display_name ?? row.author_username ?? 'Member Hertz',
     username: row.author_username,
     badge: row.author_role === 'admin' ? 'admin' : 'verified_member',
     avatarUrl: row.author_avatar_url,
@@ -488,7 +488,7 @@ export class HertzPostService {
       replies: [],
       author: {
         id: row.user_id,
-        name: row.display_name ?? row.username ?? 'Member Horizon',
+        name: row.display_name ?? row.username ?? 'Member Hertz',
         username: row.username,
         badge: row.role === 'admin' ? 'admin' : 'verified_member',
         avatarUrl: row.avatar_url,

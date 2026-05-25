@@ -42,12 +42,44 @@ export default defineConfig([
     },
   },
   {
+    files: ['frontend/**/*.{ts,tsx}', 'bot/**/*.{ts,tsx}'],
+    rules: {
+      'no-restricted-imports': ['error', {
+        patterns: [{
+          group: [
+            '@shared/services/feedService',
+            '@shared/services/postReactionService',
+            '@shared/services/postReportService',
+            '@shared/services/postCommentService',
+            '@shared/services/postViewService',
+            '@shared/services/postRepostService',
+            '@shared/services/postBookmarkService',
+            '@shared/services/communityNoteService',
+            '@shared/services/legacyArticleService',
+            '@shared/repositories/feedRepository',
+            '@shared/repositories/postReactionRepository',
+            '@shared/repositories/postReportRepository',
+            '@shared/repositories/postCommentRepository',
+            '@shared/repositories/postViewRepository',
+            '@shared/repositories/postRepostRepository',
+            '@shared/repositories/postBookmarkRepository',
+            '@shared/repositories/communityNoteRepository',
+          ],
+          message: 'Use the hertz_* services/repositories; the legacy signal-ledger stack is deprecated.',
+        }],
+      }],
+    },
+  },
+  {
     files: ['scripts/**/*.js'],
     rules: {
       '@typescript-eslint/no-require-imports': 'off',
     },
   },
   globalIgnores([
+    '.agents/**',
+    '.cursor/**',
+    '.superpowers/**',
     '.next/**',
     'frontend/.next/**',
     'out/**',

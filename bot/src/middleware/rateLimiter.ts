@@ -1,5 +1,5 @@
 // ============================================
-// Horizon Trader Platform — Rate Limiter Middleware
+// HERTZ Platform — Rate Limiter Middleware
 // ============================================
 
 import type { MiddlewareFn } from './types';

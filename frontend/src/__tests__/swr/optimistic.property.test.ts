@@ -2,7 +2,7 @@ import fc from 'fast-check';
 import { describe, expect, it } from 'vitest';
 import { mergeOptimisticList, rollbackOptimisticValue } from '@/lib/swr/optimistic';
 
-// Feature: horizon-social-ux-uplift, Property 1: Optimistic merge round-trip
+// Feature: hertz-social-ux-uplift, Property 1: Optimistic merge round-trip
 
 describe('optimistic helpers', () => {
   it('merges optimistic entities idempotently and reconciles canonical ids', () => {

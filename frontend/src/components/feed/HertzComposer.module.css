@@ -1,6 +1,6 @@
 .composer {
   background: transparent;
-  border: 1px solid var(--horizon-border);
+  border: 1px solid var(--hertz-border);
   border-radius: 8px;
   display: grid;
   gap: 12px;
@@ -37,7 +37,7 @@
 
 .body textarea {
   background: transparent;
-  border: 1px solid var(--horizon-border);
+  border: 1px solid var(--hertz-border);
   border-radius: 8px;
   color: #f0fbf4;
   font: inherit;
@@ -53,7 +53,7 @@
 }
 
 .body textarea:focus-visible {
-  border-color: var(--horizon-border-hover);
+  border-color: var(--hertz-border-hover);
 }
 
 .body textarea::placeholder {
@@ -83,14 +83,14 @@
 }
 
 .categoryChip:hover {
-  background: var(--horizon-bg-active);
+  background: var(--hertz-bg-active);
   color: #cde8d8;
 }
 
 .categoryChipActive {
-  background: var(--horizon-bg-selected);
-  border-color: var(--horizon-border-active);
-  color: var(--horizon-accent);
+  background: var(--hertz-bg-selected);
+  border-color: var(--hertz-border-active);
+  color: var(--hertz-accent);
 }
 
 .composeFab,
@@ -187,7 +187,7 @@
 }
 
 .mediaQueue figure {
-  border: 1px solid var(--horizon-border);
+  border: 1px solid var(--hertz-border);
   border-radius: 8px;
   margin: 0;
   min-width: 0;
@@ -314,8 +314,8 @@
   }
 
   .composeSheet {
-    background: var(--horizon-bg-base);
-    border-top: 1px solid var(--horizon-border);
+    background: var(--hertz-bg-base);
+    border-top: 1px solid var(--hertz-border);
     border-radius: 16px 16px 0 0;
     display: grid;
     gap: 0;
@@ -372,7 +372,7 @@
 
   .sheetForm textarea {
     background: transparent;
-    border: 1px solid var(--horizon-border);
+    border: 1px solid var(--hertz-border);
     border-radius: 8px;
     color: #f0fbf4;
     font: inherit;
@@ -387,7 +387,7 @@
   }
 
   .sheetForm textarea:focus-visible {
-    border-color: var(--horizon-border-hover);
+    border-color: var(--hertz-border-hover);
   }
 
   .sheetForm textarea::placeholder {

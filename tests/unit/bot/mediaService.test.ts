@@ -1,5 +1,5 @@
 // ============================================
-// Horizon Trader Platform — Media Service Tests
+// Hertz Trader Platform — Media Service Tests
 // ============================================
 
 import { describe, it, expect, vi, beforeEach } from 'vitest';
@@ -39,7 +39,7 @@ function createMockTelegramApi(overrides: Partial<TelegramApiClient> = {}): Tele
 
 function createMockConfig(): MediaServiceConfig {
   return {
-    bucketName: 'horizon-media',
+    bucketName: 'hertz-media',
     publicUrl: 'https://r2.example.com',
   };
 }
@@ -87,7 +87,7 @@ describe('MediaService', () => {
       expect(sendMock).toHaveBeenCalledTimes(1);
 
       const command = sendMock.mock.calls[0][0] as PutObjectCommand;
-      expect(command.input.Bucket).toBe('horizon-media');
+      expect(command.input.Bucket).toBe('hertz-media');
       expect(command.input.Key).toMatch(/^image\/[a-f0-9-]+\.jpg$/);
       expect(command.input.ContentType).toBe('image/jpeg');
       expect(command.input.Body).toEqual(Buffer.from('fake-image-data'));

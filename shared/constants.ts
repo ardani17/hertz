@@ -1,5 +1,5 @@
 // ============================================
-// Horizon Trader Platform — Shared Constants
+// Hertz Trader Platform — Shared Constants
 // ============================================
 
 /** Pagination defaults */
@@ -16,8 +16,6 @@ export const PAGINATION = {
   MAX_PAGE_SIZE: 100,
   /** Maximum allowed offset for public endpoints */
   MAX_OFFSET: 10000,
-  /** Default page size for blog listing */
-  BLOG_PAGE_SIZE: 12,
 } as const;
 
 /** Rate limiting (requests per window) */
@@ -38,7 +36,9 @@ export const SESSION_IDLE_MS = 24 * 60 * 60 * 1000;
 /** Session configuration */
 export const SESSION = {
   /** Session cookie name */
-  COOKIE_NAME: 'horizon_session',
+  COOKIE_NAME: 'hertz_session',
+  /** Legacy session cookie name kept for transition reads. */
+  LEGACY_COOKIE_NAME: 'horizon_session',
   /** Session duration in milliseconds (24 hours) */
   DURATION_MS: SESSION_IDLE_MS,
 } as const;
@@ -54,7 +54,7 @@ export const CONTENT = {
 } as const;
 
 /** Valid article categories */
-export const VALID_CATEGORIES = ['trading', 'life_story', 'general', 'outlook', 'blog'] as const;
+export const VALID_CATEGORIES = ['trading', 'life_story', 'general', 'outlook'] as const;
 export type ArticleCategory = (typeof VALID_CATEGORIES)[number];
 
 /** Valid article statuses */

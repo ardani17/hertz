@@ -1,8 +1,8 @@
 .main {
   min-height: 100vh;
   overflow-x: hidden;
-  background: var(--horizon-bg-base);
-  color: var(--horizon-text);
+  background: var(--hertz-bg-base);
+  color: var(--hertz-text);
 }
 
 .main:has(.contentPageFill) {
@@ -16,8 +16,8 @@
 .shell,
 .shellNoRail,
 .shellCompact {
-  border-left: 1px solid var(--horizon-border);
-  border-right: 1px solid var(--horizon-border);
+  border-left: 1px solid var(--hertz-border);
+  border-right: 1px solid var(--hertz-border);
   display: grid;
   margin: 0 auto;
   min-height: 100vh;
@@ -88,20 +88,20 @@
 }
 
 .pageHeader h1 {
-  color: var(--horizon-text);
+  color: var(--hertz-text);
   font-size: 1.25rem;
   margin: 0;
 }
 
 .pageHeader p {
-  color: var(--horizon-text-muted);
+  color: var(--hertz-text-muted);
   font-size: 0.84rem;
   margin: 0.3rem 0 0;
 }
 
 .desktopHeader {
   align-items: center;
-  background: var(--horizon-bg-base);
+  background: var(--hertz-bg-base);
   border-bottom: 1px solid rgba(255, 255, 255, 0.06);
   display: flex;
   justify-content: flex-end;
@@ -214,7 +214,7 @@
     position: sticky;
     top: 0;
     z-index: 6;
-    background: var(--horizon-bg-base);
+    background: var(--hertz-bg-base);
   }
 
   .mobileNotificationBell {
@@ -247,7 +247,7 @@
   }
 
   .mobileBrandTitle {
-    color: var(--horizon-text);
+    color: var(--hertz-text);
     font-size: 1.35rem;
     font-weight: 850;
     letter-spacing: 0.01em;

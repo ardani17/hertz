@@ -35,8 +35,8 @@ describe('Shared Types — Enums and Constants', () => {
     expect(ArticleCategory.LIFE_STORY).toBe('life_story');
     expect(ArticleCategory.GENERAL).toBe('general');
     expect(ArticleCategory.OUTLOOK).toBe('outlook');
-    expect(ArticleCategory.BLOG).toBe('blog');
-    expect(Object.keys(ArticleCategory)).toHaveLength(5);
+    expect('BLOG' in ArticleCategory).toBe(false);
+    expect(Object.keys(ArticleCategory)).toHaveLength(4);
   });
 
   it('UserRole has member and admin', () => {

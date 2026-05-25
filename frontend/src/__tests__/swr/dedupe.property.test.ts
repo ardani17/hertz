@@ -2,7 +2,7 @@ import fc from 'fast-check';
 import { describe, expect, it } from 'vitest';
 import { createDedupeFetcher } from '@/lib/swr/dedupe';
 
-// Feature: horizon-social-ux-uplift, Property 2: SWR dedupe across consumers
+// Feature: hertz-social-ux-uplift, Property 2: SWR dedupe across consumers
 
 describe('createDedupeFetcher', () => {
   it('deduplicates overlapping requests with the same key', async () => {

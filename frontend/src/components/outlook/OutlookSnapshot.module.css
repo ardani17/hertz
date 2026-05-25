@@ -11,7 +11,7 @@
 
 .panel {
   background: rgba(4, 19, 12, 0.72);
-  border: 1px solid var(--horizon-border);
+  border: 1px solid var(--hertz-border);
   border-radius: 8px;
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(128px, 1fr));

@@ -1,5 +1,5 @@
 // ============================================
-// Horizon Trader Platform — Command Registry
+// HERTZ Platform — Command Registry
 // ============================================
 
 import type { TelegramMessage } from '../middleware/types';
@@ -50,7 +50,7 @@ export class CommandRegistry implements ICommandRegistry {
     // Check for slash command (first word starting with /)
     if (text.startsWith('/')) {
       const commandName = text.split(/\s+/)[0].toLowerCase();
-      // Strip @botname suffix if present (e.g., /publish@HorizonBot → /publish)
+      // Strip @botname suffix if present (e.g., /publish@HertzBot → /publish)
       const cleanCommand = commandName.split('@')[0];
       const handler = this.handlers.get(cleanCommand);
       return handler && handler.type === 'command' ? handler : null;

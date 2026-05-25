@@ -9,7 +9,7 @@ function swrIsVisible() {
   return document.visibilityState !== 'hidden';
 }
 
-export function HorizonSWRProvider({ children }: { children: ReactNode }) {
+export function HertzSWRProvider({ children }: { children: ReactNode }) {
   return (
     <SWRConfig
       value={{

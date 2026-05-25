@@ -9,8 +9,8 @@
 }
 
 .card {
-  background: var(--horizon-bg-base);
-  border: 1px solid var(--horizon-border);
+  background: var(--hertz-bg-base);
+  border: 1px solid var(--hertz-border);
   border-radius: 12px;
   display: grid;
   gap: 0.55rem;
@@ -19,7 +19,7 @@
 
 .level {
   background: rgba(19, 210, 123, 0.12);
-  border: 1px solid var(--horizon-border-active);
+  border: 1px solid var(--hertz-border-active);
   border-radius: 999px;
   color: #13d27b;
   font-size: 0.78rem;
@@ -40,16 +40,16 @@
 
 .markets li {
   background: rgba(255, 255, 255, 0.04);
-  border: 1px solid var(--horizon-border);
+  border: 1px solid var(--hertz-border);
   border-radius: 999px;
-  color: var(--horizon-text-muted);
+  color: var(--hertz-text-muted);
   font-size: 0.75rem;
   padding: 0.2rem 0.55rem;
 }
 
 .meta,
 .style {
-  color: var(--horizon-text-muted);
+  color: var(--hertz-text-muted);
   font-size: 0.85rem;
   line-height: 1.45;
   margin: 0;

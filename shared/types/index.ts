@@ -1,5 +1,5 @@
 // ============================================
-// Horizon Trader Platform — Shared Types
+// Hertz Trader Platform — Shared Types
 // ============================================
 
 // ---- Enums & Constants ----
@@ -10,7 +10,6 @@ export const ArticleCategory = {
   LIFE_STORY: 'life_story',
   GENERAL: 'general',
   OUTLOOK: 'outlook',
-  BLOG: 'blog',
 } as const;
 
 export type ArticleCategory = (typeof ArticleCategory)[keyof typeof ArticleCategory];
@@ -103,15 +102,6 @@ export const CommentStatus = {
 } as const;
 
 export type CommentStatus = (typeof CommentStatus)[keyof typeof CommentStatus];
-
-/** Import job statuses */
-export const ImportJobStatus = {
-  RUNNING: 'running',
-  COMPLETED: 'completed',
-  FAILED: 'failed',
-} as const;
-
-export type ImportJobStatus = (typeof ImportJobStatus)[keyof typeof ImportJobStatus];
 
 // ---- Database Entity Interfaces ----
 
@@ -247,50 +237,6 @@ export interface AdminSession {
   token_hash: string;
   expires_at: Date;
   created_at: Date;
-}
-
-/** WordPress import jobs table entity */
-export interface WordPressImportJob {
-  id: string;
-  status: ImportJobStatus;
-  started_at: Date;
-  completed_at: Date | null;
-  total_fetched: number;
-  total_imported: number;
-  total_skipped: number;
-  total_failed: number;
-  error_message: string | null;
-  triggered_by: string;
-}
-
-/** Progress counts used during WordPress import */
-export interface ImportCounts {
-  total_fetched: number;
-  total_imported: number;
-  total_skipped: number;
-  total_failed: number;
-}
-
-/** WordPress API post shape (subset) */
-export interface WordPressPost {
-  title: { rendered: string };
-  content: { rendered: string };
-  excerpt: { rendered: string };
-  slug: string;
-  date: string;
-  _embedded?: {
-    'wp:featuredmedia'?: Array<{ source_url?: string }>;
-  };
-}
-
-/** Extracted post data from WordPress */
-export interface ExtractedPost {
-  title: string;
-  contentHtml: string;
-  excerpt: string;
-  slug: string;
-  date: string;
-  featuredImageUrl: string | null;
 }
 
 // ---- API Response Types ----

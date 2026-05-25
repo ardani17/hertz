@@ -1,5 +1,5 @@
 // ============================================
-// Horizon Trader Platform — Credit Service
+// Hertz Trader Platform — Credit Service
 // ============================================
 
 import { query, queryOne, execute, type DbClient } from '../db/query';

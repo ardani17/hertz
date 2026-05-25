@@ -35,7 +35,7 @@ export function QuotePostCard({ post }: { post: HertzPost | null }) {
         <div className={styles.quoteAuthor}>
           <strong>{post.author.name}</strong>
           <em>
-            {post.market?.pair ?? (post.category === 'trading_room' || post.category === 'trading' ? 'Trading Room' : 'Horizon')}
+            {post.market?.pair ?? (post.category === 'trading_room' || post.category === 'trading' ? 'Trading Room' : 'Hertz')}
           </em>
         </div>
         <p>{post.content.text}</p>

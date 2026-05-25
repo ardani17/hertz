@@ -50,7 +50,7 @@ export class PushNotificationService {
       await this.sendToUser(recipient.user_id, {
         eventType: 'dm.message.created',
         title: 'Pesan baru',
-        body: 'Anda menerima pesan baru di Horizon.',
+        body: 'Anda menerima pesan baru di Hertz.',
         payload: {
           type: 'dm',
           conversationId: params.conversationId,

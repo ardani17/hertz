@@ -1,5 +1,5 @@
 // ============================================
-// Horizon Trader Platform — Auth Middleware
+// HERTZ Platform — Auth Middleware
 // ============================================
 
 import type { MiddlewareFn } from './types';
@@ -26,7 +26,7 @@ export interface AuthMiddlewareOptions {
 
 /**
  * Auth middleware: validates that the message sender is a member of the
- * Horizon Telegram group before allowing the pipeline to continue.
+ * Hertz Telegram group before allowing the pipeline to continue.
  *
  * If the sender is not a group member, the pipeline halts silently
  * (no article is created, per Requirement 11.2).

@@ -6,11 +6,11 @@ product
 
 ## Users
 
-Trader forex Indonesia dan regional (Asia) yang sudah aktif di chart, Telegram, atau komunitas trading. Mereka membuka Horizon di sesi London/New York untuk membaca bias market, mencatat jurnal, dan berinteraksi di feed sosial — sering dari mobile di malam hari atau desktop di jam kerja.
+Trader forex Indonesia dan regional (Asia) yang sudah aktif di chart, Telegram, atau komunitas trading. Mereka membuka Hertz di sesi London/New York untuk membaca bias market, mencatat jurnal, dan berinteraksi di feed sosial — sering dari mobile di malam hari atau desktop di jam kerja.
 
 ## Product Purpose
 
-Horizon menggabungkan data market, analisa (Outlook), komunitas (HERTZ), blog riset, dan tools gratis dalam satu workspace. Sukses = trader mendapat konteks sebelum entry, punya jejak jurnal yang konsisten, dan merasa platform ini milik komunitas trader — bukan template SaaS generik.
+Hertz menggabungkan data market, analisa (Outlook), komunitas (HERTZ), blog riset, dan tools gratis dalam satu workspace. Sukses = trader mendapat konteks sebelum entry, punya jejak jurnal yang konsisten, dan merasa platform ini milik komunitas trader — bukan template SaaS generik.
 
 ## Brand Personality
 

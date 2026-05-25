@@ -13,7 +13,7 @@ describe('memberProfile validation', () => {
         bio: 'Trader swing pasif.',
         location: 'Jakarta, ID',
         hobbies: ['hiking', 'fotografi'],
-        socialLinks: { x: 'horizontrader', instagram: '' },
+        socialLinks: { x: 'hertztrader', instagram: '' },
         tradingExperienceLevel: 'intermediate',
         tradingMarkets: ['forex', 'crypto'],
         tradingSinceYear: 2019,
@@ -23,7 +23,7 @@ describe('memberProfile validation', () => {
       bio: 'Trader swing pasif.',
       location: 'Jakarta, ID',
       hobbies: ['hiking', 'fotografi'],
-      socialLinks: { x: 'horizontrader' },
+      socialLinks: { x: 'hertztrader' },
       tradingExperienceLevel: 'intermediate',
       tradingMarkets: ['forex', 'crypto'],
       tradingSinceYear: 2019,
@@ -46,7 +46,7 @@ describe('memberProfile validation', () => {
   it('rejects unknown social platforms', () => {
     expect(() =>
       sanitizeMemberProfileInput({
-        socialLinks: { tiktok: 'horizon' },
+        socialLinks: { tiktok: 'hertz' },
       }),
     ).toThrow('Platform sosial "tiktok" tidak didukung');
   });
@@ -64,7 +64,7 @@ describe('memberProfile validation', () => {
       profile_bio: '  Bio singkat  ',
       profile_location: 'Bandung',
       profile_hobbies: ['travel', 'membaca'],
-      profile_social_links: { youtube: 'horizontube', x: 'horizon' },
+      profile_social_links: { youtube: 'hertztube', x: 'hertz' },
       profile_trading: {
         experienceLevel: 'advanced',
         markets: ['forex'],
@@ -77,7 +77,7 @@ describe('memberProfile validation', () => {
     expect(dto.bio).toBe('Bio singkat');
     expect(dto.location).toBe('Bandung');
     expect(dto.hobbies).toEqual(['travel', 'membaca']);
-    expect(dto.socialLinks).toEqual({ youtube: 'horizontube', x: 'horizon' });
+    expect(dto.socialLinks).toEqual({ youtube: 'hertztube', x: 'hertz' });
     expect(dto.trading.experienceLevel).toBe('advanced');
     expect(TRADING_LEVEL_LABELS[dto.trading.experienceLevel!]).toBe('Mahir');
     expect(dto.updatedAt).toBe('2026-05-20T00:00:00.000Z');
@@ -86,7 +86,7 @@ describe('memberProfile validation', () => {
 
 describe('socialLinks helper', () => {
   it('builds safe platform urls from handles', () => {
-    expect(buildSocialUrl('instagram', 'horizon.id')).toBe('https://instagram.com/horizon.id');
-    expect(buildSocialUrl('telegram', 'horizon_group')).toBe('https://t.me/horizon_group');
+    expect(buildSocialUrl('instagram', 'hertz.id')).toBe('https://instagram.com/hertz.id');
+    expect(buildSocialUrl('telegram', 'hertz_group')).toBe('https://t.me/hertz_group');
   });
 });

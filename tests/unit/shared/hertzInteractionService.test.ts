@@ -80,13 +80,17 @@ function serviceWithRepos({
     togglePlainRepost: vi.fn().mockResolvedValue(toggleResult),
     setPlainRepostPostId: vi.fn().mockResolvedValue(undefined),
   };
+  const postStats = {
+    incr: vi.fn().mockResolvedValue(undefined),
+  };
   const hertz = {
     createPlainRepostPost: vi.fn().mockResolvedValue('repost-post-1'),
   };
   (service as unknown as { posts: typeof posts; reposts: typeof reposts; hertz: typeof hertz }).posts = posts;
   (service as unknown as { posts: typeof posts; reposts: typeof reposts; hertz: typeof hertz }).reposts = reposts;
+  (service as unknown as { postStats: typeof postStats }).postStats = postStats;
   (service as unknown as { posts: typeof posts; reposts: typeof reposts; hertz: typeof hertz }).hertz = hertz;
-  return { service, posts, reposts, hertz };
+  return { service, posts, reposts, postStats, hertz };
 }
 
 describe('HertzRepostService plain reposts', () => {

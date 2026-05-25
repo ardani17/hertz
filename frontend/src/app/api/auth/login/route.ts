@@ -1,5 +1,5 @@
 // ============================================
-// Horizon Trader Platform — Admin Login API
+// Hertz Trader Platform — Admin Login API
 // ============================================
 
 import { NextRequest, NextResponse } from 'next/server';
