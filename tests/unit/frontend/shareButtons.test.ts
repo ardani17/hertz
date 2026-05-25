@@ -1,31 +1,53 @@
 import { describe, expect, it, vi } from 'vitest';
 import {
+  SHARE_LINK_ERROR_MESSAGE,
+  SHARE_LINK_SUCCESS_MESSAGE,
   buildCanonicalPostUrl,
-  buildHertzShareTargets,
-  canUseNativeShare,
-} from '../../../frontend/src/components/feed/HertzShareSheet';
+  copyShareLinkWithFeedback,
+  copyTextToClipboard,
+} from '../../../frontend/src/lib/shareLink';
 
-describe('HERTZ share sheet targets', () => {
-  it('builds canonical social share targets for a HERTZ post', () => {
-    const canonicalUrl = buildCanonicalPostUrl('hz_abc', 'https://horizon.cloudnexify.com');
-    const targets = buildHertzShareTargets({
-      shortId: 'hz_abc',
-      text: 'Setup XAUUSD #gold',
-      origin: 'https://horizon.cloudnexify.com',
-    });
-
-    expect(canonicalUrl).toBe('https://horizon.cloudnexify.com/hertz/post/hz_abc');
-    expect(targets.map((target) => target.label)).toEqual(['Telegram', 'WhatsApp', 'X', 'Facebook']);
-    expect(targets[0].href).toContain('https://t.me/share/url?');
-    expect(targets[0].href).toContain(encodeURIComponent(canonicalUrl));
-    expect(targets[1].href).toContain('https://wa.me/?text=');
-    expect(targets[2].href).toContain('https://twitter.com/intent/tweet?');
-    expect(targets[3].href).toContain('https://www.facebook.com/sharer/sharer.php?');
+describe('share link helpers', () => {
+  it('builds canonical HERTZ post URLs', () => {
+    expect(buildCanonicalPostUrl('hz_abc', 'https://horizon.cloudnexify.com')).toBe(
+      'https://horizon.cloudnexify.com/hertz/post/hz_abc',
+    );
+    expect(buildCanonicalPostUrl('hz_abc', 'https://horizon.cloudnexify.com/')).toBe(
+      'https://horizon.cloudnexify.com/hertz/post/hz_abc',
+    );
   });
 
-  it('only enables native share when the browser exposes navigator.share', () => {
-    expect(canUseNativeShare({ share: vi.fn() })).toBe(true);
-    expect(canUseNativeShare({ clipboard: { writeText: vi.fn() } })).toBe(false);
-    expect(canUseNativeShare(null)).toBe(false);
+  it('copies text to the clipboard when available', async () => {
+    const writeText = vi.fn().mockResolvedValue(undefined);
+    vi.stubGlobal('navigator', { clipboard: { writeText } });
+
+    await expect(copyTextToClipboard('https://example.com/post/1')).resolves.toBe(true);
+    expect(writeText).toHaveBeenCalledWith('https://example.com/post/1');
+
+    vi.unstubAllGlobals();
+  });
+
+  it('returns false when clipboard write fails', async () => {
+    const writeText = vi.fn().mockRejectedValue(new Error('denied'));
+    vi.stubGlobal('navigator', { clipboard: { writeText } });
+
+    await expect(copyTextToClipboard('https://example.com/post/1')).resolves.toBe(false);
+
+    vi.unstubAllGlobals();
+  });
+
+  it('shows HERTZ-style toast feedback after copying a share link', async () => {
+    const writeText = vi.fn().mockResolvedValue(undefined);
+    const showToast = vi.fn();
+    vi.stubGlobal('navigator', { clipboard: { writeText } });
+
+    await expect(copyShareLinkWithFeedback('https://example.com/blog/post', showToast)).resolves.toBe(true);
+    expect(showToast).toHaveBeenCalledWith(SHARE_LINK_SUCCESS_MESSAGE, 'success');
+
+    writeText.mockRejectedValueOnce(new Error('denied'));
+    await expect(copyShareLinkWithFeedback('https://example.com/blog/post', showToast)).resolves.toBe(false);
+    expect(showToast).toHaveBeenCalledWith(SHARE_LINK_ERROR_MESSAGE, 'error');
+
+    vi.unstubAllGlobals();
   });
 });

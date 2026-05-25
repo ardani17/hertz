@@ -11,7 +11,7 @@ import { useDismissMenu } from '@/lib/useDismissMenu';
 import { ReportDialog } from '@/features/hertz/post-menu/ReportDialog';
 import { HertzDeletePostDialog } from './HertzDeletePostDialog';
 import { MoreIcon } from './HertzIcons';
-import { buildCanonicalPostUrl } from './HertzShareSheet';
+import { buildCanonicalPostUrl, copyShareLinkWithFeedback } from '@/lib/shareLink';
 import styles from './HertzPostMenu.module.css';
 
 export function HertzPostMenu({ post, currentUser }: { post: HertzPost; currentUser: MemberSessionUser | null }) {
@@ -85,8 +85,7 @@ export function HertzPostMenu({ post, currentUser }: { post: HertzPost; currentU
   }
 
   async function copyLink() {
-    await navigator.clipboard?.writeText(buildCanonicalPostUrl(post.shortId, window.location.origin));
-    showToast('Link disalin.', 'success');
+    await copyShareLinkWithFeedback(buildCanonicalPostUrl(post.shortId, window.location.origin), showToast);
     closeMenu();
   }
 

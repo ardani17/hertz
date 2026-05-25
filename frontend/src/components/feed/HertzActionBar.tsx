@@ -4,8 +4,8 @@ import { useState } from 'react';
 import type { MemberSessionUser, HertzPost } from '@shared/types';
 import { Button } from '@/components/ui/button';
 import { useToast } from '@/components/ui/Toast';
+import { buildCanonicalPostUrl, copyShareLinkWithFeedback } from '@/lib/shareLink';
 import { BookmarkIcon, CommentIcon, LoveIcon, RepostIcon, ShareIcon } from './HertzIcons';
-import { HertzShareSheet } from './HertzShareSheet';
 import styles from './HertzActionBar.module.css';
 
 export function HertzActionBar({
@@ -24,7 +24,6 @@ export function HertzActionBar({
   const [bookmarked, setBookmarked] = useState(post.viewer.hasBookmarked);
   const [reposted, setReposted] = useState(post.viewer.hasReposted);
   const [reposts, setReposts] = useState(post.counts.reposts);
-  const [shareOpen, setShareOpen] = useState(false);
 
   function requireLogin() {
     if (!currentUser) {
@@ -106,6 +105,13 @@ export function HertzActionBar({
     window.location.assign(`/hertz/post/${post.shortId}#comments`);
   }
 
+  async function copyShareLink() {
+    await copyShareLinkWithFeedback(
+      buildCanonicalPostUrl(post.shortId, window.location.origin),
+      showToast,
+    );
+  }
+
   return (
     <div className={styles.wrap}>
       <div className={styles.actions}>
@@ -121,13 +127,10 @@ export function HertzActionBar({
         <Button type="button" variant="ghost" size="sm" onClick={toggleBookmark} className={bookmarked ? styles.active : ''} disabled={pendingAction === 'bookmark'} aria-label={bookmarked ? 'Batal bookmark' : 'Bookmark'} aria-pressed={bookmarked}>
           <BookmarkIcon /> <span>Simpan</span>
         </Button>
-        <Button type="button" variant="ghost" size="sm" onClick={() => setShareOpen(true)} aria-label="Bagikan postingan" aria-haspopup="dialog">
+        <Button type="button" variant="ghost" size="sm" onClick={copyShareLink} aria-label="Bagikan postingan">
           <ShareIcon /> <span>Bagikan</span>
         </Button>
       </div>
-      {shareOpen ? (
-        <HertzShareSheet post={post} onClose={() => setShareOpen(false)} onMessage={(msg) => showToast(msg, 'success')} />
-      ) : null}
     </div>
   );
 }

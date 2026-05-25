@@ -1,9 +1,11 @@
 'use client';
 
-import { useCallback, useEffect, useMemo, useState, type FormEvent } from 'react';
+import { useCallback, useEffect, useState, type FormEvent } from 'react';
 import type { MemberSessionUser } from '@shared/types';
 import { CommentIcon, LoveIcon, ShareIcon } from '@/components/feed/HertzIcons';
 import { HertzTelegramLogin } from '@/components/feed/HertzTelegramLogin';
+import { useToast } from '@/components/ui/Toast';
+import { copyShareLinkWithFeedback } from '@/lib/shareLink';
 import styles from './OutlookEngagement.module.css';
 
 interface CommentData {
@@ -13,11 +15,6 @@ interface CommentData {
   is_anonymous: boolean;
   created_at: string;
   user_id: string | null;
-}
-
-interface ShareTarget {
-  label: string;
-  href: string;
 }
 
 interface OutlookEngagementProps {
@@ -38,30 +35,17 @@ function formatCommentDate(dateStr: string): string {
   });
 }
 
-function buildShareTargets(title: string, excerpt: string, url: string): ShareTarget[] {
-  const text = `${title}${excerpt ? ` - ${excerpt}` : ''}`;
-  const encodedUrl = encodeURIComponent(url);
-  const encodedText = encodeURIComponent(text);
-  const encodedTextWithUrl = encodeURIComponent(`${text} ${url}`);
-
-  return [
-    { label: 'Telegram', href: `https://t.me/share/url?url=${encodedUrl}&text=${encodedText}` },
-    { label: 'WhatsApp', href: `https://wa.me/?text=${encodedTextWithUrl}` },
-    { label: 'X', href: `https://twitter.com/intent/tweet?url=${encodedUrl}&text=${encodedText}` },
-    { label: 'Facebook', href: `https://www.facebook.com/sharer/sharer.php?u=${encodedUrl}` },
-  ];
-}
-
 export function OutlookEngagement({
   articleId,
-  title,
-  excerpt,
+  title: _title,
+  excerpt: _excerpt,
   url,
   initialLikeCount,
   initialCommentCount,
   currentUser,
   contentLabel = 'Outlook',
 }: OutlookEngagementProps) {
+  const { showToast } = useToast();
   const [comments, setComments] = useState<CommentData[]>([]);
   const [commentsLoading, setCommentsLoading] = useState(true);
   const [commentCount, setCommentCount] = useState(initialCommentCount);
@@ -71,10 +55,6 @@ export function OutlookEngagement({
   const [liked, setLiked] = useState(false);
   const [likeCount, setLikeCount] = useState(initialLikeCount);
   const [likePending, setLikePending] = useState(false);
-  const [shareOpen, setShareOpen] = useState(false);
-  const [nativeShareAvailable, setNativeShareAvailable] = useState(false);
-
-  const shareTargets = useMemo(() => buildShareTargets(title, excerpt, url), [excerpt, title, url]);
 
   const fetchComments = useCallback(async () => {
     try {
@@ -93,8 +73,6 @@ export function OutlookEngagement({
   }, [articleId]);
 
   useEffect(() => {
-    setNativeShareAvailable(typeof navigator.share === 'function');
-
     async function fetchLikeStatus() {
       try {
         const response = await fetch(`/api/likes?article_id=${articleId}`);
@@ -180,25 +158,7 @@ export function OutlookEngagement({
   }
 
   async function copyLink() {
-    try {
-      await navigator.clipboard.writeText(url);
-      setMessage('Link disalin.');
-      setShareOpen(false);
-    } catch {
-      setMessage('Link gagal disalin.');
-    }
-  }
-
-  async function nativeShare() {
-    if (typeof navigator.share !== 'function') return;
-    try {
-      await navigator.share({ title, text: excerpt || title, url });
-      setMessage(`${contentLabel} siap dibagikan.`);
-      setShareOpen(false);
-    } catch (error) {
-      if (error instanceof DOMException && error.name === 'AbortError') return;
-      setMessage('Share bawaan gagal dibuka.');
-    }
+    await copyShareLinkWithFeedback(url, showToast);
   }
 
   return (
@@ -223,9 +183,8 @@ export function OutlookEngagement({
         </button>
         <button
           type="button"
-          onClick={() => setShareOpen((open) => !open)}
+          onClick={copyLink}
           aria-label={`Bagikan ${contentLabel}`}
-          aria-expanded={shareOpen}
         >
           <ShareIcon />
           <span>Bagikan</span>
@@ -233,28 +192,6 @@ export function OutlookEngagement({
       </div>
 
       {message ? <p className={styles.message}>{message}</p> : null}
-
-      {shareOpen ? (
-        <div className={styles.sharePanel}>
-          <div className={styles.shareHeader}>
-            <strong>Bagikan {contentLabel}</strong>
-            <button type="button" onClick={() => setShareOpen(false)} aria-label="Tutup share panel">
-              Tutup
-            </button>
-          </div>
-          <div className={styles.shareTargets}>
-            {nativeShareAvailable ? (
-              <button type="button" onClick={nativeShare}>Share bawaan</button>
-            ) : null}
-            {shareTargets.map((target) => (
-              <a key={target.label} href={target.href} target="_blank" rel="noopener noreferrer">
-                {target.label}
-              </a>
-            ))}
-            <button type="button" onClick={copyLink}>Salin link</button>
-          </div>
-        </div>
-      ) : null}
 
       <section id="comments" className={styles.section} aria-label="Komentar">
         <div className={styles.sectionHeader}>
