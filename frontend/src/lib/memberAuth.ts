@@ -11,9 +11,26 @@ export async function getMemberSessionToken(): Promise<string | null> {
   return cookieStore.get(MEMBER_SESSION_COOKIE)?.value ?? null;
 }
 
+async function validateMemberSession(
+  token: string | null,
+  options: { refreshCookie?: boolean } = {},
+): Promise<MemberSessionUser | null> {
+  const validated = await sessionService.validateToken(token);
+  if (!validated) return null;
+  if (options.refreshCookie && token) {
+    await setMemberSessionCookie(token, validated.expiresAt);
+  }
+  return validated.user;
+}
+
 export async function getCurrentMember(): Promise<MemberSessionUser | null> {
   const token = await getMemberSessionToken();
-  return sessionService.validateToken(token);
+  return validateMemberSession(token);
+}
+
+export async function getCurrentMemberAndRefreshCookie(): Promise<MemberSessionUser | null> {
+  const token = await getMemberSessionToken();
+  return validateMemberSession(token, { refreshCookie: true });
 }
 
 export function parseBearerToken(authorization: string | null): string | null {
@@ -42,14 +59,14 @@ export async function resolveCurrentMemberFromRequest(
   const allowCookie = options.allowCookie ?? true;
   if (allowCookie) {
     const cookieToken = request.cookies.get(MEMBER_SESSION_COOKIE)?.value ?? null;
-    const cookieUser = await sessionService.validateToken(cookieToken);
+    const cookieUser = await validateMemberSession(cookieToken, { refreshCookie: true });
     if (cookieUser) {
       return { user: cookieUser, token: cookieToken, source: 'cookie' };
     }
   }
 
   const bearerToken = getBearerTokenFromRequest(request);
-  const bearerUser = await sessionService.validateToken(bearerToken);
+  const bearerUser = await validateMemberSession(bearerToken);
   if (bearerUser) {
     return { user: bearerUser, token: bearerToken, source: 'bearer' };
   }

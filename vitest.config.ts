@@ -8,6 +8,7 @@ export default defineConfig({
     alias: {
       '@': `${rootDir}frontend/src`,
       '@shared': `${rootDir}shared`,
+      'next/headers': `${rootDir}tests/mocks/next-headers.ts`,
     },
   },
   test: {

@@ -32,12 +32,15 @@ export const RATE_LIMITS = {
   WINDOW_MS: 60_000,
 } as const;
 
+/** Sliding idle timeout for member and admin sessions (24 hours). */
+export const SESSION_IDLE_MS = 24 * 60 * 60 * 1000;
+
 /** Session configuration */
 export const SESSION = {
   /** Session cookie name */
   COOKIE_NAME: 'horizon_session',
   /** Session duration in milliseconds (24 hours) */
-  DURATION_MS: 24 * 60 * 60 * 1000,
+  DURATION_MS: SESSION_IDLE_MS,
 } as const;
 
 /** Content limits */

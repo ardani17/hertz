@@ -25,17 +25,23 @@ function request(path: string, init: RequestInit = {}) {
 function mockMemberSessionService() {
   vi.doMock('@shared/services/memberSessionService', () => ({
     MemberSessionService: vi.fn().mockImplementation(() => ({
-      validateToken: vi.fn(async (token: string | null) => (token === 'valid-token' ? user : null)),
+      validateToken: vi.fn(async (token: string | null) =>
+        token === 'valid-token' ? { user, expiresAt: new Date('2026-05-22T00:00:00.000Z') } : null,
+      ),
       createSession: vi.fn(async () => ({
         token: 'new-mobile-token',
         expiresAt: new Date('2026-05-22T00:00:00.000Z'),
       })),
       deleteSession: vi.fn(async () => undefined),
-      refreshSession: vi.fn(async () => ({
-        token: 'refreshed-token',
-        expiresAt: new Date('2026-05-22T00:00:00.000Z'),
-        user,
-      })),
+      refreshSession: vi.fn(async (token: string | null) =>
+        token === 'valid-token'
+          ? {
+              token: 'valid-token',
+              expiresAt: new Date('2026-05-22T00:00:00.000Z'),
+              user,
+            }
+          : null,
+      ),
     })),
     hashMemberSessionToken: vi.fn((token: string) => `hash:${token}`),
   }));

@@ -16,8 +16,8 @@ export class MemberSessionRepository {
     expiresAt: Date;
   }, client?: DbClient): Promise<void> {
     await execute(
-      `INSERT INTO hertz_member_sessions (user_id, token_hash, expires_at)
-       VALUES ($1, $2, $3)`,
+      `INSERT INTO hertz_member_sessions (user_id, token_hash, expires_at, last_used_at)
+       VALUES ($1, $2, $3, NOW())`,
       [params.userId, params.tokenHash, params.expiresAt.toISOString()],
       client,
     );
@@ -33,10 +33,12 @@ export class MemberSessionRepository {
     );
   }
 
-  async touch(id: string, client?: DbClient): Promise<void> {
+  async touchAndExtend(id: string, expiresAt: Date, client?: DbClient): Promise<void> {
     await execute(
-      'UPDATE hertz_member_sessions SET last_used_at = NOW() WHERE id = $1',
-      [id],
+      `UPDATE hertz_member_sessions
+       SET last_used_at = NOW(), expires_at = $2
+       WHERE id = $1`,
+      [id, expiresAt.toISOString()],
       client,
     );
   }

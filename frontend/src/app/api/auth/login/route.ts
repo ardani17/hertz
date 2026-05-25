@@ -141,8 +141,8 @@ export async function POST(request: NextRequest) {
     }
 
     // Create session and set cookie
-    const token = await createSession(user.id);
-    await setSessionCookie(token);
+    const { token, expiresAt } = await createSession(user.id);
+    await setSessionCookie(token, expiresAt);
 
     // Log successful login
     await activityLog.log({

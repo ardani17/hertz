@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { AdminSpaContent } from '@/components/spa/AdminSpaContent';
 import { AdminSidebar } from './AdminSidebar';
 import { AdminHeader } from './AdminHeader';
@@ -17,6 +17,14 @@ interface AdminShellProps {
  */
 export function AdminShell({ username, children }: AdminShellProps) {
   const [sidebarOpen, setSidebarOpen] = useState(false);
+
+  useEffect(() => {
+    void fetch('/api/auth/session/refresh', {
+      method: 'POST',
+      credentials: 'same-origin',
+      cache: 'no-store',
+    }).catch(() => null);
+  }, []);
 
   return (
     <div className={styles.adminLayout}>

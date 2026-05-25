@@ -1,10 +1,14 @@
 import { createHmac, randomUUID } from 'crypto';
+import { SESSION_IDLE_MS } from '../constants';
 import { MemberSessionRepository } from '../repositories/memberSessionRepository';
 import { MembershipRepository } from '../repositories/membershipRepository';
 import { MembershipService, toMemberSessionUser } from './membershipService';
 import type { MemberSessionUser } from '../types/membership';
 
-const SESSION_DURATION_MS = 7 * 24 * 60 * 60 * 1000;
+export type ValidatedMemberSession = {
+  user: MemberSessionUser;
+  expiresAt: Date;
+};
 
 export function hashMemberSessionToken(token: string): string {
   const secret = process.env.MEMBER_SESSION_SECRET
@@ -20,7 +24,7 @@ export class MemberSessionService {
 
   async createSession(userId: string): Promise<{ token: string; expiresAt: Date }> {
     const token = randomUUID();
-    const expiresAt = new Date(Date.now() + SESSION_DURATION_MS);
+    const expiresAt = new Date(Date.now() + SESSION_IDLE_MS);
     await this.sessions.create({
       userId,
       tokenHash: hashMemberSessionToken(token),
@@ -29,7 +33,7 @@ export class MemberSessionService {
     return { token, expiresAt };
   }
 
-  async validateToken(token: string | null): Promise<MemberSessionUser | null> {
+  async validateToken(token: string | null): Promise<ValidatedMemberSession | null> {
     if (!token) return null;
     const tokenHash = hashMemberSessionToken(token);
     const session = await this.sessions.findByTokenHash(tokenHash);
@@ -50,8 +54,9 @@ export class MemberSessionService {
       if (!stillMember) return null;
     }
 
-    await this.sessions.touch(session.id);
-    return toMemberSessionUser(user);
+    const nextExpiresAt = new Date(Date.now() + SESSION_IDLE_MS);
+    await this.sessions.touchAndExtend(session.id, nextExpiresAt);
+    return { user: toMemberSessionUser(user), expiresAt: nextExpiresAt };
   }
 
   async deleteSession(token: string | null): Promise<void> {
@@ -60,10 +65,8 @@ export class MemberSessionService {
   }
 
   async refreshSession(token: string | null): Promise<{ token: string; expiresAt: Date; user: MemberSessionUser } | null> {
-    const user = await this.validateToken(token);
-    if (!user) return null;
-    await this.deleteSession(token);
-    const session = await this.createSession(user.id);
-    return { ...session, user };
+    const validated = await this.validateToken(token);
+    if (!validated || !token) return null;
+    return { token, expiresAt: validated.expiresAt, user: validated.user };
   }
 }
