@@ -14,10 +14,10 @@ npm run db:seed:all
 npm run db:seed
 
 # Satu file via docker
-docker exec -i hertz-db psql -U hertz_app -d horizon -v ON_ERROR_STOP=1 -f - < db/seeds/001_horizon_demo_seed.sql
+docker exec -i hertz-db psql -U hertz_app -d hertz -v ON_ERROR_STOP=1 -f - < db/seeds/001_hertz_demo_seed.sql
 
 # Satu file via node
-node scripts/run-db-seeds.js db/seeds/001_horizon_demo_seed.sql
+node scripts/run-db-seeds.js db/seeds/001_hertz_demo_seed.sql
 ```
 
 **Prasyarat:** PostgreSQL jalan (`hertz-db` docker atau `POSTGRES_*` di `.env`), migrasi termasuk `016_member_public_profile.sql`, dan `ADMIN_USERNAME` / `ADMIN_PASSWORD` untuk login admin web.
@@ -29,9 +29,9 @@ node scripts/run-db-seeds.js db/seeds/001_horizon_demo_seed.sql
 | File | Isi |
 |------|-----|
 | `db/migrations/002_seed_data.sql` | Credit settings + admin default (via migrasi) |
-| `db/seeds/001_horizon_demo_seed.sql` | **Unified demo seed** — users, profil publik, HERTZ feed, Outlook, blog, DM, notifikasi, challenge, moderation, push, API keys |
+| `db/seeds/001_hertz_demo_seed.sql` | **Unified demo seed** — users, profil publik, HERTZ feed, Outlook, DM, notifikasi, challenge, moderation, push, API keys |
 
-Cukup jalankan **satu file** `001_horizon_demo_seed.sql` (otomatis lewat `npm run db:seed`).
+Cukup jalankan **satu file** `001_hertz_demo_seed.sql` (otomatis lewat `npm run db:seed`).
 
 Seed **idempotent**: cleanup prefix tetap di awal transaksi, lalu `INSERT ... ON CONFLICT DO UPDATE` untuk users dan upsert di tempat yang relevan.
 
@@ -109,11 +109,6 @@ Edge cases (`011` pending, `013` banned) sengaja tanpa bio lengkap untuk audit e
 - 9 artikel outlook (video / chart / long-read + metadata)
 - 1 hidden outlook (`hidden-outlook-audit`)
 
-### Blog (`/blog`)
-- 6 artikel published (`category=blog`, `source=wordpress`)
-- 1 draft blog
-- Komentar member + anonim, likes
-
 ### Direct Message (`/hertz/messages`)
 - 5 percakapan, 22 pesan, 1 attachment
 - Block antar user (Deka ↔ Bayu)
@@ -133,9 +128,8 @@ Edge cases (`011` pending, `013` banned) sengaja tanpa bio lengkap untuk audit e
 
 ### Admin
 - `/admin/hertz` — pending Telegram post (`hzx_demo08`)
-- `/admin/logs` — 6 activity logs seed
+- `/admin/logs` — 4 activity logs seed
 - API keys: 1 active + 1 revoked
-- WordPress import jobs: completed + failed
 
 ### Mobile push (backend)
 - `device_tokens` android/ios
@@ -161,21 +155,10 @@ URL contoh: `https://hertz.cloudnexify.com/hertz/post/hzx_demo01`
 
 ---
 
-## Blog slugs
-
-- `checklist-risk-management-sesi-london`
-- `jurnal-trading-proses-review-konsisten`
-- `prop-firm-challenge-hindari-overtrading`
-- `swing-indeks-disiplin-h4-close`
-- `crypto-playbook-btc-range`
-- `options-defined-risk-hedging`
-
----
-
 ## Reset / ulang seed
 
 ```bash
-docker exec -i hertz-db psql -U hertz_app -d horizon -v ON_ERROR_STOP=1 -f - < db/seeds/001_horizon_demo_seed.sql
+docker exec -i hertz-db psql -U hertz_app -d hertz -v ON_ERROR_STOP=1 -f - < db/seeds/001_hertz_demo_seed.sql
 # atau
 npm run db:seed
 ```

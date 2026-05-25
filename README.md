@@ -322,7 +322,7 @@ Data PostgreSQL disimpan di host directory (default: `./data/postgres`). Untuk b
 cp -r ./data/postgres /path/to/backup/
 
 # Atau gunakan pg_dump via container
-docker exec hertz-db pg_dump -U horizon_user horizon > backup.sql
+ docker exec hertz-db pg_dump -U hertz_app hertz > backup.sql
 ```
 
 ## Development
@@ -386,7 +386,7 @@ Migrasi dijalankan otomatis saat pertama kali PostgreSQL container di-start mela
 ## Struktur Proyek
 
 ```
-horizon-trader-platform/
+hertz/
 ├── bot/                    # Telegram Bot service
 │   ├── src/
 │   │   ├── commands/       # Command registry & types

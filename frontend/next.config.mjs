@@ -43,15 +43,6 @@ const nextConfig = {
     ],
     formats: ['image/avif', 'image/webp'],
   },
-  async redirects() {
-    return [
-      {
-        source: '/artikel/:slug',
-        destination: '/blog/:slug',
-        permanent: true,
-      },
-    ];
-  },
   async headers() {
     return [
       {
