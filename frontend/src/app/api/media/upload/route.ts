@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { queryOne, execute } from '@shared/db';
 import { validateSession } from '@/lib/auth';
 import { getCurrentMember } from '@/lib/memberAuth';
-import { validateHertzImageUploadType, validateMediaType } from '@shared/utils/mediaValidation';
+import { validateHertzMemberMediaUploadType, validateMediaType } from '@shared/utils/mediaValidation';
 import { randomUUID } from 'crypto';
 
 /**
@@ -49,10 +49,10 @@ export async function POST(request: NextRequest) {
 
     if (member) {
       try {
-        validateHertzImageUploadType(file.type);
+        validateHertzMemberMediaUploadType(file.type);
       } catch {
         return NextResponse.json(
-          { success: false, error: { error_code: 'MEDIA_TYPE_INVALID', message: 'Upload HERTZ hanya mendukung gambar JPG, PNG, atau WEBP.', details: { provided: file.type }, timestamp: new Date().toISOString() } },
+          { success: false, error: { error_code: 'MEDIA_TYPE_INVALID', message: 'Upload HERTZ hanya mendukung JPG, PNG, WEBP, MP4, WEBM, atau MOV.', details: { provided: file.type }, timestamp: new Date().toISOString() } },
           { status: 422 },
         );
       }
@@ -60,12 +60,6 @@ export async function POST(request: NextRequest) {
 
     // Determine media type
     const mediaType = file.type.startsWith('video/') ? 'video' : 'image';
-    if (!admin && mediaType !== 'image') {
-      return NextResponse.json(
-        { success: false, error: { error_code: 'MEDIA_TYPE_INVALID', message: 'Upload web phase awal hanya mendukung gambar', details: { provided: file.type }, timestamp: new Date().toISOString() } },
-        { status: 422 },
-      );
-    }
 
     // Generate unique file key
     const ext = file.name.split('.').pop()?.toLowerCase() || (mediaType === 'image' ? 'jpg' : 'mp4');

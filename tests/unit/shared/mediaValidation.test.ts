@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { validateHertzImageUploadType, validateMediaType } from '../../../shared/utils/mediaValidation';
+import { validateHertzImageUploadType, validateHertzMemberMediaUploadType, validateMediaType } from '../../../shared/utils/mediaValidation';
 import { MediaTypeInvalidError } from '../../../shared/utils/errors';
 
 describe('validateMediaType', () => {
@@ -150,5 +150,15 @@ describe('validateHertzImageUploadType', () => {
 
   it.each(['image/gif', 'image/svg+xml', 'video/mp4', 'application/pdf'])('rejects %s for HERTZ web posts', (mime) => {
     expect(() => validateHertzImageUploadType(mime)).toThrow(MediaTypeInvalidError);
+  });
+});
+
+describe('validateHertzMemberMediaUploadType', () => {
+  it.each(['image/jpeg', 'image/png', 'image/webp', 'video/mp4', 'video/webm', 'video/quicktime'])('accepts %s for HERTZ member posts', (mime) => {
+    expect(validateHertzMemberMediaUploadType(mime)).toBe(true);
+  });
+
+  it.each(['image/gif', 'image/svg+xml', 'video/ogg', 'video/x-msvideo', 'application/pdf'])('rejects %s for HERTZ member posts', (mime) => {
+    expect(() => validateHertzMemberMediaUploadType(mime)).toThrow(MediaTypeInvalidError);
   });
 });

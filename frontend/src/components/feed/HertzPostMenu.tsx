@@ -33,14 +33,6 @@ export function HertzPostMenu({ post, currentUser }: { post: HertzPost; currentU
   const [quoteContent, setQuoteContent] = useState('');
   const [market, setMarket] = useState({
     pair: post.market?.pair ?? '',
-    timeframe: post.market?.timeframe ?? '',
-    riskPercent: post.market?.riskPercent?.toString() ?? '',
-    direction: post.market?.direction ?? '',
-    entryZone: post.market?.entryZone ?? '',
-    entryPrice: post.market?.entryPrice?.toString() ?? '',
-    stopLoss: post.market?.stopLoss?.toString() ?? '',
-    takeProfit: post.market?.takeProfit?.toString() ?? '',
-    confidencePercent: post.market?.confidencePercent?.toString() ?? '',
   });
   const effectiveUser = currentUser ?? menuUser;
   const sameAuthorIdentity = Boolean(effectiveUser && (
@@ -186,22 +178,13 @@ export function HertzPostMenu({ post, currentUser }: { post: HertzPost; currentU
 
   async function submitMarket(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
-    const numberOrNull = (value: string) => {
-      const trimmed = value.trim();
-      if (!trimmed) return null;
-      const parsed = Number(trimmed);
-      return Number.isFinite(parsed) ? parsed : null;
-    };
+    const pair = market.pair.trim();
+    if (!pair) {
+      showToast('Pair wajib diisi untuk Trading Room.', 'warning');
+      return;
+    }
     const payload: MarketContext = {
-      pair: market.pair.trim() || null,
-      timeframe: market.timeframe.trim() || null,
-      riskPercent: numberOrNull(market.riskPercent),
-      direction: market.direction.trim() || null,
-      entryZone: market.entryZone.trim() || null,
-      entryPrice: numberOrNull(market.entryPrice),
-      stopLoss: numberOrNull(market.stopLoss),
-      takeProfit: numberOrNull(market.takeProfit),
-      confidencePercent: numberOrNull(market.confidencePercent),
+      pair,
     };
     const response = await fetch(`/api/hertz/posts/${post.shortId}`, {
       method: 'PATCH',
@@ -298,14 +281,6 @@ export function HertzPostMenu({ post, currentUser }: { post: HertzPost; currentU
               <Button type="button" variant="ghost" size="icon-sm" className={styles.closeButton} onClick={closePanels} aria-label="Tutup metadata market">×</Button>
             </div>
             <label>Pair<input value={market.pair} onChange={(event) => setMarketField('pair', event.target.value)} placeholder="XAUUSD" /></label>
-            <label>Timeframe<input value={market.timeframe} onChange={(event) => setMarketField('timeframe', event.target.value)} placeholder="H4" /></label>
-            <label>Risk %<input value={market.riskPercent} onChange={(event) => setMarketField('riskPercent', event.target.value)} inputMode="decimal" /></label>
-            <label>Direction<input value={market.direction} onChange={(event) => setMarketField('direction', event.target.value)} placeholder="Long / Short" /></label>
-            <label>Entry zone<input value={market.entryZone} onChange={(event) => setMarketField('entryZone', event.target.value)} /></label>
-            <label>Entry<input value={market.entryPrice} onChange={(event) => setMarketField('entryPrice', event.target.value)} inputMode="decimal" /></label>
-            <label>SL<input value={market.stopLoss} onChange={(event) => setMarketField('stopLoss', event.target.value)} inputMode="decimal" /></label>
-            <label>TP<input value={market.takeProfit} onChange={(event) => setMarketField('takeProfit', event.target.value)} inputMode="decimal" /></label>
-            <label>Confidence %<input value={market.confidencePercent} onChange={(event) => setMarketField('confidencePercent', event.target.value)} inputMode="decimal" /></label>
             <div className={styles.panelActions}>
               <Button type="button" variant="ghost" onClick={closePanels}>Batal</Button>
               <Button type="submit">Simpan market</Button>

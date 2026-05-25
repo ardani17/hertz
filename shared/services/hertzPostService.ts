@@ -123,6 +123,12 @@ function cleanText(value: unknown, max = 12000): string {
   return text;
 }
 
+function cleanOptionalText(value: unknown, max = 12000): string {
+  const text = typeof value === 'string' ? value.trim() : '';
+  if (text.length > max) throw new HertzValidationError(`Konten maksimal ${max} karakter`);
+  return text;
+}
+
 function optionalMediaIds(value: unknown): string[] {
   if (!value) return [];
   if (!Array.isArray(value)) throw new HertzValidationError('mediaIds harus array');
@@ -134,12 +140,8 @@ function optionalMediaIds(value: unknown): string[] {
 function validateMarket(category: HertzPostCategory, market: MarketContext | null | undefined): MarketContext | null {
   if (category !== 'trading_room') return null;
   const pair = typeof market?.pair === 'string' ? market.pair.trim() : '';
-  const riskPercent = market?.riskPercent;
   if (!pair) throw new HertzValidationError('Pair wajib diisi untuk Trading Room');
-  if (typeof riskPercent !== 'number' || !Number.isFinite(riskPercent) || riskPercent <= 0) {
-    throw new HertzValidationError('Risk wajib diisi untuk Trading Room');
-  }
-  return { ...market, pair, riskPercent };
+  return { ...market, pair };
 }
 
 function createShortIdCandidate(): string {
@@ -267,8 +269,11 @@ export class HertzPostService {
   async createWebPost(user: MemberSessionUser, input: HertzPostInput): Promise<HertzPost> {
     assertMember(user);
     const category = normalizeHertzCategory(input.category);
-    const content = cleanText(input.content);
     const mediaIds = optionalMediaIds(input.mediaIds);
+    if (category === 'trading_room' && mediaIds.length === 0) {
+      throw new HertzValidationError('Lampiran wajib untuk Trading Room');
+    }
+    const content = category === 'trading_room' ? cleanOptionalText(input.content) : cleanText(input.content);
     const market = validateMarket(category, input.market);
 
     const postId = await withTransaction(async (client) => {
@@ -395,7 +400,10 @@ export class HertzPostService {
     if (!isAdmin && normalizeHertzCategory(post.category) !== 'trading_room') {
       throw new HertzForbiddenError('Metadata market hanya dapat diedit pada post Trading');
     }
-    await this.posts.upsertMarketContext(post.id, market);
+    const nextMarket = normalizeHertzCategory(post.category) === 'trading_room'
+      ? validateMarket('trading_room', market)
+      : market;
+    await this.posts.upsertMarketContext(post.id, nextMarket);
   }
 
   async deletePost(postId: string, user: MemberSessionUser): Promise<void> {

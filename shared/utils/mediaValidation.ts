@@ -10,6 +10,12 @@ import { MediaTypeInvalidError } from './errors';
  */
 const ALLOWED_MIME_PREFIXES = ['image/', 'video/'] as const;
 const HERTZ_ALLOWED_IMAGE_MIME_TYPES = ['image/jpeg', 'image/png', 'image/webp'] as const;
+const HERTZ_ALLOWED_MEMBER_MEDIA_MIME_TYPES = [
+  ...HERTZ_ALLOWED_IMAGE_MIME_TYPES,
+  'video/mp4',
+  'video/webm',
+  'video/quicktime',
+] as const;
 
 /**
  * Validate that a MIME type is an accepted media type (image or video).
@@ -65,6 +71,25 @@ export function validateHertzImageUploadType(mimeType: string): boolean {
     throw new MediaTypeInvalidError(
       `Tipe file "${normalised}" tidak didukung. HERTZ hanya menerima gambar JPG, PNG, atau WEBP.`,
       { provided: normalised, allowed: [...HERTZ_ALLOWED_IMAGE_MIME_TYPES] },
+    );
+  }
+
+  return true;
+}
+
+export function validateHertzMemberMediaUploadType(mimeType: string): boolean {
+  if (!mimeType || typeof mimeType !== 'string') {
+    throw new MediaTypeInvalidError(
+      'Tipe file tidak valid: MIME type tidak boleh kosong',
+      { provided: mimeType ?? null },
+    );
+  }
+
+  const normalised = mimeType.trim().toLowerCase();
+  if (!HERTZ_ALLOWED_MEMBER_MEDIA_MIME_TYPES.includes(normalised as typeof HERTZ_ALLOWED_MEMBER_MEDIA_MIME_TYPES[number])) {
+    throw new MediaTypeInvalidError(
+      `Tipe file "${normalised}" tidak didukung. HERTZ hanya menerima JPG, PNG, WEBP, MP4, WEBM, atau MOV.`,
+      { provided: normalised, allowed: [...HERTZ_ALLOWED_MEMBER_MEDIA_MIME_TYPES] },
     );
   }
 

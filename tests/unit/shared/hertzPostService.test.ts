@@ -2,9 +2,20 @@ import { describe, expect, it, vi } from 'vitest';
 import {
   HertzForbiddenError,
   HertzPostService,
+  HertzValidationError,
 } from '../../../shared/services/hertzPostService';
 import type { HertzPostRow } from '../../../shared/repositories/hertzPostRepository';
 import type { MemberSessionUser } from '../../../shared/types/membership';
+
+vi.mock('../../../shared/db', async () => {
+  const actual = await vi.importActual<typeof import('../../../shared/db')>('../../../shared/db');
+  return {
+    ...actual,
+    withTransaction: vi.fn(async (fn: (client: unknown) => Promise<unknown>) => fn({})),
+    query: vi.fn().mockResolvedValue({ rows: [] }),
+    execute: vi.fn().mockResolvedValue({ rowCount: 1 }),
+  };
+});
 
 const owner: MemberSessionUser = {
   id: '550e8400-e29b-41d4-a716-446655440000',
@@ -85,6 +96,9 @@ function makePost(overrides: Partial<HertzPostRow> = {}): HertzPostRow {
 }
 
 function serviceWithPosts(posts: {
+  shortIdExists?: ReturnType<typeof vi.fn>;
+  createPost?: ReturnType<typeof vi.fn>;
+  attachMedia?: ReturnType<typeof vi.fn>;
   findById: ReturnType<typeof vi.fn>;
   updateContent?: ReturnType<typeof vi.fn>;
   updateStatus?: ReturnType<typeof vi.fn>;
@@ -93,6 +107,50 @@ function serviceWithPosts(posts: {
   const service = new HertzPostService();
   (service as unknown as { posts: typeof posts }).posts = posts;
   return service;
+}
+
+function webPostServiceWithPosts(posts: {
+  shortIdExists?: ReturnType<typeof vi.fn>;
+  createPost?: ReturnType<typeof vi.fn>;
+  attachMedia?: ReturnType<typeof vi.fn>;
+  upsertMarketContext?: ReturnType<typeof vi.fn>;
+}) {
+  const getPostDetail = vi.spyOn(HertzPostService.prototype, 'getPostDetail').mockResolvedValue({
+    id: '770e8400-e29b-41d4-a716-446655440002',
+    shortId: 'hz_owner1',
+    type: 'original',
+    source: 'web',
+    category: 'trading_room',
+    status: 'published',
+    content: { html: '', text: '', isTruncated: false },
+    author: { id: owner.id, name: owner.displayName, username: owner.username, badge: 'verified_member', avatarUrl: null },
+    media: [],
+    market: { pair: 'XAUUSD' },
+    counts: { comments: 0, pulse: 0, reposts: 0, views: 0 },
+    viewer: { hasPulsed: false, hasBookmarked: false, hasReposted: false, canEdit: true, canDelete: true },
+    createdAt: '2026-05-15T01:00:00.000Z',
+    updatedAt: '2026-05-15T01:00:00.000Z',
+    editedAt: null,
+  } as Awaited<ReturnType<HertzPostService['getPostDetail']>>);
+  const service = new HertzPostService();
+  (service as unknown as {
+    posts: {
+      shortIdExists: ReturnType<typeof vi.fn>;
+      createPost: ReturnType<typeof vi.fn>;
+      attachMedia: ReturnType<typeof vi.fn>;
+      upsertMarketContext: ReturnType<typeof vi.fn>;
+    };
+    logs: { log: ReturnType<typeof vi.fn> };
+  }).posts = {
+    shortIdExists: posts.shortIdExists ?? vi.fn().mockResolvedValue(false),
+    createPost: posts.createPost ?? vi.fn().mockResolvedValue({ id: '770e8400-e29b-41d4-a716-446655440002', short_id: 'hz_owner1' }),
+    attachMedia: posts.attachMedia ?? vi.fn().mockResolvedValue(undefined),
+    upsertMarketContext: posts.upsertMarketContext ?? vi.fn().mockResolvedValue(undefined),
+  };
+  (service as unknown as { logs: { log: ReturnType<typeof vi.fn> } }).logs = {
+    log: vi.fn().mockResolvedValue(undefined),
+  };
+  return { service, getPostDetail };
 }
 
 describe('HertzPostService owner post permissions', () => {
@@ -178,6 +236,76 @@ describe('HertzPostService owner post permissions', () => {
 
     await expect(service.updateMarketContext('hz_owner1', otherMember, { pair: 'XAUUSD' })).rejects.toThrow(HertzForbiddenError);
     expect(upsertMarketContext).not.toHaveBeenCalled();
+  });
+});
+
+describe('HertzPostService web post validation', () => {
+  it('allows trading posts with pair and media without content', async () => {
+    const createPost = vi.fn().mockResolvedValue({ id: '770e8400-e29b-41d4-a716-446655440002', short_id: 'hz_owner1' });
+    const attachMedia = vi.fn().mockResolvedValue(undefined);
+    const upsertMarketContext = vi.fn().mockResolvedValue(undefined);
+    const { service, getPostDetail } = webPostServiceWithPosts({ createPost, attachMedia, upsertMarketContext });
+
+    await service.createWebPost(owner, {
+      category: 'trading_room',
+      content: '',
+      mediaIds: ['550e8400-e29b-41d4-a716-446655440010'],
+      market: { pair: 'XAUUSD' },
+    });
+
+    expect(createPost).toHaveBeenCalledWith(expect.objectContaining({ content: '' }), expect.anything());
+    expect(attachMedia).toHaveBeenCalledWith(
+      '770e8400-e29b-41d4-a716-446655440002',
+      ['550e8400-e29b-41d4-a716-446655440010'],
+      expect.anything(),
+    );
+    expect(upsertMarketContext).toHaveBeenCalledWith(
+      '770e8400-e29b-41d4-a716-446655440002',
+      { pair: 'XAUUSD' },
+      expect.anything(),
+    );
+    getPostDetail.mockRestore();
+  });
+
+  it('requires media for trading posts before touching storage', async () => {
+    const createPost = vi.fn();
+    const { service, getPostDetail } = webPostServiceWithPosts({ createPost });
+
+    await expect(service.createWebPost(owner, {
+      category: 'trading_room',
+      content: '',
+      mediaIds: [],
+      market: { pair: 'XAUUSD' },
+    })).rejects.toThrow('Lampiran wajib untuk Trading Room');
+    expect(createPost).not.toHaveBeenCalled();
+    getPostDetail.mockRestore();
+  });
+
+  it('requires pair for trading posts before touching storage', async () => {
+    const createPost = vi.fn();
+    const { service, getPostDetail } = webPostServiceWithPosts({ createPost });
+
+    await expect(service.createWebPost(owner, {
+      category: 'trading_room',
+      content: '',
+      mediaIds: ['550e8400-e29b-41d4-a716-446655440010'],
+      market: { pair: '' },
+    })).rejects.toThrow('Pair wajib diisi untuk Trading Room');
+    expect(createPost).not.toHaveBeenCalled();
+    getPostDetail.mockRestore();
+  });
+
+  it('still requires content for non-trading posts', async () => {
+    const createPost = vi.fn();
+    const { service, getPostDetail } = webPostServiceWithPosts({ createPost });
+
+    await expect(service.createWebPost(owner, {
+      category: 'general',
+      content: '',
+      mediaIds: ['550e8400-e29b-41d4-a716-446655440010'],
+    })).rejects.toThrow(HertzValidationError);
+    expect(createPost).not.toHaveBeenCalled();
+    getPostDetail.mockRestore();
   });
 });
 
