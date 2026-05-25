@@ -85,19 +85,13 @@ Prepare the existing Hertz backend for native mobile clients while preserving cu
     - _Requirements: 4.7, 4.8, 10.1, 10.2_
 
 - [x] 5. Add mobile content endpoints
-  - [x] 5.1 Create Blog mobile endpoints
-    - `GET /api/mobile/v1/blog`
-    - `GET /api/mobile/v1/blog/[slug]`
-    - Reuse existing article query/service logic where possible
-    - _Requirements: 5.1, 5.2, 5.7_
-
-  - [x] 5.2 Create Outlook mobile endpoints
+  - [x] 5.1 Create Outlook mobile endpoints
     - `GET /api/mobile/v1/outlook`
     - `GET /api/mobile/v1/outlook/[slug]`
     - Reuse existing article query/service logic where possible
     - _Requirements: 5.3, 5.4, 5.7_
 
-  - [x] 5.3 Create Gallery mobile endpoint
+  - [x] 5.2 Create Gallery mobile endpoint
     - `GET /api/mobile/v1/gallery`
     - Support pagination or cursor if media grows large
     - Return media item metadata and article references

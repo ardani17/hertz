@@ -90,14 +90,6 @@ Requires bearer auth. Deletes own comment or admin-managed comment.
 
 ## Content
 
-### `GET /blog`
-
-Lists WordPress-imported blog articles. Query params: `limit`, `offset`, `q`.
-
-### `GET /blog/:slug`
-
-Returns a WordPress-imported blog article detail plus normalized media.
-
 ### `GET /outlook`
 
 Lists Outlook articles. Query params: `limit`, `offset`, `q`.

@@ -74,8 +74,6 @@ graph TD
 
 | Method | Path | Auth | Purpose |
 |---|---|---|---|
-| `GET` | `/api/mobile/v1/blog` | Public | Blog list from WordPress-imported articles |
-| `GET` | `/api/mobile/v1/blog/:slug` | Public | Blog detail |
 | `GET` | `/api/mobile/v1/outlook` | Public | Outlook list |
 | `GET` | `/api/mobile/v1/outlook/:slug` | Public | Outlook detail |
 | `GET` | `/api/mobile/v1/gallery` | Public | Gallery media list |
