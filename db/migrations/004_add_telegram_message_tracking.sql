@@ -1,5 +1,5 @@
 -- ============================================
--- Horizon Trader Platform — Schema Update
+-- Hertz Trader Platform — Schema Update
 -- Migration 004: Add Telegram message tracking columns to articles
 -- ============================================
 

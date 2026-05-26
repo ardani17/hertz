@@ -1,5 +1,5 @@
 -- ============================================
--- Horizon Trader Platform — Schema Update
+-- Hertz Trader Platform — Schema Update
 -- Migration 012: Add optional Outlook metadata
 -- ============================================
 

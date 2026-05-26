@@ -1,5 +1,5 @@
 -- ============================================
--- Horizon Trader Platform — Blog Category
+-- Hertz Trader Platform — Blog Category
 -- Migration 006: Add credit settings for blog category
 -- ============================================
 

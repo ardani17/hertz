@@ -1,5 +1,5 @@
 -- ============================================
--- Horizon Trader Platform
+-- Hertz Trader Platform
 -- Migration 011: Mobile notifications
 -- ============================================
 

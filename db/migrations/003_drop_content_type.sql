@@ -1,5 +1,5 @@
 -- ============================================
--- Horizon Trader Platform — Schema Update
+-- Hertz Trader Platform — Schema Update
 -- Migration 003: Drop unused content_type column from articles table
 -- ============================================
 

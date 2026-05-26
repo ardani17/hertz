@@ -1,5 +1,5 @@
 -- ============================================
--- Horizon Trader Platform — WordPress Import Jobs
+-- Hertz Trader Platform — WordPress Import Jobs
 -- Migration 007: Create wordpress_import_jobs table
 -- ============================================
 

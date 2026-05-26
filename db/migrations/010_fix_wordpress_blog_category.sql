@@ -1,5 +1,5 @@
 -- ============================================
--- Horizon Trader Platform
+-- Hertz Trader Platform
 -- Migration 010: WordPress imports belong to Blog
 -- ============================================
 

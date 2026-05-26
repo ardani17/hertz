@@ -1,5 +1,5 @@
 -- ============================================
--- Horizon Trader Platform
+-- Hertz Trader Platform
 -- Migration 009: HERTZ clean domain
 -- ============================================
 

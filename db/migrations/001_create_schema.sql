@@ -1,5 +1,5 @@
 -- ============================================
--- Horizon Trader Platform — Database Schema
+-- Hertz Trader Platform — Database Schema
 -- Migration 001: Create all tables and indexes
 -- ============================================
 

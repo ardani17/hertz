@@ -1,5 +1,5 @@
 -- ============================================
--- Horizon Trader Platform — Seed Data
+-- Hertz Trader Platform — Seed Data
 -- Migration 002: Default credit settings and admin user
 -- ============================================
 
