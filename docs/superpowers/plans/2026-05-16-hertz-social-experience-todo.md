@@ -46,7 +46,7 @@ Expected:
 Run:
 
 ```bash
-REVIEW_BASE_URL=https://horizon.cloudnexify.com npm run review:visual:update
+REVIEW_BASE_URL=https://hertz.cloudnexify.com npm run review:visual:update
 ```
 
 Expected:
@@ -59,7 +59,7 @@ Expected:
 Run:
 
 ```bash
-REVIEW_BASE_URL=https://horizon.cloudnexify.com npm run review:dom:update
+REVIEW_BASE_URL=https://hertz.cloudnexify.com npm run review:dom:update
 ```
 
 Expected:
@@ -137,7 +137,7 @@ Run:
 npm run test -- tests/unit/frontend/accessRole.test.ts
 npm run lint
 npm run build:frontend
-REVIEW_BASE_URL=https://horizon.cloudnexify.com npm run review:dom
+REVIEW_BASE_URL=https://hertz.cloudnexify.com npm run review:dom
 ```
 
 Expected:
@@ -198,8 +198,8 @@ Run:
 ```bash
 npm run lint
 npm run build:frontend
-REVIEW_BASE_URL=https://horizon.cloudnexify.com npm run review:visual
-REVIEW_BASE_URL=https://horizon.cloudnexify.com npm run review:a11y
+REVIEW_BASE_URL=https://hertz.cloudnexify.com npm run review:visual
+REVIEW_BASE_URL=https://hertz.cloudnexify.com npm run review:a11y
 ```
 
 Manual check:
@@ -305,8 +305,8 @@ Run:
 npm run test -- tests/unit/frontend/hertzMarketSidebar.test.ts
 npm run lint
 npm run build:frontend
-REVIEW_BASE_URL=https://horizon.cloudnexify.com npm run review:visual
-REVIEW_BASE_URL=https://horizon.cloudnexify.com npm run review:a11y
+REVIEW_BASE_URL=https://hertz.cloudnexify.com npm run review:visual
+REVIEW_BASE_URL=https://hertz.cloudnexify.com npm run review:a11y
 ```
 
 Manual check:
@@ -379,7 +379,7 @@ Run:
 npm run test -- tests/unit/frontend/hertzFeedUi.test.ts
 npm run lint
 npm run build:frontend
-REVIEW_BASE_URL=https://horizon.cloudnexify.com npm run review:visual
+REVIEW_BASE_URL=https://hertz.cloudnexify.com npm run review:visual
 ```
 
 - [x] **Step 4: Commit Task 3**
@@ -442,8 +442,8 @@ Run:
 npm run test -- tests/unit/shared/hertzValidation.test.ts tests/unit/shared/mediaValidation.test.ts
 npm run lint
 npm run build:frontend
-REVIEW_BASE_URL=https://horizon.cloudnexify.com npm run review:visual
-REVIEW_BASE_URL=https://horizon.cloudnexify.com REVIEW_REPLAY_ROUTE=/hertz REVIEW_REPLAY_SECONDS=30 npm run review:replay
+REVIEW_BASE_URL=https://hertz.cloudnexify.com npm run review:visual
+REVIEW_BASE_URL=https://hertz.cloudnexify.com REVIEW_REPLAY_ROUTE=/hertz REVIEW_REPLAY_SECONDS=30 npm run review:replay
 ```
 
 - [x] **Step 4: Commit Task 4**
@@ -505,7 +505,7 @@ Run:
 npm run test -- tests/unit/shared/hertzPostService.test.ts
 npm run lint
 npm run build:frontend
-REVIEW_BASE_URL=https://horizon.cloudnexify.com npm run review:a11y
+REVIEW_BASE_URL=https://hertz.cloudnexify.com npm run review:a11y
 ```
 
 Manual/live check:
@@ -569,8 +569,8 @@ Run:
 npm run test -- tests/unit/frontend/hertzPostActions.test.ts
 npm run lint
 npm run build:frontend
-REVIEW_BASE_URL=https://horizon.cloudnexify.com npm run review:a11y
-REVIEW_BASE_URL=https://horizon.cloudnexify.com REVIEW_REPLAY_ROUTE=/hertz REVIEW_REPLAY_SECONDS=20 npm run review:replay
+REVIEW_BASE_URL=https://hertz.cloudnexify.com npm run review:a11y
+REVIEW_BASE_URL=https://hertz.cloudnexify.com REVIEW_REPLAY_ROUTE=/hertz REVIEW_REPLAY_SECONDS=20 npm run review:replay
 ```
 
 - [x] **Step 4: Commit Task 6**
@@ -635,8 +635,8 @@ Run:
 npm run test -- tests/unit/shared/hertzPostService.test.ts tests/unit/frontend/feed.test.ts
 npm run lint
 npm run build:frontend
-REVIEW_BASE_URL=https://horizon.cloudnexify.com npm run review:dom
-REVIEW_BASE_URL=https://horizon.cloudnexify.com REVIEW_REPLAY_ROUTE=/hertz REVIEW_REPLAY_SECONDS=30 npm run review:replay
+REVIEW_BASE_URL=https://hertz.cloudnexify.com npm run review:dom
+REVIEW_BASE_URL=https://hertz.cloudnexify.com REVIEW_REPLAY_ROUTE=/hertz REVIEW_REPLAY_SECONDS=30 npm run review:replay
 ```
 
 - [x] **Step 4: Commit Task 7**
@@ -700,8 +700,8 @@ Run:
 npm run test -- tests/unit/shared/hertzProfileService.test.ts tests/unit/frontend/hertzProfile.test.ts
 npm run lint
 npm run build:frontend
-REVIEW_BASE_URL=https://horizon.cloudnexify.com npm run review:visual
-REVIEW_BASE_URL=https://horizon.cloudnexify.com npm run review:dom
+REVIEW_BASE_URL=https://hertz.cloudnexify.com npm run review:visual
+REVIEW_BASE_URL=https://hertz.cloudnexify.com npm run review:dom
 ```
 
 - [x] **Step 4: Commit Task 8**
@@ -760,8 +760,8 @@ Run:
 npm run test -- tests/unit/frontend/shareButtons.test.ts
 npm run lint
 npm run build:frontend
-REVIEW_BASE_URL=https://horizon.cloudnexify.com npm run review:a11y
-REVIEW_BASE_URL=https://horizon.cloudnexify.com REVIEW_REPLAY_ROUTE=/hertz REVIEW_REPLAY_SECONDS=30 npm run review:replay
+REVIEW_BASE_URL=https://hertz.cloudnexify.com npm run review:a11y
+REVIEW_BASE_URL=https://hertz.cloudnexify.com REVIEW_REPLAY_ROUTE=/hertz REVIEW_REPLAY_SECONDS=30 npm run review:replay
 ```
 
 - [x] **Step 4: Commit Task 9**
@@ -824,9 +824,9 @@ Run:
 npm run test -- tests/unit/frontend/hertzPostDetail.test.ts
 npm run lint
 npm run build:frontend
-REVIEW_BASE_URL=https://horizon.cloudnexify.com npm run review:visual
-REVIEW_BASE_URL=https://horizon.cloudnexify.com npm run review:a11y
-REVIEW_BASE_URL=https://horizon.cloudnexify.com REVIEW_REPLAY_ROUTE=/hertz REVIEW_REPLAY_SECONDS=30 npm run review:replay
+REVIEW_BASE_URL=https://hertz.cloudnexify.com npm run review:visual
+REVIEW_BASE_URL=https://hertz.cloudnexify.com npm run review:a11y
+REVIEW_BASE_URL=https://hertz.cloudnexify.com REVIEW_REPLAY_ROUTE=/hertz REVIEW_REPLAY_SECONDS=30 npm run review:replay
 ```
 
 - [x] **Step 4: Commit Task 10**
@@ -884,7 +884,7 @@ Run:
 npm run test -- tests/unit/shared/hertzPostService.test.ts tests/unit/frontend/hertzPostDetail.test.ts
 npm run lint
 npm run build:frontend
-REVIEW_BASE_URL=https://horizon.cloudnexify.com npm run review:a11y
+REVIEW_BASE_URL=https://hertz.cloudnexify.com npm run review:a11y
 ```
 
 - [x] **Step 4: Commit Task 11**
@@ -948,10 +948,10 @@ Run:
 npm run test -- tests/unit/frontend/hertzMessages.test.ts tests/unit/shared/hertzDmService.test.ts
 npm run lint
 npm run build:frontend
-REVIEW_BASE_URL=https://horizon.cloudnexify.com npm run review:visual
-REVIEW_BASE_URL=https://horizon.cloudnexify.com npm run review:a11y
-REVIEW_BASE_URL=https://horizon.cloudnexify.com npm run review:dom
-REVIEW_BASE_URL=https://horizon.cloudnexify.com REVIEW_REPLAY_ROUTE=/hertz/messages REVIEW_REPLAY_SECONDS=30 npm run review:replay
+REVIEW_BASE_URL=https://hertz.cloudnexify.com npm run review:visual
+REVIEW_BASE_URL=https://hertz.cloudnexify.com npm run review:a11y
+REVIEW_BASE_URL=https://hertz.cloudnexify.com npm run review:dom
+REVIEW_BASE_URL=https://hertz.cloudnexify.com REVIEW_REPLAY_ROUTE=/hertz/messages REVIEW_REPLAY_SECONDS=30 npm run review:replay
 ```
 
 - [x] **Step 4: Commit Task 12**
@@ -1014,8 +1014,8 @@ Run:
 npm run test -- tests/unit/shared/hertzSearchService.test.ts tests/unit/frontend/hertzSearch.test.ts
 npm run lint
 npm run build:frontend
-REVIEW_BASE_URL=https://horizon.cloudnexify.com npm run review:visual
-REVIEW_BASE_URL=https://horizon.cloudnexify.com npm run review:dom
+REVIEW_BASE_URL=https://hertz.cloudnexify.com npm run review:visual
+REVIEW_BASE_URL=https://hertz.cloudnexify.com npm run review:dom
 ```
 
 - [x] **Step 4: Commit Task 13**
@@ -1076,8 +1076,8 @@ Run:
 npm run test -- tests/unit/shared/mobileNotifications.test.ts tests/unit/frontend/hertzNotifications.test.ts
 npm run lint
 npm run build:frontend
-REVIEW_BASE_URL=https://horizon.cloudnexify.com npm run review:visual
-REVIEW_BASE_URL=https://horizon.cloudnexify.com npm run review:dom
+REVIEW_BASE_URL=https://hertz.cloudnexify.com npm run review:visual
+REVIEW_BASE_URL=https://hertz.cloudnexify.com npm run review:dom
 ```
 
 - [x] **Step 4: Commit Task 14**
@@ -1188,7 +1188,7 @@ Run:
 ```bash
 npm run lint
 npm run build:frontend
-REVIEW_BASE_URL=https://horizon.cloudnexify.com npm run review:a11y
+REVIEW_BASE_URL=https://hertz.cloudnexify.com npm run review:a11y
 ```
 
 Optional browser-agent:
@@ -1238,9 +1238,9 @@ Expected:
 Run:
 
 ```bash
-REVIEW_BASE_URL=https://horizon.cloudnexify.com npm run review:visual
-REVIEW_BASE_URL=https://horizon.cloudnexify.com npm run review:a11y
-REVIEW_BASE_URL=https://horizon.cloudnexify.com npm run review:dom
+REVIEW_BASE_URL=https://hertz.cloudnexify.com npm run review:visual
+REVIEW_BASE_URL=https://hertz.cloudnexify.com npm run review:a11y
+REVIEW_BASE_URL=https://hertz.cloudnexify.com npm run review:dom
 ```
 
 Expected:
@@ -1254,9 +1254,9 @@ Expected:
 Run for representative flows:
 
 ```bash
-REVIEW_BASE_URL=https://horizon.cloudnexify.com REVIEW_REPLAY_ROUTE=/hertz REVIEW_REPLAY_SECONDS=45 npm run review:replay
-REVIEW_BASE_URL=https://horizon.cloudnexify.com REVIEW_REPLAY_ROUTE=/hertz/messages REVIEW_REPLAY_SECONDS=45 npm run review:replay
-REVIEW_BASE_URL=https://horizon.cloudnexify.com REVIEW_REPLAY_ROUTE=/hertz/profile REVIEW_REPLAY_SECONDS=30 npm run review:replay
+REVIEW_BASE_URL=https://hertz.cloudnexify.com REVIEW_REPLAY_ROUTE=/hertz REVIEW_REPLAY_SECONDS=45 npm run review:replay
+REVIEW_BASE_URL=https://hertz.cloudnexify.com REVIEW_REPLAY_ROUTE=/hertz/messages REVIEW_REPLAY_SECONDS=45 npm run review:replay
+REVIEW_BASE_URL=https://hertz.cloudnexify.com REVIEW_REPLAY_ROUTE=/hertz/profile REVIEW_REPLAY_SECONDS=30 npm run review:replay
 ```
 
 Expected:

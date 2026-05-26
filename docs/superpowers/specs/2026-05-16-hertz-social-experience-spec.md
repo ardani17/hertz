@@ -570,8 +570,8 @@ Sebelum implementation plan dieksekusi untuk batch UI besar:
 Command:
 
 ```bash
-REVIEW_BASE_URL=https://horizon.cloudnexify.com npm run review:visual:update
-REVIEW_BASE_URL=https://horizon.cloudnexify.com npm run review:dom:update
+REVIEW_BASE_URL=https://hertz.cloudnexify.com npm run review:visual:update
+REVIEW_BASE_URL=https://hertz.cloudnexify.com npm run review:dom:update
 ```
 
 Baseline tidak boleh diperbarui setelah perubahan hanya untuk membuat test hijau. Jika snapshot berubah, perubahan harus dijelaskan sebagai expected change atau diperbaiki.
@@ -593,7 +593,7 @@ Wajib dipakai untuk perubahan yang menyentuh:
 Command:
 
 ```bash
-REVIEW_BASE_URL=https://horizon.cloudnexify.com npm run review:visual
+REVIEW_BASE_URL=https://hertz.cloudnexify.com npm run review:visual
 ```
 
 Jika visual diff muncul, hasilnya harus diklasifikasikan:
@@ -621,7 +621,7 @@ Wajib dipakai untuk perubahan yang menyentuh:
 Command:
 
 ```bash
-REVIEW_BASE_URL=https://horizon.cloudnexify.com npm run review:a11y
+REVIEW_BASE_URL=https://hertz.cloudnexify.com npm run review:a11y
 ```
 
 Critical dan serious violation harus diperbaiki sebelum task dianggap selesai, kecuali dicatat eksplisit sebagai existing issue yang tidak tersentuh task.
@@ -641,7 +641,7 @@ Wajib dipakai untuk perubahan yang menyentuh:
 Command:
 
 ```bash
-REVIEW_BASE_URL=https://horizon.cloudnexify.com npm run review:dom
+REVIEW_BASE_URL=https://hertz.cloudnexify.com npm run review:dom
 ```
 
 DOM diff dipakai untuk memastikan elemen yang harus hilang/ada benar-benar berubah, misalnya Tools hilang untuk guest atau DM guest tidak lagi menampilkan composer operasional.
@@ -675,7 +675,7 @@ Gunakan replay untuk flow yang perlu bukti run dan akan sering direview ulang.
 Command:
 
 ```bash
-REVIEW_BASE_URL=https://horizon.cloudnexify.com REVIEW_REPLAY_ROUTE=/hertz REVIEW_REPLAY_SECONDS=30 npm run review:replay
+REVIEW_BASE_URL=https://hertz.cloudnexify.com REVIEW_REPLAY_ROUTE=/hertz REVIEW_REPLAY_SECONDS=30 npm run review:replay
 ```
 
 Replay dipakai untuk:

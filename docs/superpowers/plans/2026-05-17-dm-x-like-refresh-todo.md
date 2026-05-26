@@ -511,8 +511,8 @@ Expected:
 Run:
 
 ```bash
-curl -s -o /tmp/dm-live.html -w "%{http_code}\n" https://horizon.cloudnexify.com/hertz/messages
-npx playwright screenshot --full-page --viewport-size=390,900 https://horizon.cloudnexify.com/hertz/messages /tmp/dm-x-like-mobile.png
+curl -s -o /tmp/dm-live.html -w "%{http_code}\n" https://hertz.cloudnexify.com/hertz/messages
+npx playwright screenshot --full-page --viewport-size=390,900 https://hertz.cloudnexify.com/hertz/messages /tmp/dm-x-like-mobile.png
 ```
 
 Expected:

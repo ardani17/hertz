@@ -804,7 +804,7 @@ Run:
 npm run test -- tests/unit/frontend/outlook.test.ts
 npm run lint
 npm run build:frontend
-REVIEW_BASE_URL=https://horizon.cloudnexify.com npm run review:visual
+REVIEW_BASE_URL=https://hertz.cloudnexify.com npm run review:visual
 ```
 
 Expected:
@@ -985,8 +985,8 @@ Run:
 npm run test -- tests/unit/frontend/outlook.test.ts
 npm run lint
 npm run build:frontend
-REVIEW_BASE_URL=https://horizon.cloudnexify.com npm run review:visual
-REVIEW_BASE_URL=https://horizon.cloudnexify.com npm run review:a11y
+REVIEW_BASE_URL=https://hertz.cloudnexify.com npm run review:visual
+REVIEW_BASE_URL=https://hertz.cloudnexify.com npm run review:a11y
 ```
 
 Expected:
@@ -1131,8 +1131,8 @@ npm run test -- tests/unit/frontend/outlook.test.ts
 npm run test -- tests/unit/frontend/mobileRoutes.test.ts
 npm run lint
 npm run build:frontend
-REVIEW_BASE_URL=https://horizon.cloudnexify.com npm run review:visual
-REVIEW_BASE_URL=https://horizon.cloudnexify.com npm run review:a11y
+REVIEW_BASE_URL=https://hertz.cloudnexify.com npm run review:visual
+REVIEW_BASE_URL=https://hertz.cloudnexify.com npm run review:a11y
 ```
 
 Expected:
@@ -1148,8 +1148,8 @@ Actual:
 - `npm run test -- tests/unit/frontend/mobileRoutes.test.ts` passed.
 - `npm run lint` passed.
 - `npm run build:frontend` passed.
-- `REVIEW_BASE_URL=https://horizon.cloudnexify.com npm run review:a11y` passed: 35/35.
-- `REVIEW_BASE_URL=https://horizon.cloudnexify.com npm run review:visual` ran and failed: 11 passed, 24 failed due screenshot baseline drift across Hertz, Outlook, Blog, and Tools. Snapshots were not updated.
+- `REVIEW_BASE_URL=https://hertz.cloudnexify.com npm run review:a11y` passed: 35/35.
+- `REVIEW_BASE_URL=https://hertz.cloudnexify.com npm run review:visual` ran and failed: 11 passed, 24 failed due screenshot baseline drift across Hertz, Outlook, Blog, and Tools. Snapshots were not updated.
 
 - [x] **Step 2: Check changed files**
 
