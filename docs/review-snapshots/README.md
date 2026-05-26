@@ -1,5 +1,5 @@
 # Review Snapshots Archive
 
-Folder ini menyimpan artefak review visual, DOM, dan accessibility yang masih relevan untuk Hertz.
+Folder ini menyimpan artefak review DOM dan visual untuk Hertz. Baseline diregenerasi lewat `npm run review:dom:update` (atau script `review:visual:update`) terhadap deploy live; output run terakhir disimpan di `latest/`.
 
-Snapshot dari era Horizon dipertahankan hanya jika masih membantu membandingkan regresi UI setelah rebrand. Jangan tambahkan export tool besar atau build artifact ke folder ini; simpan ulang snapshot yang dibutuhkan lewat script review terkait.
+Jangan commit export tool besar atau build artifact ke folder ini.
