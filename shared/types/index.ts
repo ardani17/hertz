@@ -36,8 +36,6 @@ export const ArticleSource = {
   TELEGRAM: 'telegram',
   DASHBOARD: 'dashboard',
   WEB: 'web',
-  ADMIN: 'admin',
-  WORDPRESS: 'wordpress',
 } as const;
 
 export type ArticleSource = (typeof ArticleSource)[keyof typeof ArticleSource];

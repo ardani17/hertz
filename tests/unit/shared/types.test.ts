@@ -56,9 +56,7 @@ describe('Shared Types — Enums and Constants', () => {
     expect(ArticleSource.TELEGRAM).toBe('telegram');
     expect(ArticleSource.DASHBOARD).toBe('dashboard');
     expect(ArticleSource.WEB).toBe('web');
-    expect(ArticleSource.ADMIN).toBe('admin');
-    expect(ArticleSource.WORDPRESS).toBe('wordpress');
-    expect(Object.keys(ArticleSource)).toHaveLength(5);
+    expect(Object.keys(ArticleSource)).toHaveLength(3);
   });
 
   it('TransactionType has earned, spent, adjusted', () => {
