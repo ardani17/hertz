@@ -88,9 +88,9 @@
   padding: var(--space-3) var(--space-4);
   font-size: var(--text-base);
   font-weight: 600;
-  color: #031008;
-  background-color: #13d27b;
-  border: 1px solid #13d27b;
+  color: var(--hertz-text-on-accent);
+  background-color: var(--hertz-accent);
+  border: 1px solid var(--hertz-accent);
   border-radius: 8px;
   cursor: pointer;
   min-height: 44px;

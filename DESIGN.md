@@ -16,7 +16,8 @@
 | Background | `#0a0a0f` | Page base (`--hertz-bg-base`) |
 | Surface | `rgba(15, 19, 18, 0.78)` | Panels, cards |
 | Surface strong | `rgba(20, 28, 24, 0.94)` | Modals, dropdowns |
-| Text | `#f3fff8` | Primary copy |
+| Text | `#f3fff8` | Primary copy (`--hertz-text`) |
+| Text on accent | `#031008` | Labels on emerald buttons (`--hertz-text-on-accent`) |
 | Text muted | `#91a79a` | Meta, captions |
 | Accent | `#13d27b` | CTA, active nav, links |
 | Accent soft | `rgba(19, 210, 123, 0.14)` | Hover, selected rows (no side-tab borders) |

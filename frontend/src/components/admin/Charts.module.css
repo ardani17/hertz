@@ -72,12 +72,12 @@
 
 .rangeBtnActive {
   background-color: var(--color-accent);
-  color: #ffffff;
+  color: var(--hertz-text);
 }
 
 .rangeBtnActive:hover {
   background-color: var(--hertz-success-muted);
-  color: #ffffff;
+  color: var(--hertz-text);
 }
 
 /* ---- Bar Chart (Activity) ---- */
@@ -248,7 +248,7 @@
   justify-content: center;
   font-size: var(--text-xs);
   font-weight: 700;
-  color: #ffffff;
+  color: var(--hertz-text);
   background-color: var(--color-accent);
   border-radius: var(--border-radius);
   flex-shrink: 0;

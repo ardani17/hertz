@@ -13,7 +13,7 @@
 .heading > svg {
   background: #229ed9;
   border-radius: 8px;
-  color: #fff;
+  color: var(--hertz-text);
   flex: 0 0 auto;
   height: 42px;
   padding: 0.52rem;

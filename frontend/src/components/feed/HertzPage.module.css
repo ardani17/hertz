@@ -38,7 +38,7 @@
   padding: 1rem 1.25rem;
   background: var(--hertz-bg-base);
   border-bottom: 1px solid var(--hertz-border);
-  backdrop-filter: blur(14px);
+  backdrop-filter: blur(8px);
 }
 
 .header h1 {

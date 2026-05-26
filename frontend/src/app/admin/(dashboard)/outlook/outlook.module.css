@@ -48,7 +48,7 @@
 }
 
 .backLink:hover {
-  color: #ffffff;
+  color: var(--hertz-text);
 }
 
 .editorCard {

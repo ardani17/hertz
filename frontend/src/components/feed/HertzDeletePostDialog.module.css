@@ -42,5 +42,5 @@
 
 .danger {
   background: #ef4444;
-  color: #fff;
+  color: var(--hertz-text);
 }

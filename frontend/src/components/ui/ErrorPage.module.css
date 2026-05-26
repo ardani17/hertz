@@ -31,7 +31,7 @@
   font-family: var(--font-mono);
   font-size: var(--text-4xl);
   font-weight: 700;
-  color: #ffffff;
+  color: var(--hertz-text);
   letter-spacing: 0.05em;
 }
 

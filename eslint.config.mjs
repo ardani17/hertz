@@ -89,6 +89,8 @@ export default defineConfig([
     'coverage/**',
     'data/**',
     'storybook-static/**',
+    'playwright-report/**',
+    'test-results/**',
     'node_modules/**',
     'frontend/node_modules/**',
     'frontend/next-env.d.ts',

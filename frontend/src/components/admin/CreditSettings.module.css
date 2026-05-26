@@ -300,13 +300,13 @@
 
 .toastSuccess {
   background-color: var(--color-accent);
-  color: #ffffff;
+  color: var(--hertz-text);
   border: var(--border-width) solid var(--hertz-success-muted);
 }
 
 .toastError {
   background-color: var(--color-danger);
-  color: #ffffff;
+  color: var(--hertz-text);
   border: var(--border-width) solid #b91c1c;
 }
 

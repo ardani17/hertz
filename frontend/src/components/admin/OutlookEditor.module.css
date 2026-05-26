@@ -282,7 +282,7 @@
   padding: 0;
   font-size: var(--text-xs);
   background-color: var(--color-danger);
-  color: #ffffff;
+  color: var(--hertz-text);
   border: none;
   border-radius: var(--border-radius);
   cursor: pointer;

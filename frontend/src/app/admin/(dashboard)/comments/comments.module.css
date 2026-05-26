@@ -78,5 +78,5 @@
 
 .actionBtnDanger:hover {
   background-color: var(--color-danger);
-  color: #ffffff;
+  color: var(--hertz-text);
 }

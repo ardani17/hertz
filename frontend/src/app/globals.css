@@ -60,6 +60,7 @@
   --hertz-border: var(--hertz-border);
   --hertz-text: #f3fff8;
   --hertz-text-muted: #91a79a;
+  --hertz-text-on-accent: #031008;
   --hertz-accent-soft: var(--hertz-bg-selected);
   --hertz-bg-hover: rgba(255, 255, 255, 0.02);
   --hertz-border-hover: rgba(19, 210, 123, 0.52);
@@ -118,7 +119,7 @@
   --popover: var(--color-surface);
   --popover-foreground: var(--color-text);
   --primary: var(--color-accent);
-  --primary-foreground: #ffffff;
+  --primary-foreground: var(--hertz-text-on-accent);
   --secondary: var(--color-surface);
   --secondary-foreground: var(--color-text);
   --muted: var(--color-surface);
@@ -137,7 +138,7 @@
   --sidebar: var(--color-bg);
   --sidebar-foreground: var(--color-text);
   --sidebar-primary: var(--color-accent);
-  --sidebar-primary-foreground: #ffffff;
+  --sidebar-primary-foreground: var(--hertz-text-on-accent);
   --sidebar-accent: var(--color-surface);
   --sidebar-accent-foreground: var(--color-text);
   --sidebar-border: var(--color-border);
@@ -310,7 +311,7 @@ button:not([data-slot]):focus-visible, .btn:focus-visible {
 
 .btn-primary {
   background-color: var(--color-accent);
-  color: #ffffff;
+  color: var(--hertz-text-on-accent);
   border-color: var(--color-accent);
 }
 
@@ -411,7 +412,7 @@ tr:nth-child(even) {
 /* --- Selection --- */
 ::selection {
   background-color: var(--color-accent);
-  color: #ffffff;
+  color: var(--hertz-text-on-accent);
 }
 
 /* --- Skip to Content (Accessibility) --- */
@@ -422,7 +423,7 @@ tr:nth-child(even) {
   z-index: 9999;
   padding: var(--space-2) var(--space-4);
   background-color: var(--color-accent);
-  color: #ffffff;
+  color: var(--hertz-text-on-accent);
   font-weight: 600;
   text-decoration: none;
   border-radius: var(--border-radius);
@@ -456,5 +457,16 @@ tr:nth-child(even) {
 
   h3 {
     font-size: var(--text-lg);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    scroll-behavior: auto !important;
+    transition-duration: 0.01ms !important;
   }
 }

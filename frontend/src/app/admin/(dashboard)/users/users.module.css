@@ -92,7 +92,7 @@
 }
 
 .backLink:hover {
-  color: #ffffff;
+  color: var(--hertz-text);
 }
 
 /* Profile card */
