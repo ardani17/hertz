@@ -1,5 +1,0 @@
-# Runtime intentionally stdlib-only for local headless test.
-# Production optional tools:
-# gunicorn
-# uvicorn
-# fastapi
