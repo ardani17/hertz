@@ -1,0 +1,223 @@
+openapi: 3.1.0
+info:
+  title: Hertz Mobile API
+  version: 1.0.0
+  description: Generated from docs/mobile/api-reference.md
+servers:
+  - url: https://hertz.cloudnexify.com
+paths:
+  /api/mobile/v1/auth/handoff/init:
+    post:
+      responses:
+        '200':
+          description: Success envelope
+  /api/mobile/v1/auth/handoff/exchange:
+    post:
+      responses:
+        '200':
+          description: Success envelope
+  /api/mobile/v1/auth/telegram:
+    post:
+      responses:
+        '200':
+          description: Success envelope
+  /api/mobile/v1/auth/refresh:
+    post:
+      responses:
+        '200':
+          description: Success envelope
+  /api/mobile/v1/logout:
+    post:
+      responses:
+        '200':
+          description: Success envelope
+  /api/mobile/v1/me:
+    get:
+      responses:
+        '200':
+          description: Success envelope
+  /api/mobile/v1/me/sessions:
+    get:
+      responses:
+        '200':
+          description: Success envelope
+  /api/mobile/v1/me/sessions/:sessionId:
+    delete:
+      responses:
+        '200':
+          description: Success envelope
+  /api/mobile/v1/hertz/posts:
+    get:
+      responses:
+        '200':
+          description: Success envelope
+  /api/mobile/v1/hertz/posts:
+    post:
+      responses:
+        '200':
+          description: Success envelope
+  /api/mobile/v1/hertz/posts/:shortId:
+    get:
+      responses:
+        '200':
+          description: Success envelope
+  /api/mobile/v1/hertz/posts/:shortId:
+    patch:
+      responses:
+        '200':
+          description: Success envelope
+  /api/mobile/v1/hertz/posts/:shortId:
+    delete:
+      responses:
+        '200':
+          description: Success envelope
+  /api/mobile/v1/hertz/posts/:shortId/comments:
+    get:
+      responses:
+        '200':
+          description: Success envelope
+  /api/mobile/v1/hertz/posts/:shortId/comments:
+    post:
+      responses:
+        '200':
+          description: Success envelope
+  /api/mobile/v1/hertz/posts/comments/:commentId:
+    patch:
+      responses:
+        '200':
+          description: Success envelope
+  /api/mobile/v1/hertz/posts/comments/:commentId:
+    delete:
+      responses:
+        '200':
+          description: Success envelope
+  /api/mobile/v1/hertz/posts/:shortId/like:
+    post:
+      responses:
+        '200':
+          description: Success envelope
+  /api/mobile/v1/hertz/posts/:shortId/bookmark:
+    post:
+      responses:
+        '200':
+          description: Success envelope
+  /api/mobile/v1/hertz/posts/:shortId/repost:
+    post:
+      responses:
+        '200':
+          description: Success envelope
+  /api/mobile/v1/hertz/posts/:shortId/view:
+    post:
+      responses:
+        '200':
+          description: Success envelope
+  /api/mobile/v1/hertz/posts/:shortId/report:
+    post:
+      responses:
+        '200':
+          description: Success envelope
+  /api/mobile/v1/hertz/messages/inbox:
+    get:
+      responses:
+        '200':
+          description: Success envelope
+  /api/mobile/v1/hertz/messages/conversations?q=member:
+    get:
+      responses:
+        '200':
+          description: Success envelope
+  /api/mobile/v1/hertz/messages/conversations:
+    post:
+      responses:
+        '200':
+          description: Success envelope
+  /api/mobile/v1/hertz/messages/conversations/:conversationId:
+    get:
+      responses:
+        '200':
+          description: Success envelope
+  /api/mobile/v1/hertz/messages/conversations/:conversationId:
+    post:
+      responses:
+        '200':
+          description: Success envelope
+  /api/mobile/v1/hertz/messages/conversations/:conversationId:
+    patch:
+      responses:
+        '200':
+          description: Success envelope
+  /api/mobile/v1/hertz/messages/messages/:messageId:
+    delete:
+      responses:
+        '200':
+          description: Success envelope
+  /api/mobile/v1/hertz/messages/messages/:messageId:
+    post:
+      responses:
+        '200':
+          description: Success envelope
+  /api/mobile/v1/hertz/notifications:
+    get:
+      responses:
+        '200':
+          description: Success envelope
+  /api/mobile/v1/hertz/notifications/summary:
+    get:
+      responses:
+        '200':
+          description: Success envelope
+  /api/mobile/v1/hertz/notifications/read:
+    post:
+      responses:
+        '200':
+          description: Success envelope
+  /api/mobile/v1/notifications/register:
+    post:
+      responses:
+        '200':
+          description: Success envelope
+  /api/mobile/v1/notifications/unregister:
+    post:
+      responses:
+        '200':
+          description: Success envelope
+  /api/mobile/v1/profile/:username:
+    get:
+      responses:
+        '200':
+          description: Success envelope
+  /api/mobile/v1/hertz/profile/:username/activity:
+    get:
+      responses:
+        '200':
+          description: Success envelope
+  /api/mobile/v1/media/upload:
+    post:
+      responses:
+        '200':
+          description: Success envelope
+  /api/mobile/v1/hertz/search?q=hertz&type=member:
+    get:
+      responses:
+        '200':
+          description: Success envelope
+  /api/mobile/v1/market/rail:
+    get:
+      responses:
+        '200':
+          description: Success envelope
+  /api/mobile/v1/gallery:
+    get:
+      responses:
+        '200':
+          description: Success envelope
+  /api/mobile/v1/outlook:
+    get:
+      responses:
+        '200':
+          description: Success envelope
+  /api/mobile/v1/outlook/:slug:
+    get:
+      responses:
+        '200':
+          description: Success envelope

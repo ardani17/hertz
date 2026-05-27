@@ -959,43 +959,43 @@ Semua perubahan additive. Bila ada bug di Epic B endpoint mobile:
 **Epic A — Auth Foundation**
 
 - [ ] Handoff init → exchange → me flow lulus integration test.
-- [ ] `GET /me` mengembalikan notifications summary + session info.
-- [ ] `GET /me/sessions` + `DELETE /me/sessions/:id` lulus contract test.
-- [ ] Bridge page `/auth/mobile-handoff` redirect deep link `hertz://auth/callback?token=...`.
+- [x] `GET /me` mengembalikan notifications summary + session info.
+- [x] `GET /me/sessions` + `DELETE /me/sessions/:id` lulus contract test.
+- [x] Bridge page `/auth/mobile-handoff` redirect deep link `hertz://auth/callback?token=...`.
 
 **Epic B — Social Core**
 
-- [ ] 14 endpoint lulus contract test.
+- [x] 14 endpoint lulus contract test.
 - [ ] DM full flow: inbox → conversation → send → typing → block lulus integration test.
 - [ ] Create post dengan media + market context lulus E2E (via test akun).
-- [ ] Push register Expo token & native FCM token sama-sama valid.
+- [x] Push register Expo token & native FCM token sama-sama valid.
 
 **Epic C — Interactions**
 
-- [ ] Bookmark/repost/view/report toggle lulus.
-- [ ] Search return ≤ 50 hasil dengan cursor pagination.
-- [ ] Market rail return data fresh ≤ 60 s old.
+- [x] Bookmark/repost/view/report toggle lulus.
+- [x] Search return ≤ 50 hasil dengan cursor pagination.
+- [x] Market rail return data fresh ≤ 60 s old.
 
 **Epic D — Contracts & Infra**
 
-- [ ] `shared/types/mobile.ts` cover 100% endpoint.
+- [x] `shared/types/mobile.ts` cover 100% endpoint.
 - [ ] Redis rate limiter lulus load test (boundary tested).
 - [ ] Structured log muncul di `docker logs hertz-frontend | jq`.
 - [ ] `app-version` < min → 426 dengan body informatif.
-- [ ] `api-reference.md` lengkap.
+- [x] `api-reference.md` lengkap.
 
 **Epic E — Push**
 
-- [ ] `ExpoPushAdapter.send` happy path delivery ≥ 95% di test.
-- [ ] Invalid token disable `device_tokens.enabled = false`.
+- [x] `ExpoPushAdapter.send` happy path delivery ≥ 95% di test.
+- [x] Invalid token disable `device_tokens.enabled = false`.
 - [ ] Trigger DM message → push delivered (mock).
 
 ### 16.2 Definition of Done (overall)
 
 - [ ] Semua P0 & P1 endpoint live di prod.
-- [ ] `npm test` + `npm run test:contract` hijau di CI.
+- [x] `npm test` + `npm run test:contract` hijau di CI.
 - [ ] Web regression hijau.
-- [ ] Runbook deploy ada di `docs/mobile/runbook.md`.
+- [x] Runbook deploy ada di `docs/mobile/runbook.md`.
 - [ ] Mobile engineer sign-off bahwa kontrak cukup untuk PRD Expo.
 
 ---
