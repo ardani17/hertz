@@ -3,7 +3,9 @@ import { execute, query, queryOne, withTransaction, type DbClient } from '../db'
 import { HertzCommentRepository, type HertzCommentRow } from '../repositories/hertzCommentRepository';
 import { HertzPostRepository, type HertzPostRow } from '../repositories/hertzPostRepository';
 import { ActivityLogService } from './activityLog';
+import { PushNotificationService } from './pushNotificationService';
 import { textToHtml, stripHtml } from '../utils/textToHtml';
+import { resolveMentionedUserIds } from '../utils/mentionParser';
 import type { MemberSessionUser } from '../types/membership';
 import type {
   CursorFeedResult,
@@ -194,6 +196,7 @@ export class HertzPostService {
   private readonly posts = new HertzPostRepository();
   private readonly comments = new HertzCommentRepository();
   private readonly logs = new ActivityLogService();
+  private readonly push = new PushNotificationService();
 
   async listFeed(params: {
     cursor?: string | null;
@@ -300,6 +303,7 @@ export class HertzPostService {
       return post.id;
     });
 
+    void this.notifyMentions(content, user.id, 'post', postId);
     return this.getPostDetail(postId, user);
   }
 
@@ -324,6 +328,7 @@ export class HertzPostService {
       await this.posts.attachMedia(post.id, mediaIds, client);
       return post.id;
     });
+    void this.notifyMentions(content, user.id, 'post', postId);
     return this.getPostDetail(postId, user);
   }
 
@@ -389,6 +394,18 @@ export class HertzPostService {
       throw new HertzForbiddenError();
     }
     await this.posts.updateContent(post.id, cleanText(content));
+    void this.notifyMentions(content, user.id, 'post', post.id);
+  }
+
+  private async notifyMentions(content: string, actorUserId: string, targetType: string, targetId: string): Promise<void> {
+    try {
+      const userIds = await resolveMentionedUserIds(content);
+      await Promise.all(userIds
+        .filter((userId) => userId !== actorUserId)
+        .map((userId) => this.push.notifyHertzMention({ userId, actorUserId, targetType, targetId })));
+    } catch {
+      // Mention push must not block the post workflow.
+    }
   }
 
   async updateMarketContext(postId: string, user: MemberSessionUser, market: MarketContext | null): Promise<void> {

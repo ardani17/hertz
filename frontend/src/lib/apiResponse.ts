@@ -13,6 +13,7 @@ import {
   MobileAuthValidationError,
 } from '@shared/services/mobileAuthService';
 import { MobileMediaValidationError } from '@shared/services/mobileMediaService';
+import { SessionDeviceMismatchError } from '@shared/services/memberSessionService';
 import {
   DevTelegramLoginDisabledError,
   MembershipCheckUnavailableError,
@@ -81,6 +82,9 @@ export function apiErrorFromUnknown(error: unknown) {
   }
   if (error instanceof MobileAuthCurrentSessionRevokeError) {
     return apiError('CANNOT_REVOKE_CURRENT', error.message, 409);
+  }
+  if (error instanceof SessionDeviceMismatchError) {
+    return apiError('SESSION_DEVICE_MISMATCH', error.message, 401);
   }
   if (error instanceof MobileMediaValidationError) {
     return apiError('VALIDATION_ERROR', error.message, 400);

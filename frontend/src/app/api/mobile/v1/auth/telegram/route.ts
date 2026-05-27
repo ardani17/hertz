@@ -9,12 +9,16 @@ export const dynamic = 'force-dynamic';
 const auth = new MobileAuthService();
 
 export async function POST(request: NextRequest) {
-  const limited = checkMobileRateLimit(request, 'auth');
+  const limited = await checkMobileRateLimit(request, 'auth');
   if (limited) return limited;
 
   try {
-    const body = (await request.json()) as TelegramAuthData;
-    return apiSuccess(await auth.createTelegramSession(body), 201);
+    const body = await request.json();
+    return apiSuccess(await auth.createTelegramSession(body as TelegramAuthData, {
+      deviceId: typeof body.deviceId === 'string' ? body.deviceId : null,
+      platform: body.platform === 'ios' || body.platform === 'android' ? body.platform : null,
+      appVersion: typeof body.appVersion === 'string' ? body.appVersion : null,
+    }), 201);
   } catch (error) {
     return apiErrorFromUnknown(error);
   }

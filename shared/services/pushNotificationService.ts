@@ -1,6 +1,7 @@
 import { queryOne } from '../db';
 import { DeviceTokenRepository, type DeviceTokenRow } from '../repositories/deviceTokenRepository';
 import { NotificationEventRepository } from '../repositories/notificationEventRepository';
+import { PushRateLimiter } from '../infra/PushRateLimiter';
 
 interface PushInput {
   eventType: string;
@@ -30,8 +31,23 @@ interface ExpoPushResponse {
 export class PushNotificationService {
   private readonly devices = new DeviceTokenRepository();
   private readonly events = new NotificationEventRepository();
+  private readonly limiter = new PushRateLimiter();
 
   async sendToUser(userId: string, input: PushInput): Promise<void> {
+    const allowed = await this.limiter.consume(userId);
+    if (!allowed) {
+      await this.events.create({
+        userId,
+        eventType: input.eventType,
+        title: input.title,
+        body: input.body,
+        payload: input.payload,
+        status: 'skipped',
+        errorMessage: 'rate_limited',
+      });
+      return;
+    }
+
     const tokens = await this.devices.listEnabledForUser(userId);
     if (tokens.length === 0) {
       await this.events.create({
@@ -94,6 +110,63 @@ export class PushNotificationService {
     } catch {
       // Push failures must not block the source workflow.
     }
+  }
+
+  async notifyHertzPulseCreated(params: { postId: string; actorUserId: string }): Promise<void> {
+    try {
+      const post = await queryOne<{ author_id: string; short_id: string }>(
+        'SELECT author_id, short_id FROM hertz_posts WHERE id = $1',
+        [params.postId],
+      );
+      if (!post || post.author_id === params.actorUserId) return;
+      await this.sendToUser(post.author_id, {
+        eventType: 'hertz.pulse.created',
+        title: 'Pulse baru',
+        body: 'Postingan HERTZ Anda mendapat pulse baru.',
+        payload: {
+          type: 'hertz_pulse',
+          postId: post.short_id,
+        },
+      });
+    } catch {
+      // Push failures must not block the source workflow.
+    }
+  }
+
+  async notifyHertzRepostCreated(params: { postId: string; actorUserId: string; repostPostId?: string | null }): Promise<void> {
+    try {
+      const post = await queryOne<{ author_id: string; short_id: string }>(
+        'SELECT author_id, short_id FROM hertz_posts WHERE id = $1',
+        [params.postId],
+      );
+      if (!post || post.author_id === params.actorUserId) return;
+      await this.sendToUser(post.author_id, {
+        eventType: 'hertz.repost.created',
+        title: 'Repost baru',
+        body: 'Postingan HERTZ Anda direpost.',
+        payload: {
+          type: 'hertz_repost',
+          postId: post.short_id,
+          repostPostId: params.repostPostId ?? null,
+        },
+      });
+    } catch {
+      // Push failures must not block the source workflow.
+    }
+  }
+
+  async notifyHertzMention(params: { userId: string; actorUserId: string; targetType: string; targetId: string }): Promise<void> {
+    if (params.userId === params.actorUserId) return;
+    await this.sendToUser(params.userId, {
+      eventType: 'hertz.mention',
+      title: 'Mention baru',
+      body: 'Anda disebut di HERTZ.',
+      payload: {
+        type: 'hertz_mention',
+        targetType: params.targetType,
+        targetId: params.targetId,
+      },
+    });
   }
 
   private async sendToDevice(device: DeviceTokenRow, input: PushInput): Promise<void> {

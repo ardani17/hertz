@@ -1,4 +1,5 @@
 import type { HertzComment, HertzFeedResult, HertzPost, HertzPostDetail } from './feed';
+import type { HertzProfileActivity } from '../services/hertzProfileService';
 import type { MemberPublicProfileDto, MemberPublicProfileInput } from './memberProfile';
 import type { MemberSessionUser, TelegramAuthData } from './membership';
 
@@ -58,6 +59,10 @@ export interface MobileSessionListResponse {
   sessions: MobileSessionInfo[];
 }
 
+export interface MobileRefreshInput {
+  deviceId: string;
+}
+
 export type MobileHertzPost = HertzPost;
 export type MobileHertzPostDetail = HertzPostDetail;
 export type MobileHertzFeedResult = HertzFeedResult;
@@ -115,6 +120,20 @@ export interface MobileDmThreadResponse {
   hasMoreBefore?: boolean;
 }
 
+export interface MobileDmTypingResponse {
+  typing: boolean;
+  typingUserIds?: string[];
+}
+
+export interface MobileDmBlockResponse {
+  blocked: boolean;
+}
+
+export interface MobileDmReportInput {
+  reason: string;
+  details?: string | null;
+}
+
 export interface MobileNotificationActor {
   userId: string;
   username: string | null;
@@ -141,6 +160,11 @@ export interface MobileNotificationListResponse {
   summary: MobileNotificationSummary;
 }
 
+export interface MobileNotificationReadInput {
+  ids?: string[];
+  all?: boolean;
+}
+
 export interface MobileMediaUploadResponse {
   media: {
     id: string;
@@ -158,6 +182,62 @@ export interface MobilePushRegisterInput {
   token: string;
   deviceId?: string | null;
   appVersion?: string | null;
+}
+
+export interface MobileBookmarkResponse {
+  active: boolean;
+  bookmarked: boolean;
+}
+
+export interface MobileRepostInput {
+  type: 'repost' | 'quote';
+  content?: string | null;
+  mediaIds?: string[];
+}
+
+export interface MobileRepostResponse {
+  active?: boolean;
+  repostId?: string | null;
+  repostPostId?: string | null;
+  post?: MobileHertzPost;
+}
+
+export interface MobileViewResponse {
+  recorded: boolean;
+}
+
+export interface MobileReportInput {
+  reason: string;
+  details?: string | null;
+}
+
+export type MobileSearchType = 'post' | 'member';
+
+export interface MobileSearchResultItem {
+  type: 'post' | 'member' | 'topic' | 'pair';
+  id: string;
+  label: string;
+  description: string | null;
+  href: string;
+}
+
+export interface MobileSearchResponse {
+  query: string;
+  results: MobileSearchResultItem[];
+}
+
+export interface MobileMarketRailGroup {
+  label: string;
+  items: Array<Record<string, unknown>>;
+}
+
+export interface MobileMarketRailResponse {
+  groups: MobileMarketRailGroup[];
+  cacheTtlSeconds: number;
+}
+
+export interface MobileProfileActivityResponse {
+  activity: HertzProfileActivity;
 }
 
 export interface MobileProfileMeResponse {

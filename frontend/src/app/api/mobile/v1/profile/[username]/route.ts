@@ -12,7 +12,7 @@ export const dynamic = 'force-dynamic';
 const profiles = new HertzPublicProfileService();
 
 export async function GET(request: NextRequest, context: RouteContext) {
-  const limited = checkMobileRateLimit(request, 'read');
+  const limited = await checkMobileRateLimit(request, 'read');
   if (limited) return limited;
 
   try {

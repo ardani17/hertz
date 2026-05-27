@@ -4,6 +4,7 @@ import { HertzPostStatsRepository } from '../repositories/hertzPostStatsReposito
 import { ActivityLogService } from './activityLog';
 import { hashForView, HertzForbiddenError, HertzNotFoundError, HertzPostService } from './hertzPostService';
 import { HertzInAppNotificationService } from './hertzInAppNotificationService';
+import { PushNotificationService } from './pushNotificationService';
 import type { RepostInput } from '../types/feed';
 import type { MemberSessionUser } from '../types/membership';
 
@@ -13,6 +14,7 @@ export class HertzReactionService {
   private readonly postStats = new HertzPostStatsRepository();
   private readonly logs = new ActivityLogService();
   private readonly inAppNotifications = new HertzInAppNotificationService();
+  private readonly push = new PushNotificationService();
 
   async togglePulse(postId: string, user: MemberSessionUser | null): Promise<{ active: boolean }> {
     if (!user) throw new HertzForbiddenError('Login member diperlukan');
@@ -30,6 +32,7 @@ export class HertzReactionService {
     });
     if (result.active) {
       void this.inAppNotifications.notifyPulse({ postId: resolvedPostId, actorUserId: user.id }).catch(() => undefined);
+      void this.push.notifyHertzPulseCreated({ postId: resolvedPostId, actorUserId: user.id });
     }
     return result;
   }
@@ -53,6 +56,7 @@ export class HertzRepostService {
   private readonly postStats = new HertzPostStatsRepository();
   private readonly hertz = new HertzPostService();
   private readonly inAppNotifications = new HertzInAppNotificationService();
+  private readonly push = new PushNotificationService();
 
   async repost(postId: string, user: MemberSessionUser | null, input: RepostInput) {
     if (!user) throw new HertzForbiddenError('Login member diperlukan');
@@ -70,6 +74,7 @@ export class HertzRepostService {
         const repostPostId = await this.hertz.createPlainRepostPost(user, original);
         await this.reposts.setPlainRepostPostId(result.repostId, repostPostId);
         void this.inAppNotifications.notifyRepost({ postId: original.id, actorUserId: user.id, repostPostId }).catch(() => undefined);
+        void this.push.notifyHertzRepostCreated({ postId: original.id, actorUserId: user.id, repostPostId });
       }
       return result;
     }
@@ -81,6 +86,7 @@ export class HertzRepostService {
     await this.reposts.createQuote(original.id, user.id, quote.id);
     await this.postStats.incr(original.id, 'repost_count', 1);
     void this.inAppNotifications.notifyQuote({ postId: original.id, actorUserId: user.id, quotePostId: quote.id }).catch(() => undefined);
+    void this.push.notifyHertzRepostCreated({ postId: original.id, actorUserId: user.id, repostPostId: quote.id });
     return { post: quote };
   }
 }

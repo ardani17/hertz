@@ -7,6 +7,9 @@ export interface MemberSessionRow {
   expires_at: Date;
   created_at: Date;
   last_used_at: Date | null;
+  device_id: string | null;
+  platform: string | null;
+  app_version: string | null;
 }
 
 export class MemberSessionRepository {
@@ -14,12 +17,22 @@ export class MemberSessionRepository {
     userId: string;
     tokenHash: string;
     expiresAt: Date;
+    deviceId?: string | null;
+    platform?: string | null;
+    appVersion?: string | null;
   }, client?: DbClient): Promise<MemberSessionRow> {
     const row = await queryOne<MemberSessionRow>(
-      `INSERT INTO hertz_member_sessions (user_id, token_hash, expires_at, last_used_at)
-       VALUES ($1, $2, $3, NOW())
-       RETURNING id, user_id, token_hash, expires_at, created_at, last_used_at`,
-      [params.userId, params.tokenHash, params.expiresAt.toISOString()],
+      `INSERT INTO hertz_member_sessions (user_id, token_hash, expires_at, last_used_at, device_id, platform, app_version)
+       VALUES ($1, $2, $3, NOW(), $4, $5, $6)
+       RETURNING id, user_id, token_hash, expires_at, created_at, last_used_at, device_id, platform, app_version`,
+      [
+        params.userId,
+        params.tokenHash,
+        params.expiresAt.toISOString(),
+        params.deviceId ?? null,
+        params.platform ?? null,
+        params.appVersion ?? null,
+      ],
       client,
     );
     if (!row) throw new Error('Failed to create member session');
@@ -28,7 +41,7 @@ export class MemberSessionRepository {
 
   async findByTokenHash(tokenHash: string, client?: DbClient): Promise<MemberSessionRow | null> {
     return queryOne<MemberSessionRow>(
-      `SELECT id, user_id, token_hash, expires_at, created_at, last_used_at
+      `SELECT id, user_id, token_hash, expires_at, created_at, last_used_at, device_id, platform, app_version
        FROM hertz_member_sessions
        WHERE token_hash = $1`,
       [tokenHash],
@@ -42,6 +55,22 @@ export class MemberSessionRepository {
        SET last_used_at = NOW(), expires_at = $2
        WHERE id = $1`,
       [id, expiresAt.toISOString()],
+      client,
+    );
+  }
+
+  async updateMeta(id: string, params: {
+    deviceId?: string | null;
+    platform?: string | null;
+    appVersion?: string | null;
+  }, client?: DbClient): Promise<void> {
+    await execute(
+      `UPDATE hertz_member_sessions
+       SET device_id = COALESCE($2, device_id),
+           platform = COALESCE($3, platform),
+           app_version = COALESCE($4, app_version)
+       WHERE id = $1`,
+      [id, params.deviceId ?? null, params.platform ?? null, params.appVersion ?? null],
       client,
     );
   }
@@ -64,7 +93,7 @@ export class MemberSessionRepository {
 
   async listActiveByUserId(userId: string, client?: DbClient): Promise<MemberSessionRow[]> {
     const result = await query<MemberSessionRow>(
-      `SELECT id, user_id, token_hash, expires_at, created_at, last_used_at
+      `SELECT id, user_id, token_hash, expires_at, created_at, last_used_at, device_id, platform, app_version
        FROM hertz_member_sessions
        WHERE user_id = $1 AND expires_at > NOW()
        ORDER BY COALESCE(last_used_at, created_at) DESC`,

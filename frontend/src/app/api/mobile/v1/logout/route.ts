@@ -11,7 +11,7 @@ export async function POST(request: NextRequest) {
   const auth = await requireMobileMember(request);
   if (!isMobileAuthContext(auth)) return auth;
 
-  const limited = checkMobileRateLimit(request, 'mutation', auth.user.id);
+  const limited = await checkMobileRateLimit(request, 'mutation', auth.user.id);
   if (limited) return limited;
 
   await sessions.deleteSession(auth.token);

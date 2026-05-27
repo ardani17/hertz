@@ -17,6 +17,8 @@
     "db:seed:all": "bash scripts/seed-all.sh",
     "lint": "eslint .",
     "test": "vitest --run",
+    "test:contract": "vitest --run --config vitest.contract.config.ts",
+    "test:ci": "npm run lint && npm test && npm run test:contract",
     "test:watch": "vitest",
     "test:property": "vitest --run --config vitest.property.config.ts",
     "review:install-browsers": "playwright install chromium",

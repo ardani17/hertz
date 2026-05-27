@@ -4,7 +4,6 @@ import { DeviceTokenValidationError } from '@shared/services/deviceTokenService'
 import type { MemberSessionUser } from '@shared/types/membership';
 import { apiError } from './apiResponse';
 import { getBearerTokenFromRequest, getCurrentBearerMemberFromRequest } from './memberAuth';
-import { checkRateLimit } from './rateLimit';
 import { RedisRateLimiter } from '@/server/infra/RedisRateLimiter';
 
 export const mobileRateLimits = {
@@ -27,19 +26,7 @@ export function tokenFingerprint(token: string | null): string | null {
   return createHash('sha256').update(token).digest('hex').slice(0, 24);
 }
 
-export function checkMobileRateLimit(
-  request: NextRequest,
-  policy: keyof typeof mobileRateLimits,
-  identity?: string | null,
-): NextResponse | null {
-  const bearerIdentity = tokenFingerprint(getBearerTokenFromRequest(request));
-  return checkRateLimit(request, {
-    ...mobileRateLimits[policy],
-    key: identity ?? bearerIdentity,
-  });
-}
-
-export async function checkMobileRateLimitAsync(
+export async function checkMobileRateLimit(
   request: NextRequest,
   policy: keyof typeof mobileRateLimits,
   identity?: string | null,
@@ -47,6 +34,8 @@ export async function checkMobileRateLimitAsync(
   const bearerIdentity = tokenFingerprint(getBearerTokenFromRequest(request));
   return redisRateLimiter.consume(request, mobileRateLimits[policy], identity ?? bearerIdentity);
 }
+
+export const checkMobileRateLimitAsync = checkMobileRateLimit;
 
 export function requireSupportedAppVersion(request: NextRequest): NextResponse | null {
   const minimum = process.env.MOBILE_MIN_APP_VERSION?.trim();

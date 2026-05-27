@@ -8,7 +8,7 @@ export const dynamic = 'force-dynamic';
 const auth = new MobileAuthService();
 
 export async function POST(request: NextRequest) {
-  const limited = checkMobileRateLimit(request, 'device');
+  const limited = await checkMobileRateLimit(request, 'device');
   if (limited) return limited;
 
   try {

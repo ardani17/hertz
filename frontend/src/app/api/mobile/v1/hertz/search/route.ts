@@ -8,7 +8,7 @@ export const dynamic = 'force-dynamic';
 const service = new HertzSearchService();
 
 export async function GET(request: NextRequest) {
-  const limited = checkMobileRateLimit(request, 'read');
+  const limited = await checkMobileRateLimit(request, 'read');
   if (limited) return limited;
 
   try {

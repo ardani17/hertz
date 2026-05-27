@@ -11,7 +11,23 @@ export type ValidatedMemberSession = {
   sessionId: string;
   createdAt: Date;
   lastUsedAt: Date | null;
+  deviceId: string | null;
+  platform: string | null;
+  appVersion: string | null;
 };
+
+export interface MemberSessionDeviceMeta {
+  deviceId?: string | null;
+  platform?: string | null;
+  appVersion?: string | null;
+}
+
+export class SessionDeviceMismatchError extends Error {
+  constructor(message = 'Sesi tidak sesuai dengan perangkat ini') {
+    super(message);
+    this.name = 'SessionDeviceMismatchError';
+  }
+}
 
 export function hashMemberSessionToken(token: string): string {
   const secret = process.env.MEMBER_SESSION_SECRET
@@ -25,13 +41,16 @@ export class MemberSessionService {
   private readonly memberships = new MembershipRepository();
   private readonly verifier = new MembershipService();
 
-  async createSession(userId: string): Promise<{ token: string; expiresAt: Date; sessionId: string }> {
+  async createSession(userId: string, meta: MemberSessionDeviceMeta = {}): Promise<{ token: string; expiresAt: Date; sessionId: string }> {
     const token = randomUUID();
     const expiresAt = new Date(Date.now() + SESSION_IDLE_MS);
     const session = await this.sessions.create({
       userId,
       tokenHash: hashMemberSessionToken(token),
       expiresAt,
+      deviceId: meta.deviceId,
+      platform: meta.platform,
+      appVersion: meta.appVersion,
     });
     return { token, expiresAt, sessionId: session?.id ?? '' };
   }
@@ -65,6 +84,9 @@ export class MemberSessionService {
       sessionId: session.id,
       createdAt: session.created_at,
       lastUsedAt: session.last_used_at,
+      deviceId: session.device_id,
+      platform: session.platform,
+      appVersion: session.app_version,
     };
   }
 
@@ -73,10 +95,23 @@ export class MemberSessionService {
     await this.sessions.deleteByTokenHash(hashMemberSessionToken(token));
   }
 
-  async refreshSession(token: string | null): Promise<{ token: string; expiresAt: Date; user: MemberSessionUser } | null> {
+  async refreshSession(token: string | null): Promise<{
+    token: string;
+    expiresAt: Date;
+    user: MemberSessionUser;
+    session: ValidatedMemberSession;
+  } | null> {
     const validated = await this.validateToken(token);
     if (!validated || !token) return null;
-    return { token, expiresAt: validated.expiresAt, user: validated.user };
+    return { token, expiresAt: validated.expiresAt, user: validated.user, session: validated };
+  }
+
+  assertDeviceMatch(session: ValidatedMemberSession, deviceId: string | null | undefined): void {
+    const requestedDeviceId = typeof deviceId === 'string' ? deviceId.trim() : '';
+    if (!session.deviceId || !requestedDeviceId) return;
+    if (session.deviceId !== requestedDeviceId) {
+      throw new SessionDeviceMismatchError();
+    }
   }
 
   async listActiveSessions(userId: string): Promise<Array<{
@@ -84,6 +119,9 @@ export class MemberSessionService {
     expiresAt: Date;
     createdAt: Date;
     lastUsedAt: Date | null;
+    deviceId: string | null;
+    platform: string | null;
+    appVersion: string | null;
   }>> {
     const rows = await this.sessions.listActiveByUserId(userId);
     return rows.map((row) => ({
@@ -91,6 +129,9 @@ export class MemberSessionService {
       expiresAt: row.expires_at,
       createdAt: row.created_at,
       lastUsedAt: row.last_used_at,
+      deviceId: row.device_id,
+      platform: row.platform,
+      appVersion: row.app_version,
     }));
   }
 

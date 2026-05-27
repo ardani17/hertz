@@ -11,7 +11,7 @@ export async function GET(request: NextRequest) {
   const auth = await requireMobileMember(request);
   if (!isMobileAuthContext(auth)) return auth;
 
-  const limited = checkMobileRateLimit(request, 'read', auth.user.id);
+  const limited = await checkMobileRateLimit(request, 'read', auth.user.id);
   if (limited) return limited;
 
   try {

@@ -6,6 +6,7 @@ import { ActivityLogService } from './activityLog';
 import { HertzForbiddenError, HertzNotFoundError, HertzValidationError } from './hertzPostService';
 import { PushNotificationService } from './pushNotificationService';
 import { HertzInAppNotificationService } from './hertzInAppNotificationService';
+import { resolveMentionedUserIds } from '../utils/mentionParser';
 import type { MemberSessionUser } from '../types/membership';
 
 const COMMENT_MAX = 2000;
@@ -30,8 +31,9 @@ export class HertzCommentService {
     const resolvedPostId = await this.posts.resolvePostId(postId);
     if (!resolvedPostId) throw new HertzNotFoundError('Post tidak ditemukan');
     const resolvedParentCommentId = await this.resolveParentCommentId(resolvedPostId, parentCommentId);
+    const cleanedContent = cleanComment(content);
     const comment = await withTransaction(async (client) => {
-      const comment = await this.comments.create(resolvedPostId, user.id, cleanComment(content), resolvedParentCommentId, client);
+      const comment = await this.comments.create(resolvedPostId, user.id, cleanedContent, resolvedParentCommentId, client);
       await this.postStats.incr(resolvedPostId, 'comment_count', 1, {}, client);
       await this.logs.log({
         actor_id: user.id,
@@ -44,6 +46,7 @@ export class HertzCommentService {
       return comment;
     });
     void this.push.notifyHertzCommentCreated({ postId: resolvedPostId, commentId: comment.id, commenterId: user.id });
+    void this.notifyMentions(cleanedContent, user.id, 'comment', comment.id);
     void this.inAppNotifications.notifyComment({ postId: resolvedPostId, commentId: comment.id, actorUserId: user.id }).catch(() => undefined);
     return comment;
   }
@@ -64,7 +67,20 @@ export class HertzCommentService {
     const comment = await this.comments.findById(commentId);
     if (!comment) throw new HertzNotFoundError('Komentar tidak ditemukan');
     if (comment.user_id !== user.id && user.role !== 'admin') throw new HertzForbiddenError();
-    await this.comments.updateContent(commentId, cleanComment(content));
+    const cleanedContent = cleanComment(content);
+    await this.comments.updateContent(commentId, cleanedContent);
+    void this.notifyMentions(cleanedContent, user.id, 'comment', commentId);
+  }
+
+  private async notifyMentions(content: string, actorUserId: string, targetType: string, targetId: string): Promise<void> {
+    try {
+      const userIds = await resolveMentionedUserIds(content);
+      await Promise.all(userIds
+        .filter((userId) => userId !== actorUserId)
+        .map((userId) => this.push.notifyHertzMention({ userId, actorUserId, targetType, targetId })));
+    } catch {
+      // Mention push must not block comment workflow.
+    }
   }
 
   async delete(commentId: string, user: MemberSessionUser | null): Promise<void> {

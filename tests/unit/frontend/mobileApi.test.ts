@@ -33,7 +33,7 @@ describe('mobile API rate limit', () => {
     let response: Response | null = null;
 
     for (let i = 0; i < 13; i++) {
-      response = checkMobileRateLimit(request, 'auth');
+      response = await checkMobileRateLimit(request, 'auth');
     }
 
     expect(response?.status).toBe(429);
@@ -55,7 +55,7 @@ describe('mobile API rate limit', () => {
     let response: Response | null = null;
 
     for (let i = 0; i < 61; i++) {
-      response = checkMobileRateLimit(request, 'mutation', identity);
+      response = await checkMobileRateLimit(request, 'mutation', identity);
     }
 
     expect(response?.status).toBe(429);

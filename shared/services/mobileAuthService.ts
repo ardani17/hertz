@@ -97,7 +97,11 @@ export class MobileAuthService {
     if (!row) throw new MobileAuthNonceInvalidError();
 
     const user = await this.membership.verifyLogin(telegramAuth);
-    const session = await this.sessions.createSession(user.id);
+    const session = await this.sessions.createSession(user.id, {
+      deviceId: row.device_id,
+      platform: row.platform,
+      appVersion: row.app_version,
+    });
     await this.nonces.markConsumed(nonce, user.id);
 
     return {
@@ -114,13 +118,23 @@ export class MobileAuthService {
     };
   }
 
-  async createTelegramSession(authData: TelegramAuthData): Promise<MobileAuthResponse> {
+  async createTelegramSession(authData: TelegramAuthData, meta: {
+    deviceId?: string | null;
+    platform?: MobilePlatform | null;
+    appVersion?: string | null;
+  } = {}): Promise<MobileAuthResponse> {
     const user = await this.membership.verifyLogin(authData);
-    const session = await this.sessions.createSession(user.id);
+    const session = await this.sessions.createSession(user.id, meta);
     return {
       token: session.token,
       expiresAt: session.expiresAt.toISOString(),
       user,
+      session: this.sessionInfo({
+        id: session.sessionId,
+        expiresAt: session.expiresAt,
+        createdAt: new Date(),
+        lastUsedAt: new Date(),
+      }, { ...meta, current: true }),
       loginMechanism: 'telegram_external_browser_callback',
     };
   }
@@ -139,7 +153,12 @@ export class MobileAuthService {
         expiresAt: validated.expiresAt,
         createdAt: validated.createdAt,
         lastUsedAt: validated.lastUsedAt,
-      }, { current: true }),
+      }, {
+        deviceId: validated.deviceId,
+        platform: validated.platform as MobilePlatform | null,
+        appVersion: validated.appVersion,
+        current: true,
+      }),
     };
   }
 
@@ -148,7 +167,12 @@ export class MobileAuthService {
     const currentHash = hashMemberSessionToken(currentToken);
     const currentRow = await this.sessionRepo.findByTokenHash(currentHash);
     return {
-      sessions: rows.map((row) => this.sessionInfo(row, { current: row.id === currentRow?.id })),
+      sessions: rows.map((row) => this.sessionInfo(row, {
+        deviceId: row.deviceId,
+        platform: row.platform as MobilePlatform | null,
+        appVersion: row.appVersion,
+        current: row.id === currentRow?.id,
+      })),
     };
   }
 
