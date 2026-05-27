@@ -1,5 +1,6 @@
 import { NextRequest } from 'next/server';
 import { HertzPostService } from '@shared/services/hertzPostService';
+import { MobileReadCache } from '@shared/infra/MobileReadCache';
 import { apiSuccess } from '@/lib/apiResponse';
 import {
   withCache,
@@ -9,10 +10,15 @@ import {
 export const dynamic = 'force-dynamic';
 
 const feed = new HertzPostService();
+const readCache = new MobileReadCache();
 
 export async function GET(request: NextRequest) {
   return withMobileRoute(request, { policy: 'read', requireAuth: false }, async ({ viewer }) => {
     const params = request.nextUrl.searchParams;
+    const cacheKey = `feed:${params.toString()}:${viewer?.id ?? 'guest'}`;
+    const cached = await readCache.get<Awaited<ReturnType<HertzPostService['listFeed']>>>(cacheKey);
+    if (cached) return withCache(apiSuccess(cached), viewer ? 'private, no-store' : 'public, max-age=15, stale-while-revalidate=30');
+
     const author = params.get('author')?.trim();
     const authorId = params.get('authorId')?.trim();
     if (author || authorId) {
@@ -24,6 +30,7 @@ export async function GET(request: NextRequest) {
         limit: Number(params.get('limit') || 20),
         viewer,
       });
+      await readCache.set(cacheKey, result);
       return withCache(apiSuccess(result), viewer ? 'private, no-store' : 'public, max-age=15, stale-while-revalidate=30');
     }
     const result = await feed.listFeed({
@@ -34,6 +41,7 @@ export async function GET(request: NextRequest) {
       sort: params.get('sort'),
       viewer,
     });
+    await readCache.set(cacheKey, result);
     return withCache(apiSuccess(result), viewer ? 'private, no-store' : 'public, max-age=15, stale-while-revalidate=30');
   });
 }

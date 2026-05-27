@@ -5,6 +5,8 @@ import { HertzPostRepository, type HertzPostRow } from '../repositories/hertzPos
 import { ActivityLogService } from './activityLog';
 import { PushNotificationService } from './pushNotificationService';
 import { textToHtml, stripHtml } from '../utils/textToHtml';
+import { MobileReadCache } from '../infra/MobileReadCache';
+import { decodeCursor, encodeCursor } from '../utils/cursor';
 import { resolveMentionedUserIds } from '../utils/mentionParser';
 import type { MemberSessionUser } from '../types/membership';
 import type {
@@ -25,6 +27,11 @@ const EXCERPT_LIMIT = 420;
 const SHORT_ID_ALPHABET = 'abcdefghijklmnopqrstuvwxyz0123456789';
 const VALID_CATEGORIES: HertzPostCategory[] = ['trading_room', 'life_coffee', 'general'];
 const DEFAULT_SITE_URL = 'https://hertz.cloudnexify.com';
+const readCache = new MobileReadCache();
+
+function invalidateFeedCache(): void {
+  void readCache.invalidatePrefix('feed:');
+}
 
 function truncateMetadataText(text: string, maxLength: number) {
   const cleaned = text.replace(/\s+/g, ' ').trim();
@@ -154,23 +161,6 @@ function createShortIdCandidate(): string {
   return `hz_${suffix}`;
 }
 
-function encodeCursor(row: { created_at: Date; id: string }): string {
-  return Buffer.from(JSON.stringify({
-    createdAt: row.created_at instanceof Date ? row.created_at.toISOString() : String(row.created_at),
-    id: row.id,
-  })).toString('base64url');
-}
-
-function decodeCursor(cursor: string | null): { createdAt: string; id: string } | null {
-  if (!cursor) return null;
-  try {
-    const parsed = JSON.parse(Buffer.from(cursor, 'base64url').toString('utf8')) as { createdAt?: string; id?: string };
-    return parsed.createdAt && parsed.id ? { createdAt: parsed.createdAt, id: parsed.id } : null;
-  } catch {
-    return null;
-  }
-}
-
 function dateToIso(value: Date | string | null): string | null {
   if (!value) return null;
   return value instanceof Date ? value.toISOString() : String(value);
@@ -222,7 +212,7 @@ export class HertzPostService {
     const pageRows = rows.slice(0, limit);
     return {
       items: await this.mapPosts(pageRows, params.viewer ?? null),
-      nextCursor: rows.length > limit ? encodeCursor(rows[limit]) : null,
+      nextCursor: rows.length > limit ? encodeCursor({ createdAt: rows[limit].created_at, id: rows[limit].id }) : null,
     };
   }
 
@@ -245,7 +235,7 @@ export class HertzPostService {
     const pageRows = rows.slice(0, limit);
     return {
       items: await this.mapPosts(pageRows, params.viewer ?? null),
-      nextCursor: rows.length > limit ? encodeCursor(rows[limit]) : null,
+      nextCursor: rows.length > limit ? encodeCursor({ createdAt: rows[limit].created_at, id: rows[limit].id }) : null,
     };
   }
 
@@ -304,6 +294,7 @@ export class HertzPostService {
     });
 
     void this.notifyMentions(content, user.id, 'post', postId);
+    invalidateFeedCache();
     return this.getPostDetail(postId, user);
   }
 
@@ -329,6 +320,7 @@ export class HertzPostService {
       return post.id;
     });
     void this.notifyMentions(content, user.id, 'post', postId);
+    invalidateFeedCache();
     return this.getPostDetail(postId, user);
   }
 
@@ -345,7 +337,9 @@ export class HertzPostService {
         content: '',
         quotedPostId: original.id,
       }, client);
-      return post.id;
+      const postId = post.id;
+      invalidateFeedCache();
+      return postId;
     });
   }
 
@@ -395,6 +389,7 @@ export class HertzPostService {
     }
     await this.posts.updateContent(post.id, cleanText(content));
     void this.notifyMentions(content, user.id, 'post', post.id);
+    invalidateFeedCache();
   }
 
   private async notifyMentions(content: string, actorUserId: string, targetType: string, targetId: string): Promise<void> {
@@ -428,6 +423,7 @@ export class HertzPostService {
     if (!post) throw new HertzNotFoundError();
     if (post.author_id !== user.id && user.role !== 'admin') throw new HertzForbiddenError();
     await this.posts.updateStatus(post.id, 'deleted');
+    invalidateFeedCache();
   }
 
   private async mapPosts(rows: HertzPostRow[], viewer: MemberSessionUser | null, truncate = true, includeQuotes = true): Promise<HertzPost[]> {
