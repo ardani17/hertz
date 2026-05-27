@@ -61,7 +61,7 @@ Errors: `UNAUTHENTICATED`, `VALIDATION_FAILED`, `RATE_LIMITED`.
 Auth: public legacy fallback. Body combines Telegram auth payload with optional `deviceId`, `platform`, `appVersion`. Response matches handoff exchange.
 
 ### POST `/api/mobile/v1/auth/refresh`
-Auth: bearer. Body: `{ "deviceId": "device-1" }`. Response returns refreshed `token`, `expiresAt`, `user`, `session`.
+Auth: bearer. Body: `{ "deviceId": "device-1" }`. Returns a **new rotated token**; replace stored bearer token after success. Response returns refreshed `token`, `expiresAt`, `user`, `session`.
 
 Errors: `UNAUTHENTICATED`, `SESSION_DEVICE_MISMATCH`, `UPGRADE_REQUIRED`.
 
@@ -156,7 +156,7 @@ Auth: bearer. Body: `{ "body": "hello", "mediaIds": [] }`. Response `201`: `{ "m
 Auth: bearer. Body: `{ "archived": true }`.
 
 ### GET/POST `/api/mobile/v1/hertz/messages/conversations/:conversationId/typing`
-Auth: bearer. POST body: `{ "typing": true }`. Response: `MobileDmTypingResponse`.
+Auth: bearer. POST body: `{ "typing": true }` or `{ "clear": true }` / `{ "typing": false }`. Response GET: `{ "typingUserIds": ["user-id"], "lastUpdated": "2026-05-27T00:00:00.000Z" }`.
 
 ### DELETE `/api/mobile/v1/hertz/messages/messages/:messageId`
 Auth: bearer. Response: `{ "deleted": true }`.
@@ -201,6 +201,11 @@ Auth: optional bearer. Response: `MobileProfileActivityResponse`.
 Auth: bearer. Content-Type: `multipart/form-data`. Fields: `file`, `purpose=post|dm|profile_avatar|profile_cover`.
 
 Response `201`: `{ "media": { "id": "...", "fileUrl": "...", "thumbnailUrl": "...", "mediaType": "image" } }`.
+
+### POST `/api/mobile/v1/media/upload-url`
+Auth: bearer. Body: `{ "purpose": "post", "contentType": "image/jpeg", "sizeBytes": 1024 }`.
+
+Response `201`: `{ "upload": { "uploadUrl": "...", "fileKey": "...", "expiresAt": "...", "publicUrl": "..." } }`.
 
 Errors: `VALIDATION_FAILED`, `RATE_LIMITED`.
 

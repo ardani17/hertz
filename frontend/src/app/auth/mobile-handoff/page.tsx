@@ -1,4 +1,5 @@
 import Script from 'next/script';
+import { resolveMobileDeepLinkScheme } from '@/lib/mobileHandoff';
 import styles from './page.module.css';
 
 export const dynamic = 'force-dynamic';
@@ -10,6 +11,7 @@ export default async function MobileHandoffPage({
 }) {
   const { nonce = '' } = await searchParams;
   const botName = process.env.NEXT_PUBLIC_TELEGRAM_BOT_NAME || process.env.TELEGRAM_BOT_NAME || '';
+  const deepLinkScheme = resolveMobileDeepLinkScheme(process.env.MOBILE_DEEP_LINK_SCHEME);
 
   return (
     <main className={styles.handoff}>
@@ -34,7 +36,7 @@ export default async function MobileHandoffPage({
                   throw new Error(payload.error?.message || 'Login gagal');
                 }
                 const data = payload.data;
-                const target = new URL('hertz://auth/callback');
+                const target = new URL(${JSON.stringify(`${deepLinkScheme}://auth/callback`)});
                 target.searchParams.set('token', data.token);
                 target.searchParams.set('expiresAt', data.expiresAt);
                 window.location.href = target.toString();

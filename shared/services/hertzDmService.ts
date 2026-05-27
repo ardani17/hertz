@@ -4,20 +4,29 @@ import { HertzForbiddenError, HertzValidationError } from './hertzPostService';
 import { PushNotificationService } from './pushNotificationService';
 import { HertzInAppNotificationService } from './hertzInAppNotificationService';
 import type { MemberSessionUser } from '../types/membership';
+import { clampLimit, encodeCursor } from '../utils/cursor';
 
 export class HertzDmService {
   private readonly repo = new HertzDmRepository();
   private readonly push = new PushNotificationService();
   private readonly inAppNotifications = new HertzInAppNotificationService();
 
-  async inbox(user: MemberSessionUser, includeArchived = false) {
-    const rows = await this.repo.listInbox(user.id, includeArchived);
-    return rows.map((row) => ({
+  async inbox(
+    user: MemberSessionUser,
+    includeArchived = false,
+    options: { cursor?: string | null; limit?: number } = {},
+  ) {
+    const limit = clampLimit(options.limit, 20, 50);
+    const rows = await this.repo.listInbox(user.id, includeArchived, { cursor: options.cursor ?? null, limit: limit + 1 });
+    const pageRows = rows.slice(0, limit);
+    const nextRow = rows.length > limit ? rows[limit] : null;
+    const items = pageRows.map((row) => ({
       id: row.id,
       archivedAt: row.archived_at,
       lastReadAt: row.last_read_at,
       lastMessageAt: row.last_message_at,
       lastMessageBody: row.last_message_body,
+      lastSenderId: row.last_sender_id,
       unreadCount: Number(row.unread_count ?? 0),
       peer: row.peer_id ? {
         id: row.peer_id,
@@ -27,6 +36,12 @@ export class HertzDmService {
         role: row.peer_role,
       } : null,
     }));
+    return {
+      items,
+      nextCursor: nextRow
+        ? encodeCursor({ createdAt: nextRow.last_message_at ?? nextRow.created_at, id: nextRow.id })
+        : null,
+    };
   }
 
   async createDirect(user: MemberSessionUser, recipientId: string) {

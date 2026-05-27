@@ -121,8 +121,8 @@ export interface MobileDmThreadResponse {
 }
 
 export interface MobileDmTypingResponse {
-  typing: boolean;
-  typingUserIds?: string[];
+  typingUserIds: string[];
+  lastUpdated: string | null;
 }
 
 export interface MobileDmBlockResponse {
@@ -224,6 +224,7 @@ export interface MobileSearchResultItem {
 export interface MobileSearchResponse {
   query: string;
   results: MobileSearchResultItem[];
+  nextCursor: string | null;
 }
 
 export interface MobileMarketRailGroup {
