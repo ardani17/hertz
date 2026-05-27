@@ -11,8 +11,8 @@ import {
   MobileAuthCurrentSessionRevokeError,
   MobileAuthNonceInvalidError,
   MobileAuthValidationError,
-} from '@shared/services/mobileAuthService';
-import { MobileMediaValidationError } from '@shared/services/mobileMediaService';
+} from '@/server/services/auth/MobileAuthService';
+import { MobileMediaValidationError } from '@/server/services/media/MobileMediaService';
 import { SessionDeviceMismatchError } from '@shared/services/memberSessionService';
 import {
   DevTelegramLoginDisabledError,

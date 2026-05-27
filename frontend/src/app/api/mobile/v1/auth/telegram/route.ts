@@ -1,5 +1,5 @@
 import { NextRequest } from 'next/server';
-import { MobileAuthService } from '@shared/services/mobileAuthService';
+import { MobileAuthService } from '@/server/services/auth/MobileAuthService';
 import type { TelegramAuthData } from '@shared/types/membership';
 import { apiErrorFromUnknown, apiSuccess } from '@/lib/apiResponse';
 import { checkMobileRateLimit } from '@/lib/mobileApi';

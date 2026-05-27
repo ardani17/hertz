@@ -1,5 +1,5 @@
 import { NextRequest } from 'next/server';
-import { MobileAuthService } from '@shared/services/mobileAuthService';
+import { MobileAuthService } from '@/server/services/auth/MobileAuthService';
 import { checkMobileRateLimit, isMobileAuthContext, requireMobileMember } from '@/lib/mobileApi';
 import { apiSuccess } from '@/lib/apiResponse';
 

@@ -1,10 +1,12 @@
 import { apiError } from '@/lib/apiResponse';
-import { getMarketRailSnapshot } from '@/lib/globalDataMarket';
+import { MarketRailService } from '@/server/services/market/MarketRailService';
 
 export const dynamic = 'force-dynamic';
 
+const marketRail = new MarketRailService();
+
 export async function GET() {
-  const snapshot = await getMarketRailSnapshot();
+  const snapshot = await marketRail.snapshot();
   if (snapshot.groups.length === 0) {
     return apiError('RESOURCE_NOT_FOUND', 'Data market belum tersedia', 503);
   }

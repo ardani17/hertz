@@ -6,7 +6,7 @@ describe('mobile media contract', () => {
 
   it('uploads media with purpose', async () => {
     mockMemberSessionService();
-    vi.doMock('@shared/services/mobileMediaService', () => ({
+    vi.doMock('@/server/services/media/MobileMediaService', () => ({
       MobileMediaService: vi.fn().mockImplementation(() => ({
         upload: vi.fn(async () => ({ id: 'media-1', fileUrl: 'https://cdn.test/image.jpg', thumbnailUrl: 'https://cdn.test/image.jpg', mediaType: 'image' })),
       })),

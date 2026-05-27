@@ -15,6 +15,8 @@ export interface HertzSearchResponse {
   results: HertzSearchResult[];
 }
 
+export type HertzSearchType = 'post' | 'member';
+
 export function normalizeHertzSearchQuery(value: unknown): string | null {
   const text = typeof value === 'string' ? value.trim() : '';
   return text.length >= 2 ? text.slice(0, 80) : null;
@@ -34,14 +36,14 @@ export function formatHertzSearchPostLabel(contentHtml: string | null | undefine
 export class HertzSearchService {
   private readonly posts = new HertzPostRepository();
 
-  async search(value: unknown): Promise<HertzSearchResponse> {
+  async search(value: unknown, type: HertzSearchType | null = null): Promise<HertzSearchResponse> {
     const text = normalizeHertzSearchQuery(value);
     if (!text) return { query: '', results: [] };
 
     const like = `%${text.replace(/^#/, '')}%`;
     const [posts, members, pairs, topicRows] = await Promise.all([
-      this.posts.searchPublishedPreview(text.replace(/^#/, ''), 6),
-      query<{ id: string; username: string | null; display_name: string | null }>(
+      type === 'member' ? Promise.resolve([]) : this.posts.searchPublishedPreview(text.replace(/^#/, ''), 6),
+      type === 'post' ? Promise.resolve({ rows: [] }) : query<{ id: string; username: string | null; display_name: string | null }>(
         `SELECT id, username, display_name
          FROM users
          WHERE verified_member_at IS NOT NULL
@@ -50,7 +52,7 @@ export class HertzSearchService {
          LIMIT 5`,
         [like],
       ),
-      query<{ pair: string }>(
+      type ? Promise.resolve({ rows: [] }) : query<{ pair: string }>(
         `SELECT DISTINCT pair
          FROM hertz_post_market_context
          WHERE pair IS NOT NULL AND pair ILIKE $1
@@ -58,7 +60,7 @@ export class HertzSearchService {
          LIMIT 5`,
         [like],
       ),
-      query<{ content: string }>(
+      type ? Promise.resolve({ rows: [] }) : query<{ content: string }>(
         `SELECT content
          FROM hertz_posts
          WHERE status = 'published' AND deleted_at IS NULL AND content ILIKE $1

@@ -14,11 +14,11 @@ function request(path: string, init: RequestInit = {}) {
 describe('mobile auth handoff routes', () => {
   afterEach(() => {
     vi.resetModules();
-    vi.doUnmock('@shared/services/mobileAuthService');
+    vi.doUnmock('@/server/services/auth/MobileAuthService');
   });
 
   it('creates a login handoff nonce', async () => {
-    vi.doMock('@shared/services/mobileAuthService', () => ({
+    vi.doMock('@/server/services/auth/MobileAuthService', () => ({
       MobileAuthService: vi.fn().mockImplementation(() => ({
         initHandoff: vi.fn(async () => ({
           nonce: 'nonce-1',
@@ -40,7 +40,7 @@ describe('mobile auth handoff routes', () => {
   });
 
   it('exchanges a nonce for a bearer token', async () => {
-    vi.doMock('@shared/services/mobileAuthService', () => ({
+    vi.doMock('@/server/services/auth/MobileAuthService', () => ({
       MobileAuthService: vi.fn().mockImplementation(() => ({
         exchangeHandoff: vi.fn(async () => ({
           token: 'mobile-token',

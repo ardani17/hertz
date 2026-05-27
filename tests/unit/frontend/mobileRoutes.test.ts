@@ -58,7 +58,7 @@ function mockMemberSessionService() {
 describe('mobile route contracts', () => {
   afterEach(() => {
     vi.doUnmock('@shared/services/memberSessionService');
-    vi.doUnmock('@shared/services/mobileAuthService');
+    vi.doUnmock('@/server/services/auth/MobileAuthService');
     vi.doUnmock('@shared/services/membershipService');
     vi.doUnmock('@shared/services/deviceTokenService');
   });
@@ -66,7 +66,7 @@ describe('mobile route contracts', () => {
   it('GET /api/mobile/v1/me resolves bearer auth and returns the standard envelope', async () => {
     vi.resetModules();
     mockMemberSessionService();
-    vi.doMock('@shared/services/mobileAuthService', () => ({
+    vi.doMock('@/server/services/auth/MobileAuthService', () => ({
       MobileAuthService: vi.fn().mockImplementation(() => ({
         buildMe: vi.fn(async () => ({
           user,

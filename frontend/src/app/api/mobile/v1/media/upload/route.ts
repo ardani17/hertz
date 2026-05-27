@@ -1,5 +1,5 @@
 import { NextRequest } from 'next/server';
-import { MobileMediaService } from '@shared/services/mobileMediaService';
+import { MobileMediaService } from '@/server/services/media/MobileMediaService';
 import { apiErrorFromUnknown, apiSuccess } from '@/lib/apiResponse';
 import { checkMobileRateLimit, isMobileAuthContext, requireMobileMember } from '@/lib/mobileApi';
 
