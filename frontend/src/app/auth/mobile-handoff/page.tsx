@@ -1,4 +1,5 @@
 import Script from 'next/script';
+import styles from './page.module.css';
 
 export const dynamic = 'force-dynamic';
 
@@ -11,21 +12,11 @@ export default async function MobileHandoffPage({
   const botName = process.env.NEXT_PUBLIC_TELEGRAM_BOT_NAME || process.env.TELEGRAM_BOT_NAME || '';
 
   return (
-    <main style={{
-      alignItems: 'center',
-      background: '#0a0a0f',
-      color: '#f3fff8',
-      display: 'flex',
-      flexDirection: 'column',
-      gap: 16,
-      minHeight: '100vh',
-      padding: 24,
-      textAlign: 'center',
-    }}>
-      <h1>Masuk ke Hertz</h1>
-      <p>Verifikasi membership lewat Telegram untuk melanjutkan ke aplikasi mobile.</p>
-      <div id="telegram-login" />
-      {!botName ? <p>Telegram bot belum dikonfigurasi.</p> : null}
+    <main className={styles.handoff}>
+      <h1 className={styles.title}>Masuk ke Hertz</h1>
+      <p className={styles.copy}>Verifikasi membership lewat Telegram untuk melanjutkan ke aplikasi mobile.</p>
+      <div id="telegram-login" className={styles.telegramLogin} />
+      {!botName ? <p className={styles.copy}>Telegram bot belum dikonfigurasi.</p> : null}
       <Script
         id="hertz-mobile-handoff"
         strategy="afterInteractive"

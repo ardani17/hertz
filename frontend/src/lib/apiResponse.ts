@@ -26,13 +26,24 @@ export function apiSuccess<T>(data: T, status = 200) {
 }
 
 function normalizeErrorCode(code: string): string {
-  if (code === 'AUTH_REQUIRED') return 'UNAUTHENTICATED';
-  if (code === 'AUTH_INVALID') return 'UNAUTHENTICATED';
-  if (code === 'AUTH_FORBIDDEN') return 'FORBIDDEN';
-  if (code === 'RESOURCE_NOT_FOUND') return 'POST_NOT_FOUND';
-  if (code === 'VALIDATION_ERROR') return 'VALIDATION_FAILED';
-  if (code === 'RATE_LIMIT_EXCEEDED') return 'RATE_LIMITED';
-  return code;
+  const aliases: Record<string, string> = {
+    AUTH_REQUIRED: 'UNAUTHENTICATED',
+    AUTH_INVALID: 'UNAUTHENTICATED',
+    AUTH_FORBIDDEN: 'FORBIDDEN',
+    RESOURCE_NOT_FOUND: 'POST_NOT_FOUND',
+    VALIDATION_ERROR: 'VALIDATION_FAILED',
+    RATE_LIMIT_EXCEEDED: 'RATE_LIMITED',
+  };
+  const normalized = aliases[code] ?? code;
+  if (normalized !== code) {
+    console.warn(JSON.stringify({
+      level: 'warn',
+      deprecation: 'error_code_alias',
+      from: code,
+      to: normalized,
+    }));
+  }
+  return normalized;
 }
 
 export function apiError(code: string, message: string, status: number, details: Record<string, unknown> | null = null) {
