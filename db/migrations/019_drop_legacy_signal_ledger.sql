@@ -1,16 +1,31 @@
 -- HERTZ Platform
 -- Migration 019: Remove legacy signal-ledger tables superseded by hertz_* tables
 
-DROP TABLE IF EXISTS community_note_ratings;
-DROP TABLE IF EXISTS community_note_sources;
-DROP TABLE IF EXISTS community_notes;
-DROP TABLE IF EXISTS post_reports;
-DROP TABLE IF EXISTS post_comments;
-DROP TABLE IF EXISTS post_views;
-DROP TABLE IF EXISTS post_reposts;
-DROP TABLE IF EXISTS post_bookmarks;
-DROP TABLE IF EXISTS post_reactions;
-DROP TABLE IF EXISTS post_market_context;
-DROP TABLE IF EXISTS feed_posts;
-DROP TABLE IF EXISTS telegram_memberships;
-DROP TABLE IF EXISTS member_sessions;
+DO $$
+DECLARE
+  legacy_table text;
+BEGIN
+  FOREACH legacy_table IN ARRAY ARRAY[
+    'community_note_ratings',
+    'community_note_sources',
+    'community_notes',
+    'post_reports',
+    'post_comments',
+    'post_views',
+    'post_reposts',
+    'post_bookmarks',
+    'post_reactions',
+    'post_market_context',
+    'feed_posts',
+    'telegram_memberships',
+    'member_sessions'
+  ]
+  LOOP
+    BEGIN
+      EXECUTE format('DROP TABLE IF EXISTS %I', legacy_table);
+    EXCEPTION
+      WHEN insufficient_privilege THEN
+        RAISE NOTICE 'Skipping % drop: current database user is not the table owner', legacy_table;
+    END;
+  END LOOP;
+END $$;

@@ -1,14 +1,12 @@
 import { NextRequest } from 'next/server';
-import { MembershipService } from '@shared/services/membershipService';
-import { MemberSessionService } from '@shared/services/memberSessionService';
+import { MobileAuthService } from '@shared/services/mobileAuthService';
 import type { TelegramAuthData } from '@shared/types/membership';
 import { apiErrorFromUnknown, apiSuccess } from '@/lib/apiResponse';
 import { checkMobileRateLimit } from '@/lib/mobileApi';
 
 export const dynamic = 'force-dynamic';
 
-const membership = new MembershipService();
-const sessions = new MemberSessionService();
+const auth = new MobileAuthService();
 
 export async function POST(request: NextRequest) {
   const limited = checkMobileRateLimit(request, 'auth');
@@ -16,14 +14,7 @@ export async function POST(request: NextRequest) {
 
   try {
     const body = (await request.json()) as TelegramAuthData;
-    const user = await membership.verifyLogin(body);
-    const session = await sessions.createSession(user.id);
-    return apiSuccess({
-      token: session.token,
-      expiresAt: session.expiresAt.toISOString(),
-      user,
-      loginMechanism: 'telegram_external_browser_callback',
-    }, 201);
+    return apiSuccess(await auth.createTelegramSession(body), 201);
   } catch (error) {
     return apiErrorFromUnknown(error);
   }

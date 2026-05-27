@@ -24,3 +24,20 @@ export async function DELETE(request: NextRequest, context: RouteContext) {
     return apiErrorFromUnknown(error);
   }
 }
+
+export async function PATCH(request: NextRequest, context: RouteContext) {
+  const auth = await requireMobileMember(request);
+  if (!isMobileAuthContext(auth)) return auth;
+
+  const limited = checkMobileRateLimit(request, 'mutation', auth.user.id);
+  if (limited) return limited;
+
+  try {
+    const { commentId } = await context.params;
+    const body = await request.json();
+    await comments.edit(commentId, auth.user, body.content);
+    return apiSuccess({ updated: true });
+  } catch (error) {
+    return apiErrorFromUnknown(error);
+  }
+}

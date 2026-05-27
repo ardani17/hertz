@@ -8,14 +8,21 @@ export class DeviceTokenValidationError extends Error {
 }
 
 function validatePlatform(value: unknown): DevicePlatform {
-  if (value === 'android' || value === 'ios') return value;
-  throw new DeviceTokenValidationError('Platform harus android atau ios');
+  if (value === 'android' || value === 'ios' || value === 'expo') return value;
+  throw new DeviceTokenValidationError('Platform harus android, ios, atau expo');
 }
 
 function cleanToken(value: unknown): string {
   const token = typeof value === 'string' ? value.trim() : '';
   if (!token) throw new DeviceTokenValidationError('Device token wajib diisi');
   if (token.length > 4096) throw new DeviceTokenValidationError('Device token terlalu panjang');
+  return token;
+}
+
+function validateTokenForPlatform(platform: DevicePlatform, token: string): string {
+  if (platform === 'expo' && !/^ExponentPushToken\[[A-Za-z0-9_-]+\]$/.test(token)) {
+    throw new DeviceTokenValidationError('Expo push token tidak valid');
+  }
   return token;
 }
 
@@ -30,10 +37,12 @@ export class DeviceTokenService {
   private readonly repo = new DeviceTokenRepository();
 
   async register(userId: string, input: Record<string, unknown>): Promise<DeviceTokenRow> {
+    const platform = validatePlatform(input.platform);
+    const token = cleanToken(input.token);
     return this.repo.upsert({
       userId,
-      platform: validatePlatform(input.platform),
-      token: cleanToken(input.token),
+      platform,
+      token: validateTokenForPlatform(platform, token),
       deviceId: optionalText(input.deviceId, 200),
       appVersion: optionalText(input.appVersion, 80),
     });

@@ -133,6 +133,18 @@ check_required_vars() {
         exit 1
     fi
 
+    export PUSH_PROVIDER="${PUSH_PROVIDER:-expo}"
+    if [ "${PUSH_PROVIDER}" = "expo" ] && { [ -z "${EXPO_ACCESS_TOKEN:-}" ] || [ "${EXPO_ACCESS_TOKEN}" = "your_expo_access_token_here" ]; }; then
+        warn "PUSH_PROVIDER=expo tetapi EXPO_ACCESS_TOKEN belum diisi. Push delivery tetap dicatat, receipt query mungkin terbatas."
+    fi
+
+    export MOBILE_DEEP_LINK_SCHEME="${MOBILE_DEEP_LINK_SCHEME:-hertz}"
+    export MOBILE_APP_BUNDLE_ID_IOS="${MOBILE_APP_BUNDLE_ID_IOS:-com.hertz.app}"
+    export MOBILE_APP_PACKAGE_ANDROID="${MOBILE_APP_PACKAGE_ANDROID:-com.hertz.app}"
+    export MOBILE_MIN_APP_VERSION="${MOBILE_MIN_APP_VERSION:-1.0.0}"
+    export MOBILE_HANDOFF_NONCE_TTL_SECONDS="${MOBILE_HANDOFF_NONCE_TTL_SECONDS:-300}"
+    export RATE_LIMITER_BACKEND="${RATE_LIMITER_BACKEND:-redis}"
+
     ok "Semua variabel wajib tervalidasi."
 }
 

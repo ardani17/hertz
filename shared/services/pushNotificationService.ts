@@ -15,6 +15,18 @@ interface FcmResponse {
   error?: unknown;
 }
 
+interface ExpoPushTicket {
+  status?: 'ok' | 'error';
+  id?: string;
+  message?: string;
+  details?: { error?: string };
+}
+
+interface ExpoPushResponse {
+  data?: ExpoPushTicket[];
+  errors?: Array<{ message?: string }>;
+}
+
 export class PushNotificationService {
   private readonly devices = new DeviceTokenRepository();
   private readonly events = new NotificationEventRepository();
@@ -94,6 +106,11 @@ export class PushNotificationService {
       payload: input.payload,
     });
 
+    if (process.env.PUSH_PROVIDER !== 'fcm_http_v1' && device.platform === 'expo') {
+      await this.sendExpo(event.id, device, input);
+      return;
+    }
+
     const serverKey = process.env.FCM_SERVER_KEY;
     if (!serverKey) {
       await this.events.markSkipped(event.id, 'FCM_SERVER_KEY is not configured');
@@ -125,6 +142,8 @@ export class PushNotificationService {
       if (result?.error) {
         if (['NotRegistered', 'InvalidRegistration'].includes(result.error)) {
           await this.devices.disableById(device.id);
+          await this.events.markInvalidToken(event.id, result.error);
+          return;
         }
         await this.events.markFailed(event.id, result.error);
         return;
@@ -135,4 +154,46 @@ export class PushNotificationService {
       await this.events.markFailed(event.id, error instanceof Error ? error.message : 'FCM send failed');
     }
   }
+
+  private async sendExpo(eventId: string, device: DeviceTokenRow, input: PushInput): Promise<void> {
+    try {
+      const response = await fetch('https://exp.host/--/api/v2/push/send', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          Accept: 'application/json',
+          ...(process.env.EXPO_ACCESS_TOKEN ? { Authorization: `Bearer ${process.env.EXPO_ACCESS_TOKEN}` } : {}),
+        },
+        body: JSON.stringify({
+          to: device.token,
+          title: input.title,
+          body: input.body,
+          data: stringifyPayload(input.payload ?? {}),
+          sound: 'default',
+        }),
+      });
+      const json = await response.json().catch(() => ({})) as ExpoPushResponse;
+      if (!response.ok) {
+        throw new Error(json.errors?.[0]?.message || `Expo Push HTTP ${response.status}`);
+      }
+      const ticket = json.data?.[0];
+      if (ticket?.status === 'error') {
+        const message = ticket.message || ticket.details?.error || 'Expo push failed';
+        if (ticket.details?.error === 'DeviceNotRegistered') {
+          await this.devices.disableById(device.id);
+          await this.events.markInvalidToken(eventId, message);
+          return;
+        }
+        await this.events.markFailed(eventId, message);
+        return;
+      }
+      await this.events.markSent(eventId, ticket?.id ?? null);
+    } catch (error) {
+      await this.events.markFailed(eventId, error instanceof Error ? error.message : 'Expo push failed');
+    }
+  }
+}
+
+function stringifyPayload(payload: Record<string, unknown>): Record<string, string> {
+  return Object.fromEntries(Object.entries(payload).map(([key, value]) => [key, typeof value === 'string' ? value : JSON.stringify(value)]));
 }

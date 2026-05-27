@@ -1,6 +1,6 @@
 import { execute, query, queryOne, type DbClient } from '../db';
 
-export type NotificationEventStatus = 'pending' | 'sent' | 'failed' | 'skipped';
+export type NotificationEventStatus = 'pending' | 'queued' | 'sent' | 'failed' | 'skipped' | 'invalid_token';
 
 export interface NotificationEventRow {
   id: string;
@@ -62,7 +62,7 @@ export class NotificationEventRepository {
   async markSent(eventId: string, providerMessageId?: string | null, client?: DbClient): Promise<void> {
     await execute(
       `UPDATE notification_events
-       SET status = 'sent', provider_message_id = $2, sent_at = NOW(), failed_at = NULL, error_message = NULL
+       SET status = 'sent', provider_message_id = $2, sent_at = NOW(), failed_at = NULL, error_message = NULL, attempt_count = attempt_count + 1
        WHERE id = $1`,
       [eventId, providerMessageId ?? null],
       client,
@@ -72,7 +72,17 @@ export class NotificationEventRepository {
   async markFailed(eventId: string, errorMessage: string, client?: DbClient): Promise<void> {
     await execute(
       `UPDATE notification_events
-       SET status = 'failed', error_message = $2, failed_at = NOW()
+       SET status = 'failed', error_message = $2, failed_at = NOW(), attempt_count = attempt_count + 1
+       WHERE id = $1`,
+      [eventId, errorMessage],
+      client,
+    );
+  }
+
+  async markInvalidToken(eventId: string, errorMessage: string, client?: DbClient): Promise<void> {
+    await execute(
+      `UPDATE notification_events
+       SET status = 'invalid_token', error_message = $2, failed_at = NOW(), attempt_count = attempt_count + 1
        WHERE id = $1`,
       [eventId, errorMessage],
       client,

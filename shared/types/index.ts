@@ -310,5 +310,7 @@ export type * from './feed';
 export type * from './hertz';
 export type * from './memberProfile';
 export type * from './membership';
+export type * from './mobile';
 export type * from './communityNote';
 export type * from './challengeTracker';
+export type * from './errors';

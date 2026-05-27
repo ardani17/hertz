@@ -1,6 +1,6 @@
 import { execute, query, queryOne, type DbClient } from '../db';
 
-export type DevicePlatform = 'android' | 'ios';
+export type DevicePlatform = 'android' | 'ios' | 'expo';
 
 export interface DeviceTokenRow {
   id: string;

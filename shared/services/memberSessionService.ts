@@ -8,6 +8,9 @@ import type { MemberSessionUser } from '../types/membership';
 export type ValidatedMemberSession = {
   user: MemberSessionUser;
   expiresAt: Date;
+  sessionId: string;
+  createdAt: Date;
+  lastUsedAt: Date | null;
 };
 
 export function hashMemberSessionToken(token: string): string {
@@ -22,15 +25,15 @@ export class MemberSessionService {
   private readonly memberships = new MembershipRepository();
   private readonly verifier = new MembershipService();
 
-  async createSession(userId: string): Promise<{ token: string; expiresAt: Date }> {
+  async createSession(userId: string): Promise<{ token: string; expiresAt: Date; sessionId: string }> {
     const token = randomUUID();
     const expiresAt = new Date(Date.now() + SESSION_IDLE_MS);
-    await this.sessions.create({
+    const session = await this.sessions.create({
       userId,
       tokenHash: hashMemberSessionToken(token),
       expiresAt,
     });
-    return { token, expiresAt };
+    return { token, expiresAt, sessionId: session?.id ?? '' };
   }
 
   async validateToken(token: string | null): Promise<ValidatedMemberSession | null> {
@@ -56,7 +59,13 @@ export class MemberSessionService {
 
     const nextExpiresAt = new Date(Date.now() + SESSION_IDLE_MS);
     await this.sessions.touchAndExtend(session.id, nextExpiresAt);
-    return { user: toMemberSessionUser(user), expiresAt: nextExpiresAt };
+    return {
+      user: toMemberSessionUser(user),
+      expiresAt: nextExpiresAt,
+      sessionId: session.id,
+      createdAt: session.created_at,
+      lastUsedAt: session.last_used_at,
+    };
   }
 
   async deleteSession(token: string | null): Promise<void> {
@@ -68,5 +77,24 @@ export class MemberSessionService {
     const validated = await this.validateToken(token);
     if (!validated || !token) return null;
     return { token, expiresAt: validated.expiresAt, user: validated.user };
+  }
+
+  async listActiveSessions(userId: string): Promise<Array<{
+    id: string;
+    expiresAt: Date;
+    createdAt: Date;
+    lastUsedAt: Date | null;
+  }>> {
+    const rows = await this.sessions.listActiveByUserId(userId);
+    return rows.map((row) => ({
+      id: row.id,
+      expiresAt: row.expires_at,
+      createdAt: row.created_at,
+      lastUsedAt: row.last_used_at,
+    }));
+  }
+
+  async deleteSessionByIdForUser(sessionId: string, userId: string): Promise<void> {
+    await this.sessions.deleteByIdForUser(sessionId, userId);
   }
 }

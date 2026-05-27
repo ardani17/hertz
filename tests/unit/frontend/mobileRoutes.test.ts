@@ -31,7 +31,15 @@ function mockMemberSessionService() {
       createSession: vi.fn(async () => ({
         token: 'new-mobile-token',
         expiresAt: new Date('2026-05-22T00:00:00.000Z'),
+        sessionId: 'session-1',
       })),
+      listActiveSessions: vi.fn(async () => [{
+        id: 'session-1',
+        expiresAt: new Date('2026-05-22T00:00:00.000Z'),
+        createdAt: new Date('2026-05-15T00:00:00.000Z'),
+        lastUsedAt: new Date('2026-05-15T00:00:00.000Z'),
+      }]),
+      deleteSessionByIdForUser: vi.fn(async () => undefined),
       deleteSession: vi.fn(async () => undefined),
       refreshSession: vi.fn(async (token: string | null) =>
         token === 'valid-token'
@@ -50,6 +58,7 @@ function mockMemberSessionService() {
 describe('mobile route contracts', () => {
   afterEach(() => {
     vi.doUnmock('@shared/services/memberSessionService');
+    vi.doUnmock('@shared/services/mobileAuthService');
     vi.doUnmock('@shared/services/membershipService');
     vi.doUnmock('@shared/services/deviceTokenService');
   });
@@ -57,6 +66,24 @@ describe('mobile route contracts', () => {
   it('GET /api/mobile/v1/me resolves bearer auth and returns the standard envelope', async () => {
     vi.resetModules();
     mockMemberSessionService();
+    vi.doMock('@shared/services/mobileAuthService', () => ({
+      MobileAuthService: vi.fn().mockImplementation(() => ({
+        buildMe: vi.fn(async () => ({
+          user,
+          notifications: { unreadCount: 0, hasUnread: false, unreadDmCount: 0, hasUnreadDm: false },
+          session: {
+            id: 'session-1',
+            deviceId: null,
+            platform: null,
+            appVersion: null,
+            expiresAt: '2026-05-22T00:00:00.000Z',
+            createdAt: '2026-05-15T00:00:00.000Z',
+            lastUsedAt: '2026-05-15T00:00:00.000Z',
+            current: true,
+          },
+        })),
+      })),
+    }));
     const { GET } = await import('../../../frontend/src/app/api/mobile/v1/me/route');
 
     const response = await GET(request('/api/mobile/v1/me', {
@@ -144,6 +171,40 @@ describe('mobile route contracts', () => {
         },
       },
     });
+  });
+
+  it('POST /api/mobile/v1/notifications/register accepts Expo push tokens', async () => {
+    vi.resetModules();
+    mockMemberSessionService();
+    vi.doMock('@shared/services/deviceTokenService', () => ({
+      DeviceTokenService: vi.fn().mockImplementation(() => ({
+        register: vi.fn(async () => ({
+          id: 'device-token-2',
+          platform: 'expo',
+          device_id: 'iphone-1',
+          app_version: '1.0.0',
+          enabled: true,
+          last_seen_at: new Date('2026-05-15T00:00:00.000Z'),
+        })),
+      })),
+      DeviceTokenValidationError: class DeviceTokenValidationError extends Error {},
+    }));
+    const { POST } = await import('../../../frontend/src/app/api/mobile/v1/notifications/register/route');
+
+    const response = await POST(request('/api/mobile/v1/notifications/register', {
+      method: 'POST',
+      headers: { authorization: 'Bearer valid-token' },
+      body: JSON.stringify({
+        platform: 'expo',
+        token: 'ExponentPushToken[abc_123]',
+        deviceId: 'iphone-1',
+        appVersion: '1.0.0',
+      }),
+    }));
+    const body = await response.json();
+
+    expect(response.status).toBe(201);
+    expect(body.data.deviceToken.platform).toBe('expo');
   });
 
   it('GET /api/mobile/v1/outlook includes optional Outlook metadata in the article payload', async () => {
