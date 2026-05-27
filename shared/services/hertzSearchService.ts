@@ -1,6 +1,7 @@
 import { query } from '../db';
 import { HertzPostRepository } from '../repositories/hertzPostRepository';
 import { stripHtml } from '../utils/textToHtml';
+import { clampLimit, decodeOffsetCursor, encodeOffsetCursor } from '../utils/cursor';
 
 export interface HertzSearchResult {
   type: 'post' | 'member' | 'topic' | 'pair';
@@ -13,6 +14,7 @@ export interface HertzSearchResult {
 export interface HertzSearchResponse {
   query: string;
   results: HertzSearchResult[];
+  nextCursor: string | null;
 }
 
 export type HertzSearchType = 'post' | 'member';
@@ -36,20 +38,26 @@ export function formatHertzSearchPostLabel(contentHtml: string | null | undefine
 export class HertzSearchService {
   private readonly posts = new HertzPostRepository();
 
-  async search(value: unknown, type: HertzSearchType | null = null): Promise<HertzSearchResponse> {
+  async search(
+    value: unknown,
+    type: HertzSearchType | null = null,
+    options: { cursor?: string | null; limit?: number } = {},
+  ): Promise<HertzSearchResponse> {
     const text = normalizeHertzSearchQuery(value);
-    if (!text) return { query: '', results: [] };
+    if (!text) return { query: '', results: [], nextCursor: null };
 
+    const pageSize = clampLimit(options.limit, 20, 50);
+    const offset = decodeOffsetCursor(options.cursor ?? null);
     const like = `%${text.replace(/^#/, '')}%`;
     const [posts, members, pairs, topicRows] = await Promise.all([
-      type === 'member' ? Promise.resolve([]) : this.posts.searchPublishedPreview(text.replace(/^#/, ''), 6),
+      type === 'member' ? Promise.resolve([]) : this.posts.searchPublishedPreview(text.replace(/^#/, ''), 50),
       type === 'post' ? Promise.resolve({ rows: [] }) : query<{ id: string; username: string | null; display_name: string | null }>(
         `SELECT id, username, display_name
          FROM users
          WHERE verified_member_at IS NOT NULL
            AND (username ILIKE $1 OR display_name ILIKE $1)
          ORDER BY display_name ASC NULLS LAST
-         LIMIT 5`,
+         LIMIT 50`,
         [like],
       ),
       type ? Promise.resolve({ rows: [] }) : query<{ pair: string }>(
@@ -57,7 +65,7 @@ export class HertzSearchService {
          FROM hertz_post_market_context
          WHERE pair IS NOT NULL AND pair ILIKE $1
          ORDER BY pair ASC
-         LIMIT 5`,
+         LIMIT 50`,
         [like],
       ),
       type ? Promise.resolve({ rows: [] }) : query<{ content: string }>(
@@ -65,14 +73,14 @@ export class HertzSearchService {
          FROM hertz_posts
          WHERE status = 'published' AND deleted_at IS NULL AND content ILIKE $1
          ORDER BY created_at DESC
-         LIMIT 20`,
+         LIMIT 50`,
         [`%#${text.replace(/^#/, '')}%`],
       ),
     ]);
 
     const topicResults = Array.from(new Set(topicRows.rows.flatMap((row) => extractHertzTopics(row.content))))
       .filter((topic) => topic.includes(text.replace(/^#/, '').toLowerCase()))
-      .slice(0, 5)
+      .slice(0, 50)
       .map((topic) => ({
         type: 'topic' as const,
         id: `topic-${topic}`,
@@ -81,32 +89,37 @@ export class HertzSearchService {
         href: `/hertz?q=${encodeURIComponent(`#${topic}`)}`,
       }));
 
+    const allResults: HertzSearchResult[] = [
+      ...posts.map((post) => ({
+        type: 'post' as const,
+        id: post.id,
+        label: formatHertzSearchPostLabel(post.content_html),
+        description: post.author_display_name,
+        href: `/hertz/post/${post.short_id}`,
+      })),
+      ...members.rows.map((member) => ({
+        type: 'member' as const,
+        id: member.id,
+        label: member.display_name ?? member.username ?? 'Member Hertz',
+        description: member.username ? `@${member.username}` : 'Member HERTZ',
+        href: `/hertz?q=${encodeURIComponent(member.username ?? member.display_name ?? '')}`,
+      })),
+      ...topicResults,
+      ...pairs.rows.map((row) => ({
+        type: 'pair' as const,
+        id: `pair-${row.pair}`,
+        label: row.pair,
+        description: 'Pair market',
+        href: `/hertz?q=${encodeURIComponent(row.pair)}`,
+      })),
+    ];
+
+    const page = allResults.slice(offset, offset + pageSize);
+    const nextOffset = offset + pageSize;
     return {
       query: text,
-      results: [
-        ...posts.map((post) => ({
-          type: 'post' as const,
-          id: post.id,
-          label: formatHertzSearchPostLabel(post.content_html),
-          description: post.author_display_name,
-          href: `/hertz/post/${post.short_id}`,
-        })),
-        ...members.rows.map((member) => ({
-          type: 'member' as const,
-          id: member.id,
-          label: member.display_name ?? member.username ?? 'Member Hertz',
-          description: member.username ? `@${member.username}` : 'Member HERTZ',
-          href: `/hertz?q=${encodeURIComponent(member.username ?? member.display_name ?? '')}`,
-        })),
-        ...topicResults,
-        ...pairs.rows.map((row) => ({
-          type: 'pair' as const,
-          id: `pair-${row.pair}`,
-          label: row.pair,
-          description: 'Pair market',
-          href: `/hertz?q=${encodeURIComponent(row.pair)}`,
-        })),
-      ],
+      results: page,
+      nextCursor: nextOffset < allResults.length ? encodeOffsetCursor(nextOffset) : null,
     };
   }
 }

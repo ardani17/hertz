@@ -1,4 +1,5 @@
 import { execute, query, queryOne, type DbClient } from '../db';
+import { clampLimit, decodeCursor } from '../utils/cursor';
 
 export interface HertzInboxRow {
   id: string;
@@ -8,6 +9,7 @@ export interface HertzInboxRow {
   last_message_at: Date | null;
   last_message_body: string | null;
   last_sender_id: string | null;
+  created_at: Date;
   peer_id: string | null;
   peer_username: string | null;
   peer_display_name: string | null;
@@ -40,9 +42,24 @@ export interface HertzMessageAttachmentRow {
 }
 
 export class HertzDmRepository {
-  async listInbox(userId: string, includeArchived = false, client?: DbClient): Promise<HertzInboxRow[]> {
+  async listInbox(
+    userId: string,
+    includeArchived = false,
+    options: { cursor?: string | null; limit?: number } = {},
+    client?: DbClient,
+  ): Promise<HertzInboxRow[]> {
+    const limit = clampLimit(options.limit, 20, 50);
+    const decoded = decodeCursor(options.cursor ?? null);
+    const params: Array<string | number | boolean> = [userId, includeArchived];
+    let cursorClause = '';
+    if (decoded) {
+      params.push(decoded.createdAt, decoded.id);
+      cursorClause = 'AND (COALESCE(c.last_message_at, c.created_at), c.id) < ($3::timestamptz, $4::uuid)';
+    }
+    params.push(limit + 1);
+    const limitParam = `$${params.length}`;
     const result = await query<HertzInboxRow>(
-      `SELECT c.id, c.direct_key, p.archived_at, p.last_read_at, c.last_message_at,
+      `SELECT c.id, c.direct_key, c.created_at, p.archived_at, p.last_read_at, c.last_message_at,
               lm.body AS last_message_body, lm.sender_id AS last_sender_id,
               peer.user_id AS peer_id, u.username AS peer_username,
               u.display_name AS peer_display_name, u.avatar_url AS peer_avatar_url,
@@ -62,8 +79,10 @@ export class HertzDmRepository {
            AND (p.last_read_at IS NULL OR m.created_at > p.last_read_at)
        ) unread ON true
        WHERE ($2::boolean = true OR p.archived_at IS NULL)
-       ORDER BY c.last_message_at DESC NULLS LAST, c.created_at DESC`,
-      [userId, includeArchived],
+       ${cursorClause}
+       ORDER BY COALESCE(c.last_message_at, c.created_at) DESC NULLS LAST, c.id DESC
+       LIMIT ${limitParam}`,
+      params,
       client,
     );
     return result.rows;

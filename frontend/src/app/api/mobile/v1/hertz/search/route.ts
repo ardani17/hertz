@@ -13,7 +13,14 @@ export async function GET(request: NextRequest) {
     if (type && type !== 'post' && type !== 'member') {
       return apiError('VALIDATION_ERROR', 'Parameter type harus post atau member', 400);
     }
-    return apiSuccess(await service.search(request.nextUrl.searchParams.get('q'), type as HertzSearchType | null));
+    return apiSuccess(await service.search(
+      request.nextUrl.searchParams.get('q'),
+      type as HertzSearchType | null,
+      {
+        cursor: request.nextUrl.searchParams.get('cursor'),
+        limit: Number(request.nextUrl.searchParams.get('limit') ?? 20),
+      },
+    ));
   });
 }
 

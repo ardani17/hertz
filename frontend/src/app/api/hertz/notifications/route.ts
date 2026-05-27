@@ -12,7 +12,8 @@ export async function GET(request: NextRequest) {
     const user = await getCurrentMember();
     if (!user) return apiError('AUTH_REQUIRED', 'Login member diperlukan', 401);
     const limit = Number(request.nextUrl.searchParams.get('limit') ?? 30);
-    return apiSuccess(await service.list(user.id, limit));
+    const result = await service.list(user.id, { limit });
+    return apiSuccess({ notifications: result.notifications, summary: result.summary });
   } catch (error) {
     return apiErrorFromUnknown(error);
   }

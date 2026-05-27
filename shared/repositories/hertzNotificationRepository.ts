@@ -1,4 +1,5 @@
 import { execute, query, queryOne, type DbClient } from '../db';
+import { clampLimit, decodeCursor } from '../utils/cursor';
 
 export type HertzNotificationType = 'pulse' | 'comment' | 'repost' | 'quote' | 'dm';
 export type HertzNotificationTargetType = 'post' | 'comment' | 'conversation';
@@ -52,7 +53,21 @@ export class HertzNotificationRepository {
     );
   }
 
-  async listForUser(userId: string, limit = 30, client?: DbClient): Promise<HertzNotificationRow[]> {
+  async listForUser(
+    userId: string,
+    options: { limit?: number; cursor?: string | null } = {},
+    client?: DbClient,
+  ): Promise<HertzNotificationRow[]> {
+    const limit = clampLimit(options.limit, 30, 80);
+    const decoded = decodeCursor(options.cursor ?? null);
+    const params: Array<string | number> = [userId];
+    let cursorClause = '';
+    if (decoded) {
+      params.push(decoded.createdAt, decoded.id);
+      cursorClause = 'AND (n.created_at, n.id) < ($2::timestamptz, $3::uuid)';
+    }
+    params.push(limit + 1);
+    const limitParam = `$${params.length}`;
     const result = await query<HertzNotificationRow>(
       `SELECT n.*, actor.username AS actor_username, actor.display_name AS actor_display_name,
               actor.avatar_url AS actor_avatar_url, actor.role AS actor_role,
@@ -61,9 +76,10 @@ export class HertzNotificationRepository {
        LEFT JOIN users actor ON actor.id = n.actor_user_id
        LEFT JOIN hertz_posts hp ON hp.id = n.post_id
        WHERE n.user_id = $1
-       ORDER BY n.created_at DESC
-       LIMIT $2`,
-      [userId, Math.min(Math.max(limit, 1), 80)],
+       ${cursorClause}
+       ORDER BY n.created_at DESC, n.id DESC
+       LIMIT ${limitParam}`,
+      params,
       client,
     );
     return result.rows;

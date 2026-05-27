@@ -11,7 +11,7 @@ export async function GET(request: NextRequest) {
   try {
     const user = await getCurrentMember();
     if (!user) return apiError('AUTH_REQUIRED', 'Login member diperlukan', 401);
-    return apiSuccess({ conversations: await service.inbox(user, request.nextUrl.searchParams.get('archived') === '1') });
+    return apiSuccess({ conversations: (await service.inbox(user, request.nextUrl.searchParams.get('archived') === '1', { limit: 50 })).items });
   } catch (error) {
     return apiErrorFromUnknown(error);
   }

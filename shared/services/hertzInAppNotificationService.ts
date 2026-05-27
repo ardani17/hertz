@@ -1,5 +1,6 @@
 import { HertzDmRepository } from '../repositories/hertzDmRepository';
 import { HertzNotificationRepository, type HertzNotificationRow, type HertzNotificationType } from '../repositories/hertzNotificationRepository';
+import { encodeCursor, clampLimit } from '../utils/cursor';
 
 
 export interface HertzInAppNotificationActor {
@@ -54,9 +55,19 @@ export class HertzInAppNotificationService {
   private readonly notifications = new HertzNotificationRepository();
   private readonly dm = new HertzDmRepository();
 
-  async list(userId: string, limit = 30): Promise<{ notifications: HertzInAppNotificationItem[]; summary: HertzInAppNotificationSummary }> {
-    const rows = await this.notifications.listForUser(userId, limit);
-    return { notifications: rows.map(mapNotificationRow), summary: await this.summary(userId) };
+  async list(
+    userId: string,
+    options: { limit?: number; cursor?: string | null } = {},
+  ): Promise<{ notifications: HertzInAppNotificationItem[]; nextCursor: string | null; summary: HertzInAppNotificationSummary }> {
+    const limit = clampLimit(options.limit, 30, 80);
+    const rows = await this.notifications.listForUser(userId, { limit: limit + 1, cursor: options.cursor ?? null });
+    const pageRows = rows.slice(0, limit);
+    const nextRow = rows.length > limit ? rows[limit] : null;
+    return {
+      notifications: pageRows.map(mapNotificationRow),
+      nextCursor: nextRow ? encodeCursor({ createdAt: nextRow.created_at, id: nextRow.id }) : null,
+      summary: await this.summary(userId),
+    };
   }
 
   async markRead(userId: string, id: string): Promise<void> {

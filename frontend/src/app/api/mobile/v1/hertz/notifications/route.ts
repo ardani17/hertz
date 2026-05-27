@@ -9,8 +9,11 @@ const service = new HertzInAppNotificationService();
 
 export async function GET(request: NextRequest) {
   return withMobileRoute(request, { policy: 'read' }, async ({ auth }) => {
-    const limit = Number(request.nextUrl.searchParams.get('limit') ?? 30);
-    const result = await service.list(auth.user.id, limit);
+    const { searchParams } = request.nextUrl;
+    const result = await service.list(auth.user.id, {
+      limit: Number(searchParams.get('limit') ?? 30),
+      cursor: searchParams.get('cursor'),
+    });
     return apiSuccess({
       items: result.notifications.map((item) => ({
         ...item,
@@ -23,9 +26,8 @@ export async function GET(request: NextRequest) {
           avatarUrl: item.actor.avatarUrl,
         } : null,
       })),
-      nextCursor: null,
+      nextCursor: result.nextCursor,
       summary: result.summary,
     });
   });
 }
-
