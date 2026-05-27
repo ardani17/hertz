@@ -75,6 +75,7 @@ fi
 echo "=== HERTZ DB: Checking for pending migrations ==="
 
 applied=0
+failed=0
 
 for migration_file in "$MIGRATIONS_DIR"/*.sql; do
     [ -f "$migration_file" ] || continue
@@ -95,9 +96,15 @@ for migration_file in "$MIGRATIONS_DIR"/*.sql; do
         applied=$((applied + 1))
     else
         echo "  [FAIL] ${filename} â€” check error above"
-        # Don't exit, continue with other migrations
+        failed=$((failed + 1))
+        # Continue collecting failures so the deploy log shows every blocked migration.
     fi
 done
+
+if [ "$failed" -ne 0 ]; then
+    echo "=== HERTZ DB: ${failed} migration(s) failed ==="
+    exit 1
+fi
 
 if [ "$applied" -eq 0 ]; then
     echo "=== HERTZ DB: All migrations up to date ==="

@@ -250,9 +250,22 @@ run_migrations() {
         sleep 2
     done
 
+    local migration_user="${POSTGRES_MIGRATION_USER:-}"
+    if [ -z "$migration_user" ]; then
+        migration_user=$(docker exec \
+            -e POSTGRES_USER="${POSTGRES_USER}" \
+            -e POSTGRES_DB="${POSTGRES_DB}" \
+            hertz-db psql -U "${POSTGRES_USER}" -d "${POSTGRES_DB}" -t -A -c \
+            "SELECT r.rolname FROM pg_class c JOIN pg_namespace n ON n.oid = c.relnamespace JOIN pg_roles r ON r.oid = c.relowner WHERE n.nspname = 'public' AND c.relname = 'users' LIMIT 1;" 2>/dev/null | tr -d '[:space:]' || true)
+    fi
+    if [ -z "$migration_user" ]; then
+        migration_user="${POSTGRES_USER}"
+    fi
+    info "Migration user: ${migration_user}"
+
     # Run init.sh inside the db container (it skips already-applied migrations)
     if docker exec \
-        -e POSTGRES_USER="${POSTGRES_USER}" \
+        -e POSTGRES_USER="${migration_user}" \
         -e POSTGRES_DB="${POSTGRES_DB}" \
         -e ADMIN_USERNAME="${ADMIN_USERNAME}" \
         -e ADMIN_PASSWORD="${ADMIN_PASSWORD}" \
