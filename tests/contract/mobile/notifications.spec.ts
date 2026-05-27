@@ -8,7 +8,7 @@ describe('mobile notifications contract', () => {
     mockMemberSessionService();
     vi.doMock('@shared/services/hertzInAppNotificationService', () => ({
       HertzInAppNotificationService: vi.fn().mockImplementation(() => ({
-        list: vi.fn(async () => ({ notifications: [], summary: { unreadCount: 0, hasUnread: false, unreadDmCount: 0, hasUnreadDm: false } })),
+        list: vi.fn(async () => ({ notifications: [], nextCursor: null, summary: { unreadCount: 0, hasUnread: false, unreadDmCount: 0, hasUnreadDm: false } })),
       })),
     }));
     const { GET } = await import('../../../frontend/src/app/api/mobile/v1/hertz/notifications/route');
@@ -31,6 +31,18 @@ describe('mobile notifications contract', () => {
       body: JSON.stringify({ ids: ['notif-1'] }),
     })));
     expect(body.data.marked).toBe(1);
+  });
+
+  it('returns notifications summary envelope', async () => {
+    mockMemberSessionService();
+    vi.doMock('@shared/services/hertzInAppNotificationService', () => ({
+      HertzInAppNotificationService: vi.fn().mockImplementation(() => ({
+        summary: vi.fn(async () => ({ unreadCount: 2, hasUnread: true, unreadDmCount: 1, hasUnreadDm: true })),
+      })),
+    }));
+    const { GET } = await import('../../../frontend/src/app/api/mobile/v1/hertz/notifications/summary/route');
+    const body = await expectEnvelope(await GET(request('/api/mobile/v1/hertz/notifications/summary', { headers: { authorization: 'Bearer valid-token' } })));
+    expect(body.data.unreadCount).toBe(2);
   });
 });
 

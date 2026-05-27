@@ -29,7 +29,7 @@ export function mockMemberSessionService() {
       ...actual,
       MemberSessionService: vi.fn().mockImplementation(() => ({
         validateToken: vi.fn(async (token: string | null) =>
-          token === 'valid-token'
+          token === 'valid-token' || token === 'rotated-token'
             ? {
                 user: contractUser,
                 expiresAt: new Date('2026-05-22T00:00:00.000Z'),
@@ -50,7 +50,7 @@ export function mockMemberSessionService() {
         refreshSession: vi.fn(async (token: string | null) =>
           token === 'valid-token'
             ? {
-                token,
+                token: 'rotated-token',
                 expiresAt: new Date('2026-05-22T00:00:00.000Z'),
                 user: contractUser,
                 session: {
@@ -101,6 +101,12 @@ export function unmockCommon() {
   vi.doUnmock('@shared/services/hertzPublicProfileService');
   vi.doUnmock('@shared/services/hertzSearchService');
   vi.doUnmock('@/lib/globalDataMarket');
+  vi.doUnmock('@shared/services/deviceTokenService');
+  vi.doUnmock('@/server/services/auth/MobileAuthService');
+  vi.doUnmock('@/lib/mobileContent');
+  vi.doUnmock('@shared/services/hertzReportService');
+  vi.doUnmock('@shared/services/hertzCommentService');
+  vi.doUnmock('@/lib/redis');
 }
 
 export async function expectEnvelope(response: Response, status = 200) {

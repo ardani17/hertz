@@ -7,7 +7,7 @@ describe('mobile search contract', () => {
   it('returns search results envelope', async () => {
     vi.doMock('@shared/services/hertzSearchService', () => ({
       HertzSearchService: vi.fn().mockImplementation(() => ({
-        search: vi.fn(async () => ({ query: 'hertz', results: [{ type: 'member', id: 'member-1', label: 'Member', description: '@member', href: '/hertz?q=member' }] })),
+        search: vi.fn(async () => ({ query: 'hertz', results: [{ type: 'member', id: 'member-1', label: 'Member', description: '@member', href: '/hertz?q=member' }], nextCursor: null })),
       })),
     }));
     const { GET } = await import('../../../frontend/src/app/api/mobile/v1/hertz/search/route');
