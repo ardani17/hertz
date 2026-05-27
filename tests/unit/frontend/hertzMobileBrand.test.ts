@@ -13,7 +13,7 @@ describe('HERTZ mobile brand', () => {
     const source = read('frontend/src/components/layout/HertzLayout.tsx');
 
     expect(source).toContain('mobileBrand');
-    expect(source).toContain('Logo-Hertz-Atom-Online-White_8.png');
+    expect(source).toContain('BRAND_LOGO_ATOM_WHITE');
     expect(source).toContain('aria-label="Hertz Home"');
   });
 

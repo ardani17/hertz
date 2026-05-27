@@ -9,6 +9,7 @@ import { HertzMobileMarket } from '@/components/feed/HertzMobileMarket';
 import { HertzRightRail } from '@/components/feed/HertzRightRail';
 import { MobileBottomNav } from '@/components/hertz/MobileBottomNav';
 import { NotificationBell } from '@/components/notifications/NotificationBell';
+import { BRAND_LOGO_ATOM_WHITE } from '@/lib/brandLogo';
 import styles from './HertzLayout.module.css';
 
 export type HertzActiveNav =
@@ -80,7 +81,7 @@ export function HertzLayout(props: HertzLayoutProps) {
               <header className={styles.mobileHeader}>
                 <Link className={styles.mobileBrand} href="/hertz" aria-label="Hertz Home" prefetch>
                   <Image
-                    src="/images/logo/Logo-Hertz-Atom-Online-White_8.png"
+                    src={BRAND_LOGO_ATOM_WHITE}
                     alt=""
                     width={34}
                     height={34}

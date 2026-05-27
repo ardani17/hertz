@@ -4,6 +4,7 @@ import Script from 'next/script';
 import { ToastProvider } from '@/components/ui/Toast';
 import { HertzSWRProvider } from '@/lib/swr/config';
 import { themeInitScript } from '@/lib/theme-init';
+import { BRAND_LOGO_ATOM_BLACK, BRAND_LOGO_ATOM_WHITE } from '@/lib/brandLogo';
 import './globals.css';
 
 const dmSans = DM_Sans({
@@ -59,8 +60,8 @@ export default function RootLayout({
   return (
     <html lang="id" className={`${dmSans.variable} dark`} data-theme="dark">
       <head>
-        <link rel="icon" href="/images/logo/Logo-Hertz-Atom-Online-Black_7.png" media="(prefers-color-scheme: light)" />
-        <link rel="icon" href="/images/logo/Logo-Hertz-Atom-Online-White_8.png" media="(prefers-color-scheme: dark)" />
+        <link rel="icon" href={BRAND_LOGO_ATOM_BLACK} media="(prefers-color-scheme: light)" />
+        <link rel="icon" href={BRAND_LOGO_ATOM_WHITE} media="(prefers-color-scheme: dark)" />
         <Script
           id="theme-init"
           strategy="beforeInteractive"

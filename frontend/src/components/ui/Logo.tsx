@@ -14,24 +14,9 @@ interface LogoProps {
   variant?: 'full' | 'compact' | 'standard' | 'atom';
 }
 
-const logoMap = {
-  full: {
-    dark: '/images/logo/Logo-Hertz-Big-white-04-02.png',
-    light: '/images/logo/Logo-Hertz-Big-black-04.png',
-  },
-  compact: {
-    dark: '/images/logo/Logo-Hertz-big-No-tag-line-white_10.png',
-    light: '/images/logo/Logo-Hertz-big-No-tag-line_9.png',
-  },
-  standard: {
-    dark: '/images/logo/Logo-Hertz-White-05-05.png',
-    light: '/images/logo/Logo-Hertz-Black-06.png',
-  },
-  atom: {
-    dark: '/images/logo/Logo-Hertz-Atom-Online-White_8.png',
-    light: '/images/logo/Logo-Hertz-Atom-Online-Black_7.png',
-  },
-} as const;
+import { BRAND_LOGO_PATHS } from '@/lib/brandLogo';
+
+const logoMap = BRAND_LOGO_PATHS;
 
 /**
  * Theme-aware Hertz logo component.

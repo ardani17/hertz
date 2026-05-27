@@ -5,6 +5,7 @@ import Link from 'next/link';
 import type { MemberSessionUser } from '@shared/types';
 import { NotificationBell } from '@/components/notifications/NotificationBell';
 import type { HertzFeedFilterPatch, HertzFeedFilters } from '@/lib/hertzFeedFilters';
+import { BRAND_LOGO_ATOM_WHITE } from '@/lib/brandLogo';
 import styles from './HertzFeedTopBar.module.css';
 
 export function HertzFeedTopBar({
@@ -25,7 +26,7 @@ export function HertzFeedTopBar({
     <header className={styles.topBar}>
       <Link className={styles.mobileBrand} href="/hertz" aria-label="Hertz Home" prefetch>
         <Image
-          src="/images/logo/Logo-Hertz-Atom-Online-White_8.png"
+          src={BRAND_LOGO_ATOM_WHITE}
           alt=""
           width={34}
           height={34}

@@ -12,6 +12,7 @@ import {
   readLeftRailCollapsed,
   writeLeftRailCollapsed,
 } from '@/lib/tools/catalog';
+import { BRAND_LOGO_ATOM_WHITE } from '@/lib/brandLogo';
 import { HertzAvatar } from './HertzAvatar';
 import styles from './HertzRails.module.css';
 
@@ -59,7 +60,7 @@ export function HertzLeftRail({
       <div className={styles.brand}>
         <Image
           className={styles.brandLogo}
-          src="/images/logo/Logo-Hertz-Atom-Online-White_8.png"
+          src={BRAND_LOGO_ATOM_WHITE}
           alt="Hertz"
           width={42}
           height={42}
