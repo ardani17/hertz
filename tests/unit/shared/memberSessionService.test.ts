@@ -4,6 +4,7 @@ import { SESSION_IDLE_MS } from '../../../shared/constants';
 const mockCreate = vi.fn();
 const mockFindByTokenHash = vi.fn();
 const mockTouchAndExtend = vi.fn();
+const mockRotateTokenHash = vi.fn();
 const mockDeleteByTokenHash = vi.fn();
 const mockFindUserById = vi.fn();
 const mockEnsureMembershipFresh = vi.fn();
@@ -13,6 +14,7 @@ vi.mock('../../../shared/repositories/memberSessionRepository', () => ({
     create: mockCreate,
     findByTokenHash: mockFindByTokenHash,
     touchAndExtend: mockTouchAndExtend,
+    rotateTokenHash: mockRotateTokenHash,
     deleteByTokenHash: mockDeleteByTokenHash,
   })),
 }));
@@ -115,7 +117,7 @@ describe('MemberSessionService sliding idle timeout', () => {
     expect(mockTouchAndExtend).not.toHaveBeenCalled();
   });
 
-  it('refreshSession reuses the same token and returns the extended expiry', async () => {
+  it('refreshSession rotates token and returns the extended expiry', async () => {
     mockFindByTokenHash.mockResolvedValue({
       id: 'session-1',
       user_id: 'user-1',
@@ -125,13 +127,15 @@ describe('MemberSessionService sliding idle timeout', () => {
       last_used_at: new Date('2026-05-15T11:00:00.000Z'),
     });
     mockTouchAndExtend.mockResolvedValue(undefined);
+    mockRotateTokenHash.mockResolvedValue(undefined);
 
     const refreshed = await service.refreshSession('member-token');
 
+    expect(refreshed?.token).not.toBe('member-token');
     expect(refreshed).toMatchObject({
-      token: 'member-token',
       user: expect.objectContaining({ id: 'user-1' }),
     });
     expect(refreshed?.expiresAt.getTime()).toBe(Date.now() + SESSION_IDLE_MS);
+    expect(mockRotateTokenHash).toHaveBeenCalledTimes(1);
   });
 });

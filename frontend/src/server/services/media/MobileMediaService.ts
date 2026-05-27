@@ -1,5 +1,7 @@
 import { randomUUID } from 'crypto';
 import { PutObjectCommand, S3Client } from '@aws-sdk/client-s3';
+import { getSignedUrl } from '@aws-sdk/s3-request-presigner';
+import sharp from 'sharp';
 import { execute, queryOne } from '@shared/db';
 import { validateHertzMemberMediaUploadType, validateMediaType } from '@shared/utils/mediaValidation';
 
@@ -8,6 +10,22 @@ export class MobileMediaValidationError extends Error {
     super(message);
     this.name = 'MobileMediaValidationError';
   }
+}
+
+function createR2Client() {
+  return new S3Client({
+    region: 'auto',
+    endpoint: process.env.R2_ENDPOINT || '',
+    credentials: {
+      accessKeyId: process.env.R2_ACCESS_KEY_ID || '',
+      secretAccessKey: process.env.R2_SECRET_ACCESS_KEY || '',
+    },
+  });
+}
+
+function publicUrlForKey(fileKey: string): string {
+  const publicUrlBase = (process.env.R2_PUBLIC_URL || '').replace(/\/+$/, '');
+  return `${publicUrlBase}/${fileKey}`;
 }
 
 export class MobileMediaService {
@@ -28,15 +46,7 @@ export class MobileMediaService {
     const ext = file.name.split('.').pop()?.toLowerCase() || (mediaType === 'image' ? 'jpg' : 'mp4');
     const fileKey = `${mediaType}/${randomUUID()}.${ext}`;
     const buffer = Buffer.from(await file.arrayBuffer());
-
-    const s3 = new S3Client({
-      region: 'auto',
-      endpoint: process.env.R2_ENDPOINT || '',
-      credentials: {
-        accessKeyId: process.env.R2_ACCESS_KEY_ID || '',
-        secretAccessKey: process.env.R2_SECRET_ACCESS_KEY || '',
-      },
-    });
+    const s3 = createR2Client();
 
     await s3.send(new PutObjectCommand({
       Bucket: process.env.R2_BUCKET_NAME || '',
@@ -46,8 +56,21 @@ export class MobileMediaService {
       ContentLength: buffer.length,
     }));
 
-    const publicUrlBase = (process.env.R2_PUBLIC_URL || '').replace(/\/+$/, '');
-    const fileUrl = `${publicUrlBase}/${fileKey}`;
+    let thumbnailUrl = publicUrlForKey(fileKey);
+    if (mediaType === 'image') {
+      const thumbKey = `thumb/${fileKey.replace(/^image\//, '')}`;
+      const thumbBuffer = await sharp(buffer).resize({ width: 400, withoutEnlargement: true }).jpeg({ quality: 82 }).toBuffer();
+      await s3.send(new PutObjectCommand({
+        Bucket: process.env.R2_BUCKET_NAME || '',
+        Key: thumbKey,
+        Body: thumbBuffer,
+        ContentType: 'image/jpeg',
+        ContentLength: thumbBuffer.length,
+      }));
+      thumbnailUrl = publicUrlForKey(thumbKey);
+    }
+
+    const fileUrl = publicUrlForKey(fileKey);
     const media = await queryOne<{
       id: string;
       article_id: string | null;
@@ -72,12 +95,44 @@ export class MobileMediaService {
     return media ? {
       id: media.id,
       fileUrl: media.file_url,
-      thumbnailUrl: media.file_url,
+      thumbnailUrl,
       mediaType: media.media_type,
       fileKey: media.file_key,
       sizeBytes: media.file_size,
       createdAt: media.created_at.toISOString(),
     } : null;
+  }
+
+  async createPresignedUpload(params: {
+    purpose: string;
+    contentType: string;
+    sizeBytes: number;
+  }) {
+    validateMediaPurpose(params.purpose);
+    validateMediaType(params.contentType);
+    validateHertzMemberMediaUploadType(params.contentType);
+    enforceSize(params.sizeBytes, params.purpose);
+
+    const mediaType = params.contentType.startsWith('video/') ? 'video' : 'image';
+    const ext = params.contentType.split('/')[1]?.replace('jpeg', 'jpg') || (mediaType === 'image' ? 'jpg' : 'mp4');
+    const fileKey = `${mediaType}/${randomUUID()}.${ext}`;
+    const expiresIn = 900;
+    const s3 = createR2Client();
+    const command = new PutObjectCommand({
+      Bucket: process.env.R2_BUCKET_NAME || '',
+      Key: fileKey,
+      ContentType: params.contentType,
+      ContentLength: params.sizeBytes,
+    });
+    const uploadUrl = await getSignedUrl(s3 as never, command, { expiresIn });
+    const expiresAt = new Date(Date.now() + expiresIn * 1000).toISOString();
+
+    return {
+      uploadUrl,
+      fileKey,
+      expiresAt,
+      publicUrl: publicUrlForKey(fileKey),
+    };
   }
 }
 
@@ -93,4 +148,3 @@ function enforceSize(size: number, purpose: string) {
     throw new MobileMediaValidationError(`Ukuran file maksimal ${mb}MB`);
   }
 }
-

@@ -103,7 +103,9 @@ export class MemberSessionService {
   } | null> {
     const validated = await this.validateToken(token);
     if (!validated || !token) return null;
-    return { token, expiresAt: validated.expiresAt, user: validated.user, session: validated };
+    const rotatedToken = randomUUID();
+    await this.sessions.rotateTokenHash(validated.sessionId, hashMemberSessionToken(rotatedToken), validated.expiresAt);
+    return { token: rotatedToken, expiresAt: validated.expiresAt, user: validated.user, session: validated };
   }
 
   assertDeviceMatch(session: ValidatedMemberSession, deviceId: string | null | undefined): void {

@@ -59,6 +59,16 @@ export class MemberSessionRepository {
     );
   }
 
+  async rotateTokenHash(id: string, tokenHash: string, expiresAt: Date, client?: DbClient): Promise<void> {
+    await execute(
+      `UPDATE hertz_member_sessions
+       SET token_hash = $2, expires_at = $3, last_used_at = NOW()
+       WHERE id = $1`,
+      [id, tokenHash, expiresAt.toISOString()],
+      client,
+    );
+  }
+
   async updateMeta(id: string, params: {
     deviceId?: string | null;
     platform?: string | null;
