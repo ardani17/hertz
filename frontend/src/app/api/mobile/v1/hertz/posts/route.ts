@@ -1,12 +1,9 @@
 import { NextRequest } from 'next/server';
 import { HertzPostService } from '@shared/services/hertzPostService';
-import { apiErrorFromUnknown, apiSuccess } from '@/lib/apiResponse';
+import { apiSuccess } from '@/lib/apiResponse';
 import {
-  checkMobileRateLimit,
-  isMobileAuthContext,
-  optionalMobileMember,
-  requireMobileMember,
   withCache,
+  withMobileRoute,
 } from '@/lib/mobileApi';
 
 export const dynamic = 'force-dynamic';
@@ -14,12 +11,8 @@ export const dynamic = 'force-dynamic';
 const feed = new HertzPostService();
 
 export async function GET(request: NextRequest) {
-  const limited = await checkMobileRateLimit(request, 'read');
-  if (limited) return limited;
-
-  try {
+  return withMobileRoute(request, { policy: 'read', requireAuth: false }, async ({ viewer }) => {
     const params = request.nextUrl.searchParams;
-    const viewer = await optionalMobileMember(request);
     const author = params.get('author')?.trim();
     const authorId = params.get('authorId')?.trim();
     if (author || authorId) {
@@ -42,22 +35,12 @@ export async function GET(request: NextRequest) {
       viewer,
     });
     return withCache(apiSuccess(result), viewer ? 'private, no-store' : 'public, max-age=15, stale-while-revalidate=30');
-  } catch (error) {
-    return apiErrorFromUnknown(error);
-  }
+  });
 }
 
 export async function POST(request: NextRequest) {
-  const auth = await requireMobileMember(request);
-  if (!isMobileAuthContext(auth)) return auth;
-
-  const limited = await checkMobileRateLimit(request, 'mutation', auth.user.id);
-  if (limited) return limited;
-
-  try {
+  return withMobileRoute(request, { policy: 'mutation' }, async ({ auth }) => {
     const post = await feed.createWebPost(auth.user, await request.json());
     return apiSuccess({ post }, 201);
-  } catch (error) {
-    return apiErrorFromUnknown(error);
-  }
+  });
 }

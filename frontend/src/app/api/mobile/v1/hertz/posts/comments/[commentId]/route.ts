@@ -1,7 +1,7 @@
 import { NextRequest } from 'next/server';
 import { HertzCommentService } from '@shared/services/hertzCommentService';
-import { apiErrorFromUnknown, apiSuccess } from '@/lib/apiResponse';
-import { checkMobileRateLimit, isMobileAuthContext, requireMobileMember } from '@/lib/mobileApi';
+import { apiSuccess } from '@/lib/apiResponse';
+import { withMobileRoute } from '@/lib/mobileApi';
 
 interface RouteContext {
   params: Promise<{ commentId: string }>;
@@ -10,34 +10,18 @@ interface RouteContext {
 const comments = new HertzCommentService();
 
 export async function DELETE(request: NextRequest, context: RouteContext) {
-  const auth = await requireMobileMember(request);
-  if (!isMobileAuthContext(auth)) return auth;
-
-  const limited = await checkMobileRateLimit(request, 'mutation', auth.user.id);
-  if (limited) return limited;
-
-  try {
+  return withMobileRoute(request, { policy: 'mutation' }, async ({ auth }) => {
     const { commentId } = await context.params;
     await comments.delete(commentId, auth.user);
     return apiSuccess({ deleted: true });
-  } catch (error) {
-    return apiErrorFromUnknown(error);
-  }
+  });
 }
 
 export async function PATCH(request: NextRequest, context: RouteContext) {
-  const auth = await requireMobileMember(request);
-  if (!isMobileAuthContext(auth)) return auth;
-
-  const limited = await checkMobileRateLimit(request, 'mutation', auth.user.id);
-  if (limited) return limited;
-
-  try {
+  return withMobileRoute(request, { policy: 'mutation' }, async ({ auth }) => {
     const { commentId } = await context.params;
     const body = await request.json();
     await comments.edit(commentId, auth.user, body.content);
     return apiSuccess({ updated: true });
-  } catch (error) {
-    return apiErrorFromUnknown(error);
-  }
+  });
 }

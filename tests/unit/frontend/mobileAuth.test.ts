@@ -16,6 +16,7 @@ describe('mobile auth handoff routes', () => {
     vi.resetModules();
     vi.doUnmock('@/server/services/auth/MobileAuthService');
     vi.doUnmock('@shared/services/memberSessionService');
+    vi.doUnmock('@/lib/memberAuth');
     vi.doUnmock('@/lib/mobileApi');
   });
 
@@ -29,8 +30,8 @@ describe('mobile auth handoff routes', () => {
         })),
       })),
     }));
-    const { POST } = await import('../../../frontend/src/app/api/mobile/v1/auth/handoff/init/route');
 
+    const { POST } = await import('../../../frontend/src/app/api/mobile/v1/auth/handoff/init/route');
     const response = await POST(request('/api/mobile/v1/auth/handoff/init', {
       method: 'POST',
       body: JSON.stringify({ deviceId: 'device-1', platform: 'ios', appVersion: '1.0.0' }),
@@ -52,8 +53,8 @@ describe('mobile auth handoff routes', () => {
         })),
       })),
     }));
-    const { POST } = await import('../../../frontend/src/app/api/mobile/v1/auth/handoff/exchange/route');
 
+    const { POST } = await import('../../../frontend/src/app/api/mobile/v1/auth/handoff/exchange/route');
     const response = await POST(request('/api/mobile/v1/auth/handoff/exchange', {
       method: 'POST',
       body: JSON.stringify({ nonce: 'nonce-1', telegramAuth: { id: 1, first_name: 'A', auth_date: 1, hash: 'h' } }),
@@ -70,17 +71,20 @@ describe('mobile auth session routes', () => {
     vi.resetModules();
     vi.doUnmock('@/server/services/auth/MobileAuthService');
     vi.doUnmock('@shared/services/memberSessionService');
+    vi.doUnmock('@/lib/memberAuth');
     vi.doUnmock('@/lib/mobileApi');
   });
 
   function mockMobileAuthContext() {
-    vi.doMock('@/lib/mobileApi', async (importOriginal) => {
-      const actual = await importOriginal<typeof import('../../../frontend/src/lib/mobileApi')>();
+    vi.doMock('@/lib/memberAuth', async (importOriginal) => {
+      const actual = await importOriginal<typeof import('../../../frontend/src/lib/memberAuth')>();
       return {
         ...actual,
-        requireMobileMember: vi.fn(async () => ({ user: { id: 'member-1', role: 'member' }, token: 'valid-token' })),
-        isMobileAuthContext: vi.fn((value) => Boolean(value?.user && value?.token)),
-        checkMobileRateLimit: vi.fn(async () => null),
+        getCurrentBearerMemberFromRequest: vi.fn(async () => ({
+          user: { id: 'member-1', role: 'member' },
+          token: 'valid-token',
+          source: 'bearer',
+        })),
       };
     });
   }
@@ -112,6 +116,7 @@ describe('mobile auth session routes', () => {
         })),
       };
     });
+
     const { POST } = await import('../../../frontend/src/app/api/mobile/v1/auth/refresh/route');
     const response = await POST(request('/api/mobile/v1/auth/refresh', {
       method: 'POST',
@@ -126,13 +131,18 @@ describe('mobile auth session routes', () => {
 
   it('lists active sessions', async () => {
     mockMobileAuthContext();
-    vi.doMock('@/server/services/auth/MobileAuthService', () => ({
-      MobileAuthService: vi.fn().mockImplementation(() => ({
-        listSessions: vi.fn(async () => ({
-          sessions: [{ id: 'session-1', deviceId: 'device-1', current: true }],
+    vi.doMock('@/server/services/auth/MobileAuthService', async (importOriginal) => {
+      const actual = await importOriginal<typeof import('../../../frontend/src/server/services/auth/MobileAuthService')>();
+      return {
+        ...actual,
+        MobileAuthService: vi.fn().mockImplementation(() => ({
+          listSessions: vi.fn(async () => ({
+            sessions: [{ id: 'session-1', deviceId: 'device-1', current: true }],
+          })),
         })),
-      })),
-    }));
+      };
+    });
+
     const { GET } = await import('../../../frontend/src/app/api/mobile/v1/me/sessions/route');
     const response = await GET(request('/api/mobile/v1/me/sessions', { headers: { authorization: 'Bearer valid-token' } }));
     const body = await response.json();
@@ -143,11 +153,16 @@ describe('mobile auth session routes', () => {
 
   it('revokes a non-current session', async () => {
     mockMobileAuthContext();
-    vi.doMock('@/server/services/auth/MobileAuthService', () => ({
-      MobileAuthService: vi.fn().mockImplementation(() => ({
-        revokeSession: vi.fn(async () => undefined),
-      })),
-    }));
+    vi.doMock('@/server/services/auth/MobileAuthService', async (importOriginal) => {
+      const actual = await importOriginal<typeof import('../../../frontend/src/server/services/auth/MobileAuthService')>();
+      return {
+        ...actual,
+        MobileAuthService: vi.fn().mockImplementation(() => ({
+          revokeSession: vi.fn(async () => undefined),
+        })),
+      };
+    });
+
     const { DELETE } = await import('../../../frontend/src/app/api/mobile/v1/me/sessions/[sessionId]/route');
     const response = await DELETE(request('/api/mobile/v1/me/sessions/session-2', { method: 'DELETE', headers: { authorization: 'Bearer valid-token' } }), {
       params: Promise.resolve({ sessionId: 'session-2' }),
@@ -160,15 +175,20 @@ describe('mobile auth session routes', () => {
 
   it('returns current user profile and notification summary', async () => {
     mockMobileAuthContext();
-    vi.doMock('@/server/services/auth/MobileAuthService', () => ({
-      MobileAuthService: vi.fn().mockImplementation(() => ({
-        buildMe: vi.fn(async () => ({
-          user: { id: 'member-1' },
-          notifications: { unreadCount: 0, hasUnread: false, unreadDmCount: 0, hasUnreadDm: false },
-          session: { id: 'session-1', current: true },
+    vi.doMock('@/server/services/auth/MobileAuthService', async (importOriginal) => {
+      const actual = await importOriginal<typeof import('../../../frontend/src/server/services/auth/MobileAuthService')>();
+      return {
+        ...actual,
+        MobileAuthService: vi.fn().mockImplementation(() => ({
+          buildMe: vi.fn(async () => ({
+            user: { id: 'member-1' },
+            notifications: { unreadCount: 0, hasUnread: false, unreadDmCount: 0, hasUnreadDm: false },
+            session: { id: 'session-1', current: true },
+          })),
         })),
-      })),
-    }));
+      };
+    });
+
     const { GET } = await import('../../../frontend/src/app/api/mobile/v1/me/route');
     const response = await GET(request('/api/mobile/v1/me', { headers: { authorization: 'Bearer valid-token' } }));
     const body = await response.json();
@@ -178,4 +198,3 @@ describe('mobile auth session routes', () => {
     expect(body.data.session.current).toBe(true);
   });
 });
-

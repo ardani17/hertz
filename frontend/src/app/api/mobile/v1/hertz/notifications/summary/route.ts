@@ -1,23 +1,15 @@
 import { NextRequest } from 'next/server';
 import { HertzInAppNotificationService } from '@shared/services/hertzInAppNotificationService';
-import { apiErrorFromUnknown, apiSuccess } from '@/lib/apiResponse';
-import { checkMobileRateLimit, isMobileAuthContext, requireMobileMember } from '@/lib/mobileApi';
+import { apiSuccess } from '@/lib/apiResponse';
+import { withMobileRoute } from '@/lib/mobileApi';
 
 export const dynamic = 'force-dynamic';
 
 const service = new HertzInAppNotificationService();
 
 export async function GET(request: NextRequest) {
-  const auth = await requireMobileMember(request);
-  if (!isMobileAuthContext(auth)) return auth;
-
-  const limited = await checkMobileRateLimit(request, 'read', auth.user.id);
-  if (limited) return limited;
-
-  try {
+  return withMobileRoute(request, { policy: 'read' }, async ({ auth }) => {
     return apiSuccess(await service.summary(auth.user.id));
-  } catch (error) {
-    return apiErrorFromUnknown(error);
-  }
+  });
 }
 

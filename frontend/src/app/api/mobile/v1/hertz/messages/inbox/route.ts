@@ -1,20 +1,14 @@
 import { NextRequest } from 'next/server';
 import { HertzDmService } from '@shared/services/hertzDmService';
-import { apiErrorFromUnknown, apiSuccess } from '@/lib/apiResponse';
-import { checkMobileRateLimit, isMobileAuthContext, requireMobileMember } from '@/lib/mobileApi';
+import { apiSuccess } from '@/lib/apiResponse';
+import { withMobileRoute } from '@/lib/mobileApi';
 
 export const dynamic = 'force-dynamic';
 
 const service = new HertzDmService();
 
 export async function GET(request: NextRequest) {
-  const auth = await requireMobileMember(request);
-  if (!isMobileAuthContext(auth)) return auth;
-
-  const limited = await checkMobileRateLimit(request, 'read', auth.user.id);
-  if (limited) return limited;
-
-  try {
+  return withMobileRoute(request, { policy: 'read' }, async ({ auth }) => {
     const conversations = await service.inbox(auth.user, request.nextUrl.searchParams.get('archived') === '1');
     return apiSuccess({ items: conversations.map((item) => ({
       conversationId: item.id,
@@ -34,8 +28,6 @@ export async function GET(request: NextRequest) {
       archivedAt: item.archivedAt ? new Date(item.archivedAt).toISOString() : null,
       lastReadAt: item.lastReadAt ? new Date(item.lastReadAt).toISOString() : null,
     })), nextCursor: null });
-  } catch (error) {
-    return apiErrorFromUnknown(error);
-  }
+  });
 }
 

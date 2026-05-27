@@ -1,8 +1,8 @@
 import { NextRequest } from 'next/server';
 import { HertzViewService } from '@shared/services/hertzInteractionService';
-import { apiErrorFromUnknown, apiSuccess } from '@/lib/apiResponse';
+import { apiSuccess } from '@/lib/apiResponse';
 import { getBearerTokenFromRequest } from '@/lib/memberAuth';
-import { optionalMobileMember } from '@/lib/mobileApi';
+import { withMobileRoute } from '@/lib/mobileApi';
 
 interface RouteContext {
   params: Promise<{ shortId: string }>;
@@ -17,19 +17,16 @@ function getIp(request: NextRequest): string | null {
 }
 
 export async function POST(request: NextRequest, context: RouteContext) {
-  try {
+  return withMobileRoute(request, { policy: 'mutation', requireAuth: false }, async ({ viewer }) => {
     const { shortId } = await context.params;
-    const user = await optionalMobileMember(request);
     const result = await service.recordView({
       postId: shortId,
-      userId: user?.id ?? null,
+      userId: viewer?.id ?? null,
       sessionToken: getBearerTokenFromRequest(request),
       ip: getIp(request),
       userAgent: request.headers.get('user-agent'),
     });
     return apiSuccess(result);
-  } catch (error) {
-    return apiErrorFromUnknown(error);
-  }
+  });
 }
 

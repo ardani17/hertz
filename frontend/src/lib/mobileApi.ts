@@ -2,7 +2,8 @@ import { createHash } from 'crypto';
 import type { NextRequest, NextResponse } from 'next/server';
 import { DeviceTokenValidationError } from '@shared/services/deviceTokenService';
 import type { MemberSessionUser } from '@shared/types/membership';
-import { apiError } from './apiResponse';
+import { createRequestLogContext, finishRequestLog, type RequestLogContext } from '@/server/middleware/withRequestId';
+import { apiError, apiErrorFromUnknown } from './apiResponse';
 import { getBearerTokenFromRequest, getCurrentBearerMemberFromRequest } from './memberAuth';
 import { RedisRateLimiter } from '@/server/infra/RedisRateLimiter';
 
@@ -36,6 +37,80 @@ export async function checkMobileRateLimit(
 }
 
 export const checkMobileRateLimitAsync = checkMobileRateLimit;
+
+export type MobileRoutePolicy = keyof typeof mobileRateLimits;
+
+export interface MobileRouteOptions {
+  policy: MobileRoutePolicy;
+  requireAuth?: boolean;
+  appVersion?: boolean;
+}
+
+export interface AuthenticatedMobileRouteContext {
+  request: NextRequest;
+  auth: MobileAuthContext;
+  logCtx: RequestLogContext;
+}
+
+export interface PublicMobileRouteContext {
+  request: NextRequest;
+  auth: null;
+  viewer: MemberSessionUser | null;
+  logCtx: RequestLogContext;
+}
+
+export function withMobileRoute(
+  request: NextRequest,
+  options: MobileRouteOptions & { requireAuth: false },
+  handler: (context: PublicMobileRouteContext) => Promise<NextResponse>,
+): Promise<NextResponse>;
+
+export function withMobileRoute(
+  request: NextRequest,
+  options: MobileRouteOptions & { requireAuth?: true },
+  handler: (context: AuthenticatedMobileRouteContext) => Promise<NextResponse>,
+): Promise<NextResponse>;
+
+export async function withMobileRoute(
+  request: NextRequest,
+  options: MobileRouteOptions,
+  handler: ((context: AuthenticatedMobileRouteContext) => Promise<NextResponse>)
+    | ((context: PublicMobileRouteContext) => Promise<NextResponse>),
+): Promise<NextResponse> {
+  const logCtx = createRequestLogContext(request);
+  const shouldRequireAuth = options.requireAuth !== false;
+  const shouldCheckAppVersion = options.appVersion !== false;
+  let identity: string | null = null;
+
+  try {
+    if (shouldCheckAppVersion) {
+      const gate = requireSupportedAppVersion(request);
+      if (gate) return finishRequestLog(request, gate, logCtx, identity);
+    }
+
+    let auth: MobileAuthContext | null = null;
+    let viewer: MemberSessionUser | null = null;
+    if (shouldRequireAuth) {
+      const result = await requireMobileMember(request);
+      if (!isMobileAuthContext(result)) return finishRequestLog(request, result, logCtx, identity);
+      auth = result;
+      identity = result.user.id;
+    } else {
+      viewer = await optionalMobileMember(request);
+      identity = viewer?.id ?? null;
+    }
+
+    const limited = await checkMobileRateLimit(request, options.policy, identity);
+    if (limited) return finishRequestLog(request, limited, logCtx, identity);
+
+    const response = shouldRequireAuth
+      ? await (handler as (context: AuthenticatedMobileRouteContext) => Promise<NextResponse>)({ request, auth: auth as MobileAuthContext, logCtx })
+      : await (handler as (context: PublicMobileRouteContext) => Promise<NextResponse>)({ request, auth: null, viewer, logCtx });
+    return finishRequestLog(request, response, logCtx, identity);
+  } catch (error) {
+    return finishRequestLog(request, apiErrorFromUnknown(error), logCtx, identity);
+  }
+}
 
 export function requireSupportedAppVersion(request: NextRequest): NextResponse | null {
   const minimum = process.env.MOBILE_MIN_APP_VERSION?.trim();
