@@ -1,6 +1,7 @@
 import { queryOne } from '../db';
 import { DeviceTokenRepository, type DeviceTokenRow } from '../repositories/deviceTokenRepository';
 import { NotificationEventRepository } from '../repositories/notificationEventRepository';
+import { PushDebouncer } from '../infra/PushDebouncer';
 import { PushRateLimiter } from '../infra/PushRateLimiter';
 import { PushDeliveryService } from './notifications/PushDeliveryService';
 
@@ -20,6 +21,7 @@ interface FcmResponse {
 export class PushNotificationService {
   private readonly devices = new DeviceTokenRepository();
   private readonly events = new NotificationEventRepository();
+  private readonly debouncer = new PushDebouncer();
   private readonly limiter = new PushRateLimiter();
   private readonly delivery = new PushDeliveryService();
 
@@ -109,6 +111,8 @@ export class PushNotificationService {
         [params.postId],
       );
       if (!post || post.author_id === params.actorUserId) return;
+      const shouldSend = await this.debouncer.shouldSend(`push:pulse:${params.postId}:${post.author_id}`);
+      if (!shouldSend) return;
       await this.sendToUser(post.author_id, {
         eventType: 'hertz.pulse.created',
         title: 'Pulse baru',
