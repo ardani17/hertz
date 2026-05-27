@@ -5,13 +5,17 @@ import type { MemberSessionUser } from '@shared/types/membership';
 import { apiError } from './apiResponse';
 import { getBearerTokenFromRequest, getCurrentBearerMemberFromRequest } from './memberAuth';
 import { checkRateLimit } from './rateLimit';
+import { RedisRateLimiter } from '@/server/infra/RedisRateLimiter';
 
 export const mobileRateLimits = {
   auth: { max: 12, windowMs: 10 * 60 * 1000, prefix: 'mobile-auth' },
   read: { max: 240, windowMs: 10 * 60 * 1000, prefix: 'mobile-read' },
   mutation: { max: 60, windowMs: 10 * 60 * 1000, prefix: 'mobile-mutation' },
   device: { max: 20, windowMs: 60 * 60 * 1000, prefix: 'mobile-device' },
+  upload: { max: 30, windowMs: 10 * 60 * 1000, prefix: 'mobile-upload' },
 } as const;
+
+const redisRateLimiter = new RedisRateLimiter();
 
 export interface MobileAuthContext {
   user: MemberSessionUser;
@@ -33,6 +37,36 @@ export function checkMobileRateLimit(
     ...mobileRateLimits[policy],
     key: identity ?? bearerIdentity,
   });
+}
+
+export async function checkMobileRateLimitAsync(
+  request: NextRequest,
+  policy: keyof typeof mobileRateLimits,
+  identity?: string | null,
+): Promise<NextResponse | null> {
+  const bearerIdentity = tokenFingerprint(getBearerTokenFromRequest(request));
+  return redisRateLimiter.consume(request, mobileRateLimits[policy], identity ?? bearerIdentity);
+}
+
+export function requireSupportedAppVersion(request: NextRequest): NextResponse | null {
+  const minimum = process.env.MOBILE_MIN_APP_VERSION?.trim();
+  if (!minimum) return null;
+  const current = request.headers.get('app-version')?.trim();
+  if (!current || compareSemver(current, minimum) >= 0) return null;
+  return apiError('UPGRADE_REQUIRED', 'Versi aplikasi Anda tidak lagi didukung. Update ke versi terbaru.', 426, {
+    minVersion: minimum,
+    currentVersion: current,
+  });
+}
+
+function compareSemver(a: string, b: string): number {
+  const left = a.split('.').map((part) => Number(part) || 0);
+  const right = b.split('.').map((part) => Number(part) || 0);
+  for (let index = 0; index < Math.max(left.length, right.length); index += 1) {
+    const delta = (left[index] ?? 0) - (right[index] ?? 0);
+    if (delta !== 0) return delta;
+  }
+  return 0;
 }
 
 export async function requireMobileMember(request: NextRequest): Promise<MobileAuthContext | NextResponse> {

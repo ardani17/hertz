@@ -8,6 +8,12 @@ import {
   HertzValidationError,
 } from '@shared/services/hertzPostService';
 import {
+  MobileAuthCurrentSessionRevokeError,
+  MobileAuthNonceInvalidError,
+  MobileAuthValidationError,
+} from '@shared/services/mobileAuthService';
+import { MobileMediaValidationError } from '@shared/services/mobileMediaService';
+import {
   DevTelegramLoginDisabledError,
   MembershipCheckUnavailableError,
   NotGroupMemberError,
@@ -20,8 +26,11 @@ export function apiSuccess<T>(data: T, status = 200) {
 
 function normalizeErrorCode(code: string): string {
   if (code === 'AUTH_REQUIRED') return 'UNAUTHENTICATED';
+  if (code === 'AUTH_INVALID') return 'UNAUTHENTICATED';
   if (code === 'AUTH_FORBIDDEN') return 'FORBIDDEN';
   if (code === 'RESOURCE_NOT_FOUND') return 'POST_NOT_FOUND';
+  if (code === 'VALIDATION_ERROR') return 'VALIDATION_FAILED';
+  if (code === 'RATE_LIMIT_EXCEEDED') return 'RATE_LIMITED';
   return code;
 }
 
@@ -63,6 +72,18 @@ export function apiErrorFromUnknown(error: unknown) {
   }
   if (error instanceof MembershipCheckUnavailableError) {
     return apiError('MEMBERSHIP_CHECK_UNAVAILABLE', 'Verifikasi membership sedang tidak tersedia', 503);
+  }
+  if (error instanceof MobileAuthValidationError) {
+    return apiError('VALIDATION_ERROR', error.message, 400);
+  }
+  if (error instanceof MobileAuthNonceInvalidError) {
+    return apiError('AUTH_INVALID', error.message, 401);
+  }
+  if (error instanceof MobileAuthCurrentSessionRevokeError) {
+    return apiError('CANNOT_REVOKE_CURRENT', error.message, 409);
+  }
+  if (error instanceof MobileMediaValidationError) {
+    return apiError('VALIDATION_ERROR', error.message, 400);
   }
   return apiError('INTERNAL_ERROR', 'Terjadi kesalahan pada server', 500);
 }
