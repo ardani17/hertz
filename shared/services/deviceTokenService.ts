@@ -23,6 +23,9 @@ function validateTokenForPlatform(platform: DevicePlatform, token: string): stri
   if (platform === 'expo' && !/^ExponentPushToken\[[A-Za-z0-9_-]+\]$/.test(token)) {
     throw new DeviceTokenValidationError('Expo push token tidak valid');
   }
+  if ((platform === 'ios' || platform === 'android') && (token.length < 20 || /\s/.test(token))) {
+    throw new DeviceTokenValidationError('Native push token tidak valid');
+  }
   return token;
 }
 

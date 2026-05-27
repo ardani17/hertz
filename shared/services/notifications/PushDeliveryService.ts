@@ -1,4 +1,6 @@
 import type { DeviceTokenRow } from '../../repositories/deviceTokenRepository';
+import { isFcmHttpV1Configured } from './fcmAuth';
+import { FcmHttpV1Adapter } from './FcmHttpV1Adapter';
 
 export interface PushDeliveryInput {
   title: string;
@@ -16,15 +18,6 @@ export interface PushAdapter {
   send(device: DeviceTokenRow, input: PushDeliveryInput): Promise<PushSendResult>;
 }
 
-export class FcmHttpV1Adapter implements PushAdapter {
-  async send(): Promise<PushSendResult> {
-    return {
-      status: 'failed',
-      errorMessage: 'FCM HTTP v1 adapter is not implemented yet',
-    };
-  }
-}
-
 interface ExpoPushTicket {
   status?: 'ok' | 'error';
   id?: string;
@@ -39,6 +32,10 @@ interface ExpoPushResponse {
 
 function stringifyPayload(payload: Record<string, unknown>): Record<string, string> {
   return Object.fromEntries(Object.entries(payload).map(([key, value]) => [key, typeof value === 'string' ? value : JSON.stringify(value)]));
+}
+
+function isExpoPushToken(token: string): boolean {
+  return /^ExponentPushToken\[[A-Za-z0-9_-]+\]$/.test(token);
 }
 
 export class ExpoPushAdapter implements PushAdapter {
@@ -82,13 +79,17 @@ export class PushDeliveryService {
   private readonly expo = new ExpoPushAdapter();
   private readonly fcm = new FcmHttpV1Adapter();
 
-  resolve(): PushAdapter {
+  resolve(device: DeviceTokenRow): PushAdapter {
     if (process.env.PUSH_PROVIDER === 'fcm_http_v1') return this.fcm;
+    if ((device.platform === 'ios' || device.platform === 'android') && !isExpoPushToken(device.token) && isFcmHttpV1Configured()) {
+      return this.fcm;
+    }
     return this.expo;
   }
 
   async send(device: DeviceTokenRow, input: PushDeliveryInput): Promise<PushSendResult> {
-    return this.resolve().send(device, input);
+    return this.resolve(device).send(device, input);
   }
 }
 
+export { FcmHttpV1Adapter } from './FcmHttpV1Adapter';

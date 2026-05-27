@@ -21,6 +21,15 @@ describe('DeviceTokenService validation', () => {
       token: '   ',
     })).rejects.toBeInstanceOf(DeviceTokenValidationError);
   });
+
+  it('rejects invalid native push tokens', async () => {
+    const service = new DeviceTokenService();
+
+    await expect(service.register('user-id', {
+      platform: 'ios',
+      token: 'short',
+    })).rejects.toBeInstanceOf(DeviceTokenValidationError);
+  });
 });
 
 describe('mobile notification persistence wiring', () => {
