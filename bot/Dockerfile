@@ -17,6 +17,7 @@ COPY --from=deps /app/node_modules ./node_modules
 COPY package.json package-lock.json ./
 COPY tsconfig.base.json ./
 COPY shared/ ./shared/
+COPY frontend/src/server/services/ ./frontend/src/server/services/
 COPY bot/ ./bot/
 
 # Compile — output goes to bot/dist/bot/src/ and bot/dist/shared/
